@@ -120,11 +120,6 @@ export const DropDown: FC<Props> = typedMemo(function DropDown({
     }, []);
 
     const onClick = useCallback((event: React.MouseEvent) => {
-        if (!disabled) {
-            return;
-        }
-
-        event.preventDefault();
         event.stopPropagation();
     }, [disabled]);
 

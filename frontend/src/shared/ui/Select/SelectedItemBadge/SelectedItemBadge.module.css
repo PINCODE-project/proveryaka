@@ -11,7 +11,8 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font: var(--body-font);
+    font-size: var(--body-font-size);
+    line-height: var(--body-line-height);
     overflow-wrap: anywhere;
 }
 

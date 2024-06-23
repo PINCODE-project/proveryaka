@@ -6,6 +6,8 @@
     color: var(--default-forefround);
     font-family: 'Inter', sans-serif;
     box-sizing: border-box;
+    font-size: var(--body-font-size);
+    line-height: var(--body-line-height);
 }
 
 a {

@@ -1,5 +1,7 @@
-import { type FC, memo, ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
+import { FC, ReactNode } from 'react';
+import { Link } from 'react-router-dom';
+
+import { SpaceRouter } from '@pages/spaces';
 
 import ThreeDots from '@shared/assets/icons/ThreeDots.svg';
 import { getBemClasses, typedMemo } from '@shared/lib';
@@ -19,50 +21,50 @@ export const SpaceCard: FC<Props> = typedMemo(({
     className,
     'data-testid': dataTestId = 'SpaceCard',
 }: Props) => {
-    const { t } = useTranslation();
-
     return (
-        <FlexContainer
-            direction="column"
-            overflow="nowrap"
-            gap="l"
-            data-testid={dataTestId}
-            className={getBemClasses(styles, null, null, className)}
-        >
-            <Image
-                alt="space avatar"
-                placeholderSrc={'https://masterpiecer-images.s3.yandex.net/4b4e8fbd579411ee8d01e6d39d9a42a4:upscaled'}
-                className={getBemClasses(styles, 'avatar')}
-            />
-
+        <Link to={SpaceRouter.Tasks(0)}>
             <FlexContainer
-                direction="row"
-                gap="m"
+                direction="column"
                 overflow="nowrap"
-                alignItems="start"
-                justifyContent="space-between"
-                className={getBemClasses(styles, 'info')}
+                gap="l"
+                data-testid={dataTestId}
+                className={getBemClasses(styles, null, null, className)}
             >
-                <Text className={getBemClasses(styles, 'name')}>
-                    Name
-                </Text>
+                <Image
+                    alt="space avatar"
+                    placeholderSrc={'https://masterpiecer-images.s3.yandex.net/4b4e8fbd579411ee8d01e6d39d9a42a4:upscaled'}
+                    className={getBemClasses(styles, 'avatar')}
+                />
 
-                <DropDown
-                    renderLabel={
-                        <FlexContainer
-                            direction="row"
-                            alignItems="center"
-                            justifyContent="center"
-                            className={getBemClasses(styles, 'settings')}
-                        >
-                            <ThreeDots className={getBemClasses(styles, 'settingsIcon')} />
-                        </FlexContainer>
-                    }
-                    contentClassName={getBemClasses(styles, 'settingsModal')}
+                <FlexContainer
+                    direction="row"
+                    gap="m"
+                    overflow="nowrap"
+                    alignItems="start"
+                    justifyContent="space-between"
+                    className={getBemClasses(styles, 'info')}
                 >
-                    {actions}
-                </DropDown>
+                    <Text className={getBemClasses(styles, 'name')}>
+                        Name
+                    </Text>
+
+                    <DropDown
+                        renderLabel={
+                            <FlexContainer
+                                direction="row"
+                                alignItems="center"
+                                justifyContent="center"
+                                className={getBemClasses(styles, 'settings')}
+                            >
+                                <ThreeDots className={getBemClasses(styles, 'settingsIcon')} />
+                            </FlexContainer>
+                        }
+                        contentClassName={getBemClasses(styles, 'settingsModal')}
+                    >
+                        {actions}
+                    </DropDown>
+                </FlexContainer>
             </FlexContainer>
-        </FlexContainer>
+        </Link>
     );
 });

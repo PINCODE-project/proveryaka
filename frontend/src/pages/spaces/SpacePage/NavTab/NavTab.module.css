@@ -1,0 +1,38 @@
+.NavTab {
+
+}
+
+.NavTab__container {
+    height: 100%;
+    position: relative;
+}
+
+.NavTab__container:after {
+    content: '';
+    width: 100%;
+    height: 3px;
+    border-radius: 4px;
+    bottom: -15px;
+    right: 0;
+    display: block;
+    position: absolute;
+}
+
+.NavTab__name {
+    color: var(--default-forefround-1);
+}
+
+.NavTab__container:hover:after {
+    background-color: var(--default-background-3);
+}
+.NavTab__container:active:after {
+    background-color: var(--default-border);
+}
+
+.NavTab__container_isActive:after {
+    background-color: var(--brand-forefround);
+}
+
+.NavTab__container_isActive .NavTab__name {
+    font-weight: var(--font-weight-medium);
+}

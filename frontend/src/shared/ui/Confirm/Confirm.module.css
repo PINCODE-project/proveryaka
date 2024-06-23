@@ -27,7 +27,8 @@
 
 .Confirm__text {
     margin: 0;
-    font: var(--body-font);
+    font-size: var(--body-font-size);
+    line-height: var(--body-line-height);
     white-space: pre-wrap;
     word-break: break-word;
 }

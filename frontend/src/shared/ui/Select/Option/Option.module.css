@@ -4,7 +4,8 @@
     cursor: pointer;
     overflow: hidden;
     text-overflow: ellipsis;
-    font: var(--body-font);
+    font-size: var(--body-font-size);
+    line-height: var(--body-line-height);
     padding: 8px;
     box-sizing: border-box;
 }

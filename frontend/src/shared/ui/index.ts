@@ -18,3 +18,4 @@ export * from './Select';
 export * from './RadioButton';
 export * from './Separator';
 export * from './Confirm';
+export * from './Link';

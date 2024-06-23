@@ -1,15 +1,23 @@
 :root {
     --font-line-height: 1.4;
-    --font-default: var(--font-weight-regular) var(--body-font) Inter;
+    --font-default: var(--font-weight-regular) var(--body-font-size)/var(--body-line-height) Inter;
 
     /* Font sizes */
     --title-1-font: 32px/40px;
     --title-2-font: 28px/36px;
     --title-3-font: 24px/32px;
-    --headline-font: 20px/28px;
-    --subheadline-font: 18px/24px;
-    --body-font: 14px/20px;
-    --caption-font: 12px/16px;
+
+    --headline-font-size: 20px;
+    --headline-line-height: 28px;
+
+    --subheadline-font-size: 18px;
+    --subheadline-line-height: 24px;
+
+    --body-font-size: 14px;
+    --body-line-height: 20px;
+
+    --caption-font-size: 12px;
+    --caption-line-height: 16px;
 
     /* Font weight */
     --font-weight-light: 300;

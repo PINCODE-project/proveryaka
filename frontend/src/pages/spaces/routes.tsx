@@ -1,3 +1,5 @@
+import { RedirectToTasks } from '@pages/spaces/components/RedirectToTasks';
+import { SpacePage } from '@pages/spaces/SpacePage';
 import { SpacesPage } from '@pages/spaces/SpacesPage';
 
 import { ConfigRouteProps } from '@shared/types';
@@ -20,16 +22,12 @@ export const SpaceRouter = {
 
 export const spacesRouteConfig: ConfigRouteProps[] = [
     {
-        path: SpaceRouter.Main,
-        element: <SpacesPage />,
-    },
-    {
         path: SpaceRouter.Space(':spaceId'),
-        element: null,
+        element: <SpacePage />,
         children: [
             {
                 path: SpaceRouter.Space(':spaceId'),
-                element: null,
+                element: <RedirectToTasks />,
             },
             {
                 path: SpaceRouter.CreateTask(':spaceId'),
@@ -76,5 +74,9 @@ export const spacesRouteConfig: ConfigRouteProps[] = [
                 element: null,
             },
         ],
+    },
+    {
+        path: SpaceRouter.Main,
+        element: <SpacesPage />,
     },
 ];
