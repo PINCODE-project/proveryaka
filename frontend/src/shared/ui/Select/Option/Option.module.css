@@ -1,0 +1,60 @@
+.Option {
+    display: inline-block;
+    width: 100%;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: var(--font-size-m);
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.Option_disabled {
+    background-color: red;
+}
+
+.Option__spoilerSummary > .Option {
+    padding: 0;
+}
+
+.Option__spoilerSummary {
+    padding: 8px 8px 8px var(--parent-option-padding);
+}
+
+.Option:hover,
+.Option__spoilerSummary:hover,
+.Option__spoilerSummary:hover .Option {
+    background-color: var(--surface-primary-color);
+}
+
+.Option.Option_selected,
+.Option__spoilerSummary.Option__spoilerSummary_selected {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+.Option.Option_selected.Option_isMultiSelect,
+.Option__spoilerSummary.Option__spoilerSummary_isMultiSelect.Option__spoilerSummary_selected{
+    color: #000;
+    background-color: var(--on-surface-color);
+}
+
+.Option.Option_selected.Option_isMultiSelect:hover,
+.Option__spoilerSummary.Option__spoilerSummary_isMultiSelect.Option__spoilerSummary_selected:hover,
+.Option__spoilerSummary.Option__spoilerSummary_isMultiSelect.Option__spoilerSummary_selected:hover .Option.Option_selected.Option_isMultiSelect{
+    background-color: var(--surface-primary-color);
+}
+
+.Option__spoilerContent {
+    --option-padding: calc(var(--parent-option-padding) + 20px);
+}
+
+.Option__spoiler {
+    --parent-option-padding: var(--option-padding);
+
+    width: 100%;
+}
+
+.Option_withTreePadding, .Option__checkbox_withTreePadding {
+    padding-left: calc(var(--option-padding) + 20px);
+}

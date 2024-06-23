@@ -1,0 +1,46 @@
+.Modal__overlay {
+    position: fixed;
+    inset: 0;
+    visibility: hidden;
+    background-color: rgba(0,0,0, var(--disabled-opacity));
+    padding: var(--space-xxxl);
+    overflow: auto;
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    backdrop-filter: blur(2px);
+}
+
+.Modal__closeButton {
+    position: absolute;
+    top: var(--space-l);
+    right: var(--space-l);
+}
+
+.Modal__closeButtonIcon {
+    width: 18px;
+    height: 18px;
+    fill: var(--secondary-text-color)
+}
+
+.Modal__closeButton:hover .Modal__closeButtonIcon {
+    fill: var(--on-surface-color)
+}
+
+.Modal__overlay_isOpen {
+    visibility: visible;
+    z-index: var(--z-index-modal)
+}
+
+.Modal {
+    background-color: var(--on-surface-color);
+    border-radius: 40px;
+    width: 100%;
+    position: relative;
+    margin: auto 0;
+    overflow: hidden;
+}
+
+body:has(.Modal__overlay_isOpen) {
+    overflow: hidden;
+}

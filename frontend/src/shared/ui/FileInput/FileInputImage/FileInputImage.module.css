@@ -1,0 +1,47 @@
+.FileInputImage {
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+    border-radius: var(--border-radius-m);
+    cursor: pointer;
+    border: 1px solid #cacaca;
+    position: relative;
+}
+
+.FileInputImage__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.FileInputImage:hover .FileInputImage__image {
+    filter: brightness(50%);
+}
+
+.FileInputImage_disabled {
+    pointer-events: none;
+    cursor: default;
+}
+
+.FileInputImage__clearButton {
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    transform: translate(50%, -50%);
+    display: none;
+}
+
+.FileInputImage:hover .FileInputImage__clearButton {
+    display: flex;
+}
+
+.FileInputImage__clearButtonIcon {
+    width: var(--icon-size);
+    height: var(--icon-size);
+    fill: var(--on-surface-color);
+}
+
+.FileInputImage__clearButton:hover .FileInputImage__clearButtonIcon {
+    fill: var(--primary-color);
+}

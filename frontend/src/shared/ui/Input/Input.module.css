@@ -1,0 +1,46 @@
+.Input {
+    outline-offset: -2px;
+    font: var(--font-default);
+    max-width: 100%;
+    width: 100%;
+    padding: 12px 16px;
+    resize: none;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    border: 1px solid var(--border-on-surface-color);
+    border-radius: var(--border-radius-m);
+    outline: 1px solid transparent;
+    box-sizing: border-box;
+}
+
+.Input_invalid {
+    border-color: var(--danger-color);
+}
+
+.Input:hover,
+.Input:focus {
+    border-color: var(--primary-color);
+}
+
+.Input:focus {
+    outline-color: var(--primary-color);
+}
+
+.Input:disabled {
+    pointer-events: none;
+    background-color: var(--surface-color);
+    color: var(--secondary-text-color);
+}
+
+.Input[type="number"]::-webkit-outer-spin-button,
+.Input[type="number"]::-webkit-inner-spin-button {
+    appearance: none;
+    margin: 0;
+}
+
+.Input[type="number"] {
+    appearance: textfield;
+}
+
+.Input::placeholder {
+    color: var(--secondary-text-color)
+}

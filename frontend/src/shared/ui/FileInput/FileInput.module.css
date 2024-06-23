@@ -1,0 +1,40 @@
+.FileInput {
+    max-width: 100%;
+    position: relative;
+}
+
+.FileInput_empty {
+    border: 1px dashed var(--border-on-surface-color);
+    border-radius: var(--border-radius-m);
+    padding: 12px 20px;
+    color: var(--secondary-text-color);
+    position: relative;
+    cursor: pointer;
+    max-width: 400px;
+}
+
+.FileInput_empty:hover,
+.FileInput_empty:focus,
+.FileInput_isDragging {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.FileInput_empty.FileInput_invalid {
+    border-color: var(--danger-color);
+    color: var(--danger-color);
+}
+
+.FileInput_empty.FileInput_disabled {
+    opacity: 0.6;
+}
+
+.FileInput__input {
+    opacity: 0;
+    position: absolute;
+    inset: 0;
+}
+
+.FileInput__placeholder {
+    max-width: 100%;
+}

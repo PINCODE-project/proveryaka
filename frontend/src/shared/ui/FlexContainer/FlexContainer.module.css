@@ -1,0 +1,194 @@
+.FlexContainer {
+    display: flex;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.FlexContainer > * {
+    flex-shrink: 0;
+}
+
+.FlexContainer_withSplitter > * {
+    position: relative;
+}
+
+.FlexContainer_withSplitter > *:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    width: 1px;
+    height: 80%;
+    background-color: #cacaca;
+    top: 10%;
+}
+
+.FlexContainer_withSplitter.FlexContainer_gap_xxs > *:not(:last-child)::after {
+    right: calc(var(--space-xxs) / 2 * -1);
+}
+
+.FlexContainer_withSplitter.FlexContainer_gap_xs > *:not(:last-child)::after {
+    right: calc(var(--space-xs) / 2 * -1);
+}
+
+.FlexContainer_withSplitter.FlexContainer_gap_s > *:not(:last-child)::after {
+    right: calc(var(--space-s) / 2 * -1);
+}
+
+.FlexContainer_withSplitter.FlexContainer_gap_m > *:not(:last-child)::after {
+    right: calc(var(--space-m) / 2 * -1);
+}
+
+.FlexContainer_withSplitter.FlexContainer_gap_l > *:not(:last-child)::after {
+    right: calc(var(--space-l) / 2 * -1);
+}
+
+.FlexContainer_withSplitter.FlexContainer_gap_xl > *:not(:last-child)::after {
+    right: calc(var(--space-xl) / 2 * -1);
+}
+
+.FlexContainer_withSplitter.FlexContainer_gap_xxl > *:not(:last-child)::after {
+    right: calc(var(--space-xxl) / 2 * -1);
+}
+
+.FlexContainer_withSplitter.FlexContainer_gap_xxxl > *:not(:last-child)::after {
+    right: calc(var(--space-xxxl) / 2 * -1);
+}
+
+.FlexContainer_direction_row {
+    flex-direction: row;
+}
+
+.FlexContainer_direction_column {
+    flex-direction: column;
+}
+
+.FlexContainer_direction_row-reverse {
+    flex-direction: row-reverse;
+}
+
+.FlexContainer_direction_column-reverse {
+    flex-direction: column-reverse;
+}
+
+.FlexContainer_gap_xxs {
+    gap: var(--space-xxs);
+}
+
+.FlexContainer_gap_xs {
+    gap: var(--space-xs);
+}
+
+.FlexContainer_gap_s {
+    gap: var(--space-s);
+}
+
+.FlexContainer_gap_m {
+    gap: var(--space-m);
+}
+
+.FlexContainer_gap_l {
+    gap: var(--space-l);
+}
+
+.FlexContainer_gap_xl {
+    gap: var(--space-xl);
+}
+
+.FlexContainer_gap_xxl {
+    gap: var(--space-xxl);
+}
+
+.FlexContainer_gap_xxxl {
+    gap: var(--space-xxxl);
+}
+
+.FlexContainer_justifyContent_start {
+    justify-content: flex-start;
+}
+
+.FlexContainer_justifyContent_end {
+    justify-content: flex-end;
+}
+
+.FlexContainer_justifyContent_space-between {
+    justify-content: space-between;
+}
+
+.FlexContainer_justifyContent_space-around {
+    justify-content: space-around;
+}
+
+.FlexContainer_justifyContent_space-evenly {
+    justify-content: space-evenly;
+}
+
+.FlexContainer_justifyContent_center {
+    justify-content: center;
+}
+
+.FlexContainer_alignItems_start {
+    align-items: start;
+}
+
+.FlexContainer_alignItems_end {
+    align-items: end;
+}
+
+.FlexContainer_alignItems_center {
+    align-items: center;
+}
+
+.FlexContainer_alignItems_stretch {
+    align-items: stretch;
+}
+
+.FlexContainer.FlexContainer_enableResize > * {
+    flex: 1 1 0;
+}
+
+.FlexContainer_height_auto {
+    height: auto;
+}
+
+.FlexContainer_height_fit-content {
+    height: fit-content;
+}
+
+.FlexContainer_height_fit-parent {
+    height: 100%;
+}
+
+.FlexContainer_width_auto {
+    width: auto;
+}
+
+.FlexContainer_width_fit-content {
+    width: fit-content;
+}
+
+.FlexContainer_width_fit-parent {
+    width: 100%;
+}
+
+.FlexContainer_overflow_wrap {
+    flex-wrap: wrap;
+}
+
+.FlexContainer_overflow_wrap-reverse {
+    flex-wrap: wrap-reverse;
+}
+
+.FlexContainer_overflow_nowrap {
+    flex-wrap: nowrap;
+}
+
+.FlexContainer_overflow_hidden {
+    overflow: hidden;
+}
+
+.FlexContainer_overflow_scroll.FlexContainer_direction_row {
+    overflow-x: auto;
+}
+
+.FlexContainer_overflow_scroll.FlexContainer_direction_column {
+    overflow-y: auto;
+}

@@ -1,0 +1,110 @@
+.Select {
+    border: solid 1px var(--border-on-surface-color);
+    border-radius: var(--border-radius-m);
+    padding: 7px 6px 7px 16px;
+    transition: border-color 100ms;
+    width: 100% !important;
+}
+
+.Select input {
+    border-color: var(--border-on-surface-color) !important;
+}
+
+.Select_disabled {
+    background-color: var(--surface-color);
+}
+
+.Select_invalid {
+    border-color: var(--danger-color);
+}
+
+.Select:hover,
+.Select:focus {
+    border-color: var(--primary-color);
+}
+
+.Select_disabled:hover {
+    border-color: var(--border-on-surface-color);
+}
+
+.Select_isExpanded {
+    border-color: var(--active-primary-color);
+}
+
+.Select__label {
+    overflow: hidden;
+}
+
+.Select__labelText,
+.Select__labelTextCount {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--secondary-text-color);
+    white-space: nowrap;
+    border-top-left-radius: var(--border-radius-m);
+}
+
+.Select_disabled .Select__labelText {
+    color: var(--secondary-text-color);
+}
+
+.Select__labelTextCount {
+    position: absolute;
+    background-color: #fff;
+    top: 0;
+    left: 0;
+    padding: var(--space-s);
+    border-bottom-right-radius: var(--border-radius-s);
+}
+
+.Select_width_fit-parent {
+    width: 100%;
+}
+
+.Select_width_fit-content {
+    width: auto;
+}
+
+.Select__contentContainer {
+    --option-padding: 10px;
+}
+
+.Select > .Select__contentContainer {
+    max-height: 400px;
+    min-width: 100%;
+    width: fit-content;
+    max-width: 450px;
+    overflow: hidden auto;
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 10%), 0 4px 11px rgb(0 0 0 / 10%);
+    background-color: white;
+    border-radius: var(--border-radius-m);
+    margin-bottom: 8px;
+    margin-top: 1px;
+}
+
+.Select__contentContainer input {
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid var(--border-on-surface-color);
+    padding: var(--space-s) 20px;
+    line-height: 1.5;
+}
+
+.Select__labelText {
+    overflow: hidden;
+    overflow-wrap: break-word;
+}
+
+.Select__labelText, .Select__labelText_isChosen.Select__labelText_isMultiSelect {
+    color: #939daa
+}
+
+.Select__labelText_isChosen {
+    color: unset;
+}
+
+@media (height <= 900px){
+    .Select > .Select__contentContainer {
+        max-height: 250px;
+    }
+}

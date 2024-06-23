@@ -1,0 +1,64 @@
+.FileInputName__wrapper {
+    position: relative;
+}
+
+.FileInputName {
+    border: 1px solid #cacaca;
+    background: #fff;
+    color: var(--secondary-text-color);
+    text-overflow: ellipsis;
+    border-radius: var(--border-radius-m);
+    padding: 12px calc(28px + var(--space-s) + var(--space-xxs)) 12px 20px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.FileInputName:hover {
+    background-color: #dcdcdc;
+    color: #2684ff;
+}
+
+.FileInputName_disabled {
+    padding: var(--space-s);
+    cursor: default;
+    background-color: var(--surface-color);
+    pointer-events: none;
+}
+
+.FileInputName__name {
+    max-width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.FileInputName__clearButton {
+    position: absolute;
+    right: var(--space-s);
+    top: 50%;
+    display: flex;
+    transform: translateY(-50%);
+}
+
+.FileInputName__clearButtonIcon {
+    width: var(--icon-size);
+    height: var(--icon-size);
+    fill: var(--secondary-text-color);
+}
+
+.FileInputName__clearButton:hover .FileInputName__clearButtonIcon {
+    fill: var(--primary-color);
+}
+
+.FileInputName__imageTooltip {
+    height: 150px;
+    max-width: 300px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.FileInputName__image {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+}

@@ -1,0 +1,52 @@
+.RadioButton {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    cursor: pointer;
+    font-size: var(--font-size-m);
+}
+
+.RadioButton__input {
+    --radio-button-size: 20px;
+
+    height: var(--radio-button-size);
+    aspect-ratio: 1;
+    border: calc(var(--radio-button-size) / 10) solid #939393;
+    padding: calc(var(--radio-button-size) / 8) !important;
+    background: radial-gradient(farthest-side, var(--primary-color) 95%, #0000) 50%/0 0 no-repeat content-box;
+    border-radius: 50%;
+    outline-offset: calc(var(--radio-button-size) / 12);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    font-size: inherit;
+    transition: .3s;
+}
+
+.RadioButton:hover .RadioButton__input:not(:disabled) {
+    border-color: var(--primary-color);
+}
+
+.RadioButton__input:checked {
+    border-color: var(--primary-color);
+    background-size: 90% 90%;
+}
+
+.RadioButton__input:disabled {
+    opacity: var(--disabled-opacity);
+    cursor: not-allowed;
+}
+
+.RadioButton:has(> .RadioButton__input:disabled){
+    cursor: not-allowed;
+}
+
+@media print {
+    .RadioButton__input {
+        -webkit-appearance: auto;
+        -moz-appearance: auto;
+        appearance: auto;
+        background: none;
+    }
+}

@@ -1,0 +1,41 @@
+.SelectedItemBadge {
+    border-radius: var(--border-radius-s);
+    overflow: hidden;
+    max-width: 100%;
+    background-color: var(--border-on-surface-color);
+}
+
+.SelectedItemBadge__text {
+    max-width: 100%;
+    padding: 4px 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: var(--font-size-s);
+    overflow-wrap: anywhere;
+}
+
+.SelectedItemBadge__removeButton {
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-basis: 26px;
+    background-color: transparent;
+    padding: 6px;
+    border-radius: 0;
+}
+
+.SelectedItemBadge__removeButtonIcon {
+    fill: var(--secondary-text-color);
+    width: var(--font-size-m);
+    height: var(--font-size-m);
+}
+
+.SelectedItemBadge__removeButton:hover {
+    background-color: var(--surface-danger-color);
+}
+
+.SelectedItemBadge__removeButton:hover .SelectedItemBadge__removeButtonIcon {
+    fill: var(--danger-color);
+}

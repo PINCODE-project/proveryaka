@@ -1,0 +1,44 @@
+.Separator_orientation_horizontal {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+
+    width: 100%;
+
+    text-align: center;
+    white-space: nowrap;
+    color: #939DAA;
+
+    cursor: default;
+}
+
+.Separator_orientation_horizontal:not(:empty):after {
+    margin-left: var(--space-s);
+}
+
+.Separator_orientation_horizontal:not(:empty):before {
+    margin-right: var(--space-s);
+}
+
+.Separator_orientation_horizontal:empty:after,
+.Separator_orientation_horizontal:empty:before {
+    margin-top: var(--space-s);
+    margin-bottom: var(--space-s);
+}
+
+.Separator_orientation_horizontal:after,
+.Separator_orientation_horizontal:before {
+    display: block;
+    content: "";
+
+    background-color: var(--active-color);
+
+    width: 50%;
+    height: 1px;
+}
+
+.Separator_orientation_vertical {
+    height: 100%;
+    width: 1px;
+    background-color: var(--active-color);
+}

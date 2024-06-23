@@ -1,0 +1,36 @@
+.ExpandIcon {
+    transition: transform 100ms;
+    stroke: #ABAFB2;
+}
+
+.ExpandIcon_expandedDirection_right.ExpandIcon_isExpanded {
+    transform: rotate(-90deg);
+}
+
+.ExpandIcon_expandedDirection_left.ExpandIcon_isExpanded {
+    transform: rotate(90deg);
+}
+
+.ExpandIcon_expandedDirection_up.ExpandIcon_isExpanded {
+    transform: rotate(-180deg);
+}
+
+.ExpandIcon_expandedDirection_down.ExpandIcon_isExpanded {
+    transform: rotate(0deg);
+}
+
+.ExpandIcon_closedDirection_right {
+    transform: rotate(-90deg);
+}
+
+.ExpandIcon_closedDirection_left {
+    transform: rotate(90deg);
+}
+
+.ExpandIcon_closedDirection_up {
+    transform: rotate(180deg);
+}
+
+.ExpandIcon_closedDirection_down {
+    transform: rotate(0deg);
+}
