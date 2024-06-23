@@ -1,0 +1,45 @@
+.NavItem {
+    position: relative;
+    gap: 2px;
+    width: 100%;
+    padding: var(--space-xs);
+}
+
+.NavItem svg {
+    width: var(--icon-size-m);
+    height: var(--icon-size-m);
+    fill: var(--default-forefround-1);
+}
+
+.NavItem__name {
+    color: var(--default-forefround-1);
+    font-size: 10px;
+}
+
+.NavItem:hover {
+    background-color: var(--brand-background-1);
+}
+
+.NavItem:hover svg,
+.NavItem_isActive svg {
+    fill: var(--brand-forefround)
+}
+
+.NavItem:hover .NavItem__name,
+.NavItem_isActive .NavItem__name {
+    color: var(--brand-forefround)
+}
+
+.NavItem:active {
+    background-color: var(--default-foreground-disabled);
+}
+
+.NavItem_isActive:before {
+    content: '';
+    width: 2px;
+    height: calc(100% - var(--space-xs) * 2);
+    position: absolute;
+    border-radius: 6px;
+    background-color: var(--brand-forefround);
+    left: 2px;
+}

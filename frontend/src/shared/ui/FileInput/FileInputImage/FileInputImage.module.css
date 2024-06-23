@@ -37,8 +37,8 @@
 }
 
 .FileInputImage__clearButtonIcon {
-    width: var(--icon-size);
-    height: var(--icon-size);
+    width: var(--icon-size-s);
+    height: var(--icon-size-s);
     fill: var(--on-surface-color);
 }
 

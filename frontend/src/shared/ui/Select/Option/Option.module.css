@@ -4,7 +4,7 @@
     cursor: pointer;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: var(--font-size-m);
+    font: var(--body-font);
     padding: 8px;
     box-sizing: border-box;
 }

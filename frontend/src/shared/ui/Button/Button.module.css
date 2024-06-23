@@ -50,7 +50,7 @@
     border-color: var(--default-foreground-disabled);
 }
 
-.Button_variant_neutral:hover {
+.Button_variant_outline:hover {
     background-color: var(--default-background-2);
 }
 

@@ -3,7 +3,7 @@
     align-items: center;
     gap: var(--space-xs);
     cursor: pointer;
-    font-size: var(--font-size-m);
+    font: var(--body-font);
 }
 
 .RadioButton__input {

@@ -3,11 +3,18 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { useAuthContext } from '@app/providers/AuthProvider';
 
+import { SpaceRouter } from '@pages/spaces';
+
 import { typedMemo } from '@shared/lib';
 
-type Props = PropsWithChildren & {};
+type Props = PropsWithChildren & {
+    withAuthGuard?: boolean;
+    withNoAuthGuard?: boolean;
+};
 
 export const ProtectRoute: FC<Props> = typedMemo(function ProtectRoute({
+    withAuthGuard,
+    withNoAuthGuard,
     children,
 }) {
     const navigate = useNavigate();
@@ -15,22 +22,17 @@ export const ProtectRoute: FC<Props> = typedMemo(function ProtectRoute({
     const [searchParams] = useSearchParams();
 
     useEffect(() => {
-        const isAuthRoute = location.pathname.includes(/* TODO: AUTH PREFIX */ '/auth');
-        if (isAuth) {
-            if (!isAuthRoute) {
-                return;
-            }
+        if (!withAuthGuard && !withNoAuthGuard) {
+            return;
+        }
 
-            const returnUrl = searchParams.get('ReturnUrl');
-            const decodedReturnUrl = returnUrl ? decodeURIComponent(returnUrl) : /* TODO: MAIN URL */'/';
-            navigate(decodedReturnUrl);
-        } else {
-            if (isAuthRoute) {
-                return;
-            }
-
+        if (withAuthGuard && !isAuth) {
             const encodeReturnUrl = encodeURIComponent(`${location.pathname}${location.search}`);
             navigate(`${/* TODO: LOGIN URL */ '/auth'}?ReturnUrl=${encodeReturnUrl}`);
+        } else if (withNoAuthGuard && isAuth) {
+            const returnUrl = searchParams.get('ReturnUrl');
+            const decodedReturnUrl = returnUrl ? decodeURIComponent(returnUrl) : SpaceRouter.Main;
+            navigate(decodedReturnUrl);
         }
     }, [isAuth]);
 

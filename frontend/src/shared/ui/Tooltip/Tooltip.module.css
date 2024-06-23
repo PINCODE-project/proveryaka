@@ -9,7 +9,7 @@
 
     /* Перебиваю высоту, которую выставляет библиотека в тег */
     height: auto !important;
-    font-size: var(--font-size-m) !important;
+    font: var(--body-font) !important;
     line-height: 1.5;
 }
 

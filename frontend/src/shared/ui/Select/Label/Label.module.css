@@ -16,8 +16,8 @@
 
 .Label__expandIcon {
     padding: 5px;
-    width: var(--icon-size);
-    height: var(--icon-size);
+    width: var(--icon-size-s);
+    height: var(--icon-size-s);
     box-sizing: unset;
     fill: var(--secondary-text-color);
     grid-column: 3;
@@ -27,5 +27,5 @@
 .Label__badgesContainer {
     max-height: 86px;
     overflow: auto;
-    padding-top: calc(var(--font-size-m) + var(--space-s) * 2)
+    padding-top: calc(14px + var(--space-s) * 2)
 }

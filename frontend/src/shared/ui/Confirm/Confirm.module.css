@@ -27,15 +27,14 @@
 
 .Confirm__text {
     margin: 0;
-    font-size: var(--font-size-m);
-    line-height: calc(var(--font-size-m) * 1.5);
+    font: var(--body-font);
     white-space: pre-wrap;
     word-break: break-word;
 }
 
 .Confirm__title {
     margin: 0;
-    font-size: calc(var(--font-size-m) * 1.5);
+    font: var(--subheadline-font);
     font-weight: var(--font-weight-semibold);
 }
 

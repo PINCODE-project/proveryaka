@@ -34,7 +34,7 @@ export type AuthContextProviderProps = PropsWithChildren & {};
 export const AuthContextProvider: FC<AuthContextProviderProps> = typedMemo(function UserContextProvider({
     children,
 }) {
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [isAuth, setIsAuth] = useState(false);
 
     const login = useCallback(() => {

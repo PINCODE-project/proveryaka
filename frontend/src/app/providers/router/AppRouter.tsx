@@ -13,7 +13,7 @@ export const AppRouter = () => {
                 key={route.path}
                 path={route.path}
                 element={
-                    <ProtectRoute>
+                    <ProtectRoute withAuthGuard={route.withAuthGuard}>
                         {route.element}
                     </ProtectRoute>
                 }
