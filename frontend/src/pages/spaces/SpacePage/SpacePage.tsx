@@ -7,11 +7,10 @@ import { PageComponent } from '@widgets/PageComponent';
 
 import ChevronLeft from '@shared/assets/icons/ChevronLeft.svg';
 import Settings from '@shared/assets/icons/Settings.svg';
-import ThreeDots from '@shared/assets/icons/ThreeDots.svg';
 import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { TestProps, ClassNameProps } from '@shared/types';
-import { Button, DropDown, FlexContainer, Image, Link, Text } from '@shared/ui';
+import { Button, FlexContainer, Image, Link, SettingsDropdown, Text } from '@shared/ui';
 
 import { NavTab } from './NavTab/NavTab';
 import styles from './SpacePage.module.css';
@@ -22,11 +21,11 @@ export const SpacePage: FC<Props> = typedMemo(({
     className,
     'data-testid': dataTestId = 'SpacePage',
 }: Props) => {
-    /* const spaceId = useSpaceId();
+    const spaceId = useSpaceId();
 
     if (spaceId === undefined) {
         return <Navigate to={SpaceRouter.Main} />;
-    } */
+    }
     return (
         <PageComponent
             data-testid={dataTestId}
@@ -65,24 +64,17 @@ export const SpacePage: FC<Props> = typedMemo(({
                     <NavTab to={SpaceRouter.Users(0)} name="Участники" />
                 </FlexContainer>
 
-                <DropDown
-                    renderLabel={
-                        <FlexContainer
-                            direction="row"
-                            alignItems="center"
-                            justifyContent="center"
-                            className={getBemClasses(styles, 'settings')}
-                        >
-                            <ThreeDots className={getBemClasses(styles, 'settingsIcon')} />
-                        </FlexContainer>
-                    }
-                    contentClassName={getBemClasses(styles, 'settingsModal')}
-                >
-                    <Button variant="ghost" size="small" className={getBemClasses(styles, 'settingsActionButton')}>
-                        <Settings className={getBemClasses(styles, 'settingsActionButtonIcon')} />
-                        Управление командой
-                    </Button>
-                </DropDown>
+                <SettingsDropdown
+                    menu={{
+                        items: [
+                            {
+                                key: 0,
+                                label: 'Управление командой',
+                                icon: <Settings className={getBemClasses(styles, 'settingsActionButtonIcon')} />,
+                            },
+                        ],
+                    }}
+                />
             </FlexContainer>
 
             <div className={getBemClasses(styles, 'content')}>

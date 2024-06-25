@@ -2,15 +2,15 @@ import { screen, render } from '@testing-library/react';
 
 import { createWrapper } from '@shared/mock/jest';
 
-import { NavTab } from './NavTab';
+import { SettingsDropdown } from './SettingsDropdown';
 
-describe('/NavTab', () => {
+describe('shared/SettingsDropdown', () => {
     const wrapper = createWrapper({});
 
     it('Компонент появился в DOM дереве', async () => {
-        render(<NavTab isActive onClick={console.log} name="Name" />, { wrapper });
+        render(<SettingsDropdown menu={{ items: [] }} />, { wrapper });
 
-        const component = await screen.findByTestId('NavTab');
+        const component = await screen.findByTestId('SettingsDropdown');
         expect(component).toBeInTheDocument();
     });
 });

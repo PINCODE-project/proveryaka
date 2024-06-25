@@ -21,7 +21,7 @@
 }
 
 .TaskCard__name {
-
+    font-weight: var(--font-weight-light);
 }
 
 .TaskCard__spaceName,

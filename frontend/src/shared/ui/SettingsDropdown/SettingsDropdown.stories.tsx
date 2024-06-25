@@ -2,11 +2,11 @@ import { Meta, StoryObj } from '@storybook/react';
 
 import { createDecorators } from '@shared/mock/storybook';
 
-import { NavTab, Props } from './NavTab';
+import { SettingsDropdown, Props } from './SettingsDropdown';
 
 const meta: Meta<Props> = {
-    title: '/NavTab',
-    component: NavTab,
+    title: 'shared/SettingsDropdown',
+    component: SettingsDropdown,
     decorators: createDecorators({}),
 };
 
@@ -14,9 +14,5 @@ export default meta;
 type Story = StoryObj<Props>;
 
 export const Default: Story = {
-    args: {
-        isActive: false,
-        onClick: console.log,
-        name: 'Name',
-    },
+    args: {},
 };

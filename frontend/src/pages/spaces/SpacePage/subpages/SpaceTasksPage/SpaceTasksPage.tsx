@@ -76,22 +76,29 @@ export const SpaceTasksPage: FC<Props> = typedMemo(function SpaceTasksPage({
                 direction="column"
                 className={getBemClasses(styles, 'tasks')}
             >
-                <TaskCard status={TaskStatus.InWork} className={getBemClasses(styles, 'task')} />
+                <TaskCard
+                    status={TaskStatus.InWork}
+                    className={getBemClasses(styles, 'task')}
+                    showSpaceName={false}
+                />
                 <TaskCard
                     status={TaskStatus.Overdue}
                     className={getBemClasses(styles, 'task')}
                     showOverdueDeadline={false}
+                    showSpaceName={false}
                 />
                 <TaskCard
                     status={TaskStatus.Done}
                     className={getBemClasses(styles, 'task')}
                     showOverdueDeadline={false}
+                    showSpaceName={false}
                 />
                 <TaskCard
                     status={TaskStatus.Done}
                     mark={100}
                     className={getBemClasses(styles, 'task')}
                     showOverdueDeadline={false}
+                    showSpaceName={false}
                 />
             </FlexContainer>
 

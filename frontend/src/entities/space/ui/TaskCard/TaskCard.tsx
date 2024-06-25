@@ -3,10 +3,11 @@ import { FC } from 'react';
 import { TaskStatus } from '@entities/space';
 
 import Checkmark from '@shared/assets/icons/Checkmark.svg';
+import Settings from '@shared/assets/icons/Settings.svg';
 import SubtractCircle from '@shared/assets/icons/SubtractCircle.svg';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { FlexContainer, Image, Text } from '@shared/ui';
+import { FlexContainer, Image, SettingsDropdown, Text } from '@shared/ui';
 
 import styles from './TaskCard.module.css';
 
@@ -19,6 +20,9 @@ export type Props = ClassNameProps & TestProps & Readonly<{
     showAssignmentDeadline?: boolean;
     showOverdueDeadline?: boolean;
     showGradingDeadline?: boolean;
+    showAssignmentCount?: boolean;
+    showGradingCount?: boolean;
+    showActions?: boolean;
 }>;
 
 export const TaskCard: FC<Props> = typedMemo(function TaskCard({
@@ -28,6 +32,9 @@ export const TaskCard: FC<Props> = typedMemo(function TaskCard({
     showAssignmentDeadline = true,
     showOverdueDeadline = true,
     showGradingDeadline = true,
+    showGradingCount = true,
+    showAssignmentCount = true,
+    showActions = true,
     status,
     mark,
     'data-testid': dataTestId = 'TaskCard',
@@ -90,32 +97,70 @@ export const TaskCard: FC<Props> = typedMemo(function TaskCard({
                             : null}
                     </FlexContainer>
                     : null}
+                {(showGradingCount || showAssignmentCount)
+                    ? <FlexContainer
+                        direction="column"
+                        overflow="nowrap"
+                        gap="xxs"
+                    >
+                        {showAssignmentCount
+                            ? <Text className={getBemClasses(styles, 'deadline')}>
+                                Сдано: 5/5 работ
+                            </Text>
+                            : null}
+                        {showGradingCount
+                            ? <Text className={getBemClasses(styles, 'deadline')}>
+                                Проверено: 2/5 работ
+                            </Text>
+                            : null}
+                    </FlexContainer>
+                    : null}
             </FlexContainer>
             <FlexContainer
-                direction="row"
-                overflow="nowrap"
-                gap="xxs"
-                alignItems="center"
-                className={getBemClasses(styles, 'status', { status })}
+                direction="column"
+                gap="xs"
+                alignItems="end"
             >
-                {status === TaskStatus.InWork
-                    ? <Text className={getBemClasses(styles, 'statusText')}>
-                        Сдать до: 00.00.00
-                    </Text>
-                    : status === TaskStatus.Overdue
-                        ? <>
-                            <SubtractCircle className={getBemClasses(styles, 'statusIcon')} />
-                            <Text className={getBemClasses(styles, 'statusText')}>Не сдано</Text>
-                        </>
-                        : mark !== undefined
-                            ? <Text className={getBemClasses(styles, 'statusText')}>
-                                Количество баллов: 100/100
-                            </Text>
-                            : <>
-                                <Checkmark className={getBemClasses(styles, 'statusIcon')} />
-                                <Text className={getBemClasses(styles, 'statusText')}>Сдано</Text>
-                            </>}
+                {showActions
+                    ? <SettingsDropdown
+                        menu={{
+                            items: [
+                                {
+                                    key: 0,
+                                    label: 'Настройки',
+                                    icon: <Settings className={getBemClasses(styles, 'settingsActionButtonIcon')} />,
+                                },
+                            ],
+                        }}
+                    />
+                    : null}
+                <FlexContainer
+                    direction="row"
+                    overflow="nowrap"
+                    gap="xxs"
+                    alignItems="center"
+                    className={getBemClasses(styles, 'status', { status })}
+                >
+                    {status === TaskStatus.InWork
+                        ? <Text className={getBemClasses(styles, 'statusText')}>
+                            Сдать до: 00.00.00
+                        </Text>
+                        : status === TaskStatus.Overdue
+                            ? <>
+                                <SubtractCircle className={getBemClasses(styles, 'statusIcon')} />
+                                <Text className={getBemClasses(styles, 'statusText')}>Не сдано</Text>
+                            </>
+                            : mark !== undefined
+                                ? <Text className={getBemClasses(styles, 'statusText')}>
+                                    Количество баллов: 100/100
+                                </Text>
+                                : <>
+                                    <Checkmark className={getBemClasses(styles, 'statusIcon')} />
+                                    <Text className={getBemClasses(styles, 'statusText')}>Сдано</Text>
+                                </>}
+                </FlexContainer>
             </FlexContainer>
+
         </FlexContainer>
     );
 });
