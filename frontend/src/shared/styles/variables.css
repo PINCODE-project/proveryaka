@@ -40,6 +40,7 @@
     --default-forefround: #242424;
     --default-forefround-1: #424242;
     --default-forefround-2: #616161;
+    --default-forefround-3: #737373;
     --default-foreground-disabled: #C7C7C7;
     --default-border: #D1D1D1;
     --default-background-3: #E9E9E9;
@@ -54,6 +55,7 @@
     --yellow-forefround-4: #835C00;
     --red-background-1: #FCD4D6;
     --green-forefround: #237D4D;
+    --green-background-1: #dbfcd4;
     --yellow-background-1: #FDF6D9;
     --yellow-background-2: #E7F5DA;
 
@@ -74,5 +76,5 @@
 
     /* Other */
     --disabled-opacity: 0.6;
-    --box-shadow:  0 1px 1px rgba(0, 0, 0, 14%), 0 2px 1px -1px rgba(0, 0, 0, 12%), 0 1px 3px rgba(0, 0, 0, 20%);
+    --box-shadow:  0 1px 2px rgba(0, 0, 0, 14%), 0 2px 3px rgba(0, 0, 0, 12%), 0 1px 5px rgba(0, 0, 0, 6%);
 }

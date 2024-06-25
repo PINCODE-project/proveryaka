@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react';
 
-import { mockAxios, resetAxiosMock } from '@shared/mock/axios';
 import { mockI18Next, restoreI18NextMock } from '@shared/mock/i18n';
 import { createWrapper } from '@shared/mock/jest';
 
@@ -15,14 +14,6 @@ describe('pages/spaces/RedirectToTasks', () => {
 
     afterAll(() => {
         restoreI18NextMock();
-    });
-
-    beforeEach(() => {
-        mockAxios();
-    });
-
-    afterEach(() => {
-        resetAxiosMock();
     });
 
     test('Компонент отобразился в DOM', () => {

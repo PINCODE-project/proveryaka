@@ -1,0 +1,14 @@
+.SpaceTasksPage {
+    background-color: var(--default-background-2);
+    height: 100%;
+}
+
+.SpaceTasksPage__header,
+.SpaceTasksPage__tasks {
+    padding: var(--space-l);
+    width: 100%;
+}
+
+.SpaceTasksPage__task {
+    flex: 1;
+}

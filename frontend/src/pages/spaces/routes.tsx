@@ -1,5 +1,6 @@
 import { RedirectToTasks } from '@pages/spaces/components/RedirectToTasks';
 import { SpacePage } from '@pages/spaces/SpacePage';
+import { SpaceTasksPage } from '@pages/spaces/SpacePage/subpages/SpaceTasksPage/SpaceTasksPage';
 import { SpacesPage } from '@pages/spaces/SpacesPage';
 
 import { ConfigRouteProps } from '@shared/types';
@@ -51,7 +52,7 @@ export const spacesRouteConfig: ConfigRouteProps[] = [
             },
             {
                 path: SpaceRouter.Tasks(':spaceId'),
-                element: null,
+                element: <SpaceTasksPage />,
             },
             {
                 path: SpaceRouter.EstimateAppeal(':spaceId', ':appealId'),
