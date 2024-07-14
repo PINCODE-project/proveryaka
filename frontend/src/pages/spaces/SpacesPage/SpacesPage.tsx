@@ -1,9 +1,8 @@
-import { type FC, memo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { type FC, useCallback, useState } from 'react';
 
 import { PageComponent } from '@widgets/PageComponent';
 
-import { SpaceCard } from '@entities/space';
+import { GetSpaceFilters, SpaceCard, useGetSpaces } from '@entities/space';
 
 import PeopleAdd from '@shared/assets/icons/PeopleAdd.svg';
 import Settings from '@shared/assets/icons/Settings.svg';
@@ -19,7 +18,16 @@ export const SpacesPage: FC<Props> = typedMemo(({
     className,
     'data-testid': dataTestId = 'SpacesPage',
 }: Props) => {
-    const spaces = [0, 0, 0];
+    const [filters, setFilters] = useState<GetSpaceFilters>({
+        page: 0,
+        count: 15,
+    });
+    const changeFilters = useCallback((key: keyof GetSpaceFilters, name: GetSpaceFilters[keyof GetSpaceFilters]) => {
+        setFilters(filters => ({ ...filters, [key]: name }));
+    }, []);
+
+    const { data, isLoading } = useGetSpaces(filters);
+    console.log(data, isLoading);
 
     return (
         <PageComponent
@@ -48,9 +56,10 @@ export const SpacesPage: FC<Props> = typedMemo(({
 
             <div className={getBemClasses(styles, 'spaces')}>
                 {
-                    spaces.map(space => (
+                    data!.entityList!.map(space => (
                         <SpaceCard
                             space={space}
+                            key={space.id}
                             actions={
                                 <Button variant="ghost" size="small" className={getBemClasses(styles, 'settingsActionButton')}>
                                     <Settings className={getBemClasses(styles, 'settingsActionButtonIcon')} />

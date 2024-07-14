@@ -6,7 +6,7 @@ import App from './app/App';
 import '@shared/config/i18n';
 import { ErrorBoundary } from '@app/providers/ErrorBoundary';
 
-import { QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from 'react-query';
 
 import { queryClient } from '@shared/config/query';
 

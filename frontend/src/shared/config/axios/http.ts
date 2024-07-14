@@ -1,10 +1,15 @@
 import axios from 'axios';
 
 const BASE_API_URL = 'https://pincode-dev.ru/proverayka/';
-export const ESTIMATE_API_URL = 'estimate-api/';
-export const SOLUTION_API_URL = 'solution-api/';
-export const SSO_API_URL = 'sso-api/';
 
-export const http = axios.create({
-    baseURL: BASE_API_URL,
+export const estimateHttp = axios.create({
+    baseURL: `${BASE_API_URL}/estimate-api/api/v1/public`,
+});
+
+export const solutionHttp = axios.create({
+    baseURL: `${BASE_API_URL}/solution-api/api/v1/public`,
+});
+
+export const ssoHttp = axios.create({
+    baseURL: `${BASE_API_URL}/sso-api/api/v1/public`,
 });

@@ -9,9 +9,10 @@ import { TestProps, ClassNameProps } from '@shared/types';
 import { DropDown, FlexContainer, Image, Text } from '@shared/ui';
 
 import styles from './SpaceCard.module.css';
+import { GetSpaceResponse } from '../../model/GetSpaceResponse';
 
 export type Props = TestProps & ClassNameProps & Readonly<{
-    space: any;
+    space: GetSpaceResponse;
     actions?: ReactNode;
 }>;
 
@@ -32,6 +33,7 @@ export const SpaceCard: FC<Props> = typedMemo(({
             >
                 <Image
                     alt="space avatar"
+                    src={space.icon}
                     placeholderSrc={'https://masterpiecer-images.s3.yandex.net/4b4e8fbd579411ee8d01e6d39d9a42a4:upscaled'}
                     className={getBemClasses(styles, 'avatar')}
                 />
@@ -45,7 +47,7 @@ export const SpaceCard: FC<Props> = typedMemo(({
                     className={getBemClasses(styles, 'info')}
                 >
                     <Text className={getBemClasses(styles, 'name')}>
-                        Name
+                        {space.name}
                     </Text>
 
                     <DropDown
