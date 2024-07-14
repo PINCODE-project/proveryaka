@@ -25,7 +25,8 @@ export function buildPlugins({
         }),
         new CopyPlugin({
             patterns: [
-                { from: 'public/dist' },
+                { from: 'public/_redirects' },
+                { from: 'public/robots.txt' },
             ],
         }),
     ];
