@@ -6,9 +6,6 @@ const BASE_API_URL = 'https://pincode-dev.ru/proverayka/';
 
 export const estimateHttp = axios.create({
     baseURL: `${BASE_API_URL}estimate-api/api/v1/public`,
-    headers: {
-        Authorization: `Bearer ${TokenService.getToken()}`,
-    },
 });
 
 // @ts-expect-error Все верно
@@ -18,6 +15,7 @@ estimateHttp.interceptors.request.use(function(config) {
     return {
         ...config,
         headers: {
+            ...config.headers,
             Authorization: `Bearer ${token?.access_token}`,
         },
     };
@@ -34,6 +32,7 @@ solutionHttp.interceptors.request.use(function(config) {
     return {
         ...config,
         headers: {
+            ...config.headers,
             Authorization: `Bearer ${token?.access_token}`,
         },
     };
@@ -50,6 +49,7 @@ ssoHttp.interceptors.request.use(function(config) {
     return {
         ...config,
         headers: {
+            ...config.headers,
             Authorization: `Bearer ${token?.access_token}`,
         },
     };
