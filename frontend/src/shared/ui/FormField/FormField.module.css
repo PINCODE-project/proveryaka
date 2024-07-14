@@ -3,7 +3,6 @@
 }
 
 .FormField__label {
-    margin-bottom: 0;
     font-weight: var(--font-weight-medium)
 }
 
@@ -20,6 +19,8 @@
 }
 
 .FormField__error {
-    color: var(--danger-color);
-    margin-top: var(--space-xxs);
+    color: var(--red-forefround);
+    font-size: var(--caption-font-size);
+    min-height: var(--caption-font-size);
+    line-height: var(--caption-font-size);
 }

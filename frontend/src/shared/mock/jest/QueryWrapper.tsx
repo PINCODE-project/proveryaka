@@ -1,7 +1,7 @@
 import React from 'react';
 import { QueryClientProvider } from 'react-query';
 
-import { queryClient } from '@shared/config/query';
+import { getQueryClient } from '@shared/config/query';
 
 /**
  * Тестовая оболочка для работы React Query
@@ -9,7 +9,7 @@ import { queryClient } from '@shared/config/query';
  */
 export const QueryWrapper = (component: React.JSX.Element) => {
     return (
-        <QueryClientProvider client={queryClient}>
+        <QueryClientProvider client={getQueryClient(() => {})}>
             {component}
         </QueryClientProvider>
     );

@@ -8,18 +8,22 @@ import { ErrorBoundary } from '@app/providers/ErrorBoundary';
 
 import { QueryClientProvider } from 'react-query';
 
-import { queryClient } from '@shared/config/query';
+import { getQueryClient } from '@shared/config/query';
 
-import { AuthContextProvider } from '@app/providers/AuthProvider';
+import { AuthContextProvider, AuthProvider } from '@app/providers/AuthProvider';
 
 const root = createRoot(document.getElementById('root')!);
 root.render(
     <ErrorBoundary>
         <BrowserRouter>
             <AuthContextProvider>
-                <QueryClientProvider client={queryClient}>
-                    <App />
-                </QueryClientProvider>
+                <AuthProvider.Consumer>
+                    {state => (
+                        <QueryClientProvider client={getQueryClient(state!.logout)}>
+                            <App />
+                        </QueryClientProvider>
+                    )}
+                </AuthProvider.Consumer>
             </AuthContextProvider>
         </BrowserRouter>
     </ErrorBoundary>,

@@ -73,8 +73,8 @@ export const FormField = typedMemo(function FormField<TValue>({
     return (
         <FlexContainer
             direction="column"
-            gap="xs"
             overflow="nowrap"
+            gap="xxs"
             className={getBemClasses(styles, null, null, className)}
             data-testid={dataTestId}
         >
@@ -97,11 +97,9 @@ export const FormField = typedMemo(function FormField<TValue>({
                 }
             </div>
 
-            {isInvalid
-                ? <Text className={getBemClasses(styles, 'error')}>
-                    <ErrorMessage name={name} />
-                </Text>
-                : null}
+            <Text className={getBemClasses(styles, 'error')}>
+                {isInvalid ? <ErrorMessage name={name} /> : null}
+            </Text>
         </FlexContainer>
     );
 });

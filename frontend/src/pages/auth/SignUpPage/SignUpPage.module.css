@@ -1,0 +1,6 @@
+.SignUpPage {
+    background-image: url(@shared/assets/images/signin_background.png);
+    width: 100vw;
+    min-height: 100vh;
+    padding: var(--space-xl);
+}

@@ -4,8 +4,13 @@
 
     /* Font sizes */
     --title-1-font: 32px/40px;
+    --title-1-font: 32px/40px;
+
     --title-2-font: 28px/36px;
-    --title-3-font: 24px/32px;
+    --title-2-font: 28px/36px;
+
+    --title-3-font-size: 24px;
+    --title-3-line-height: 32px;
 
     --headline-font-size: 20px;
     --headline-line-height: 28px;

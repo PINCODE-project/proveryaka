@@ -24,6 +24,7 @@ export const SpaceRouter = {
 export const spacesRouteConfig: ConfigRouteProps[] = [
     {
         path: SpaceRouter.Space(':spaceId'),
+        withAuthGuard: true,
         element: <SpacePage />,
         children: [
             {
@@ -78,6 +79,7 @@ export const spacesRouteConfig: ConfigRouteProps[] = [
     },
     {
         path: SpaceRouter.Main,
+        withAuthGuard: true,
         element: <SpacesPage />,
     },
 ];

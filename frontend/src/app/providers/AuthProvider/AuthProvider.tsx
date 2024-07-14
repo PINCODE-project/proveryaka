@@ -3,16 +3,15 @@ import {
     FC,
     PropsWithChildren,
     useCallback,
-    useContext,
-    useLayoutEffect,
+    useContext, useEffect,
     useState,
 } from 'react';
 
-import { typedMemo } from '@shared/lib';
+import { Token, TokenService, typedMemo } from '@shared/lib';
 import { Loader } from '@shared/ui';
 
 export type AuthContextProps = {
-    login: () => void;
+    login: (token: Token) => void;
     logout: () => void;
     isAuth: boolean;
 };
@@ -34,15 +33,22 @@ export type AuthContextProviderProps = PropsWithChildren & {};
 export const AuthContextProvider: FC<AuthContextProviderProps> = typedMemo(function UserContextProvider({
     children,
 }) {
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [isAuth, setIsAuth] = useState(false);
 
-    const login = useCallback(() => {
+    useEffect(() => {
+        setIsAuth(TokenService.getToken() !== null);
+        setIsLoading(false);
+    }, []);
+
+    const login = useCallback((token: Token) => {
         setIsAuth(true);
+        TokenService.setToken(token);
     }, []);
 
     const logout = useCallback(() => {
         setIsAuth(false);
+        TokenService.removeToken();
     }, []);
 
     if (isLoading) {
