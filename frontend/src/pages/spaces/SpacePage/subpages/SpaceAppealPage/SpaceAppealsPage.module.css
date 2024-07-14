@@ -1,0 +1,14 @@
+.SpaceAppealsPage {
+    background-color: var(--default-background-2);
+    height: 100%;
+}
+
+.SpaceAppealsPage__header,
+.SpaceAppealsPage__tasks {
+    padding: var(--space-l);
+    width: 100%;
+}
+
+.SpaceAppealsPage__task {
+    flex: 1;
+}
