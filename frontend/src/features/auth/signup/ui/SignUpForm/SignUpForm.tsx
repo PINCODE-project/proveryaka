@@ -73,6 +73,7 @@ export const SignUpForm: FC<Props> = typedMemo(function SignInForm({
                                     <Input
                                         value={value}
                                         onChange={event => onChange(event.target.value)}
+                                        onBlur={event => onChange(event.target.value.trim())}
                                     />
                                 )
                             }

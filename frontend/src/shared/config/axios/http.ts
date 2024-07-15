@@ -1,56 +1,49 @@
 import axios from 'axios';
 
+import { addTokenInterceptor } from '@shared/config/axios/interseptors/addTokenInterceptor';
+import { refreshSecretInterceptor } from '@shared/config/axios/interseptors/refreshTokenInterceptor';
 import { TokenService } from '@shared/lib';
 
 const BASE_API_URL = 'https://pincode-dev.ru/proverayka/';
 
 export const estimateHttp = axios.create({
     baseURL: `${BASE_API_URL}estimate-api/api/v1/public`,
+    headers: {
+        Accept: 'text/plain',
+        'Content-Type': 'application/json; charset=utf-8',
+    },
 });
 
-// @ts-expect-error Все верно
-estimateHttp.interceptors.request.use(function(config) {
-    const token = TokenService.getToken();
+estimateHttp.interceptors.request.use(config => addTokenInterceptor(config),
+    error => Promise.reject(error));
 
-    return {
-        ...config,
-        headers: {
-            ...config.headers,
-            Authorization: `Bearer ${token?.access_token}`,
-        },
-    };
-});
+estimateHttp.interceptors.response.use(response => response,
+    error => refreshSecretInterceptor(error));
 
 export const solutionHttp = axios.create({
     baseURL: `${BASE_API_URL}solution-api/api/v1/public`,
+    headers: {
+        Accept: 'text/plain',
+        'Content-Type': 'application/json; charset=utf-8',
+    },
 });
 
-// @ts-expect-error Все верно
-solutionHttp.interceptors.request.use(function(config) {
-    const token = TokenService.getToken();
+solutionHttp.interceptors.request.use(config => addTokenInterceptor(config),
+    error => Promise.reject(error));
 
-    return {
-        ...config,
-        headers: {
-            ...config.headers,
-            Authorization: `Bearer ${token?.access_token}`,
-        },
-    };
-});
+solutionHttp.interceptors.response.use(response => response,
+    error => refreshSecretInterceptor(error));
 
 export const ssoHttp = axios.create({
     baseURL: `${BASE_API_URL}sso`,
+    headers: {
+        Accept: 'text/plain',
+        'Content-Type': 'application/json; charset=utf-8',
+    },
 });
 
-// @ts-expect-error Все верно
-ssoHttp.interceptors.request.use(function(config) {
-    const token = TokenService.getToken();
+ssoHttp.interceptors.request.use(config => addTokenInterceptor(config),
+    error => Promise.reject(error));
 
-    return {
-        ...config,
-        headers: {
-            ...config.headers,
-            Authorization: `Bearer ${token?.access_token}`,
-        },
-    };
-});
+ssoHttp.interceptors.response.use(response => response,
+    error => refreshSecretInterceptor(error));

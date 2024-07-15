@@ -27,7 +27,6 @@ export const SpacesPage: FC<Props> = typedMemo(({
     }, []);
 
     const { data, isLoading } = useGetSpaces(filters);
-    console.log(data, isLoading);
 
     return (
         <PageComponent
