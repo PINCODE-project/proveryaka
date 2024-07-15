@@ -1,54 +1,57 @@
 import { Modal } from 'antd';
-import { Form, Formik } from 'formik';
 import { FC, useCallback, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
-import { useCreateSpace } from '@features/space/create-space/lib/useCreateSpace';
-
 import { getSpacesQueryKey, SpaceSettingsForm } from '@entities/space';
+import { getSpaceQueryKey } from '@entities/space/lib/getSpaceQueryKey';
+import { useGetSpace } from '@entities/space/lib/useGetSpace';
 
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { Text } from '@shared/ui';
 
-import styles from './CreateSpaceModal.module.css';
+import styles from './EditSpaceModal.module.css';
+import { useEditSpace } from '../../lib/useEditSpace';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     triggerElement: (open: () => void) => {};
+    spaceId: string;
 }>;
 
-export const CreateSpaceModal: FC<Props> = typedMemo(function CreateSpaceModal({
+export const EditSpaceModal: FC<Props> = typedMemo(function EditSpaceModal({
     className,
     triggerElement,
-    'data-testid': dataTestId = 'CreateSpaceModal',
+    spaceId,
+    'data-testid': dataTestId = 'EditSpaceModal',
 }) {
     const [isOpen, setIsOpen] = useState(false);
     const toggleIsOpen = useCallback(() => setIsOpen(isOpen => !isOpen), []);
+    const { data: space } = useGetSpace(spaceId);
 
     const queryClient = useQueryClient();
-    const { mutate: create } = useCreateSpace({
+    const { mutate: edit } = useEditSpace({
         onSuccess: () => {
             queryClient.resetQueries(getSpacesQueryKey);
-            setIsOpen(false);
+            queryClient.resetQueries(getSpaceQueryKey(spaceId));
         },
     });
-    console.log(isOpen);
+
     return (
         <>
-            {triggerElement(() => setIsOpen(true))}
+            {triggerElement(toggleIsOpen)}
             <Modal
                 className={getBemClasses(styles, null, null, className)}
-                onCancel={() => setIsOpen(false)}
+                onClose={toggleIsOpen}
                 open={isOpen}
-                destroyOnClose
                 footer={null}
             >
                 <Text className={getBemClasses(styles, 'title')}>
-                    Создать пространство
+                    Изменить пространство
                 </Text>
                 <SpaceSettingsForm
-                    submitText="Создать пространство"
-                    onSubmit={create}
+                    submitText="Изменить пространство"
+                    form={space}
+                    onSubmit={edit}
                 />
             </Modal>
         </>
