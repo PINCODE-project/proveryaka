@@ -1,6 +1,9 @@
+import { Dropdown, MenuProps } from 'antd';
 import { type FC, useCallback, useState } from 'react';
 
 import { PageComponent } from '@widgets/PageComponent';
+
+import { CreateSpaceModal } from '@features/space/create-space';
 
 import { GetSpaceFilters, SpaceCard, useGetSpaces } from '@entities/space';
 
@@ -13,6 +16,19 @@ import { Button, FlexContainer, Text } from '@shared/ui';
 import styles from './SpacesPage.module.css';
 
 export type Props = TestProps & ClassNameProps & Readonly<{}>;
+
+const buttonMenu: MenuProps['items'] = [
+    {
+        key: '1',
+        label: (
+            <CreateSpaceModal triggerElement={open => <Text onClick={open}>Создать пространство</Text>} />
+        ),
+    },
+    {
+        key: '',
+        label: 'Присоединиться к пространству',
+    },
+];
 
 export const SpacesPage: FC<Props> = typedMemo(({
     className,
@@ -44,13 +60,19 @@ export const SpacesPage: FC<Props> = typedMemo(({
                     Команды
                 </Text>
 
-                <Button
-                    variant="outline"
-                    className={getBemClasses(styles, 'addSpaceButton')}
+                <Dropdown
+                    menu={{ items: buttonMenu }}
+                    placement="bottom"
                 >
-                    <PeopleAdd className={getBemClasses(styles, 'addSpaceButtonIcon')} />
-                    Присоединиться или создать команду
-                </Button>
+                    <Button
+                        variant="outline"
+                        className={getBemClasses(styles, 'addSpaceButton')}
+                    >
+                        <PeopleAdd className={getBemClasses(styles, 'addSpaceButtonIcon')} />
+                        Присоединиться или создать команду
+                    </Button>
+                </Dropdown>
+
             </FlexContainer>
 
             <div className={getBemClasses(styles, 'spaces')}>

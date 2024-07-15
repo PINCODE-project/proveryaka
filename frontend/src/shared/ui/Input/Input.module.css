@@ -3,8 +3,8 @@
     width: 100%;
     padding: 8px 12px;
     resize: none;
-    border: none;
-    border-bottom: 2px solid transparent;
+    border: 1px solid var(--default-border);
+    border-bottom: 2px solid var(--default-border);
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
     border-radius: var(--border-radius-m);
     outline: none;
@@ -13,15 +13,15 @@
 }
 
 .Input_invalid {
-    border-color: var(--red-forefround);
+    border-bottom-color: var(--red-forefround);
 }
 
 .Input:hover {
-    border-color: var(--default-forefround-2);
+    border-bottom-color: var(--default-forefround-2);
 }
 
 .Input:focus {
-    border-color: var(--brand-forefround);
+    border-bottom-color: var(--brand-forefround);
 }
 
 .Input:disabled {

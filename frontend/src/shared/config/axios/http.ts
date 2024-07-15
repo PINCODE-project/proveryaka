@@ -2,7 +2,6 @@ import axios from 'axios';
 
 import { addTokenInterceptor } from '@shared/config/axios/interseptors/addTokenInterceptor';
 import { refreshSecretInterceptor } from '@shared/config/axios/interseptors/refreshTokenInterceptor';
-import { TokenService } from '@shared/lib';
 
 const BASE_API_URL = 'https://pincode-dev.ru/proverayka/';
 
@@ -10,6 +9,7 @@ export const estimateHttp = axios.create({
     baseURL: `${BASE_API_URL}estimate-api/api/v1/public`,
     headers: {
         Accept: 'text/plain',
+        'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json; charset=utf-8',
     },
 });
@@ -24,6 +24,7 @@ export const solutionHttp = axios.create({
     baseURL: `${BASE_API_URL}solution-api/api/v1/public`,
     headers: {
         Accept: 'text/plain',
+        'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json; charset=utf-8',
     },
 });
@@ -38,6 +39,7 @@ export const ssoHttp = axios.create({
     baseURL: `${BASE_API_URL}sso`,
     headers: {
         Accept: 'text/plain',
+        'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json; charset=utf-8',
     },
 });

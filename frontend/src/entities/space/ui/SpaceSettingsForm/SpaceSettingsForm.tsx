@@ -6,7 +6,16 @@ import { SpaceAccessType } from '@entities/space/model/SpaceAccessType';
 
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { Button, FileInput, FileInputImage, FlexContainer, FormField, imageAcceptTypes, Input } from '@shared/ui';
+import {
+    Button,
+    FileInput,
+    FileInputImage,
+    FlexContainer,
+    FormField,
+    imageAcceptTypes,
+    Input,
+    Textarea,
+} from '@shared/ui';
 
 import styles from './SpaceSettingsForm.module.css';
 import { SpaceSettings } from '../../model/SpaceSettings';
@@ -45,12 +54,17 @@ export const SpaceSettingsForm: FC<Props> = typedMemo(function SpaceSettingsForm
         <Formik initialValues={form ?? initialValue} onSubmit={onSubmit} validationSchema={validationSchema}>
             {() => (
                 <Form className={getBemClasses(styles)}>
-                    <FlexContainer direction="row" gap="m" alignItems="center">
+                    <FlexContainer direction="row" gap="m" alignItems="center"
+                        overflow="nowrap"
+                    >
                         <FormField<File | null>
                             name="iconFile"
+                            className={getBemClasses(styles, 'fileInputField')}
                             content={
                                 ({ onChange }) => (
                                     <FileInput
+                                        className={getBemClasses(styles, 'fileInput')}
+                                        placeholder={'Иконка'}
                                         fileUrl={fileUrl}
                                         onChangeFile={file => {
                                             onChange(file);
@@ -66,9 +80,11 @@ export const SpaceSettingsForm: FC<Props> = typedMemo(function SpaceSettingsForm
                         <FormField<string>
                             name="name"
                             label="Название"
+                            className={getBemClasses(styles, 'nameInputField')}
                             content={
                                 ({ onChange, value }) => (
                                     <Input
+                                        className={getBemClasses(styles, 'nameInput')}
                                         value={value}
                                         onChange={event => onChange(event.target.value)}
                                         onBlur={event => onChange(event.target.value.trim())}
@@ -82,7 +98,7 @@ export const SpaceSettingsForm: FC<Props> = typedMemo(function SpaceSettingsForm
                         label="Описание"
                         content={
                             ({ onChange, value }) => (
-                                <Input
+                                <Textarea
                                     value={value}
                                     onChange={event => onChange(event.target.value)}
                                     onBlur={event => onChange(event.target.value.trim())}
@@ -104,7 +120,7 @@ export const SpaceSettingsForm: FC<Props> = typedMemo(function SpaceSettingsForm
                         }
                     />
 
-                    <Button type="submit">
+                    <Button type="submit" className={getBemClasses(styles, 'submitButton')}>
                         {submitText}
                     </Button>
                 </Form>

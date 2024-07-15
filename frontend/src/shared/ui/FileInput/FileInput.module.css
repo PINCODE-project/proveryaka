@@ -4,10 +4,10 @@
 }
 
 .FileInput_empty {
-    border: 1px dashed var(--border-on-surface-color);
+    border: 1px dashed var(--default-border);
     border-radius: var(--border-radius-m);
     padding: 12px 20px;
-    color: var(--secondary-text-color);
+    color: var(--default-forefround-3);
     position: relative;
     cursor: pointer;
     max-width: 400px;
@@ -16,13 +16,13 @@
 .FileInput_empty:hover,
 .FileInput_empty:focus,
 .FileInput_isDragging {
-    border-color: var(--primary-color);
-    color: var(--primary-color);
+    border-color: var(--brand-background);
+    color: var(--brand-background);
 }
 
 .FileInput_empty.FileInput_invalid {
-    border-color: var(--danger-color);
-    color: var(--danger-color);
+    border-color: var(--red-forefround);
+    color: var(--red-forefround);
 }
 
 .FileInput_empty.FileInput_disabled {
