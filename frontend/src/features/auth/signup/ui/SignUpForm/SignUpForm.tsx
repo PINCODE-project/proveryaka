@@ -9,7 +9,7 @@ import { AuthRouter } from '@pages/auth';
 
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { Button, FlexContainer, FormField, Link, Text } from '@shared/ui';
+import { Button, FlexContainer, FormField, Link, PasswordInput, Text } from '@shared/ui';
 
 import styles from './SignUpForm.module.css';
 import { useSignUp } from '../../lib/useSignUp';
@@ -86,6 +86,7 @@ export const SignUpForm: FC<Props> = typedMemo(function SignInForm({
                                     <Input
                                         value={value}
                                         onChange={event => onChange(event.target.value)}
+                                        onBlur={event => onChange(event.target.value.trim())}
                                     />
                                 )
                             }
@@ -98,6 +99,7 @@ export const SignUpForm: FC<Props> = typedMemo(function SignInForm({
                                     <Input
                                         value={value}
                                         onChange={event => onChange(event.target.value)}
+                                        onBlur={event => onChange(event.target.value.trim())}
                                     />
                                 )
                             }
@@ -113,6 +115,7 @@ export const SignUpForm: FC<Props> = typedMemo(function SignInForm({
                                     <Input
                                         value={value}
                                         onChange={event => onChange(event.target.value)}
+                                        onBlur={event => onChange(event.target.value.trim())}
                                     />
                                 )
                             }
@@ -125,6 +128,7 @@ export const SignUpForm: FC<Props> = typedMemo(function SignInForm({
                                     <Input
                                         value={value}
                                         onChange={event => onChange(event.target.value)}
+                                        onBlur={event => onChange(event.target.value.trim())}
                                     />
                                 )
                             }
@@ -137,9 +141,10 @@ export const SignUpForm: FC<Props> = typedMemo(function SignInForm({
                             label="Пароль"
                             content={
                                 ({ onChange, value }) => (
-                                    <Input
+                                    <PasswordInput
                                         value={value}
                                         onChange={event => onChange(event.target.value)}
+                                        onBlur={event => onChange(event.target.value.trim())}
                                     />
                                 )
                             }
@@ -149,9 +154,10 @@ export const SignUpForm: FC<Props> = typedMemo(function SignInForm({
                             label="Повторите пароль"
                             content={
                                 ({ onChange, value }) => (
-                                    <Input
+                                    <PasswordInput
                                         value={value}
                                         onChange={event => onChange(event.target.value)}
+                                        onBlur={event => onChange(event.target.value.trim())}
                                     />
                                 )
                             }

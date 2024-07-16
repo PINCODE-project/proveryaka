@@ -1,6 +1,8 @@
-import { Input } from 'antd';
+import { Input, notification } from 'antd';
+import { isAxiosError } from 'axios';
 import { Form, Formik } from 'formik';
 import { FC } from 'react';
+import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 
 import { useAuthContext } from '@app/providers/AuthProvider';
@@ -9,7 +11,7 @@ import { AuthRouter } from '@pages/auth';
 
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { Button, FlexContainer, FormField, Link, Text } from '@shared/ui';
+import { Button, FlexContainer, FormField, Link, PasswordInput, Text } from '@shared/ui';
 
 import styles from './SignInForm.module.css';
 import { useSignIn } from '../../lib/useSignIn';
@@ -31,10 +33,21 @@ export const SignInForm: FC<Props> = typedMemo(function SignInForm({
     className,
     'data-testid': dataTestId = 'SignInForm',
 }) {
+    const [api, contextHolder] = notification.useNotification();
+
     const { login } = useAuthContext();
     const { mutate: signIn } = useSignIn({
         onSuccess: token => {
             login(token);
+        },
+        onError: error => {
+            if (!isAxiosError(error)) {
+                return;
+            }
+            const data = error.response?.data as {error_description: string} ?? { error_description: '' };
+            if (data.error_description === 'invalid_username_or_password') {
+                toast.error('Неверный пароль или почта');
+            }
         },
     });
 
@@ -73,7 +86,7 @@ export const SignInForm: FC<Props> = typedMemo(function SignInForm({
                             label="Пароль"
                             content={
                                 ({ onChange, value }) => (
-                                    <Input
+                                    <PasswordInput
                                         type="password"
                                         value={value}
                                         onChange={event => onChange(event.target.value)}
