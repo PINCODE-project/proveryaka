@@ -1,8 +1,9 @@
 import { Form, Formik } from 'formik';
-import { FC, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 import * as Yup from 'yup';
 
 import { SpaceAccessType } from '@entities/space/model/SpaceAccessType';
+import { useGetCurrentUserInfo } from '@entities/user';
 
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
@@ -44,11 +45,22 @@ const validationSchema = Yup.object({
 export const SpaceSettingsForm: FC<Props> = typedMemo(function SpaceSettingsForm({
     className,
     form,
-    onSubmit,
+    onSubmit: onSubmitProps,
     submitText,
     'data-testid': dataTestId = 'SpaceSettingsForm',
 }) {
+    const { data: currentUser } = useGetCurrentUserInfo();
     const [fileUrl, setFileUrl] = useState<string | null>(form?.icon ?? null);
+
+    const onSubmit = useCallback((form: SpaceSettings) => {
+        const organizedId = form.organizerId ?? [];
+        const data = {
+            ...form,
+            organizerId: organizedId.includes(currentUser!.id ?? '') ? organizedId : organizedId.concat([currentUser!.id ?? '']),
+        };
+
+        onSubmitProps(data);
+    }, [currentUser]);
 
     return (
         <Formik initialValues={form ?? initialValue} onSubmit={onSubmit} validationSchema={validationSchema}>
