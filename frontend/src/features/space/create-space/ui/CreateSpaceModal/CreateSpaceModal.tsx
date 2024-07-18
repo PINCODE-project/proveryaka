@@ -23,7 +23,6 @@ export const CreateSpaceModal: FC<Props> = typedMemo(function CreateSpaceModal({
     'data-testid': dataTestId = 'CreateSpaceModal',
 }) {
     const [isOpen, setIsOpen] = useState(false);
-    const toggleIsOpen = useCallback(() => setIsOpen(isOpen => !isOpen), []);
 
     const queryClient = useQueryClient();
     const { mutate: create } = useCreateSpace({
@@ -32,7 +31,7 @@ export const CreateSpaceModal: FC<Props> = typedMemo(function CreateSpaceModal({
             setIsOpen(false);
         },
     });
-    console.log(isOpen);
+
     return (
         <>
             {triggerElement(() => setIsOpen(true))}

@@ -1,9 +1,10 @@
-import { RedirectToTasks } from '@pages/spaces/components/RedirectToTasks';
-import { SpacePage } from '@pages/spaces/SpacePage';
-import { SpaceTasksPage } from '@pages/spaces/SpacePage/subpages/SpaceTasksPage/SpaceTasksPage';
-import { SpacesPage } from '@pages/spaces/SpacesPage';
-
 import { ConfigRouteProps } from '@shared/types';
+
+import { RedirectToTasks } from './components/RedirectToTasks';
+import { SpacePage } from './SpacePage';
+import { SpaceTasksPage } from './SpacePage/subpages/SpaceTasksPage/SpaceTasksPage';
+import { SpaceUsersPage } from './SpacePage/subpages/SpaceUsersPage/SpaceUsersPage';
+import { SpacesPage } from './SpacesPage';
 
 export const SpaceRouter = {
     Main: '/spaces',
@@ -73,7 +74,7 @@ export const spacesRouteConfig: ConfigRouteProps[] = [
             },
             {
                 path: SpaceRouter.Users(':spaceId'),
-                element: null,
+                element: <SpaceUsersPage />,
             },
         ],
     },

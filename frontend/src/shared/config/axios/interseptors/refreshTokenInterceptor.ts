@@ -10,10 +10,8 @@ export type RefreshResult = Promise<AxiosResponse<unknown, unknown>>;
  * @param refreshCallback Коллбек для повтора запроса
  */
 export function refreshSecretInterceptor(error: AxiosError)/*: RefreshResult */ {
-    if (
-        error.config == null ||
-		(error.response != null && error.response.status !== 401)
-    ) {
+    console.log(error);
+    if (error.code !== 'ERR_NETWORK') {
         throw error;
     }
 

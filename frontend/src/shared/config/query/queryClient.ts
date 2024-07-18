@@ -8,9 +8,7 @@ export const getQueryClient = (logout: () => void) => new QueryClient({
             suspense: true,
             useErrorBoundary: true,
             onError: error => {
-                // @ts-ignore Так надо
-                console.log(error);
-                if (isAxiosError(error) && error.response?.status === 401) {
+                if (isAxiosError(error) && error.code === 'ERR_NETWORK') {
                     logout();
                 }
             },
@@ -18,8 +16,7 @@ export const getQueryClient = (logout: () => void) => new QueryClient({
         },
         mutations: {
             onError: error => {
-                console.log(error);
-                if (isAxiosError(error) && error.response?.status === 401) {
+                if (isAxiosError(error) && error.code === 'ERR_NETWORK') {
                     logout();
                 }
             },

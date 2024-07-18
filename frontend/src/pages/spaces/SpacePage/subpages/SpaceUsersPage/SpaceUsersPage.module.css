@@ -1,0 +1,22 @@
+.SpaceUsersPage {
+    background-color: var(--default-background-2);
+    height: 100%;
+}
+
+.SpaceUsersPage__header,
+.SpaceUsersPage__tasks {
+    padding: var(--space-l);
+    width: 100%;
+}
+
+.SpaceUsersPage__task {
+    flex: 1;
+}
+
+.SpaceUsersPage__collapse {
+    width: 100%;
+}
+
+.SpaceUsersPage__collapseLabel {
+    font-weight: var(--font-weight-semibold);
+}
