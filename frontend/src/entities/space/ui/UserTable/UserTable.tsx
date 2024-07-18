@@ -1,10 +1,12 @@
 import { Dropdown, MenuProps, Table, TableProps } from 'antd';
 import { FC } from 'react';
 
+import { ChangeSpaceUserRole } from '@features/space/edit-space/sub-features/change-user-role';
+
 import ThreeDots from '@shared/assets/icons/ThreeDots.svg';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps } from '@shared/types';
-import { Image } from '@shared/ui';
+import { Image, Text } from '@shared/ui';
 
 import styles from './UserTable.module.css';
 
@@ -13,7 +15,12 @@ export type Props = ClassNameProps & Readonly<{}>;
 const items: MenuProps['items'] = [
     {
         key: '1',
-        label: 'Изменить роль',
+        label: <ChangeSpaceUserRole
+            triggerComponent={open => (<Text onClick={open}>
+                Изменить роль
+            </Text>)}
+            username={'User Name'}
+        />,
     },
     {
         key: '2',
