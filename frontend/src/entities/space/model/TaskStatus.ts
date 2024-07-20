@@ -1,5 +1,6 @@
 export enum TaskStatus {
     InWork = 0,
-    Overdue = 1,
-    Done = 2,
+    OnGrade = 1,
+    OverdueGrade = 2,
+    Done = 3,
 }

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 
 import { TaskStatus } from '@entities/space';
 
@@ -39,6 +39,41 @@ export const TaskCard: FC<Props> = typedMemo(function TaskCard({
     mark,
     'data-testid': dataTestId = 'TaskCard',
 }) {
+    const statusComponent = useMemo(() => {
+        switch (status) {
+            case TaskStatus.InWork:
+                return (
+                    <Text className={getBemClasses(styles, 'statusText')}>
+                        Сдать до: 00.00.00
+                    </Text>
+                );
+            case TaskStatus.OnGrade:
+                return (
+                    <Text className={getBemClasses(styles, 'statusText')}>
+                        Оценить до: 00.00.00
+                    </Text>
+                );
+            case TaskStatus.OverdueGrade:
+                return (
+                    <>
+                        <SubtractCircle className={getBemClasses(styles, 'statusIcon')} />
+                        <Text className={getBemClasses(styles, 'statusText')}>Не сдано</Text>
+                    </>
+                );
+            case TaskStatus.Done:
+                return (
+                    mark !== undefined
+                        ? <Text className={getBemClasses(styles, 'statusText')}>
+                            Количество баллов: 100/100
+                        </Text>
+                        : <>
+                            <Checkmark className={getBemClasses(styles, 'statusIcon')} />
+                            <Text className={getBemClasses(styles, 'statusText')}>Сдано</Text>
+                        </>
+                );
+        }
+    }, [status]);
+
     return (
         <FlexContainer
             direction="row"
@@ -141,26 +176,9 @@ export const TaskCard: FC<Props> = typedMemo(function TaskCard({
                     alignItems="center"
                     className={getBemClasses(styles, 'status', { status })}
                 >
-                    {status === TaskStatus.InWork
-                        ? <Text className={getBemClasses(styles, 'statusText')}>
-                            Сдать до: 00.00.00
-                        </Text>
-                        : status === TaskStatus.Overdue
-                            ? <>
-                                <SubtractCircle className={getBemClasses(styles, 'statusIcon')} />
-                                <Text className={getBemClasses(styles, 'statusText')}>Не сдано</Text>
-                            </>
-                            : mark !== undefined
-                                ? <Text className={getBemClasses(styles, 'statusText')}>
-                                    Количество баллов: 100/100
-                                </Text>
-                                : <>
-                                    <Checkmark className={getBemClasses(styles, 'statusIcon')} />
-                                    <Text className={getBemClasses(styles, 'statusText')}>Сдано</Text>
-                                </>}
+                    {statusComponent}
                 </FlexContainer>
             </FlexContainer>
-
         </FlexContainer>
     );
 });

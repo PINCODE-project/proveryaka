@@ -40,7 +40,7 @@
     border-radius: var(--border-radius-s);
 }
 
-.TaskCard__status_status_1 {
+.TaskCard__status_status_2 {
     background-color: var(--default-background-2);
 }
 
@@ -49,18 +49,18 @@
     height: var(--icon-size-s);
 }
 
-.TaskCard__status_status_1 .TaskCard__statusIcon {
+.TaskCard__status_status_2 .TaskCard__statusIcon {
     fill: var(--default-forefround-2);
 }
 
-.TaskCard__status_status_2 {
+.TaskCard__status_status_3 {
     background-color: var(--green-background-1);
 }
 
-.TaskCard__status_status_2 .TaskCard__statusIcon {
+.TaskCard__status_status_3 .TaskCard__statusIcon {
     fill: var(--green-forefround);
 }
 
-.TaskCard__status_status_2 .TaskCard__statusText {
+.TaskCard__status_status_3 .TaskCard__statusText {
     color: var(--green-forefround);
 }

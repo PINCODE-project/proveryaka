@@ -41,17 +41,22 @@ export const SpaceTasksPage: FC<Props> = typedMemo(function SpaceTasksPage({
                 >
                     <NavTab
                         isActive={status === TaskStatus.InWork}
-                        name="Предстоящие"
+                        name="К выполнению"
                         onClick={() => setStatus(TaskStatus.InWork)}
                     />
                     <NavTab
-                        isActive={status === TaskStatus.Overdue}
-                        name="Просроченные"
-                        onClick={() => setStatus(TaskStatus.Overdue)}
+                        isActive={status === TaskStatus.OnGrade}
+                        name="На проверке"
+                        onClick={() => setStatus(TaskStatus.OnGrade)}
+                    />
+                    <NavTab
+                        isActive={status === TaskStatus.OverdueGrade}
+                        name="Просрочена проверка"
+                        onClick={() => setStatus(TaskStatus.OverdueGrade)}
                     />
                     <NavTab
                         isActive={status === TaskStatus.Done}
-                        name="Выполненные"
+                        name="Завершенные"
                         onClick={() => setStatus(TaskStatus.Done)}
                     />
                 </FlexContainer>
@@ -82,7 +87,13 @@ export const SpaceTasksPage: FC<Props> = typedMemo(function SpaceTasksPage({
                     showSpaceName={false}
                 />
                 <TaskCard
-                    status={TaskStatus.Overdue}
+                    status={TaskStatus.OnGrade}
+                    className={getBemClasses(styles, 'task')}
+                    showOverdueDeadline={false}
+                    showSpaceName={false}
+                />
+                <TaskCard
+                    status={TaskStatus.OverdueGrade}
                     className={getBemClasses(styles, 'task')}
                     showOverdueDeadline={false}
                     showSpaceName={false}

@@ -3,8 +3,10 @@ import { type FC, useCallback, useState } from 'react';
 
 import { PageComponent } from '@widgets/PageComponent';
 
+import { CopySpaceCode } from '@features/space/copy-space-code';
 import { CreateSpaceModal } from '@features/space/create-space';
 import { EditSpaceModal } from '@features/space/edit-space';
+import { RegenerateSpaceCodeButton } from '@features/space/regenerate-space-code';
 
 import { GetSpaceFilters, SpaceCard, useGetSpaces } from '@entities/space';
 
@@ -83,19 +85,23 @@ export const SpacesPage: FC<Props> = typedMemo(({
                             space={space}
                             key={space.id}
                             actions={
-                                <EditSpaceModal
-                                    triggerElement={open => (
-                                        <Button
-                                            onClick={open}
-                                            variant="ghost"
-                                            size="small"
-                                            className={getBemClasses(styles, 'settingsActionButton')}
-                                        >
+                                <>
+                                    <EditSpaceModal
+                                        triggerElement={open => (
+                                            <Button
+                                                onClick={open}
+                                                variant="ghost"
+                                                size="small"
+                                                className={getBemClasses(styles, 'settingsActionButton')}
+                                            >
                                             Управление командой
-                                        </Button>
-                                    )}
-                                    spaceId={space.id}
-                                />
+                                            </Button>
+                                        )}
+                                        spaceId={space.id}
+                                    />
+                                    {space.inviteCode ? <CopySpaceCode inviteCode={space.inviteCode} /> : null}
+                                    <RegenerateSpaceCodeButton spaceId={space.id} />
+                                </>
                             }
                         />))
                 }

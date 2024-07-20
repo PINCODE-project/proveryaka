@@ -46,9 +46,9 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
                         onClick={() => setStatus(TaskStatus.InWork)}
                     />
                     <NavTab
-                        isActive={status === TaskStatus.Overdue}
+                        isActive={status === TaskStatus.OverdueGrade}
                         name="Просроченные"
-                        onClick={() => setStatus(TaskStatus.Overdue)}
+                        onClick={() => setStatus(TaskStatus.OverdueGrade)}
                     />
                     <NavTab
                         isActive={status === TaskStatus.Done}
