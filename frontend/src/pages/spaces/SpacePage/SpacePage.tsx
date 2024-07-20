@@ -6,8 +6,11 @@ import { SpaceRouter } from '@pages/spaces';
 
 import { PageComponent } from '@widgets/PageComponent';
 
+import { AddUserInSpaceModal } from '@features/space/add-user-in-space';
+import { copySpaceCode, CopySpaceCode } from '@features/space/copy-space-code';
 import { useDeleteSpace } from '@features/space/delete-space';
 import { EditSpaceModal } from '@features/space/edit-space';
+import { RegenerateSpaceCodeButton, useRegenerateSpaceCode } from '@features/space/regenerate-space-code';
 
 import { getSpacesQueryKey } from '@entities/space';
 import { getSpaceQueryKey } from '@entities/space/lib/getSpaceQueryKey';
@@ -18,7 +21,7 @@ import { useFileUrlById } from '@shared/hooks';
 import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { TestProps, ClassNameProps } from '@shared/types';
-import { FlexContainer, Image, Link, SettingsDropdown, Text } from '@shared/ui';
+import { Button, FlexContainer, Image, Link, SettingsDropdown, Text } from '@shared/ui';
 
 import { NavTab } from './NavTab/NavTab';
 import styles from './SpacePage.module.css';
@@ -35,6 +38,13 @@ export const SpacePage: FC<Props> = typedMemo(({
     const [iconUrl] = useFileUrlById(space!.icon);
 
     const { mutate: deleteSpace, isLoading } = useDeleteSpace({
+        onSuccess: () => {
+            queryClient.resetQueries(getSpacesQueryKey);
+            queryClient.resetQueries(getSpaceQueryKey(spaceId ?? ''));
+        },
+    });
+
+    const { mutate: regenerateCode } = useRegenerateSpaceCode({
         onSuccess: () => {
             queryClient.resetQueries(getSpacesQueryKey);
             queryClient.resetQueries(getSpaceQueryKey(spaceId ?? ''));
@@ -97,14 +107,35 @@ export const SpacePage: FC<Props> = typedMemo(({
                                 />,
                             },
                             {
-                                danger: true,
                                 key: 1,
+                                onClick: () => space.inviteCode && copySpaceCode(space.inviteCode),
+                                label: 'Скопировать код',
+                                disabled: !space.inviteCode,
+                            },
+                            {
+                                key: 2,
+                                onClick: () => regenerateCode(spaceId),
+                                label: 'Перегенерировать код',
+                            },
+                            {
+                                key: 3,
+                                label: <AddUserInSpaceModal
+                                    triggerElement={open => (<Text onClick={open}>Добавить пользователей</Text>)}
+                                    spaceId={spaceId}
+                                />,
+                            },
+                            {
+                                type: 'divider',
+                            },
+                            {
+                                danger: true,
+                                key: 4,
                                 label: 'Покинуть пространство',
                             },
                             {
                                 danger: true,
                                 disabled: isLoading,
-                                key: 2,
+                                key: 5,
                                 onClick: () => deleteSpace(spaceId),
                                 label: 'Удалить пространство',
                             },

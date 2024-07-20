@@ -25,4 +25,9 @@ export type SpaceSettings = {
      * Идентификаторы организаторов
      */
     organizerId: string[] | null;
+
+    /**
+     * Пригласительный код
+     */
+    inviteCode?: string;
 };
