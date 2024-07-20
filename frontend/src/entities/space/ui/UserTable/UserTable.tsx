@@ -1,5 +1,5 @@
 import { Dropdown, MenuProps, Table, TableProps } from 'antd';
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 
 import { ChangeSpaceUserRole } from '@features/space/edit-space/sub-features/change-user-role';
 
@@ -9,8 +9,16 @@ import { ClassNameProps } from '@shared/types';
 import { Image, Text } from '@shared/ui';
 
 import styles from './UserTable.module.css';
+import { GetExpertResponse } from '../..//model/GetExpertResponse';
+import { GetStudentResponse } from '../..//model/GetStudentResponse';
+import { GetOrganizerResponse } from '../../model/GetOrganizerResponse';
 
-export type Props = ClassNameProps & Readonly<{}>;
+export type User = GetOrganizerResponse | GetExpertResponse | GetStudentResponse;
+
+export type Props = ClassNameProps & Readonly<{
+    users: User[];
+    isStudent?: boolean;
+}>;
 
 const items: MenuProps['items'] = [
     {
@@ -28,12 +36,12 @@ const items: MenuProps['items'] = [
     },
 ];
 
-const columns: TableProps<any>['columns'] = [
+const getColumns = (isStudent: boolean): TableProps<User>['columns'] => [
     {
         title: '',
+        width: '60px',
         dataIndex: 'image',
         className: getBemClasses(styles, 'columns'),
-        key: 'image',
         render: image => (<Image
             className={getBemClasses(styles, 'avatar')}
             alt="Avatar"
@@ -45,24 +53,26 @@ const columns: TableProps<any>['columns'] = [
         title: 'ФИО',
         dataIndex: 'name',
         className: getBemClasses(styles, 'columns'),
-        key: 'name',
         render: (_, record) => `${record.surname} ${record.name} ${record.patronymic}`,
     },
     {
         title: 'Email',
         dataIndex: 'email',
         className: getBemClasses(styles, 'columns'),
-        key: 'email',
+    },
+    {
+        title: isStudent ? 'Группа' : 'Должность',
+        dataIndex: isStudent ? 'academicGroup' : 'position',
+        className: getBemClasses(styles, 'columns'),
+        key: isStudent ? 'academicGroup' : 'position',
     },
     {
         title: 'Дополнительно',
         dataIndex: 'status',
         className: getBemClasses(styles, 'columns'),
-        key: 'status',
     },
     {
         title: '',
-        key: 'action',
         className: getBemClasses(styles, 'columns'),
         render: (_, record) => (
             <Dropdown menu={{ items }}>
@@ -74,15 +84,17 @@ const columns: TableProps<any>['columns'] = [
 
 export const UserTable: FC<Props> = typedMemo(function UserTable({
     className,
+    users,
+    isStudent = false,
 }) {
+    const columns = useMemo(() => getColumns(isStudent), [isStudent]);
+
     return (
         <Table
             className={getBemClasses(styles, null, null, className)}
             pagination={false}
             columns={columns}
-            dataSource={
-                [{ name: 'Name', surname: 'Surname', patronymic: 'Patronymic', email: 'Email', status: 'Status' }]
-            }
+            dataSource={users}
         />
     );
 });

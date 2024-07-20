@@ -22,15 +22,14 @@ export const EditSpaceModal: FC<Props> = typedMemo(function EditSpaceModal({
     className,
     triggerElement,
     spaceId,
-    'data-testid': dataTestId = 'EditSpaceModal',
 }) {
     const [isOpen, setIsOpen] = useState(false);
-    const toggleIsOpen = useCallback(() => setIsOpen(isOpen => !isOpen), []);
     const { data: space } = useGetSpace(spaceId);
 
     const queryClient = useQueryClient();
     const { mutate: edit } = useEditSpace({
         onSuccess: () => {
+            setIsOpen(false);
             queryClient.resetQueries(getSpacesQueryKey);
             queryClient.resetQueries(getSpaceQueryKey(spaceId));
         },
@@ -38,11 +37,12 @@ export const EditSpaceModal: FC<Props> = typedMemo(function EditSpaceModal({
 
     return (
         <>
-            {triggerElement(toggleIsOpen)}
+            {triggerElement(() => setIsOpen(true))}
             <Modal
                 className={getBemClasses(styles, null, null, className)}
-                onClose={toggleIsOpen}
+                onCancel={() => setIsOpen(false)}
                 open={isOpen}
+                destroyOnClose
                 footer={null}
             >
                 <Text className={getBemClasses(styles, 'title')}>

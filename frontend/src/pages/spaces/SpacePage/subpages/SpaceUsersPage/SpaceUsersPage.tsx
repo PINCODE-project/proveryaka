@@ -1,45 +1,53 @@
 import type { CollapseProps } from 'antd';
 import { Collapse } from 'antd';
-import { FC, useMemo, useState } from 'react';
+import { FC, useMemo } from 'react';
 
-import { TaskCard, TaskStatus, UserTable } from '@entities/space';
+import { UserTable, useGetSpaceExperts, useGetSpaceOrganizers, useGetSpaceStudents } from '@entities/space';
 
+import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { FlexContainer, Input, NavTab, Text } from '@shared/ui';
+import { FlexContainer, Text } from '@shared/ui';
 
 import styles from './SpaceUsersPage.module.css';
-
-const getItems = (orgCount: number, expertCount: number, studentCount: number): CollapseProps['items'] => [
-    {
-        key: '1',
-        label: <Text className={getBemClasses(styles, 'collapseLabel')}>
-            Владельцы ({orgCount})
-        </Text>,
-        children: <UserTable />,
-    },
-    {
-        key: '2',
-        label: <Text className={getBemClasses(styles, 'collapseLabel')}>
-            Эксперты ({expertCount})
-        </Text>,
-        children: <UserTable />,
-    },
-    {
-        key: '3',
-        label: <Text className={getBemClasses(styles, 'collapseLabel')}>
-            Студенты ({studentCount})
-        </Text>,
-        children: <UserTable />,
-    },
-];
 
 export type Props = ClassNameProps & TestProps & Readonly<{}>;
 
 export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage({
     className,
 }) {
-    const items = useMemo(() => getItems(1, 1, 1), []);
+    const spaceId = useSpaceId();
+
+    const { data: organizers } = useGetSpaceOrganizers(spaceId ?? '');
+    const { data: experts } = useGetSpaceExperts(spaceId ?? '');
+    const { data: students } = useGetSpaceStudents(spaceId ?? '');
+
+    const items = useMemo<CollapseProps['items']>(() => [
+        {
+            key: '1',
+            label: <Text className={getBemClasses(styles, 'collapseLabel')}>
+                Владельцы ({(organizers?.organizerInfoList ?? []).length})
+            </Text>,
+            collapsible: (organizers?.organizerInfoList ?? []).length > 0 ? undefined : 'disabled',
+            children: <UserTable users={organizers?.organizerInfoList ?? []} />,
+        },
+        {
+            key: '2',
+            collapsible: (experts?.expertInfoList ?? []).length > 0 ? undefined : 'disabled',
+            label: <Text className={getBemClasses(styles, 'collapseLabel')}>
+                Эксперты ({(experts?.expertInfoList ?? []).length})
+            </Text>,
+            children: <UserTable users={experts?.expertInfoList ?? []} />,
+        },
+        {
+            key: '3',
+            collapsible: (students?.studentInfoList ?? []).length > 0 ? undefined : 'disabled',
+            label: <Text className={getBemClasses(styles, 'collapseLabel')}>
+                Студенты ({(students?.studentInfoList ?? []).length})
+            </Text>,
+            children: <UserTable users={students?.studentInfoList ?? []} isStudent={true} />,
+        },
+    ], [organizers, experts, students]);
 
     return (
         <FlexContainer

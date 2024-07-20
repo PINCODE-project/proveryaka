@@ -143,7 +143,7 @@ export const IssueForm: FC<Props> = typedMemo(function IssueForm({
                                 }
                             />
 
-                            {values.criterias.map((item, index) => (
+                            {values.criterias.map((item: unknown, index: number) => (
                                 <FlexContainer direction="row">
                                     <FlexContainer direction="column" gap="m">
                                         <FormField<string>
@@ -238,7 +238,7 @@ export const IssueForm: FC<Props> = typedMemo(function IssueForm({
                             gap="m"
                         >
                             <Text>Примеры решения</Text>
-                            {values.criterias.map((item, index) => (
+                            {values.criterias.map((item: unknown, index: number) => (
                                 <FlexContainer direction="row">
                                     <FlexContainer direction="column" gap="m">
                                         <FormField<File | null>
@@ -285,8 +285,8 @@ export const IssueForm: FC<Props> = typedMemo(function IssueForm({
                             gap="m"
                         >
                             <Text>Антипримеры решения</Text>
-                            {values.criterias.map((item, index) => (
-                                <FlexContainer direction="row">
+                            {values.criterias.map((item: unknown, index: number) => (
+                                <FlexContainer direction="row" key={index}>
                                     <FlexContainer direction="column" gap="m">
                                         <FormField<File | null>
                                             name="name"

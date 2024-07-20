@@ -4,6 +4,7 @@ import { type FC, useCallback, useState } from 'react';
 import { PageComponent } from '@widgets/PageComponent';
 
 import { CreateSpaceModal } from '@features/space/create-space';
+import { EditSpaceModal } from '@features/space/edit-space';
 
 import { GetSpaceFilters, SpaceCard, useGetSpaces } from '@entities/space';
 
@@ -82,10 +83,19 @@ export const SpacesPage: FC<Props> = typedMemo(({
                             space={space}
                             key={space.id}
                             actions={
-                                <Button variant="ghost" size="small" className={getBemClasses(styles, 'settingsActionButton')}>
-                                    <Settings className={getBemClasses(styles, 'settingsActionButtonIcon')} />
-                                    Управление командой
-                                </Button>
+                                <EditSpaceModal
+                                    triggerElement={open => (
+                                        <Button
+                                            onClick={open}
+                                            variant="ghost"
+                                            size="small"
+                                            className={getBemClasses(styles, 'settingsActionButton')}
+                                        >
+                                            Управление командой
+                                        </Button>
+                                    )}
+                                    spaceId={space.id}
+                                />
                             }
                         />))
                 }

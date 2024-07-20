@@ -1,6 +1,7 @@
 .Text {
     margin: 0;
     font: var(--font-default);
+    color: var(--default-forefround);
 }
 
 .Text_nowrap {

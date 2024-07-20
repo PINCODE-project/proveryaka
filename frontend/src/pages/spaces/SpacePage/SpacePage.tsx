@@ -1,13 +1,20 @@
 import { FC } from 'react';
+import { useQueryClient } from 'react-query';
 import { Outlet, Navigate } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/spaces';
 
 import { PageComponent } from '@widgets/PageComponent';
 
+import { useDeleteSpace } from '@features/space/delete-space';
 import { EditSpaceModal } from '@features/space/edit-space';
 
+import { getSpacesQueryKey } from '@entities/space';
+import { getSpaceQueryKey } from '@entities/space/lib/getSpaceQueryKey';
+import { useGetSpace } from '@entities/space/lib/useGetSpace';
+
 import ChevronLeft from '@shared/assets/icons/ChevronLeft.svg';
+import { useFileUrlById } from '@shared/hooks';
 import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { TestProps, ClassNameProps } from '@shared/types';
@@ -22,10 +29,23 @@ export const SpacePage: FC<Props> = typedMemo(({
     className,
     'data-testid': dataTestId = 'SpacePage',
 }: Props) => {
+    const queryClient = useQueryClient();
     const spaceId = useSpaceId();
+    const { data: space, error } = useGetSpace(spaceId ?? '');
+    const [iconUrl] = useFileUrlById(space!.icon);
+
+    const { mutate: deleteSpace, isLoading } = useDeleteSpace({
+        onSuccess: () => {
+            queryClient.resetQueries(getSpacesQueryKey);
+            queryClient.resetQueries(getSpaceQueryKey(spaceId ?? ''));
+        },
+    });
 
     if (spaceId === undefined) {
         return <Navigate to={SpaceRouter.Main} />;
+    }
+    if (!space) {
+        return null;
     }
     return (
         <PageComponent
@@ -51,18 +71,19 @@ export const SpacePage: FC<Props> = typedMemo(({
 
                     <FlexContainer direction="row" alignItems="center" gap="s">
                         <Image
+                            src={iconUrl}
                             alt="space avatar"
                             placeholderSrc={'https://masterpiecer-images.s3.yandex.net/4b4e8fbd579411ee8d01e6d39d9a42a4:upscaled'}
                             className={getBemClasses(styles, 'avatar')}
                         />
                         <Text className={getBemClasses(styles, 'name')}>
-                        Name
+                            {space.name}
                         </Text>
                     </FlexContainer>
 
-                    <NavTab to={SpaceRouter.Tasks(0)} name="Задания" />
-                    <NavTab to={SpaceRouter.Works(0, 0)} name="Работы" />
-                    <NavTab to={SpaceRouter.Users(0)} name="Участники" />
+                    <NavTab to={SpaceRouter.Tasks(spaceId)} name="Задания" />
+                    <NavTab to={SpaceRouter.Works(spaceId)} name="Работы" />
+                    <NavTab to={SpaceRouter.Users(spaceId)} name="Участники" />
                 </FlexContainer>
 
                 <SettingsDropdown
@@ -72,15 +93,19 @@ export const SpacePage: FC<Props> = typedMemo(({
                                 key: 0,
                                 label: <EditSpaceModal
                                     triggerElement={open => <Text onClick={open}>Управление командой</Text>}
-                                    spaceId={''}
+                                    spaceId={spaceId}
                                 />,
                             },
                             {
+                                danger: true,
                                 key: 1,
                                 label: 'Покинуть пространство',
                             },
                             {
+                                danger: true,
+                                disabled: isLoading,
                                 key: 2,
+                                onClick: () => deleteSpace(spaceId),
                                 label: 'Удалить пространство',
                             },
                         ],

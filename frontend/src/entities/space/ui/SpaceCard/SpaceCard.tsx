@@ -1,10 +1,12 @@
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/spaces';
 
+import { getFile } from '@shared/api';
 import ThreeDots from '@shared/assets/icons/ThreeDots.svg';
-import { getBemClasses, typedMemo } from '@shared/lib';
+import { useFileUrlById } from '@shared/hooks';
+import { getBemClasses, getFileUrl, typedMemo } from '@shared/lib';
 import { TestProps, ClassNameProps } from '@shared/types';
 import { DropDown, FlexContainer, Image, Text } from '@shared/ui';
 
@@ -22,8 +24,10 @@ export const SpaceCard: FC<Props> = typedMemo(({
     className,
     'data-testid': dataTestId = 'SpaceCard',
 }: Props) => {
+    const [iconUrl] = useFileUrlById(space.icon);
+
     return (
-        <Link to={SpaceRouter.Tasks(0)}>
+        <Link to={SpaceRouter.Tasks(space.id)}>
             <FlexContainer
                 direction="column"
                 overflow="nowrap"
@@ -33,7 +37,7 @@ export const SpaceCard: FC<Props> = typedMemo(({
             >
                 <Image
                     alt="space avatar"
-                    src={space.icon}
+                    src={iconUrl}
                     placeholderSrc={'https://masterpiecer-images.s3.yandex.net/4b4e8fbd579411ee8d01e6d39d9a42a4:upscaled'}
                     className={getBemClasses(styles, 'avatar')}
                 />

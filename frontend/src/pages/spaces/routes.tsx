@@ -19,7 +19,7 @@ export const SpaceRouter = {
     EditTask: (spaceId: number | string, taskId: number | string) => `/spaces/${spaceId}/tasks/${taskId}/edit`,
     TaskWork: (spaceId: number | string, taskId: number | string, workId: number | string) => `/spaces/${spaceId}/tasks/${taskId}/works/${workId}`,
     EstimateTaskWork: (spaceId: number | string, taskId: number | string, workId: number | string) => `/spaces/${spaceId}/tasks/${taskId}/works/${workId}/estimate`,
-    Works: (spaceId: number | string, taskId: number | string) => `/spaces/${spaceId}/tasks/${taskId}/works`,
+    Works: (spaceId: number | string) => `/spaces/${spaceId}/works`,
     Appeal: (spaceId: number | string, appealId: number | string) => `/spaces/${spaceId}/appeals/${appealId}`,
     EstimateAppeal: (spaceId: number | string, appealId: number | string) => `/spaces/${spaceId}/appeals/${appealId}/estimate`,
     Users: (spaceId: number | string) => `/spaces/${spaceId}/users`,
@@ -69,7 +69,7 @@ export const spacesRouteConfig: ConfigRouteProps[] = [
                 element: null,
             },
             {
-                path: SpaceRouter.Works(':spaceId', ':taskId'),
+                path: SpaceRouter.Works(':spaceId'),
                 element: <SpaceSolutionsPage />,
             },
             {

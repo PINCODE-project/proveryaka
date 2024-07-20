@@ -32,22 +32,18 @@ const initialValue: SpaceSettings = {
     description: '',
     icon: '',
     accessType: SpaceAccessType.Private,
-    inviteCode: '',
     organizerId: [],
 };
 
 const validationSchema = Yup.object({
     name: Yup.string().required('Введите название'),
     description: Yup.string().required('Введите описание'),
-    inviteCode: Yup.string().required('Введите пригласительный код'),
 });
 
 export const SpaceSettingsForm: FC<Props> = typedMemo(function SpaceSettingsForm({
-    className,
     form,
     onSubmit: onSubmitProps,
     submitText,
-    'data-testid': dataTestId = 'SpaceSettingsForm',
 }) {
     const { data: currentUser } = useGetCurrentUserInfo();
     const [fileUrl, setFileUrl] = useState<string | null>(form?.icon ?? null);
@@ -60,11 +56,11 @@ export const SpaceSettingsForm: FC<Props> = typedMemo(function SpaceSettingsForm
         };
 
         onSubmitProps(data);
-    }, [currentUser]);
+    }, [currentUser, onSubmitProps]);
 
     return (
         <Formik initialValues={form ?? initialValue} onSubmit={onSubmit} validationSchema={validationSchema}>
-            {() => (
+            {({ handleSubmit }) => (
                 <Form className={getBemClasses(styles)}>
                     <FlexContainer direction="row" gap="m" alignItems="center"
                         overflow="nowrap"
@@ -118,21 +114,11 @@ export const SpaceSettingsForm: FC<Props> = typedMemo(function SpaceSettingsForm
                             )
                         }
                     />
-                    <FormField<string>
-                        name="inviteCode"
-                        label="Пригласительный код"
-                        content={
-                            ({ onChange, value }) => (
-                                <Input
-                                    value={value}
-                                    onChange={event => onChange(event.target.value)}
-                                    onBlur={event => onChange(event.target.value.trim())}
-                                />
-                            )
-                        }
-                    />
 
-                    <Button type="submit" className={getBemClasses(styles, 'submitButton')}>
+                    <Button
+                        onClick={() => handleSubmit()}
+                        className={getBemClasses(styles, 'submitButton')}
+                    >
                         {submitText}
                     </Button>
                 </Form>

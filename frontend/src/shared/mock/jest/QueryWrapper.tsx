@@ -9,7 +9,7 @@ import { getQueryClient } from '@shared/config/query';
  */
 export const QueryWrapper = (component: React.JSX.Element) => {
     return (
-        <QueryClientProvider client={getQueryClient(() => {})}>
+        <QueryClientProvider client={getQueryClient(() => {}, () => {})}>
             {component}
         </QueryClientProvider>
     );
