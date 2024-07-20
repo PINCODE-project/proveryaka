@@ -19,7 +19,7 @@ export const NavTab: FC<Props> = typedMemo(({
     'data-testid': dataTestId = 'NavTab',
 }: Props) => {
     return (
-        <NavLink to={to} className={getBemClasses(styles, null, null, className)}>
+        <NavLink to={to} className={getBemClasses(styles, null, null, className)} end>
             {({ isActive }) => (
                 <FlexContainer
                     direction="column"

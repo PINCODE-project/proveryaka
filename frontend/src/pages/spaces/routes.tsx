@@ -1,3 +1,5 @@
+import { SpaceTaskPage } from '@pages/spaces/SpacePage/subpages/SpaceTaskPage';
+
 import { ConfigRouteProps } from '@shared/types';
 
 import { RedirectToTasks } from './components/RedirectToTasks';
@@ -15,7 +17,7 @@ export const SpaceRouter = {
     EditTask: (spaceId: number | string, taskId: number | string) => `/spaces/${spaceId}/tasks/${taskId}/edit`,
     TaskWork: (spaceId: number | string, taskId: number | string, workId: number | string) => `/spaces/${spaceId}/tasks/${taskId}/works/${workId}`,
     EstimateTaskWork: (spaceId: number | string, taskId: number | string, workId: number | string) => `/spaces/${spaceId}/tasks/${taskId}/works/${workId}/estimate`,
-    Appeals: (spaceId: number | string) => `/spaces/${spaceId}/appeals`,
+    Works: (spaceId: number | string) => `/spaces/${spaceId}/works`,
     Appeal: (spaceId: number | string, appealId: number | string) => `/spaces/${spaceId}/appeals/${appealId}`,
     EstimateAppeal: (spaceId: number | string, appealId: number | string) => `/spaces/${spaceId}/appeals/${appealId}/estimate`,
     Users: (spaceId: number | string) => `/spaces/${spaceId}/users`,
@@ -50,7 +52,7 @@ export const spacesRouteConfig: ConfigRouteProps[] = [
             },
             {
                 path: SpaceRouter.Task(':spaceId', ':taskId'),
-                element: null,
+                element: <SpaceTaskPage />,
             },
             {
                 path: SpaceRouter.Tasks(':spaceId'),
@@ -65,7 +67,7 @@ export const spacesRouteConfig: ConfigRouteProps[] = [
                 element: null,
             },
             {
-                path: SpaceRouter.Appeals(':spaceId'),
+                path: SpaceRouter.Works(':spaceId'),
                 element: null,
             },
             {

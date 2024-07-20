@@ -24,6 +24,7 @@
     outline: 1px solid transparent;
     outline-offset: -2px;
     box-sizing: border-box;
+    min-height: 83px;
 }
 
 .Textarea__label:has( > .Textarea__actions) .Textarea {

@@ -22,3 +22,4 @@ export * from './Link';
 export * from './NavTab';
 export * from './SettingsDropdown';
 export * from './PasswordInput';
+export * from './SolutionExample';

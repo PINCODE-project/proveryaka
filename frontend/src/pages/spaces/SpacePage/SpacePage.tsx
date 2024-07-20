@@ -1,16 +1,17 @@
 import { FC } from 'react';
-import { Outlet, Navigate, useLocation } from 'react-router-dom';
+import { Outlet, Navigate } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/spaces';
 
 import { PageComponent } from '@widgets/PageComponent';
 
+import { EditSpaceModal } from '@features/space/edit-space';
+
 import ChevronLeft from '@shared/assets/icons/ChevronLeft.svg';
-import Settings from '@shared/assets/icons/Settings.svg';
 import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { TestProps, ClassNameProps } from '@shared/types';
-import { Button, FlexContainer, Image, Link, SettingsDropdown, Text } from '@shared/ui';
+import { FlexContainer, Image, Link, SettingsDropdown, Text } from '@shared/ui';
 
 import { NavTab } from './NavTab/NavTab';
 import styles from './SpacePage.module.css';
@@ -60,6 +61,7 @@ export const SpacePage: FC<Props> = typedMemo(({
                     </FlexContainer>
 
                     <NavTab to={SpaceRouter.Tasks(0)} name="Задания" />
+                    <NavTab to={SpaceRouter.Works(0)} name="Работы" />
                     <NavTab to={SpaceRouter.Users(0)} name="Участники" />
                 </FlexContainer>
 
@@ -68,8 +70,18 @@ export const SpacePage: FC<Props> = typedMemo(({
                         items: [
                             {
                                 key: 0,
-                                label: 'Управление командой',
-                                icon: <Settings className={getBemClasses(styles, 'settingsActionButtonIcon')} />,
+                                label: <EditSpaceModal
+                                    triggerElement={open => <Text onClick={open}>Управление командой</Text>}
+                                    spaceId={''}
+                                />,
+                            },
+                            {
+                                key: 1,
+                                label: 'Покинуть пространство',
+                            },
+                            {
+                                key: 2,
+                                label: 'Удалить пространство',
                             },
                         ],
                     }}
