@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { AvailableSelectItemValueTypes } from './AvailableSelectItemValueTypes';
+type AvailableSelectItemValueTypes = string | number | null | object;
 
 /**
  * Опция селекта

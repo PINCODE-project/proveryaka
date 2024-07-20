@@ -1,9 +1,10 @@
 import { Modal, Select } from 'antd';
 import { FC, ReactNode, useCallback, useState } from 'react';
 
+import { roles } from '@shared/consts';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { Button, FlexContainer, renderOption, SelectItem } from '@shared/ui';
+import { Button, FlexContainer } from '@shared/ui';
 
 import styles from './ChangeSpaceUserRole.module.css';
 
@@ -11,12 +12,6 @@ export type Props = ClassNameProps & TestProps & Readonly<{
     triggerComponent: (open: () => void) => ReactNode;
     username: string;
 }>;
-
-const roles: SelectItem<number>[] = [
-    { value: 0, label: 'Студент' },
-    { value: 1, label: 'Эксперт' },
-    { value: 2, label: 'Организатор' },
-];
 
 export const ChangeSpaceUserRole: FC<Props> = typedMemo(function ChangeSpaceUserRole({
     triggerComponent,
@@ -27,7 +22,6 @@ export const ChangeSpaceUserRole: FC<Props> = typedMemo(function ChangeSpaceUser
     const [selectedRoles, setSelectedRoles] = useState([roles[0]]);
 
     const change = useCallback(() => {
-        console.log(selectedRoles);
         setIsOpen(false);
     }, [selectedRoles]);
 
@@ -49,9 +43,9 @@ export const ChangeSpaceUserRole: FC<Props> = typedMemo(function ChangeSpaceUser
                     onChange={setSelectedRoles}
                     className={getBemClasses(styles, 'select')}
                 >
-                    <Select.Option value="1">Студент</Select.Option>
-                    <Select.Option value="2">Эксперт</Select.Option>
-                    <Select.Option value="3">Организатор</Select.Option>
+                    {roles.map(role => (
+                        <Select.Option value={role.value}>{role.label}</Select.Option>
+                    ))}
                 </Select>
 
                 <FlexContainer

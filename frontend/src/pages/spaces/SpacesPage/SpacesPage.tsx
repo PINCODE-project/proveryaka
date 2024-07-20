@@ -3,9 +3,11 @@ import { type FC, useCallback, useState } from 'react';
 
 import { PageComponent } from '@widgets/PageComponent';
 
+import { AddUserInSpaceModal } from '@features/space/add-user-in-space';
 import { CopySpaceCode } from '@features/space/copy-space-code';
 import { CreateSpaceModal } from '@features/space/create-space';
 import { EditSpaceModal } from '@features/space/edit-space';
+import { EnterSpaceByCodeModal } from '@features/space/enter-space-by-code';
 import { RegenerateSpaceCodeButton } from '@features/space/regenerate-space-code';
 
 import { GetSpaceFilters, SpaceCard, useGetSpaces } from '@entities/space';
@@ -29,7 +31,7 @@ const buttonMenu: MenuProps['items'] = [
     },
     {
         key: '',
-        label: 'Присоединиться к пространству',
+        label: <EnterSpaceByCodeModal triggerElement={open => <Text onClick={open}>Присоединиться к пространству</Text>} />,
     },
 ];
 
@@ -101,6 +103,19 @@ export const SpacesPage: FC<Props> = typedMemo(({
                                     />
                                     {space.inviteCode ? <CopySpaceCode inviteCode={space.inviteCode} /> : null}
                                     <RegenerateSpaceCodeButton spaceId={space.id} />
+                                    <AddUserInSpaceModal
+                                        triggerElement={open => (
+                                            <Button
+                                                onClick={open}
+                                                variant="ghost"
+                                                size="small"
+                                                className={getBemClasses(styles, 'settingsActionButton')}
+                                            >
+                                                Добавить пользователей
+                                            </Button>
+                                        )}
+                                        spaceId={space.id}
+                                    />
                                 </>
                             }
                         />))
