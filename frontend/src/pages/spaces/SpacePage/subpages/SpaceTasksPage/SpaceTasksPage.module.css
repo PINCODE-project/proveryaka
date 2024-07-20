@@ -12,3 +12,7 @@
 .SpaceTasksPage__task {
     flex: 1;
 }
+
+.SpaceTasksPage__taskLink {
+    width: 100%;
+}

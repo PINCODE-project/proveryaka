@@ -1,14 +1,18 @@
-.SpaceTasksPage {
+.SpaceSolutionsPage {
     background-color: var(--default-background-2);
     height: 100%;
 }
 
-.SpaceTasksPage__header,
-.SpaceTasksPage__tasks {
+.SpaceSolutionsPage__header,
+.SpaceSolutionsPage__tasks {
     padding: var(--space-l);
     width: 100%;
 }
 
-.SpaceTasksPage__task {
+.SpaceSolutionsPage__task {
     flex: 1;
+}
+
+.SpaceSolutionsPage__workLink {
+    width: 100%;
 }

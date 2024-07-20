@@ -1,8 +1,12 @@
 import { FC, useState } from 'react';
+import { NavLink } from 'react-router-dom';
+
+import { SpaceRouter } from '@pages/spaces';
 
 import { SolutionCard } from '@entities/solution';
 import { TaskStatus } from '@entities/space';
 
+import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { FlexContainer, Input, NavTab } from '@shared/ui';
@@ -15,6 +19,7 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
     className,
     'data-testid': dataTestId = 'SpaceSolutionsPage',
 }) {
+    const spaceId = useSpaceId();
     const [status, setStatus] = useState(TaskStatus.InWork);
     const [search, setSearch] = useState('');
 
@@ -42,17 +47,27 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
                 >
                     <NavTab
                         isActive={status === TaskStatus.InWork}
-                        name="Предстоящие"
+                        name="К выполнению"
                         onClick={() => setStatus(TaskStatus.InWork)}
                     />
                     <NavTab
                         isActive={status === TaskStatus.OverdueGrade}
-                        name="Просроченные"
+                        name="Просрочена сдача"
+                        onClick={() => setStatus(TaskStatus.OverdueGrade)}
+                    />
+                    <NavTab
+                        isActive={status === TaskStatus.OnGrade}
+                        name="На проверке"
+                        onClick={() => setStatus(TaskStatus.OnGrade)}
+                    />
+                    <NavTab
+                        isActive={status === TaskStatus.OverdueGrade}
+                        name="Просрочена проверка"
                         onClick={() => setStatus(TaskStatus.OverdueGrade)}
                     />
                     <NavTab
                         isActive={status === TaskStatus.Done}
-                        name="Выполненные"
+                        name="Завершенные"
                         onClick={() => setStatus(TaskStatus.Done)}
                     />
                 </FlexContainer>
@@ -77,26 +92,46 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
                 direction="column"
                 className={getBemClasses(styles, 'tasks')}
             >
-                <SolutionCard
-                    className={getBemClasses(styles, 'task')}
-                    showSpaceName={false}
-                />
-                <SolutionCard
-                    className={getBemClasses(styles, 'task')}
-                    showOverdueDeadline={false}
-                    showSpaceName={false}
-                />
-                <SolutionCard
-                    className={getBemClasses(styles, 'task')}
-                    showOverdueDeadline={false}
-                    showSpaceName={false}
-                />
-                <SolutionCard
-                    mark={100}
-                    className={getBemClasses(styles, 'task')}
-                    showOverdueDeadline={false}
-                    showSpaceName={false}
-                />
+                <NavLink
+                    to={SpaceRouter.TaskWork(spaceId ?? '', 0, 0)}
+                    className={getBemClasses(styles, 'workLink')}
+                >
+                    <SolutionCard
+                        className={getBemClasses(styles, 'task')}
+                        showSpaceName={false}
+                    />
+                </NavLink>
+                <NavLink
+                    to={SpaceRouter.TaskWork(spaceId ?? '', 0, 0)}
+                    className={getBemClasses(styles, 'workLink')}
+                >
+                    <SolutionCard
+                        className={getBemClasses(styles, 'task')}
+                        showOverdueDeadline={false}
+                        showSpaceName={false}
+                    />
+                </NavLink>
+                <NavLink
+                    to={SpaceRouter.TaskWork(spaceId ?? '', 0, 0)}
+                    className={getBemClasses(styles, 'workLink')}
+                >
+                    <SolutionCard
+                        className={getBemClasses(styles, 'task')}
+                        showOverdueDeadline={false}
+                        showSpaceName={false}
+                    />
+                </NavLink>
+                <NavLink
+                    to={SpaceRouter.TaskWork(spaceId ?? '', 0, 0)}
+                    className={getBemClasses(styles, 'workLink')}
+                >
+                    <SolutionCard
+                        mark={100}
+                        className={getBemClasses(styles, 'task')}
+                        showOverdueDeadline={false}
+                        showSpaceName={false}
+                    />
+                </NavLink>
             </FlexContainer>
 
         </FlexContainer>

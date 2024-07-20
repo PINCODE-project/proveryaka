@@ -1,7 +1,11 @@
 import { FC, useState } from 'react';
+import { NavLink } from 'react-router-dom';
+
+import { SpaceRouter } from '@pages/spaces';
 
 import { TaskCard, TaskStatus } from '@entities/space';
 
+import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { FlexContainer, Input, NavTab } from '@shared/ui';
@@ -14,6 +18,7 @@ export const SpaceTasksPage: FC<Props> = typedMemo(function SpaceTasksPage({
     className,
     'data-testid': dataTestId = 'SpaceTasksPage',
 }) {
+    const spaceId = useSpaceId();
     const [status, setStatus] = useState(TaskStatus.InWork);
     const [search, setSearch] = useState('');
 
@@ -81,38 +86,62 @@ export const SpaceTasksPage: FC<Props> = typedMemo(function SpaceTasksPage({
                 direction="column"
                 className={getBemClasses(styles, 'tasks')}
             >
-                <TaskCard
-                    status={TaskStatus.InWork}
-                    className={getBemClasses(styles, 'task')}
-                    showSpaceName={false}
-                />
-                <TaskCard
-                    status={TaskStatus.OnGrade}
-                    className={getBemClasses(styles, 'task')}
-                    showOverdueDeadline={false}
-                    showSpaceName={false}
-                />
-                <TaskCard
-                    status={TaskStatus.OverdueGrade}
-                    className={getBemClasses(styles, 'task')}
-                    showOverdueDeadline={false}
-                    showSpaceName={false}
-                />
-                <TaskCard
-                    status={TaskStatus.Done}
-                    className={getBemClasses(styles, 'task')}
-                    showOverdueDeadline={false}
-                    showSpaceName={false}
-                />
-                <TaskCard
-                    status={TaskStatus.Done}
-                    mark={100}
-                    className={getBemClasses(styles, 'task')}
-                    showOverdueDeadline={false}
-                    showSpaceName={false}
-                />
+                <NavLink
+                    to={SpaceRouter.Task(spaceId ?? '', 0)}
+                    className={getBemClasses(styles, 'taskLink')}
+                >
+                    <TaskCard
+                        status={TaskStatus.InWork}
+                        className={getBemClasses(styles, 'task')}
+                        showSpaceName={false}
+                    />
+                </NavLink>
+                <NavLink
+                    to={SpaceRouter.Task(spaceId ?? '', 0)}
+                    className={getBemClasses(styles, 'taskLink')}
+                >
+                    <TaskCard
+                        status={TaskStatus.OnGrade}
+                        className={getBemClasses(styles, 'task')}
+                        showOverdueDeadline={false}
+                        showSpaceName={false}
+                    />
+                </NavLink>
+                <NavLink
+                    to={SpaceRouter.Task(spaceId ?? '', 0)}
+                    className={getBemClasses(styles, 'taskLink')}
+                >
+                    <TaskCard
+                        status={TaskStatus.OverdueGrade}
+                        className={getBemClasses(styles, 'task')}
+                        showOverdueDeadline={false}
+                        showSpaceName={false}
+                    />
+                </NavLink>
+                <NavLink
+                    to={SpaceRouter.Task(spaceId ?? '', 0)}
+                    className={getBemClasses(styles, 'taskLink')}
+                >
+                    <TaskCard
+                        status={TaskStatus.Done}
+                        className={getBemClasses(styles, 'task')}
+                        showOverdueDeadline={false}
+                        showSpaceName={false}
+                    />
+                </NavLink>
+                <NavLink
+                    to={SpaceRouter.Task(spaceId ?? '', 0)}
+                    className={getBemClasses(styles, 'taskLink')}
+                >
+                    <TaskCard
+                        status={TaskStatus.Done}
+                        mark={100}
+                        className={getBemClasses(styles, 'task')}
+                        showOverdueDeadline={false}
+                        showSpaceName={false}
+                    />
+                </NavLink>
             </FlexContainer>
-
         </FlexContainer>
     );
 });
