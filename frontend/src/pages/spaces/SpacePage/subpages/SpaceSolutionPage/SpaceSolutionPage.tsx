@@ -4,35 +4,35 @@ import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { FlexContainer, NavTab, Text } from '@shared/ui';
 
-import styles from './SpaceTaskPage.module.css';
-import { TaskCriteria } from './TaskCriteria';
-import { TaskDescription } from './TaskDescription';
-import { TaskPreparation } from './TaskPreparation';
-import { TaskSolutions } from './TaskSolutions';
+import { SolutionAssignment } from './SolutionAssignment';
+import { SolutionCriteria } from './SolutionCriteria';
+import { SolutionDescription } from './SolutionDescription';
+import { SolutionGrades } from './SolutionGrades';
+import styles from './SpaceSolutionPage.module.css';
 
 enum ActiveSection {
     Description,
-    Solutions,
+    Assignments,
     Criteria,
-    Preparation
+    Grades
 }
 
 export type Props = ClassNameProps & TestProps & Readonly<{}>;
 
-export const SpaceTaskPage: FC<Props> = typedMemo(function SpaceTaskPage({
+export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage({
     className,
-    'data-testid': dataTestId = 'SpaceTaskPage',
+    'data-testid': dataTestId = 'SpaceSolutionPage',
 }) {
     const [activeSection, setActiveSection] = useState(ActiveSection.Description);
 
     const content = useMemo(() => {
         switch (activeSection) {
             case ActiveSection.Description:
-                return <TaskDescription />;
-            case ActiveSection.Solutions:
-                return <TaskSolutions />;
+                return <SolutionDescription />;
+            case ActiveSection.Assignments:
+                return <SolutionAssignment />;
             case ActiveSection.Criteria:
-                return (<TaskCriteria criteria={[{
+                return (<SolutionCriteria criteria={[{
                     id: '0000',
                     name: '0000',
                     description: '0000',
@@ -42,8 +42,8 @@ export const SpaceTaskPage: FC<Props> = typedMemo(function SpaceTaskPage({
                     issueId: '0000',
                 }]}
                 />);
-            case ActiveSection.Preparation:
-                return <TaskPreparation />;
+            case ActiveSection.Grades:
+                return <SolutionGrades grades={[]} />;
         }
         return null;
     }, [activeSection]);
@@ -73,9 +73,9 @@ export const SpaceTaskPage: FC<Props> = typedMemo(function SpaceTaskPage({
                     onClick={() => setActiveSection(ActiveSection.Description)}
                 />
                 <NavTab
-                    isActive={activeSection === ActiveSection.Solutions}
-                    name="Работы"
-                    onClick={() => setActiveSection(ActiveSection.Solutions)}
+                    isActive={activeSection === ActiveSection.Assignments}
+                    name="Работа"
+                    onClick={() => setActiveSection(ActiveSection.Assignments)}
                 />
                 <NavTab
                     isActive={activeSection === ActiveSection.Criteria}
@@ -83,9 +83,9 @@ export const SpaceTaskPage: FC<Props> = typedMemo(function SpaceTaskPage({
                     onClick={() => setActiveSection(ActiveSection.Criteria)}
                 />
                 <NavTab
-                    isActive={activeSection === ActiveSection.Preparation}
-                    name="Материалы для подготовки"
-                    onClick={() => setActiveSection(ActiveSection.Preparation)}
+                    isActive={activeSection === ActiveSection.Grades}
+                    name="Оценки"
+                    onClick={() => setActiveSection(ActiveSection.Grades)}
                 />
             </FlexContainer>
 
