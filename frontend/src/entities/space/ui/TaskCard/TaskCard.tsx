@@ -1,11 +1,13 @@
 import { FC, useMemo } from 'react';
 
-import { TaskStatus } from '@entities/space';
+import { GetIssueResponse } from '@entities/issue';
+import { SpaceSettings, TaskStatus } from '@entities/space';
+import { GetSpaceResponse } from '@entities/space/model/GetSpaceResponse';
 
 import Checkmark from '@shared/assets/icons/Checkmark.svg';
 import Settings from '@shared/assets/icons/Settings.svg';
 import SubtractCircle from '@shared/assets/icons/SubtractCircle.svg';
-import { getBemClasses, typedMemo } from '@shared/lib';
+import { getBemClasses, getDateFromISO, getTimeFromISO, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { FlexContainer, Image, SettingsDropdown, Text } from '@shared/ui';
 
@@ -13,12 +15,12 @@ import styles from './TaskCard.module.css';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     status: TaskStatus;
-    mark?: number;
+    issue: GetIssueResponse;
+    space?: SpaceSettings;
 
     showAvatar?: boolean;
     showSpaceName?: boolean;
     showAssignmentDeadline?: boolean;
-    showOverdueDeadline?: boolean;
     showGradingDeadline?: boolean;
     showAssignmentCount?: boolean;
     showGradingCount?: boolean;
@@ -27,32 +29,37 @@ export type Props = ClassNameProps & TestProps & Readonly<{
 
 export const TaskCard: FC<Props> = typedMemo(function TaskCard({
     className,
+    issue,
+    space,
+
     showAvatar = true,
     showSpaceName = true,
     showAssignmentDeadline = true,
-    showOverdueDeadline = true,
     showGradingDeadline = true,
     showGradingCount = true,
     showAssignmentCount = true,
     showActions = true,
     status,
-    mark,
     'data-testid': dataTestId = 'TaskCard',
 }) {
     const statusComponent = useMemo(() => {
         switch (status) {
             case TaskStatus.InWork:
-                return (
-                    <Text className={getBemClasses(styles, 'statusText')}>
-                        Сдать до: 00.00.00
-                    </Text>
-                );
+                return issue.assessmentDeadlineDateUtc
+                    ? (
+                        <Text className={getBemClasses(styles, 'statusText')}>
+                            Выполняется
+                        </Text>
+                    )
+                    : null;
             case TaskStatus.OnGrade:
-                return (
-                    <Text className={getBemClasses(styles, 'statusText')}>
-                        Оценить до: 00.00.00
-                    </Text>
-                );
+                return issue.submitDeadlineDateUtc
+                    ? (
+                        <Text className={getBemClasses(styles, 'statusText')}>
+                            На проверке
+                        </Text>
+                    )
+                    : null;
             case TaskStatus.OverdueGrade:
                 return (
                     <>
@@ -62,9 +69,9 @@ export const TaskCard: FC<Props> = typedMemo(function TaskCard({
                 );
             case TaskStatus.Done:
                 return (
-                    mark !== undefined
+                    undefined !== false
                         ? <Text className={getBemClasses(styles, 'statusText')}>
-                            Количество баллов: 100/100
+                            100/100
                         </Text>
                         : <>
                             <Checkmark className={getBemClasses(styles, 'statusIcon')} />
@@ -88,10 +95,11 @@ export const TaskCard: FC<Props> = typedMemo(function TaskCard({
                 gap="m"
                 alignItems="start"
             >
-                {showAvatar
+                {showAvatar && space
                     ? <Image
                         className={getBemClasses(styles, 'avatar')}
                         alt="space avatar"
+                        src={space.icon}
                         placeholderSrc="https://masterpiecer-images.s3.yandex.net/4b4e8fbd579411ee8d01e6d39d9a42a4:upscaled"
                     />
                     : null}
@@ -101,16 +109,11 @@ export const TaskCard: FC<Props> = typedMemo(function TaskCard({
                     gap="xxs"
                 >
                     <Text className={getBemClasses(styles, 'name')}>
-                        Name
+                        {issue.name}
                     </Text>
-                    {showOverdueDeadline
-                        ? <Text className={getBemClasses(styles, 'deadline', { isError: true })}>
-                            Срок: Overdue deadline
-                        </Text>
-                        : null}
-                    {showSpaceName
+                    {showSpaceName && space
                         ? <Text className={getBemClasses(styles, 'spaceName')}>
-                            Space Name
+                            {space.name}
                         </Text>
                         : null}
                 </FlexContainer>
@@ -120,14 +123,14 @@ export const TaskCard: FC<Props> = typedMemo(function TaskCard({
                         overflow="nowrap"
                         gap="xxs"
                     >
-                        {showAssignmentDeadline
+                        {showAssignmentDeadline && issue.assessmentDeadlineDateUtc
                             ? <Text className={getBemClasses(styles, 'deadline')}>
-                                Assignment deadline
+                                Сдача: {getDateFromISO(issue.assessmentDeadlineDateUtc)}, {getTimeFromISO(issue.assessmentDeadlineDateUtc)}
                             </Text>
                             : null}
-                        {showGradingDeadline
+                        {showGradingDeadline && issue.submitDeadlineDateUtc
                             ? <Text className={getBemClasses(styles, 'deadline')}>
-                                Grading deadline
+                                Проверка: {getDateFromISO(issue.submitDeadlineDateUtc)}, {getTimeFromISO(issue.submitDeadlineDateUtc)}
                             </Text>
                             : null}
                     </FlexContainer>
@@ -140,12 +143,12 @@ export const TaskCard: FC<Props> = typedMemo(function TaskCard({
                     >
                         {showAssignmentCount
                             ? <Text className={getBemClasses(styles, 'deadline')}>
-                                Сдано: 5/5 работ
+                                Сдано: 100500/100500 работ
                             </Text>
                             : null}
                         {showGradingCount
                             ? <Text className={getBemClasses(styles, 'deadline')}>
-                                Проверено: 2/5 работ
+                                Проверено: 100500/100500 работ
                             </Text>
                             : null}
                     </FlexContainer>

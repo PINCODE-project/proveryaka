@@ -7,3 +7,6 @@ export * from './getFileUrl';
 export * from './axios/replaceIfEmpty';
 export * from './axios/extractData';
 export * from './axios/replaceIfEmptyList';
+
+export * from './date/getTimeFromISO';
+export * from './date/getDateFromISO';

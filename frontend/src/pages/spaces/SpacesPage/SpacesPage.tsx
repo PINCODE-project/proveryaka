@@ -14,6 +14,7 @@ import { GetSpaceFilters, SpaceCard, useGetSpaces } from '@entities/space';
 
 import PeopleAdd from '@shared/assets/icons/PeopleAdd.svg';
 import Settings from '@shared/assets/icons/Settings.svg';
+import { useListFilters } from '@shared/hooks';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { TestProps, ClassNameProps } from '@shared/types';
 import { Button, FlexContainer, Text } from '@shared/ui';
@@ -39,14 +40,7 @@ export const SpacesPage: FC<Props> = typedMemo(({
     className,
     'data-testid': dataTestId = 'SpacesPage',
 }: Props) => {
-    const [filters, setFilters] = useState<GetSpaceFilters>({
-        page: 0,
-        count: 15,
-    });
-    const changeFilters = useCallback((key: keyof GetSpaceFilters, name: GetSpaceFilters[keyof GetSpaceFilters]) => {
-        setFilters(filters => ({ ...filters, [key]: name }));
-    }, []);
-
+    const [filters, changeFilter] = useListFilters({ page: 0, count: 15 });
     const { data, isLoading } = useGetSpaces(filters);
 
     return (

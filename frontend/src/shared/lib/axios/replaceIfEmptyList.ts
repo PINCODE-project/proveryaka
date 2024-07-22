@@ -1,11 +1,11 @@
 import { GetListResponse } from '@shared/types';
 
 export function replaceIfEmptyList<T>(placeholder: T[]) {
-    return function(data: GetListResponse<T | null>) {
+    return function(data: GetListResponse<T | null>): GetListResponse<T> {
         if (!data.entityList) {
-            return placeholder;
+            return { entityList: placeholder };
         }
 
-        return data;
+        return data as GetListResponse<T>;
     };
 }
