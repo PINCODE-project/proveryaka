@@ -23,6 +23,8 @@ export type FormFieldContext<TValue> = {
      * Невалидно ли поле
      */
     isInvalid: boolean;
+
+    error?: string | string[];
 };
 
 export type Props<TValue> = ClassNameProps & TestProps & Readonly<{
@@ -86,7 +88,12 @@ export const FormField = typedMemo(function FormField<TValue>({
             }
 
             <div className={getBemClasses(styles, 'field')}>
-                {content({ onChange: onChange ?? fieldHelper.setValue, value: fieldMeta.value, isInvalid })}
+                {content({
+                    onChange: onChange ?? fieldHelper.setValue,
+                    value: fieldMeta.value,
+                    isInvalid,
+                    error: fieldMeta.touched ? fieldMeta.error : undefined,
+                })}
 
                 {
                     endContent

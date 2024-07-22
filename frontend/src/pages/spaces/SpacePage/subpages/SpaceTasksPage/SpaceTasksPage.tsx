@@ -3,12 +3,14 @@ import { NavLink } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/spaces';
 
+import { CreateIssueFullForm } from '@features/issue/create-issue/ui/CreateIssueFullForm';
+
 import { TaskCard, TaskStatus } from '@entities/space';
 
 import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { FlexContainer, Input, NavTab } from '@shared/ui';
+import { Button, FlexContainer, Input, NavTab } from '@shared/ui';
 
 import styles from './SpaceTasksPage.module.css';
 
@@ -37,6 +39,14 @@ export const SpaceTasksPage: FC<Props> = typedMemo(function SpaceTasksPage({
                 justifyContent="space-between"
                 className={getBemClasses(styles, 'header')}
             >
+                <CreateIssueFullForm
+                    triggerElement={open => (
+                        <Button onClick={open}>
+                            Создать задание
+                        </Button>
+                    )}
+                    spaceId={spaceId ?? ''}
+                />
 
                 <FlexContainer
                     direction="row"

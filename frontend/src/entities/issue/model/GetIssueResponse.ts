@@ -18,13 +18,13 @@ export type GetIssueResponse = {
      * Дедлайн оценивания
      * @example 2024-07-16T05:13:10.807Z
      */
-    assessmentDeadlineDateUtc: string;
+    assessmentDeadlineDateUtc: string | null;
 
     /**
      * Дедлайн сдачи
      * @example 2024-07-16T05:13:10.807Z
      */
-    submitDeadlineDateUtc: string;
+    submitDeadlineDateUtc: string | null;
 
     /**
      * Ссылка на материалы к заданию
