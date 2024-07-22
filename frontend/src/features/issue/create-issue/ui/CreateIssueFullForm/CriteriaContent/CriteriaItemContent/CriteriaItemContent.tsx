@@ -1,4 +1,4 @@
-import { useField } from 'formik';
+import { useField, useFormikContext } from 'formik';
 import { FC, useCallback, useMemo } from 'react';
 
 import { CriteriaForm } from '@entities/criteria';
@@ -18,22 +18,28 @@ export type Props = ClassNameProps & TestProps & Readonly<{
 export const CriteriaItemContent: FC<Props> = typedMemo(function CriteriaItemContent({
     index,
 }) {
-    const [fieldInput] = useField<CreateInfoWithFullInfo['criteriaList']>('criteriaList');
-    const exampleStandardIndex = useMemo(() => fieldInput.value[index].criteriaExampleList.findIndex(example => example.exampleType === ExampleType.Standard), [fieldInput, index]);
-    const exampleAntiIndex = useMemo(() => fieldInput.value[index].criteriaExampleList.findIndex(example => example.exampleType === ExampleType.AntiExample), [fieldInput, index]);
+    const formik = useFormikContext<CreateInfoWithFullInfo>();
+    const exampleStandardIndex = useMemo(() => formik.values.criteriaList[index].criteriaExampleList.findIndex(example => example.exampleType === ExampleType.Standard), [formik, index]);
+    const exampleAntiIndex = useMemo(() => formik.values.criteriaList[index].criteriaExampleList.findIndex(example => example.exampleType === ExampleType.AntiExample), [formik, index]);
 
     const addExample = useCallback((type: ExampleType) => {
-        fieldInput.value[index].criteriaExampleList.push({
+        formik.values.criteriaList[index].criteriaExampleList.push({
             exampleType: type,
             exampleLink: '',
             description: '',
         });
-        fieldInput.onChange(fieldInput.value);
-    }, [fieldInput, index]);
+        formik.setFieldValue('criteriaList', formik.values.criteriaList);
+    }, [formik, index]);
 
     const deleteCriteria = useCallback(() => {
-        fieldInput.onChange(fieldInput.value.filter((_, order) => order !== index));
-    }, [index, fieldInput]);
+        formik.setFieldValue('criteriaList', formik.values.criteriaList.filter((_, order) => order !== index));
+    }, [index, formik]);
+
+    const deleteExample = useCallback((exampleIndex: number) => {
+        formik.setFieldValue(
+            `criteriaList[${index}].criteriaExampleList`,
+            formik.values.criteriaList[index].criteriaExampleList.filter((_, order) => order !== exampleIndex));
+    }, [index, formik]);
 
     return (
         <div>
@@ -47,6 +53,9 @@ export const CriteriaItemContent: FC<Props> = typedMemo(function CriteriaItemCon
                         ? <>
                             <Text>Эталон</Text>
                             <ExampleForm formParentFieldName={`criteriaList[${index}].criteriaExampleList[${exampleStandardIndex}]`} /> :
+                            <Button onClick={() => deleteExample(exampleStandardIndex)}>
+                            Удалить эталон
+                            </Button>
                         </>
                         : <Button onClick={() => addExample(ExampleType.Standard)}>
                             Добавить эталон
@@ -56,6 +65,9 @@ export const CriteriaItemContent: FC<Props> = typedMemo(function CriteriaItemCon
                         ? <>
                             <Text>Антипример</Text>
                             <ExampleForm formParentFieldName={`criteriaList[${index}].criteriaExampleList[${exampleAntiIndex}]`} /> :
+                            <Button onClick={() => deleteExample(exampleAntiIndex)}>
+                                Удалить антипример
+                            </Button>
                         </>
                         : <Button onClick={() => addExample(ExampleType.AntiExample)}>
                             Добавить антипример

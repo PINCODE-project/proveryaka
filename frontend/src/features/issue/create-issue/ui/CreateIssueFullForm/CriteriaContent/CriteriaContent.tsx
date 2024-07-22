@@ -1,4 +1,4 @@
-import { useField } from 'formik';
+import { useField, useFormikContext } from 'formik';
 import { FC, useCallback } from 'react';
 
 import { CreateInfoWithFullInfo } from '@features/issue/create-issue/model/CreateInfoWithFullInfo';
@@ -18,10 +18,11 @@ import styles from './CriteriaContent.module.css';
 export type Props = ClassNameProps & TestProps & Readonly<{}>;
 
 export const CriteriaContent: FC<Props> = typedMemo(function CriteriaContent({}) {
-    const [fieldInput] = useField<CreateInfoWithFullInfo['criteriaList']>('criteriaList');
+    const formik = useFormikContext<CreateInfoWithFullInfo>();
 
     const addCriteria = useCallback(() => {
-        fieldInput.onChange(fieldInput.value.concat([{
+        const criteria = formik.values.criteriaList;
+        formik.setFieldValue('criteriaList', (criteria ?? []).concat([{
             name: '',
             description: '',
             minScore: 0,
@@ -29,21 +30,21 @@ export const CriteriaContent: FC<Props> = typedMemo(function CriteriaContent({})
             weight: 0,
             criteriaExampleList: [],
         }]));
-    }, [fieldInput]);
+    }, [formik]);
 
     return (
         <FormField<CreateInfoWithFullInfo['criteriaList']>
             name="criteriaList"
             content={
                 ({ value }) => (
-                    <>
+                    <FlexContainer direction="column" gap="m">
                         {value.map((_, index) => (
                             <CriteriaItemContent index={index} key={index} />
                         ))}
                         <Button onClick={addCriteria}>
                             Добавить критерий
                         </Button>
-                    </>
+                    </FlexContainer>
                 )
             }
         />

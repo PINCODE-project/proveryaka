@@ -20,8 +20,8 @@ export const IssueForm: FC<Props> = typedMemo(function IssueForm({}) {
         return materialUrl.filter((_, index) => index !== order);
     }, []);
 
-    const addUrl = useCallback((materialUrl: string[]) => {
-        return materialUrl.concat(['']);
+    const addUrl = useCallback((materialUrl: string[] | null) => {
+        return (materialUrl ?? []).concat(['']);
     }, []);
 
     return (
@@ -100,7 +100,7 @@ export const IssueForm: FC<Props> = typedMemo(function IssueForm({}) {
             >
                 <Text>Дедлайны</Text>
                 <FormField<string>
-                    name="assessmentDeadline"
+                    name="assessmentDeadlineDateUtc"
                     label="Дата сдачи"
                     content={
                         ({ value, onChange, isInvalid }) => (
@@ -113,7 +113,7 @@ export const IssueForm: FC<Props> = typedMemo(function IssueForm({}) {
                     }
                 />
                 <FormField<string>
-                    name="submitDeadline"
+                    name="submitDeadlineDateUtc"
                     label="Дата оценки"
                     content={
                         ({ value, onChange, isInvalid }) => (
@@ -132,22 +132,22 @@ export const IssueForm: FC<Props> = typedMemo(function IssueForm({}) {
                 gap="m"
             >
                 <Text>Материалы для подготовки</Text>
-                <FormField<string[]>
+                <FormField<string[] | null>
                     name="materialUrls"
                     content={
                         ({ value, onChange, error }) => (
                             <FlexContainer direction="column" gap="m">
-                                {value.map((url, index) => (
+                                {(value ?? []).map((url, index) => (
                                     <FlexContainer direction="row" gap="m" key={index}>
                                         <Input
                                             value={url}
                                             placeholder="Введите ссылку"
-                                            onChange={event => onChange(changeUrl(value, event.target.value, index))}
-                                            onBlur={event => onChange(changeUrl(value, event.target.value.trim(), index))}
+                                            onChange={event => onChange(changeUrl(value ?? [], event.target.value, index))}
+                                            onBlur={event => onChange(changeUrl(value ?? [], event.target.value.trim(), index))}
                                             invalid={Boolean(error?.[index])}
                                         />
 
-                                        <Button variant="ghost" onClick={() => onChange(deleteUrl(value, index))}>
+                                        <Button variant="ghost" onClick={() => onChange(deleteUrl(value ?? [], index))}>
                                             <Trash />
                                         </Button>
                                     </FlexContainer>

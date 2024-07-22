@@ -9,7 +9,7 @@ import { ExampleContent } from '@features/issue/create-issue/ui/CreateIssueFullF
 
 import { validationSchema as validationSchemaCriteria } from '@entities/criteria';
 import { ExampleForm, ExampleType, validationSchema as validationSchemaExample } from '@entities/example/common';
-import { validationSchema as validationSchemaIssue } from '@entities/issue';
+import { IssueForm, validationSchema as validationSchemaIssue } from '@entities/issue';
 
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
@@ -59,13 +59,17 @@ export const CreateIssueFullForm: FC<Props> = typedMemo(function CreateIssueFull
 }) {
     const [isOpen, setIsOpen] = useState(false);
     const queryClient = useQueryClient();
-    const { mutate: create } = useCreateIssueFull({});
+    const { mutate: create } = useCreateIssueFull({
+        onSuccess: () => {
+
+        },
+    });
     const [step, setStep] = useState(IssueStep.Common);
 
     const getContent = useCallback((handleSubmit: () => void) => {
         switch (step) {
             case IssueStep.Common:
-                return <ExampleForm />;
+                return <IssueForm />;
             case IssueStep.Criteria:
                 return <CriteriaContent />;
             case IssueStep.ExampleStandard:
@@ -80,8 +84,11 @@ export const CreateIssueFullForm: FC<Props> = typedMemo(function CreateIssueFull
 
     return (
         <>
-            {triggerElement(() => setIsOpen(false))}
+            {triggerElement(() => setIsOpen(true))}
             <Modal
+                footer={false}
+                open={isOpen}
+                onCancel={() => setIsOpen(false)}
                 title="Создание задания"
                 className={getBemClasses(styles, null, null, className)}
             >
@@ -113,11 +120,14 @@ export const CreateIssueFullForm: FC<Props> = typedMemo(function CreateIssueFull
                     onSubmit={data => create({ data, spaceId })}
                     validationSchema={validationSchema}
                 >
-                    {({ handleSubmit }) => (
-                        <Form>
-                            {getContent(handleSubmit)}
-                        </Form>
-                    )}
+                    {({ handleSubmit, errors }) => {
+                        console.log(errors);
+                        return (
+                            <Form>
+                                {getContent(handleSubmit)}
+                            </Form>
+                        );
+                    }}
                 </Formik>
             </Modal>
         </>

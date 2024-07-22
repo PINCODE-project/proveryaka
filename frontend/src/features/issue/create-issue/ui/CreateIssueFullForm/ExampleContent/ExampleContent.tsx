@@ -1,4 +1,4 @@
-import { useField } from 'formik';
+import { useField, useFormikContext } from 'formik';
 import { FC, useCallback, useMemo } from 'react';
 
 import { CreateInfoWithFullInfo } from '@features/issue/create-issue/model/CreateInfoWithFullInfo';
@@ -21,24 +21,24 @@ export const ExampleContent: FC<Props> = typedMemo(function ExampleContent({
     exampleType,
     'data-testid': dataTestId = 'ExampleContent',
 }) {
-    const [fieldInput] = useField<CreateInfoWithFullInfo['issueExampleList']>('issueExampleList');
+    const formik = useFormikContext<CreateInfoWithFullInfo>();
 
     const addExample = useCallback(() => {
-        fieldInput.value.push({
+        formik.values.issueExampleList.push({
             exampleType,
             exampleLink: '',
             description: '',
         });
-        fieldInput.onChange(fieldInput.value);
-    }, [fieldInput, exampleType]);
+        formik.setFieldValue('issueExampleList', formik.values.issueExampleList);
+    }, [formik, exampleType]);
 
     const deleteExample = useCallback((index: number) => {
-        fieldInput.onChange(fieldInput.value.filter((_, order) => order !== index));
-    }, [fieldInput]);
+        formik.setFieldValue('issueExampleList', formik.values.issueExampleList.filter((_, order) => order !== index));
+    }, [formik]);
 
     return (
         <FlexContainer direction="column" gap="s">
-            {fieldInput.value.map((example, index) => (
+            {formik.values.issueExampleList.map((example, index) => (
                 example.exampleType !== exampleType
                     ? null
                     : <div>
