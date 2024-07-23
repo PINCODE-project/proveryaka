@@ -1,6 +1,8 @@
 import { Modal } from 'antd';
 import { FC, ReactNode, useState } from 'react';
 
+import { ExampleResponse } from '@entities/example/common';
+
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { FlexContainer } from '@shared/ui';
@@ -8,14 +10,9 @@ import { SolutionCarousel } from '@shared/ui/SolutionExample/SolutionCarousel';
 
 import styles from './SolutionExample.module.css';
 
-export type Solution = {
-    text: string;
-    description: string;
-};
-
 export type Props = ClassNameProps & TestProps & Readonly<{
-    example: Solution[];
-    antiExample: Solution[];
+    example: ExampleResponse[];
+    antiExample: ExampleResponse[];
     triggerComponent: (open: () => void) => ReactNode;
 }>;
 

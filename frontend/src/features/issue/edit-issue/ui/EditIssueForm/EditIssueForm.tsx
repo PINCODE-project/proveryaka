@@ -5,7 +5,7 @@ import {getBemClasses, typedMemo} from '@shared/lib';
 import {ClassNameProps} from '@shared/types';
 
 import styles from './EditIssueForm.module.css';
-import {GetIssueResponse, getSpaceIssueQueryKey, IssueForm, validationSchema} from "@entities/issue";
+import {getIssueQueryKey, GetIssueResponse, getSpaceIssueQueryKey, IssueForm, validationSchema} from "@entities/issue";
 import {Form, Formik} from "formik";
 import {Button} from "@shared/ui";
 import {useEditIssue} from "@features/issue/edit-issue/lib/useEditIssue";
@@ -28,6 +28,7 @@ export const EditIssueForm: FC<Props> = typedMemo(function EditIssueForm({
         onSuccess:() => {
             setIsOpen(false)
             queryClient.resetQueries(getSpaceIssueQueryKey(spaceId))
+            queryClient.resetQueries(getIssueQueryKey(issue.id))
         }
     })
     const [isOpen, setIsOpen] = useState(false);

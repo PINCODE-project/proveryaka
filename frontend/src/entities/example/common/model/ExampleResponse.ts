@@ -20,4 +20,14 @@ export type ExampleResponse = {
      * Тип примера
      */
     exampleType: ExampleType;
+
+    /**
+     * Пример текстовые
+     */
+    textValue: string | null;
+
+    /**
+     * Пример идентификатором файла
+     */
+    fileIdValue: string | null;
 };

@@ -9,7 +9,7 @@ import { ExampleContent } from '@features/issue/create-issue/ui/CreateIssueFullF
 
 import { validationSchema as validationSchemaCriteria } from '@entities/criteria';
 import { ExampleForm, ExampleType, validationSchema as validationSchemaExample } from '@entities/example/common';
-import {getSpaceIssueQueryKey, IssueForm, validationSchema as validationSchemaIssue} from '@entities/issue';
+import { getSpaceIssueQueryKey, IssueForm, validationSchema as validationSchemaIssue } from '@entities/issue';
 
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
@@ -41,6 +41,9 @@ const initialValue: Omit<CreateInfoWithFullInfo, 'spaceId'> = {
     checksCountMax: 0,
     issueExampleList: [],
     criteriaList: [],
+    allSolutionCount: 0,
+    allTeamCountInSpace: 0,
+    reviewedSolutionCount: 0,
 };
 
 const validationSchema = validationSchemaIssue.shape({
@@ -61,7 +64,7 @@ export const CreateIssueFullForm: FC<Props> = typedMemo(function CreateIssueFull
     const queryClient = useQueryClient();
     const { mutate: create } = useCreateIssueFull({
         onSuccess: () => {
-            queryClient.resetQueries(getSpaceIssueQueryKey(spaceId))
+            queryClient.resetQueries(getSpaceIssueQueryKey(spaceId));
         },
     });
     const [step, setStep] = useState(IssueStep.Common);

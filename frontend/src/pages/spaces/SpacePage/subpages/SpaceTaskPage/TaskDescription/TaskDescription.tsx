@@ -1,17 +1,33 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 
+import { ExampleType } from '@entities/example/common';
+import { useGetIssueExamples } from '@entities/example/issue-example';
+import { GetIssueResponse } from '@entities/issue';
+
+import { useListFilters } from '@shared/hooks';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { Button, FlexContainer, Input, SolutionExample, Text } from '@shared/ui';
 
 import styles from './TaskDescription.module.css';
 
-export type Props = ClassNameProps & TestProps & Readonly<{}>;
+export type Props = ClassNameProps & TestProps & Readonly<{
+    issue: GetIssueResponse;
+}>;
 
 export const TaskDescription: FC<Props> = typedMemo(function TaskDescription({
     className,
+    issue,
     'data-testid': dataTestId = 'TaskDescription',
 }) {
+    const [filters] = useListFilters({ count: 15, page: 0 });
+
+    const { data: examples } = useGetIssueExamples(issue.id, filters);
+    const standardExamples = useMemo(() => examples?.entityList
+        ?.filter(example => example.exampleType === ExampleType.Standard) ?? [], [examples]);
+    const antiExamples = useMemo(() => examples?.entityList
+        ?.filter(example => example.exampleType === ExampleType.AntiExample) ?? [], [examples]);
+
     return (
         <FlexContainer
             direction="column"
@@ -20,7 +36,7 @@ export const TaskDescription: FC<Props> = typedMemo(function TaskDescription({
             data-testid={dataTestId}
         >
             <Text>
-                Предварительные выводы неутешительны: высокотехнологичная концепция общественного уклада напрямую зависит от соответствующих условий активизации. Однозначно, непосредственные участники технического прогресса могут быть подвергнуты целой серии независимых исследований. С учётом сложившейся международной обстановки, разбавленное изрядной долей эмпатии, рациональное мышление обеспечивает актуальность системы массового участия. А также предприниматели в сети интернет подвергнуты целой серии независимых исследований. Вот вам яркий пример современных тенденций — внедрение современных методик обеспечивает широкому кругу (специалистов) участие в формировании укрепления моральных ценностей.
+                {issue.description}
             </Text>
 
             <FlexContainer
@@ -36,18 +52,8 @@ export const TaskDescription: FC<Props> = typedMemo(function TaskDescription({
                 gap="s"
             >
                 <SolutionExample
-                    example={
-                        [
-                            { text: 'bla bla', description: 'bla bla' },
-                            { text: 'bla bla', description: 'bla bla' },
-                        ]
-                    }
-                    antiExample={
-                        [
-                            { text: 'bla bla', description: 'bla bla' },
-                            { text: 'bla bla', description: 'bla bla' },
-                        ]
-                    }
+                    example={standardExamples}
+                    antiExample={antiExamples}
                     triggerComponent={open =>
                         (<Button
                             variant="ghost"

@@ -1,14 +1,15 @@
 import { FC, useState } from 'react';
 
+import { ExampleResponse } from '@entities/example/common';
+
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { FlexContainer, Text } from '@shared/ui';
 
 import styles from './SolutionCarousel.module.css';
-import { Solution } from '../SolutionExample';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
-    solutions: Solution[];
+    solutions: ExampleResponse[];
 }>;
 
 export const SolutionCarousel: FC<Props> = typedMemo(function SolutionCarousel({
@@ -36,7 +37,7 @@ export const SolutionCarousel: FC<Props> = typedMemo(function SolutionCarousel({
 
             <div className={getBemClasses(styles, 'solutionScroll')}>
                 <Text>
-                    {solutions[currentIndex].text ?? ''}
+                    {solutions[currentIndex].exampleLink ?? ''}
                 </Text>
                 <Text>
                     {solutions[currentIndex].description ?? ''}

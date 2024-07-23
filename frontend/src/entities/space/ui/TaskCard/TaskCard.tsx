@@ -1,8 +1,11 @@
 import { FC, useMemo } from 'react';
 
+import { EditIssueForm } from '@features/issue/edit-issue';
+
 import { GetIssueResponse } from '@entities/issue';
-import { SpaceSettings, TaskStatus } from '@entities/space';
-import { GetSpaceResponse } from '@entities/space/model/GetSpaceResponse';
+import { getIssueStatus } from '@entities/issue/lib/getIssueStatus';
+import { IssueStatus } from '@entities/issue/model/IssueStatus';
+import { SpaceSettings } from '@entities/space';
 
 import Checkmark from '@shared/assets/icons/Checkmark.svg';
 import Settings from '@shared/assets/icons/Settings.svg';
@@ -12,10 +15,8 @@ import { ClassNameProps, TestProps } from '@shared/types';
 import { FlexContainer, Image, SettingsDropdown, Text } from '@shared/ui';
 
 import styles from './TaskCard.module.css';
-import {EditIssueForm} from "@features/issue/edit-issue";
 
 export type Props = ClassNameProps & TestProps & Readonly<{
-    status: TaskStatus;
     issue: GetIssueResponse;
     space?: SpaceSettings;
 
@@ -40,44 +41,37 @@ export const TaskCard: FC<Props> = typedMemo(function TaskCard({
     showGradingCount = true,
     showAssignmentCount = true,
     showActions = true,
-    status,
     'data-testid': dataTestId = 'TaskCard',
 }) {
+    const status = useMemo(() => getIssueStatus(issue), [issue]);
+
     const statusComponent = useMemo(() => {
         switch (status) {
-            case TaskStatus.InWork:
-                return issue.assessmentDeadlineDateUtc
-                    ? (
-                        <Text className={getBemClasses(styles, 'statusText')}>
+            case IssueStatus.InWork:
+                return (
+                    <Text className={getBemClasses(styles, 'statusText')}>
                             Выполняется
-                        </Text>
-                    )
-                    : null;
-            case TaskStatus.OnGrade:
-                return issue.submitDeadlineDateUtc
-                    ? (
-                        <Text className={getBemClasses(styles, 'statusText')}>
+                    </Text>
+                );
+            case IssueStatus.InGrade:
+                return (
+                    <Text className={getBemClasses(styles, 'statusText')}>
                             На проверке
-                        </Text>
-                    )
-                    : null;
-            case TaskStatus.OverdueGrade:
+                    </Text>
+                );
+            case IssueStatus.OverdueGrade:
                 return (
                     <>
                         <SubtractCircle className={getBemClasses(styles, 'statusIcon')} />
-                        <Text className={getBemClasses(styles, 'statusText')}>Не сдано</Text>
+                        <Text className={getBemClasses(styles, 'statusText')}>Не проверено</Text>
                     </>
                 );
-            case TaskStatus.Done:
+            case IssueStatus.Done:
                 return (
-                    undefined !== false
-                        ? <Text className={getBemClasses(styles, 'statusText')}>
-                            100/100
-                        </Text>
-                        : <>
-                            <Checkmark className={getBemClasses(styles, 'statusIcon')} />
-                            <Text className={getBemClasses(styles, 'statusText')}>Сдано</Text>
-                        </>
+                    <>
+                        <Checkmark className={getBemClasses(styles, 'statusIcon')} />
+                        <Text className={getBemClasses(styles, 'statusText')}>Завершено</Text>
+                    </>
                 );
         }
     }, [status]);
@@ -144,12 +138,12 @@ export const TaskCard: FC<Props> = typedMemo(function TaskCard({
                     >
                         {showAssignmentCount
                             ? <Text className={getBemClasses(styles, 'deadline')}>
-                                Сдано: 100500/100500 работ
+                                Сдано: {issue.allSolutionCount}/{issue.allTeamCountInSpace} работ
                             </Text>
                             : null}
                         {showGradingCount
                             ? <Text className={getBemClasses(styles, 'deadline')}>
-                                Проверено: 100500/100500 работ
+                                Проверено: {issue.reviewedSolutionCount}/{issue.allSolutionCount} работ
                             </Text>
                             : null}
                     </FlexContainer>

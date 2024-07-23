@@ -1,6 +1,9 @@
 import { FC, useMemo, useState } from 'react';
 
-import { getBemClasses, typedMemo } from '@shared/lib';
+import { useGetIssue } from '@entities/issue';
+
+import { useIssueId } from '@shared/hooks';
+import { getBemClasses, getDateFromISO, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { FlexContainer, NavTab, Text } from '@shared/ui';
 
@@ -23,16 +26,21 @@ export const SpaceTaskPage: FC<Props> = typedMemo(function SpaceTaskPage({
     className,
     'data-testid': dataTestId = 'SpaceTaskPage',
 }) {
+    const issueId = useIssueId();
+    const { data: issue } = useGetIssue(issueId ?? '');
     const [activeSection, setActiveSection] = useState(ActiveSection.Description);
 
     const content = useMemo(() => {
+        if (!issue) {
+            return null;
+        }
         switch (activeSection) {
             case ActiveSection.Description:
-                return <TaskDescription />;
+                return <TaskDescription issue={issue} />;
             case ActiveSection.Solutions:
-                return <TaskSolutions />;
+                return <TaskSolutions issue={issue} />;
             case ActiveSection.Criteria:
-                return (<TaskCriteria criteria={[{
+                return (<TaskCriteria issue={issue} criteria={[{
                     id: '0000',
                     name: '0000',
                     description: '0000',
@@ -43,11 +51,14 @@ export const SpaceTaskPage: FC<Props> = typedMemo(function SpaceTaskPage({
                 }]}
                 />);
             case ActiveSection.Preparation:
-                return <TaskPreparation />;
+                return <TaskPreparation issue={issue} />;
         }
         return null;
-    }, [activeSection]);
+    }, [activeSection, issue]);
 
+    if (!issue) {
+        return null;
+    }
     return (
         <FlexContainer
             direction="column"
@@ -56,9 +67,9 @@ export const SpaceTaskPage: FC<Props> = typedMemo(function SpaceTaskPage({
             data-testid={dataTestId}
         >
             <FlexContainer direction="column" gap="xs">
-                <Text>Задание 0. Мок</Text>
-                <Text>Сдать до: 00.00.0000</Text>
-                <Text>Оценить до: 00.00.0000</Text>
+                <Text>{issue.name}</Text>
+                <Text>Сдать до: ${getDateFromISO(issue.assessmentDeadlineDateUtc ?? '')}</Text>
+                <Text>Оценить до: ${getDateFromISO(issue.submitDeadlineDateUtc ?? '')}</Text>
             </FlexContainer>
 
             <FlexContainer

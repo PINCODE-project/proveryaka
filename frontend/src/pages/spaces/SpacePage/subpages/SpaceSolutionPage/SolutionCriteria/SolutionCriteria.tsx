@@ -32,8 +32,8 @@ export const SolutionCriteria: FC<Props> = typedMemo(function SolutionCriteria({
                         <Text>Шкала оценивания: {item.minScore} - {item.maxScore}</Text>
                         <Text>{item.description}</Text>
                         <SolutionExample
-                            example={[{ text: 'text', description: 'desc' }]}
-                            antiExample={[{ text: 'text', description: 'desc' }]}
+                            example={[]}
+                            antiExample={[]}
                             triggerComponent={open => (
                                 <Button variant="ghost" onClick={open}>
                                     Пример выполнения

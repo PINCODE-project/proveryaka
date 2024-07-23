@@ -29,16 +29,10 @@ export const SolutionDescription: FC<Props> = typedMemo(function SolutionDescrip
             >
                 <SolutionExample
                     example={
-                        [
-                            { text: 'bla bla', description: 'bla bla' },
-                            { text: 'bla bla', description: 'bla bla' },
-                        ]
+                        []
                     }
                     antiExample={
-                        [
-                            { text: 'bla bla', description: 'bla bla' },
-                            { text: 'bla bla', description: 'bla bla' },
-                        ]
+                        []
                     }
                     triggerComponent={open =>
                         (<Button

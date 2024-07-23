@@ -1,5 +1,6 @@
 import { FC } from 'react';
 
+import { GetIssueResponse } from '@entities/issue';
 import { SolutionCard } from '@entities/solution';
 
 import { getBemClasses, typedMemo } from '@shared/lib';
@@ -8,7 +9,9 @@ import { FlexContainer } from '@shared/ui';
 
 import styles from './TaskSolutions.module.css';
 
-export type Props = ClassNameProps & TestProps & Readonly<{}>;
+export type Props = ClassNameProps & TestProps & Readonly<{
+    issue: GetIssueResponse;
+}>;
 
 export const TaskSolutions: FC<Props> = typedMemo(function TaskSolutions({
     className,

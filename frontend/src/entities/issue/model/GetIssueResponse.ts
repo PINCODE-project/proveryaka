@@ -1,3 +1,5 @@
+import { IssueStatus } from '@entities/issue/model/IssueStatus';
+
 export type GetIssueResponse = {
     /**
      * Идентификатор сущности
@@ -45,4 +47,24 @@ export type GetIssueResponse = {
      * Идентификатор пространства, к котрому привязано задание
      */
     spaceId: string;
+
+    /**
+     * Кол-во всех решений по заданию
+     */
+    allSolutionCount: number;
+
+    /**
+     * Оцененные решения которые оценили минимальное кол-во экспертов
+     */
+    reviewedSolutionCount: number;
+
+    /**
+     * Кол-во всех команд в пространстве
+     */
+    allTeamCountInSpace: number;
+
+    /**
+     * ПОЛЕ ФРОНТА: Статус задания
+     */
+    innerStatus?: IssueStatus;
 };

@@ -1,6 +1,7 @@
 import { FC } from 'react';
 
 import { GetCriteriaResponse } from '@entities/criteria';
+import { GetIssueResponse } from '@entities/issue';
 
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
@@ -10,6 +11,7 @@ import styles from './TaskCriteria.module.css';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     criteria: GetCriteriaResponse[];
+    issue: GetIssueResponse;
 }>;
 
 export const TaskCriteria: FC<Props> = typedMemo(function TaskCriteria({
@@ -32,8 +34,8 @@ export const TaskCriteria: FC<Props> = typedMemo(function TaskCriteria({
                         <Text>Шкала оценивания: {item.minScore} - {item.maxScore}</Text>
                         <Text>{item.description}</Text>
                         <SolutionExample
-                            example={[{ text: 'text', description: 'desc' }]}
-                            antiExample={[{ text: 'text', description: 'desc' }]}
+                            example={[]}
+                            antiExample={[]}
                             triggerComponent={open => (
                                 <Button variant="ghost" onClick={open}>
                                     Пример выполнения
