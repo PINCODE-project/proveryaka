@@ -35,14 +35,15 @@ export const SolutionCarousel: FC<Props> = typedMemo(function SolutionCarousel({
                 ))}
             </FlexContainer>
 
-            <div className={getBemClasses(styles, 'solutionScroll')}>
-                <Text>
-                    {solutions[currentIndex].exampleLink ?? ''}
-                </Text>
-                <Text>
-                    {solutions[currentIndex].description ?? ''}
-                </Text>
-            </div>
+            {solutions.length > 0 &&
+                <div className={getBemClasses(styles, 'solutionScroll')}>
+                    <Text>
+                        {solutions[currentIndex].exampleLink ?? ''}
+                    </Text>
+                    <Text>
+                        {solutions[currentIndex].description ?? ''}
+                    </Text>
+                </div>}
         </FlexContainer>
     );
 });

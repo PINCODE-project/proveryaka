@@ -68,8 +68,8 @@ export const SpaceTaskPage: FC<Props> = typedMemo(function SpaceTaskPage({
         >
             <FlexContainer direction="column" gap="xs">
                 <Text>{issue.name}</Text>
-                <Text>Сдать до: ${getDateFromISO(issue.assessmentDeadlineDateUtc ?? '')}</Text>
-                <Text>Оценить до: ${getDateFromISO(issue.submitDeadlineDateUtc ?? '')}</Text>
+                <Text>Сдать до: {getDateFromISO(issue.assessmentDeadlineDateUtc ?? '')}</Text>
+                <Text>Оценить до: {getDateFromISO(issue.submitDeadlineDateUtc ?? '')}</Text>
             </FlexContainer>
 
             <FlexContainer

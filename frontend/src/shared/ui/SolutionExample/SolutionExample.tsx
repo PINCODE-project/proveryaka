@@ -10,19 +10,19 @@ import { SolutionCarousel } from '@shared/ui/SolutionExample/SolutionCarousel';
 
 import styles from './SolutionExample.module.css';
 
-export type Props = ClassNameProps & TestProps & Readonly<{
-    example: ExampleResponse[];
-    antiExample: ExampleResponse[];
+export type Props<TExample extends ExampleResponse> = ClassNameProps & TestProps & Readonly<{
+    example: TExample[];
+    antiExample: TExample[];
     triggerComponent: (open: () => void) => ReactNode;
 }>;
 
-export const SolutionExample: FC<Props> = typedMemo(function SolutionExample({
+export const SolutionExample = typedMemo(function SolutionExample<TExample extends ExampleResponse>({
     example,
     antiExample,
     className,
     triggerComponent,
     'data-testid': dataTestId = 'SolutionExample',
-}) {
+}: Props<TExample>) {
     const [isOpen, setIsOpen] = useState(false);
 
     return (

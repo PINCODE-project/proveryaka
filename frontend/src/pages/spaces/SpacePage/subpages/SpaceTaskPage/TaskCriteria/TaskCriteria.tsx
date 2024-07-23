@@ -1,8 +1,12 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
+
+import { TaskCriteriaItem } from '@pages/spaces/SpacePage/subpages/SpaceTaskPage/TaskCriteria/TaskCriteriaItem';
 
 import { GetCriteriaResponse } from '@entities/criteria';
+import { useGetIssueCriteria } from '@entities/criteria/lib/useGetIssueCriteria';
 import { GetIssueResponse } from '@entities/issue';
 
+import { useListFilters } from '@shared/hooks';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { Button, FlexContainer, SolutionExample, Text } from '@shared/ui';
@@ -16,9 +20,15 @@ export type Props = ClassNameProps & TestProps & Readonly<{
 
 export const TaskCriteria: FC<Props> = typedMemo(function TaskCriteria({
     className,
-    criteria,
+    issue,
     'data-testid': dataTestId = 'TaskCriteria',
 }) {
+    const [filters] = useListFilters({ count: 15, page: 0 });
+    const { data: criteria } = useGetIssueCriteria(issue.id, filters);
+
+    if (!criteria) {
+        return null;
+    }
     return (
         <FlexContainer
             direction="column"
@@ -27,22 +37,8 @@ export const TaskCriteria: FC<Props> = typedMemo(function TaskCriteria({
             data-testid={dataTestId}
         >
             {
-                criteria.map(item => (
-                    <FlexContainer direction="column" key={item.id}>
-                        <Text>{item.name}</Text>
-                        <Text>Вес: {item.weight}</Text>
-                        <Text>Шкала оценивания: {item.minScore} - {item.maxScore}</Text>
-                        <Text>{item.description}</Text>
-                        <SolutionExample
-                            example={[]}
-                            antiExample={[]}
-                            triggerComponent={open => (
-                                <Button variant="ghost" onClick={open}>
-                                    Пример выполнения
-                                </Button>
-                            )}
-                        />
-                    </FlexContainer>
+                criteria.entityList?.map(item => (
+                    <TaskCriteriaItem criteria={item} key={item.id} />
                 ))
             }
         </FlexContainer>
