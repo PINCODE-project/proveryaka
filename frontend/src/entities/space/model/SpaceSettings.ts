@@ -1,6 +1,8 @@
 import { SpaceAccessType } from '@entities/space/model/SpaceAccessType';
 
 export type SpaceSettings = {
+    id: string;
+
     /**
      * Название
      */

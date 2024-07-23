@@ -7,6 +7,7 @@ import { ClassNameProps, TestProps } from '@shared/types';
 import { Button, FlexContainer, FormField, Input, Text, Textarea } from '@shared/ui';
 
 import styles from './IssueForm.module.css';
+import dayjs from "dayjs";
 
 export type Props = ClassNameProps & TestProps & Readonly<{}>;
 
@@ -62,7 +63,7 @@ export const IssueForm: FC<Props> = typedMemo(function IssueForm({}) {
                 />
                 <FlexContainer direction="row" gap="m">
                     <FormField<string>
-                        name="minRatingCount"
+                        name="checksCountMin"
                         label="Минимальное кол-во оценок"
                         content={
                             ({ value, onChange, isInvalid }) => (
@@ -77,7 +78,7 @@ export const IssueForm: FC<Props> = typedMemo(function IssueForm({}) {
                         }
                     />
                     <FormField<string>
-                        name="maxRatingCount"
+                        name="checksCountMax"
                         label="Максимальное кол-во оценок"
                         content={
                             ({ value, onChange, isInvalid }) => (
@@ -99,27 +100,27 @@ export const IssueForm: FC<Props> = typedMemo(function IssueForm({}) {
                 gap="m"
             >
                 <Text>Дедлайны</Text>
-                <FormField<string>
+                <FormField<Date>
                     name="assessmentDeadlineDateUtc"
                     label="Дата сдачи"
                     content={
                         ({ value, onChange, isInvalid }) => (
                             <DatePicker
-                                value={value}
-                                onChange={onChange}
+                                defaultValue={dayjs(value)}
+                                onChange={(date) => onChange(date.toDate())}
                                 status={isInvalid ? 'error' : ''}
                             />
                         )
                     }
                 />
-                <FormField<string>
+                <FormField<Date>
                     name="submitDeadlineDateUtc"
                     label="Дата оценки"
                     content={
                         ({ value, onChange, isInvalid }) => (
                             <DatePicker
-                                value={value}
-                                onChange={onChange}
+                                defaultValue={dayjs(value)}
+                                onChange={(date) => onChange(date.toDate())}
                                 status={isInvalid ? 'error' : ''}
                             />
                         )

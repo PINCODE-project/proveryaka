@@ -1,8 +1,9 @@
 import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 
-import { TokenService } from '@shared/lib';
+import { refreshToken } from '@features/auth/refresh-token';
 
-export type RefreshResult = Promise<AxiosResponse<unknown, unknown>>;
+import { ssoHttp } from '@shared/config/axios';
+import { extractData, Token, TokenService } from '@shared/lib';
 
 /**
  * Интерсептор обновления токена
@@ -14,21 +15,25 @@ export function refreshSecretInterceptor(error: AxiosError)/*: RefreshResult */ 
         throw error;
     }
 
-    return refreshSecret(error);
+    return refreshSecretInner(error);
 }
 
-const refreshSecret = async (requestError: AxiosError)/* RefreshResult */ => {
+const refreshSecretInner = async (requestError: AxiosError)/* RefreshResult */ => {
     const secret = TokenService.getToken();
     if (secret === null || requestError.config === undefined) {
         throw requestError;
     }
 
-    /* try {
-        const newSecret = await AuthService.refreshSecret(secret);
-		UserSecretService.saveToken(newSecret);
-		return http.request(requestError.config);
+    try {
+        const newSecret = await refreshToken();
+        if (!newSecret) {
+            throw requestError;
+        }
+
+        TokenService.setToken(newSecret);
+        return ssoHttp.request(requestError.config);
     } catch (error: unknown) {
-        AuthService.disconnect();
+        TokenService.removeToken();
         throw error;
-    } */
+    }
 };

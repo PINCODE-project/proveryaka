@@ -12,6 +12,7 @@ import { ClassNameProps, TestProps } from '@shared/types';
 import { FlexContainer, Image, SettingsDropdown, Text } from '@shared/ui';
 
 import styles from './TaskCard.module.css';
+import {EditIssueForm} from "@features/issue/edit-issue";
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     status: TaskStatus;
@@ -165,7 +166,11 @@ export const TaskCard: FC<Props> = typedMemo(function TaskCard({
                             items: [
                                 {
                                     key: 0,
-                                    label: 'Настройки',
+                                    label: <EditIssueForm
+                                        spaceId={space?.id ?? ''}
+                                        triggerElement={open => <Text onClick={open}>Настройки</Text>}
+                                        issue={issue}
+                                    />,
                                     icon: <Settings className={getBemClasses(styles, 'settingsActionButtonIcon')} />,
                                 },
                             ],

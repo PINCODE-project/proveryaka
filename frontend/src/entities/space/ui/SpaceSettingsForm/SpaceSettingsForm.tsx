@@ -27,7 +27,7 @@ export type Props = ClassNameProps & TestProps & Readonly<{
     submitText: string;
 }>;
 
-const initialValue: SpaceSettings = {
+const initialValue: Omit<SpaceSettings, 'id'> = {
     name: '',
     description: '',
     icon: '',
