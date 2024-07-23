@@ -43,6 +43,7 @@ const initialValue: Omit<CreateInfoWithFullInfo, 'spaceId'> = {
     criteriaList: [],
     allSolutionCount: 0,
     allTeamCountInSpace: 0,
+    issueFormList: [],
     reviewedSolutionCount: 0,
 };
 

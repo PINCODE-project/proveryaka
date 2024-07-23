@@ -29,7 +29,7 @@ export const ExampleContent: FC<Props> = typedMemo(function ExampleContent({
             exampleLink: '',
             description: '',
             textValue: '',
-            fileIdValue: '',
+            fileIdValue: null,
         });
         formik.setFieldValue('issueExampleList', formik.values.issueExampleList);
     }, [formik, exampleType]);

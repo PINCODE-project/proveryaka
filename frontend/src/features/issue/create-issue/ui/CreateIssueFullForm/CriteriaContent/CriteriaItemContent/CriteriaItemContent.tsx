@@ -28,7 +28,7 @@ export const CriteriaItemContent: FC<Props> = typedMemo(function CriteriaItemCon
             exampleLink: '',
             description: '',
             textValue: '',
-            fileIdValue: '',
+            fileIdValue: null,
         });
         formik.setFieldValue('criteriaList', formik.values.criteriaList);
     }, [formik, index]);

@@ -1,4 +1,5 @@
 import { DatePicker } from 'antd';
+import dayjs from 'dayjs';
 import { FC, useCallback } from 'react';
 
 import Trash from '@shared/assets/icons/Trash.svg';
@@ -7,7 +8,6 @@ import { ClassNameProps, TestProps } from '@shared/types';
 import { Button, FlexContainer, FormField, Input, Text, Textarea } from '@shared/ui';
 
 import styles from './IssueForm.module.css';
-import dayjs from "dayjs";
 
 export type Props = ClassNameProps & TestProps & Readonly<{}>;
 
@@ -106,8 +106,8 @@ export const IssueForm: FC<Props> = typedMemo(function IssueForm({}) {
                     content={
                         ({ value, onChange, isInvalid }) => (
                             <DatePicker
-                                defaultValue={dayjs(value)}
-                                onChange={(date) => onChange(date.toDate())}
+                                defaultValue={value ? dayjs(value) : undefined}
+                                onChange={date => onChange(date.toDate())}
                                 status={isInvalid ? 'error' : ''}
                             />
                         )
@@ -119,8 +119,8 @@ export const IssueForm: FC<Props> = typedMemo(function IssueForm({}) {
                     content={
                         ({ value, onChange, isInvalid }) => (
                             <DatePicker
-                                defaultValue={dayjs(value)}
-                                onChange={(date) => onChange(date.toDate())}
+                                defaultValue={value ? dayjs(value) : undefined}
+                                onChange={date => onChange(date.toDate())}
                                 status={isInvalid ? 'error' : ''}
                             />
                         )
