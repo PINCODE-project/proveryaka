@@ -105,7 +105,7 @@ export const FormField = typedMemo(function FormField<TValue>({
             </div>
 
             <Text className={getBemClasses(styles, 'error')}>
-                {isInvalid ? <ErrorMessage name={name} /> : null}
+                {isInvalid && typeof fieldMeta.error === 'string' ? <ErrorMessage name={name} /> : null}
             </Text>
         </FlexContainer>
     );

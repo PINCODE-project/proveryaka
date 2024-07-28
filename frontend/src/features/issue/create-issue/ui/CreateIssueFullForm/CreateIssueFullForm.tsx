@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 
 import { CriteriaContent } from '@features/issue/create-issue/ui/CreateIssueFullForm/CriteriaContent';
 import { ExampleContent } from '@features/issue/create-issue/ui/CreateIssueFullForm/ExampleContent';
+import { IssueFormList } from '@features/issue/create-issue/ui/CreateIssueFullForm/IssueFormList';
 
 import { validationSchema as validationSchemaCriteria } from '@entities/criteria';
 import { ExampleForm, ExampleType, validationSchema as validationSchemaExample } from '@entities/example/common';
@@ -21,6 +22,7 @@ import { CreateInfoWithFullInfo } from '../../model/CreateInfoWithFullInfo';
 
 enum IssueStep {
     Common,
+    IssueFormList,
     Criteria,
     ExampleStandard,
     ExampleAnti
@@ -54,6 +56,11 @@ const validationSchema = validationSchemaIssue.shape({
             criteriaExampleList: Yup.array().of(validationSchemaExample),
         }),
     ),
+    issueFormList: Yup.array().min(1, 'Добавьте поле для сдачи').of(Yup.object({
+        name: Yup.string().required('Введите название поля'),
+        description: Yup.string(),
+        formSolutionType: Yup.number().min(1, 'Выберите тип поля'),
+    })),
 });
 export const CreateIssueFullForm: FC<Props> = typedMemo(function CreateIssueFullForm({
     triggerElement,
@@ -74,6 +81,8 @@ export const CreateIssueFullForm: FC<Props> = typedMemo(function CreateIssueFull
         switch (step) {
             case IssueStep.Common:
                 return <IssueForm />;
+            case IssueStep.IssueFormList:
+                return <IssueFormList />;
             case IssueStep.Criteria:
                 return <CriteriaContent />;
             case IssueStep.ExampleStandard:
@@ -105,16 +114,20 @@ export const CreateIssueFullForm: FC<Props> = typedMemo(function CreateIssueFull
                         <Text>1</Text>
                         <Text>Общее</Text>
                     </button>
-                    <button onClick={() => setStep(IssueStep.Criteria)}>
+                    <button onClick={() => setStep(IssueStep.IssueFormList)}>
                         <Text>2</Text>
+                        <Text>Форма сдачи</Text>
+                    </button>
+                    <button onClick={() => setStep(IssueStep.Criteria)}>
+                        <Text>3</Text>
                         <Text>Критерии</Text>
                     </button>
                     <button onClick={() => setStep(IssueStep.ExampleStandard)}>
-                        <Text>3</Text>
+                        <Text>4</Text>
                         <Text>Эталоны</Text>
                     </button>
                     <button onClick={() => setStep(IssueStep.ExampleAnti)}>
-                        <Text>4</Text>
+                        <Text>5</Text>
                         <Text>Антипримеры</Text>
                     </button>
                 </FlexContainer>
