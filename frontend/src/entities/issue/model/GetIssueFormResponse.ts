@@ -10,10 +10,16 @@ export type GetIssueFormResponse = {
      * Идентификатор задания
      */
     issueId: string;
+
     /**
      * Название поля
      */
     name: string | null;
+
+    /**
+     * Описание
+     */
+    description?: string | null;
 
     /**
      * Обязательная ли форма для сдачи

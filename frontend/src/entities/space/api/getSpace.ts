@@ -4,6 +4,6 @@ import { estimateHttp } from '@shared/config/axios';
 import { extractData } from '@shared/lib';
 
 export function getSpace(spaceId: string|number): Promise<SpaceSettings> {
-    return estimateHttp.get<SpaceSettings>(`admin/space/${spaceId}`)
+    return estimateHttp.get<SpaceSettings>(`space/${spaceId}`)
         .then(extractData);
 }

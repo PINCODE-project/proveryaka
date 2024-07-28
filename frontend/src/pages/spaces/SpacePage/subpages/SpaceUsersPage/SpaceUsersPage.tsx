@@ -1,9 +1,12 @@
-import type { CollapseProps } from 'antd';
-import { Collapse } from 'antd';
+import { CollapseProps, Dropdown, MenuProps, TableProps, Collapse } from 'antd';
 import { FC, useMemo } from 'react';
 
-import { UserTable, useGetSpaceExperts, useGetSpaceOrganizers, useGetSpaceStudents } from '@entities/space';
+import { ChangeSpaceUserRole } from '@features/space/edit-space/sub-features/change-user-role';
 
+import { UserTable, useGetSpaceExperts, useGetSpaceOrganizers, useGetSpaceStudents } from '@entities/space';
+import { User } from '@entities/space/ui/UserTable/UserTable';
+
+import ThreeDots from '@shared/assets/icons/ThreeDots.svg';
 import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
@@ -12,6 +15,34 @@ import { FlexContainer, Text } from '@shared/ui';
 import styles from './SpaceUsersPage.module.css';
 
 export type Props = ClassNameProps & TestProps & Readonly<{}>;
+
+const items: MenuProps['items'] = [
+    {
+        key: '1',
+        label: <ChangeSpaceUserRole
+            triggerComponent={open => (<Text onClick={open}>
+                Изменить роль
+            </Text>)}
+            username={'User Name'}
+        />,
+    },
+    {
+        key: '2',
+        label: 'Удалить из пространства',
+    },
+];
+
+const actions: TableProps<User>['columns'] = [
+    {
+        title: '',
+        className: getBemClasses(styles, 'columns'),
+        render: (_, record) => (
+            <Dropdown menu={{ items }}>
+                <ThreeDots />
+            </Dropdown>
+        ),
+    },
+];
 
 export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage({
     className,
@@ -29,7 +60,7 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage({
                 Владельцы ({(organizers?.organizerInfoList ?? []).length})
             </Text>,
             collapsible: (organizers?.organizerInfoList ?? []).length > 0 ? undefined : 'disabled',
-            children: <UserTable users={organizers?.organizerInfoList ?? []} />,
+            children: <UserTable users={organizers?.organizerInfoList ?? []} actions={actions} />,
         },
         {
             key: '2',
@@ -37,7 +68,7 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage({
             label: <Text className={getBemClasses(styles, 'collapseLabel')}>
                 Эксперты ({(experts?.expertInfoList ?? []).length})
             </Text>,
-            children: <UserTable users={experts?.expertInfoList ?? []} />,
+            children: <UserTable users={experts?.expertInfoList ?? []} actions={actions} />,
         },
         {
             key: '3',
@@ -45,7 +76,7 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage({
             label: <Text className={getBemClasses(styles, 'collapseLabel')}>
                 Студенты ({(students?.studentInfoList ?? []).length})
             </Text>,
-            children: <UserTable users={students?.studentInfoList ?? []} isStudent={true} />,
+            children: <UserTable users={students?.studentInfoList ?? []} isStudent={true} actions={actions} />,
         },
     ], [organizers, experts, students]);
 

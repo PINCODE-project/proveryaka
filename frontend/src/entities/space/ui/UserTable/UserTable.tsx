@@ -18,25 +18,10 @@ export type User = GetOrganizerResponse | GetExpertResponse | GetStudentResponse
 export type Props = ClassNameProps & Readonly<{
     users: User[];
     isStudent?: boolean;
+    actions?: TableProps<User>['columns'];
 }>;
 
-const items: MenuProps['items'] = [
-    {
-        key: '1',
-        label: <ChangeSpaceUserRole
-            triggerComponent={open => (<Text onClick={open}>
-                Изменить роль
-            </Text>)}
-            username={'User Name'}
-        />,
-    },
-    {
-        key: '2',
-        label: 'Удалить из пространства',
-    },
-];
-
-const getColumns = (isStudent: boolean): TableProps<User>['columns'] => [
+const getColumns = (isStudent: boolean, actions: TableProps<User>['columns']): TableProps<User>['columns'] => [
     {
         title: '',
         width: '60px',
@@ -71,23 +56,17 @@ const getColumns = (isStudent: boolean): TableProps<User>['columns'] => [
         dataIndex: 'status',
         className: getBemClasses(styles, 'columns'),
     },
-    {
-        title: '',
-        className: getBemClasses(styles, 'columns'),
-        render: (_, record) => (
-            <Dropdown menu={{ items }}>
-                <ThreeDots />
-            </Dropdown>
-        ),
-    },
+    ...(actions ?? []),
+
 ];
 
 export const UserTable: FC<Props> = typedMemo(function UserTable({
     className,
     users,
+    actions,
     isStudent = false,
 }) {
-    const columns = useMemo(() => getColumns(isStudent), [isStudent]);
+    const columns = useMemo(() => getColumns(isStudent, actions), [isStudent]);
 
     return (
         <Table

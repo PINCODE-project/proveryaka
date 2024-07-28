@@ -94,6 +94,7 @@ export const SpacePage: FC<Props> = typedMemo(({
                     <NavTab to={SpaceRouter.Tasks(spaceId)} name="Задания" />
                     <NavTab to={SpaceRouter.Works(spaceId)} name="Работы" />
                     <NavTab to={SpaceRouter.Users(spaceId)} name="Участники" />
+                    <NavTab to={SpaceRouter.Team(spaceId)} name="Команды" />
                 </FlexContainer>
 
                 <SettingsDropdown

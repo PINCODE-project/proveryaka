@@ -1,6 +1,7 @@
 import { SpaceSolutionPage } from '@pages/spaces/SpacePage/subpages/SpaceSolutionPage';
 import { SpaceSolutionsPage } from '@pages/spaces/SpacePage/subpages/SpaceSolutionsPage/SpaceSolutionsPage';
 import { SpaceTaskPage } from '@pages/spaces/SpacePage/subpages/SpaceTaskPage';
+import { SpaceTeamPage } from '@pages/spaces/SpacePage/subpages/SpaceTeamPage/SpaceTeamPage';
 
 import { ConfigRouteProps } from '@shared/types';
 
@@ -14,15 +15,13 @@ export const SpaceRouter = {
     Main: '/spaces',
     Space: (spaceId: number | string) => `/spaces/${spaceId}`,
     Tasks: (spaceId: number | string) => `/spaces/${spaceId}/tasks`,
-    CreateTask: (spaceId: number | string) => `/spaces/${spaceId}/tasks/create`,
     Task: (spaceId: number | string, issueId: number | string) => `/spaces/${spaceId}/tasks/${issueId}`,
     EditTask: (spaceId: number | string, issueId: number | string) => `/spaces/${spaceId}/tasks/${issueId}/edit`,
     TaskWork: (spaceId: number | string, issueId: number | string, workId: number | string) => `/spaces/${spaceId}/tasks/${issueId}/works/${workId}`,
     EstimateTaskWork: (spaceId: number | string, issueId: number | string, workId: number | string) => `/spaces/${spaceId}/tasks/${issueId}/works/${workId}/estimate`,
     Works: (spaceId: number | string) => `/spaces/${spaceId}/works`,
-    Appeal: (spaceId: number | string, appealId: number | string) => `/spaces/${spaceId}/appeals/${appealId}`,
-    EstimateAppeal: (spaceId: number | string, appealId: number | string) => `/spaces/${spaceId}/appeals/${appealId}/estimate`,
     Users: (spaceId: number | string) => `/spaces/${spaceId}/users`,
+    Team: (spaceId: number | string) => `/spaces/${spaceId}/team`,
     User: (spaceId: number | string, userId: number | string) => `/spaces/${spaceId}/users/${userId}`,
 };
 
@@ -35,10 +34,6 @@ export const spacesRouteConfig: ConfigRouteProps[] = [
             {
                 path: SpaceRouter.Space(':spaceId'),
                 element: <RedirectToTasks />,
-            },
-            {
-                path: SpaceRouter.CreateTask(':spaceId'),
-                element: null,
             },
             {
                 path: SpaceRouter.EditTask(':spaceId', ':issueId'),
@@ -61,14 +56,6 @@ export const spacesRouteConfig: ConfigRouteProps[] = [
                 element: <SpaceTasksPage />,
             },
             {
-                path: SpaceRouter.EstimateAppeal(':spaceId', ':appealId'),
-                element: null,
-            },
-            {
-                path: SpaceRouter.Appeal(':spaceId', ':appealId'),
-                element: null,
-            },
-            {
                 path: SpaceRouter.Works(':spaceId'),
                 element: <SpaceSolutionsPage />,
             },
@@ -79,6 +66,10 @@ export const spacesRouteConfig: ConfigRouteProps[] = [
             {
                 path: SpaceRouter.Users(':spaceId'),
                 element: <SpaceUsersPage />,
+            },
+            {
+                path: SpaceRouter.Team(':spaceId'),
+                element: <SpaceTeamPage />,
             },
         ],
     },

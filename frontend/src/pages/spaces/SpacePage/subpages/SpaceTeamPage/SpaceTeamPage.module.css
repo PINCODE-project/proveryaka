@@ -1,0 +1,28 @@
+.SpaceTeamPage {
+    background-color: var(--default-background-2);
+    height: 100%;
+    padding: var(--space-l);
+}
+
+.SpaceTeamPage__header,
+.SpaceTeamPage__tasks {
+    padding: var(--space-l);
+    width: 100%;
+}
+
+.SpaceTeamPage__task {
+    flex: 1;
+}
+
+.SpaceTeamPage__collapse {
+    width: 100%;
+}
+
+.SpaceTeamPage__collapseLabel {
+    font-weight: var(--font-weight-semibold);
+}
+
+.SpaceTeamPage__actionIcon {
+    width: var(--icon-size-m);
+    height: var(--icon-size-m);
+}
