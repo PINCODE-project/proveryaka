@@ -1,4 +1,5 @@
-import { FC } from 'react';
+import { MenuProps } from 'antd';
+import { FC, useMemo } from 'react';
 import { useQueryClient } from 'react-query';
 import { Outlet, Navigate } from 'react-router-dom';
 
@@ -15,6 +16,7 @@ import { RegenerateSpaceCodeButton, useRegenerateSpaceCode } from '@features/spa
 import { getSpacesQueryKey } from '@entities/space';
 import { getSpaceQueryKey } from '@entities/space/lib/getSpaceQueryKey';
 import { useGetSpace } from '@entities/space/lib/useGetSpace';
+import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
 import ChevronLeft from '@shared/assets/icons/ChevronLeft.svg';
 import { useFileUrlById } from '@shared/hooks';
@@ -36,6 +38,7 @@ export const SpacePage: FC<Props> = typedMemo(({
     const spaceId = useSpaceId();
     const { data: space, error } = useGetSpace(spaceId ?? '');
     const [iconUrl] = useFileUrlById(space!.icon);
+    const { isOrganizer, isStudent } = useRolesCheck();
 
     const { mutate: deleteSpace, isLoading } = useDeleteSpace({
         onSuccess: () => {
@@ -50,6 +53,61 @@ export const SpacePage: FC<Props> = typedMemo(({
             queryClient.resetQueries(getSpaceQueryKey(spaceId ?? ''));
         },
     });
+
+    const settingsItem = useMemo(() => {
+        let items: MenuProps['items'] = [];
+
+        if (isOrganizer) {
+            items = items.concat([
+                {
+                    key: 0,
+                    label: <EditSpaceModal
+                        triggerElement={open => <Text onClick={open}>Управление командой</Text>}
+                        spaceId={spaceId ?? ''}
+                    />,
+                },
+                {
+                    key: 1,
+                    onClick: () => space?.inviteCode && copySpaceCode(space.inviteCode),
+                    label: 'Скопировать код',
+                    disabled: !space?.inviteCode,
+                },
+                {
+                    key: 2,
+                    onClick: () => regenerateCode(spaceId ?? ''),
+                    label: 'Перегенерировать код',
+                },
+                {
+                    key: 3,
+                    label: <AddUserInSpaceModal
+                        triggerElement={open => (<Text onClick={open}>Добавить пользователей</Text>)}
+                        spaceId={spaceId ?? ''}
+                    />,
+                },
+                {
+                    type: 'divider',
+                },
+            ]);
+        }
+
+        items.push({
+            danger: true,
+            key: 4,
+            label: 'Покинуть пространство',
+        });
+
+        if (isOrganizer) {
+            items.push({
+                danger: true,
+                disabled: isLoading,
+                key: 5,
+                onClick: () => deleteSpace(spaceId ?? ''),
+                label: 'Удалить пространство',
+            });
+        }
+
+        return items;
+    }, [spaceId, space, isOrganizer]);
 
     if (spaceId === undefined) {
         return <Navigate to={SpaceRouter.Main} />;
@@ -91,57 +149,14 @@ export const SpacePage: FC<Props> = typedMemo(({
                         </Text>
                     </FlexContainer>
 
-                    <NavTab to={SpaceRouter.Tasks(spaceId)} name="Задания" />
+                    {(isOrganizer || isStudent) ? <NavTab to={SpaceRouter.Tasks(spaceId)} name="Задания" /> : null}
                     <NavTab to={SpaceRouter.Works(spaceId)} name="Работы" />
-                    <NavTab to={SpaceRouter.Users(spaceId)} name="Участники" />
-                    <NavTab to={SpaceRouter.Team(spaceId)} name="Команды" />
+                    {(isOrganizer || isStudent) ? <NavTab to={SpaceRouter.Users(spaceId)} name="Участники" /> : null}
+                    {(isOrganizer || isStudent) ? <NavTab to={SpaceRouter.Team(spaceId)} name="Команды" /> : null}
                 </FlexContainer>
 
                 <SettingsDropdown
-                    menu={{
-                        items: [
-                            {
-                                key: 0,
-                                label: <EditSpaceModal
-                                    triggerElement={open => <Text onClick={open}>Управление командой</Text>}
-                                    spaceId={spaceId}
-                                />,
-                            },
-                            {
-                                key: 1,
-                                onClick: () => space.inviteCode && copySpaceCode(space.inviteCode),
-                                label: 'Скопировать код',
-                                disabled: !space.inviteCode,
-                            },
-                            {
-                                key: 2,
-                                onClick: () => regenerateCode(spaceId),
-                                label: 'Перегенерировать код',
-                            },
-                            {
-                                key: 3,
-                                label: <AddUserInSpaceModal
-                                    triggerElement={open => (<Text onClick={open}>Добавить пользователей</Text>)}
-                                    spaceId={spaceId}
-                                />,
-                            },
-                            {
-                                type: 'divider',
-                            },
-                            {
-                                danger: true,
-                                key: 4,
-                                label: 'Покинуть пространство',
-                            },
-                            {
-                                danger: true,
-                                disabled: isLoading,
-                                key: 5,
-                                onClick: () => deleteSpace(spaceId),
-                                label: 'Удалить пространство',
-                            },
-                        ],
-                    }}
+                    menu={{ items: settingsItem }}
                 />
             </FlexContainer>
 

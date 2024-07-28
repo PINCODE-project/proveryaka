@@ -1,6 +1,8 @@
 import { FC, useMemo, useState } from 'react';
 
 import { useGetIssue } from '@entities/issue';
+import { useGetStudentIssueSolution } from '@entities/solution/lib/useGetStudentIssueSolution';
+import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
 import { useIssueId } from '@shared/hooks';
 import { getBemClasses, getDateFromISO, typedMemo } from '@shared/lib';
@@ -17,7 +19,8 @@ enum ActiveSection {
     Description,
     Solutions,
     Criteria,
-    Preparation
+    Preparation,
+    Grades
 }
 
 export type Props = ClassNameProps & TestProps & Readonly<{}>;
@@ -29,6 +32,8 @@ export const SpaceTaskPage: FC<Props> = typedMemo(function SpaceTaskPage({
     const issueId = useIssueId();
     const { data: issue } = useGetIssue(issueId ?? '');
     const [activeSection, setActiveSection] = useState(ActiveSection.Description);
+
+    const { isOrganizer, isStudent } = useRolesCheck();
 
     const content = useMemo(() => {
         if (!issue) {
@@ -68,8 +73,8 @@ export const SpaceTaskPage: FC<Props> = typedMemo(function SpaceTaskPage({
         >
             <FlexContainer direction="column" gap="xs">
                 <Text>{issue.name}</Text>
-                <Text>Сдать до: {getDateFromISO(issue.assessmentDeadlineDateUtc ?? '')}</Text>
-                <Text>Оценить до: {getDateFromISO(issue.submitDeadlineDateUtc ?? '')}</Text>
+                <Text>Сдача до: {getDateFromISO(issue.assessmentDeadlineDateUtc ?? '')}</Text>
+                <Text>Проверка до: {getDateFromISO(issue.submitDeadlineDateUtc ?? '')}</Text>
             </FlexContainer>
 
             <FlexContainer
@@ -83,11 +88,13 @@ export const SpaceTaskPage: FC<Props> = typedMemo(function SpaceTaskPage({
                     name="Описание"
                     onClick={() => setActiveSection(ActiveSection.Description)}
                 />
-                <NavTab
-                    isActive={activeSection === ActiveSection.Solutions}
-                    name="Работы"
-                    onClick={() => setActiveSection(ActiveSection.Solutions)}
-                />
+                {isOrganizer
+                    ? <NavTab
+                        isActive={activeSection === ActiveSection.Solutions}
+                        name="Работы"
+                        onClick={() => setActiveSection(ActiveSection.Solutions)}
+                    />
+                    : null}
                 <NavTab
                     isActive={activeSection === ActiveSection.Criteria}
                     name="Критерии"
@@ -98,6 +105,13 @@ export const SpaceTaskPage: FC<Props> = typedMemo(function SpaceTaskPage({
                     name="Материалы для подготовки"
                     onClick={() => setActiveSection(ActiveSection.Preparation)}
                 />
+                {isStudent
+                    ? <NavTab
+                        isActive={activeSection === ActiveSection.Grades}
+                        name="Оценки"
+                        onClick={() => setActiveSection(ActiveSection.Grades)}
+                    />
+                    : null}
             </FlexContainer>
 
             {content}

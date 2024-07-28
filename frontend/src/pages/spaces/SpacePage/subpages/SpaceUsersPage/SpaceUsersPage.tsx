@@ -4,6 +4,7 @@ import { FC, useMemo } from 'react';
 import { ChangeSpaceUserRole } from '@features/space/edit-space/sub-features/change-user-role';
 
 import { UserTable, useGetSpaceExperts, useGetSpaceOrganizers, useGetSpaceStudents } from '@entities/space';
+import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 import { User } from '@entities/space/ui/UserTable/UserTable';
 
 import ThreeDots from '@shared/assets/icons/ThreeDots.svg';
@@ -52,6 +53,7 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage({
     const { data: organizers } = useGetSpaceOrganizers(spaceId ?? '');
     const { data: experts } = useGetSpaceExperts(spaceId ?? '');
     const { data: students } = useGetSpaceStudents(spaceId ?? '');
+    const { isOrganizer, isStudent } = useRolesCheck();
 
     const items = useMemo<CollapseProps['items']>(() => [
         {
@@ -60,7 +62,7 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage({
                 Владельцы ({(organizers?.organizerInfoList ?? []).length})
             </Text>,
             collapsible: (organizers?.organizerInfoList ?? []).length > 0 ? undefined : 'disabled',
-            children: <UserTable users={organizers?.organizerInfoList ?? []} actions={actions} />,
+            children: <UserTable users={organizers?.organizerInfoList ?? []} actions={isOrganizer ? actions : undefined} />,
         },
         {
             key: '2',
@@ -68,7 +70,7 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage({
             label: <Text className={getBemClasses(styles, 'collapseLabel')}>
                 Эксперты ({(experts?.expertInfoList ?? []).length})
             </Text>,
-            children: <UserTable users={experts?.expertInfoList ?? []} actions={actions} />,
+            children: <UserTable users={experts?.expertInfoList ?? []} actions={isOrganizer ? actions : undefined} />,
         },
         {
             key: '3',
@@ -76,7 +78,7 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage({
             label: <Text className={getBemClasses(styles, 'collapseLabel')}>
                 Студенты ({(students?.studentInfoList ?? []).length})
             </Text>,
-            children: <UserTable users={students?.studentInfoList ?? []} isStudent={true} actions={actions} />,
+            children: <UserTable users={students?.studentInfoList ?? []} isStudent={true} actions={isOrganizer ? actions : undefined} />,
         },
     ], [organizers, experts, students]);
 

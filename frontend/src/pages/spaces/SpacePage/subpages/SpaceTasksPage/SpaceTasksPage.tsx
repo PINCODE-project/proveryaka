@@ -5,11 +5,13 @@ import { SpaceRouter } from '@pages/spaces';
 
 import { CreateIssueFullForm } from '@features/issue/create-issue/ui/CreateIssueFullForm';
 
-import { useGetSpaceIssue } from '@entities/issue';
+import { GetIssueResponse, useGetSpaceIssue } from '@entities/issue';
 import { getIssueStatus } from '@entities/issue/lib/getIssueStatus';
 import { IssueStatus } from '@entities/issue/model/IssueStatus';
+import { useGetStudentIssueSolution } from '@entities/solution/lib/useGetStudentIssueSolution';
 import { TaskCard } from '@entities/space';
 import { useGetSpace } from '@entities/space/lib/useGetSpace';
+import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
 import { useListFilters } from '@shared/hooks';
 import { useSpaceId } from '@shared/hooks/useSpaceId';
@@ -32,10 +34,12 @@ export const SpaceTasksPage: FC<Props> = typedMemo(function SpaceTasksPage({
     const [search, setSearch] = useState('');
     const [filters, changeFilter] = useListFilters({ page: 0, count: 15 });
 
+    const { isOrganizer, isStudent } = useRolesCheck();
+
     const { data: rawIssues } = useGetSpaceIssue(spaceId ?? '', filters);
-    const issues = useMemo(() => rawIssues?.entityList?.map(issue => ({
+    const issues: GetIssueResponse[] = useMemo(() => rawIssues?.entityList?.map(issue => ({
         ...issue,
-        status: getIssueStatus(issue),
+        innerStatus: getIssueStatus(issue),
     })) ?? [], [rawIssues]);
 
     return (
@@ -53,14 +57,16 @@ export const SpaceTasksPage: FC<Props> = typedMemo(function SpaceTasksPage({
                 justifyContent="space-between"
                 className={getBemClasses(styles, 'header')}
             >
-                <CreateIssueFullForm
-                    triggerElement={open => (
-                        <Button onClick={open}>
+                {isOrganizer
+                    ? <CreateIssueFullForm
+                        triggerElement={open => (
+                            <Button onClick={open}>
                             Создать задание
-                        </Button>
-                    )}
-                    spaceId={spaceId ?? ''}
-                />
+                            </Button>
+                        )}
+                        spaceId={spaceId ?? ''}
+                    />
+                    : null}
 
                 <FlexContainer
                     direction="row"
@@ -73,16 +79,25 @@ export const SpaceTasksPage: FC<Props> = typedMemo(function SpaceTasksPage({
                         name="К выполнению"
                         onClick={() => setStatus(IssueStatus.InWork)}
                     />
+                    {isStudent
+                        ? <NavTab
+                            isActive={status === IssueStatus.OverdueGrade}
+                            name="Просрочена сдача"
+                            onClick={() => setStatus(IssueStatus.OverdueGrade)}
+                        />
+                        : null}
                     <NavTab
                         isActive={status === IssueStatus.InGrade}
                         name="На проверке"
                         onClick={() => setStatus(IssueStatus.InGrade)}
                     />
-                    <NavTab
-                        isActive={status === IssueStatus.OverdueGrade}
-                        name="Просрочена проверка"
-                        onClick={() => setStatus(IssueStatus.OverdueGrade)}
-                    />
+                    {isOrganizer
+                        ? <NavTab
+                            isActive={status === IssueStatus.OverdueGrade}
+                            name="Просрочена проверка"
+                            onClick={() => setStatus(IssueStatus.OverdueGrade)}
+                        />
+                        : null}
                     <NavTab
                         isActive={status === IssueStatus.Done}
                         name="Завершенные"
@@ -111,8 +126,7 @@ export const SpaceTasksPage: FC<Props> = typedMemo(function SpaceTasksPage({
                 className={getBemClasses(styles, 'tasks')}
             >
                 {issues.map(issue => (
-                    issue.status === status
-
+                    issue.innerStatus === status
                         ? <NavLink
                             to={SpaceRouter.Task(spaceId ?? '', issue.id)}
                             className={getBemClasses(styles, 'taskLink')}
@@ -120,58 +134,13 @@ export const SpaceTasksPage: FC<Props> = typedMemo(function SpaceTasksPage({
                             <TaskCard
                                 className={getBemClasses(styles, 'task')}
                                 showSpaceName={false}
+                                status={issue.innerStatus}
                                 issue={issue}
                                 space={space}
                             />
                         </NavLink>
                         : null
                 ))}
-
-                {/* <NavLink
-                    to={SpaceRouter.Task(spaceId ?? '', 0)}
-                    className={getBemClasses(styles, 'taskLink')}
-                >
-                    <TaskCard
-                        status={TaskStatus.OnGrade}
-                        className={getBemClasses(styles, 'task')}
-                        showOverdueDeadline={false}
-                        showSpaceName={false}
-                    />
-                </NavLink>
-                    <NavLink
-                    to={SpaceRouter.Task(spaceId ?? '', 0)}
-                className={getBemClasses(styles, 'taskLink')}
-            >
-                <TaskCard
-                    status={TaskStatus.OverdueGrade}
-                    className={getBemClasses(styles, 'task')}
-                    showOverdueDeadline={false}
-                    showSpaceName={false}
-                />
-            </NavLink>
-            <NavLink
-                to={SpaceRouter.Task(spaceId ?? '', 0)}
-                className={getBemClasses(styles, 'taskLink')}
-            >
-                <TaskCard
-                    status={TaskStatus.Done}
-                    className={getBemClasses(styles, 'task')}
-                    showOverdueDeadline={false}
-                    showSpaceName={false}
-                />
-            </NavLink>
-            <NavLink
-                to={SpaceRouter.Task(spaceId ?? '', 0)}
-                className={getBemClasses(styles, 'taskLink')}
-            >
-                <TaskCard
-                    status={TaskStatus.Done}
-                    mark={100}
-                    className={getBemClasses(styles, 'task')}
-                    showOverdueDeadline={false}
-                    showSpaceName={false}
-                />
-            </NavLink> */}
             </FlexContainer>
         </FlexContainer>
     );

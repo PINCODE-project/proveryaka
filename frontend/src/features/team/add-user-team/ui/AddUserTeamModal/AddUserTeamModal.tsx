@@ -10,7 +10,7 @@ import { useCreateTeam } from '@features/team/create-team/lib/useCreateTeam';
 import { ExampleType } from '@entities/example/common';
 import styles from '@entities/example/common/ui/ExampleForm/ExampleForm.module.css';
 import { useGetSpaceStudents } from '@entities/space';
-import { getSpaceTeamsQueryKey } from '@entities/team/lib/getSpaceTeamsQueryKey';
+import { getSpaceUserTeamsQueryKey } from '@entities/team/lib/getSpaceUserTeamsQueryKey';
 import { GetTeam } from '@entities/team/model/GetTeam';
 
 import { getBemClasses, typedMemo } from '@shared/lib';
@@ -49,7 +49,7 @@ export const AddUserTeamModal: FC<Props> = typedMemo(function AddUserTeamModal({
 
     const { mutate: addUsers } = useAddUserTeam({
         onSuccess: () => {
-            queryClient.resetQueries(getSpaceTeamsQueryKey(spaceId));
+            queryClient.resetQueries(getSpaceUserTeamsQueryKey(spaceId));
             setIsOpen(false);
         },
     });

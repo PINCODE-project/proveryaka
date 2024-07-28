@@ -19,6 +19,7 @@ import styles from './TaskCard.module.css';
 export type Props = ClassNameProps & TestProps & Readonly<{
     issue: GetIssueResponse;
     space?: SpaceSettings;
+    status: IssueStatus;
 
     showAvatar?: boolean;
     showSpaceName?: boolean;
@@ -33,6 +34,7 @@ export const TaskCard: FC<Props> = typedMemo(function TaskCard({
     className,
     issue,
     space,
+    status,
 
     showAvatar = true,
     showSpaceName = true,
@@ -43,8 +45,6 @@ export const TaskCard: FC<Props> = typedMemo(function TaskCard({
     showActions = true,
     'data-testid': dataTestId = 'TaskCard',
 }) {
-    const status = useMemo(() => getIssueStatus(issue), [issue]);
-
     const statusComponent = useMemo(() => {
         switch (status) {
             case IssueStatus.InWork:

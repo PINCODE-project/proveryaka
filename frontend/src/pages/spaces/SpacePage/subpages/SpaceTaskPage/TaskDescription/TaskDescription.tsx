@@ -3,6 +3,8 @@ import { FC, useMemo } from 'react';
 import { ExampleType } from '@entities/example/common';
 import { useGetIssueExamples } from '@entities/example/issue-example';
 import { GetIssueResponse } from '@entities/issue';
+import { useGetIssueFormList } from '@entities/issue/lib/useGetIssueFormList';
+import { IssueFormList } from '@entities/issue/ui/IssueFormList';
 
 import { useListFilters } from '@shared/hooks';
 import { getBemClasses, typedMemo } from '@shared/lib';
@@ -21,6 +23,8 @@ export const TaskDescription: FC<Props> = typedMemo(function TaskDescription({
     'data-testid': dataTestId = 'TaskDescription',
 }) {
     const [filters] = useListFilters({ count: 15, page: 0 });
+
+    const { data: formList } = useGetIssueFormList(issue.id);
 
     const { data: examples } = useGetIssueExamples(issue.id, filters);
     const standardExamples = useMemo(() => examples?.entityList
@@ -44,7 +48,12 @@ export const TaskDescription: FC<Props> = typedMemo(function TaskDescription({
                 gap="s"
             >
                 <Text>Форма сдачи</Text>
-                <Input value="Текст" disabled />
+
+                <IssueFormList
+                    issueId={issue.id}
+                    onSubmit={console.log}
+                    disabled={true}
+                />
             </FlexContainer>
 
             <FlexContainer

@@ -1,5 +1,5 @@
 export enum SolutionStatus {
-    InWork,
+    OverdueWork,
     InGrade,
     OverdueGrade,
     Done,

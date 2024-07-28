@@ -6,7 +6,9 @@ import { CreateTeamModal } from '@features/team/create-team';
 import { EditTeamModal } from '@features/team/edit-team/ui/EditTeamModal';
 
 import { UserTable } from '@entities/space';
+import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 import { useGetSpaceTeams } from '@entities/team/lib/useGetSpaceTeams';
+import { useGetSpaceUserTeams } from '@entities/team/lib/useGetSpaceUserTeams';
 
 import PeopleAdd from '@shared/assets/icons/PeopleAdd.svg';
 import Settings from '@shared/assets/icons/Settings.svg';
@@ -25,11 +27,17 @@ export const SpaceTeamPage: FC<Props> = typedMemo(function SpaceTeamPage({
 }) {
     const spaceId = useSpaceId();
     const [filters] = useListFilters({ count: 15, page: 0 });
+    const { isStudent, isOrganizer } = useRolesCheck();
 
-    const { data: teams } = useGetSpaceTeams(spaceId ?? '', filters);
+    const { data: teams } = useGetSpaceTeams(spaceId ?? '', filters, {
+        enabled: isOrganizer,
+    });
+    const { data: studentTeams } = useGetSpaceUserTeams(spaceId ?? '', filters, {
+        enabled: isStudent,
+    });
 
     const items = useMemo<CollapseProps['items']>(() =>
-        teams?.teamList.map(team => ({
+        (isOrganizer ? teams : studentTeams)?.teamList.map(team => ({
             key: team.id,
             label: <FlexContainer direction="row" justifyContent="space-between" alignItems="center">
                 <Text className={getBemClasses(styles, 'collapseLabel')}>
@@ -63,7 +71,7 @@ export const SpaceTeamPage: FC<Props> = typedMemo(function SpaceTeamPage({
             children: <UserTable isStudent={true} users={team.studentInfoList ?? []} />,
         })), [teams]);
 
-    if (teams?.teamList.length === 0) {
+    if (teams?.teamList.length === 0 && isStudent) {
         return (
             <FlexContainer
                 direction="column"
