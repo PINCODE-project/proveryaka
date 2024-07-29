@@ -1,11 +1,14 @@
-import { FC, useState } from 'react';
+import { FC, useMemo, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/spaces';
 
 import { SolutionCard } from '@entities/solution';
+import { getSolutionStatus } from '@entities/solution/lib/getSolutionStatus';
+import { useGetExpertSolutions } from '@entities/solution/lib/useGetExpertSolutions';
 import { TaskStatus } from '@entities/space';
 
+import { useListFilters } from '@shared/hooks';
 import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
@@ -20,8 +23,15 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
     'data-testid': dataTestId = 'SpaceSolutionsPage',
 }) {
     const spaceId = useSpaceId();
+    const [filters] = useListFilters({ page: 0, count: 15 });
     const [status, setStatus] = useState(TaskStatus.InWork);
     const [search, setSearch] = useState('');
+
+    const { data: rawSolutions } = useGetExpertSolutions(spaceId ?? '', filters);
+    const solutions = useMemo(() => rawSolutions?.map(solution => ({
+        ...solution,
+        // status: getSolutionStatus(solution),
+    })), []);
 
     return (
         <FlexContainer

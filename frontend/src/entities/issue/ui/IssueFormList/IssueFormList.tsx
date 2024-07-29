@@ -13,6 +13,7 @@ import { Button, FlexContainer, FormField, Text, Textarea } from '@shared/ui';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     issueId: string;
+    form?: GetSolutionValue[];
     onSubmit: (data: Omit<GetSolutionValue, 'id'>[]) => void;
     submitButton?: (handleSubmit: () => void) => ReactNode;
     disabled?: boolean;
@@ -21,6 +22,7 @@ export type Props = ClassNameProps & TestProps & Readonly<{
 export const IssueFormList: FC<Props> = typedMemo(function IssueFormList({
     className,
     issueId,
+    form,
     onSubmit,
     disabled,
     submitButton,
@@ -49,11 +51,11 @@ export const IssueFormList: FC<Props> = typedMemo(function IssueFormList({
             textValue: '',
             fileIdList: [],
             issueFormId: form.issueId,
-        })) ?? [], []);
+        })) ?? [], [issueForm]);
 
     return (
         <Formik
-            initialValues={initialData}
+            initialValues={form ?? initialData}
             onSubmit={onSubmit}
             disabled={disabled}
             validationSchema={validationSchema}

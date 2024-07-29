@@ -5,7 +5,7 @@ export type CriteriaReviewByCriteria = {
     /**
      * Критерий оценивания
      */
-    criteriaId: number;
+    criteriaId: string;
 
     /**
      * Оценка - кол-во баллов по критерия

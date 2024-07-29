@@ -1,0 +1,17 @@
+.CriteriaForm {
+
+}
+
+.CriteriaForm:not(.CriteriaForm_isOpen) .CriteriaForm__additional {
+    display: none;
+}
+
+.CriteriaForm__openArrowIcon {
+    width: var(--icon-size-l);
+    height: var(--icon-size-l);
+    transition: transform 0.3s;
+}
+
+.CriteriaForm_isOpen .CriteriaForm__openArrowIcon {
+    transform: rotate(180deg);
+}
