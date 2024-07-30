@@ -118,14 +118,14 @@ export const TaskCard: FC<Props> = typedMemo(function TaskCard({
                         overflow="nowrap"
                         gap="xxs"
                     >
-                        {showAssignmentDeadline && issue.assessmentDeadlineDateUtc
+                        {showAssignmentDeadline && issue.submitDeadlineDateUtc
                             ? <Text className={getBemClasses(styles, 'deadline')}>
-                                Сдача: {getDateFromISO(issue.assessmentDeadlineDateUtc)}, {getTimeFromISO(issue.assessmentDeadlineDateUtc)}
+                                Сдача: {getDateFromISO(issue.submitDeadlineDateUtc)}, {getTimeFromISO(issue.submitDeadlineDateUtc)}
                             </Text>
                             : null}
-                        {showGradingDeadline && issue.submitDeadlineDateUtc
+                        {showGradingDeadline && issue.assessmentDeadlineDateUtc
                             ? <Text className={getBemClasses(styles, 'deadline')}>
-                                Проверка: {getDateFromISO(issue.submitDeadlineDateUtc)}, {getTimeFromISO(issue.submitDeadlineDateUtc)}
+                                Проверка: {getDateFromISO(issue.assessmentDeadlineDateUtc)}, {getTimeFromISO(issue.assessmentDeadlineDateUtc)}
                             </Text>
                             : null}
                     </FlexContainer>

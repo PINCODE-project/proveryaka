@@ -5,7 +5,7 @@ export const validationSchema = Yup.object({
     description: Yup.string().nullable().required('Введите описание'),
     checksCountMin: Yup.number().nullable().required('Введите мин. кол-во проверок'),
     checksCountMax: Yup.number().nullable().required('Введите мин. кол-во проверок'),
-    assessmentDeadlineDateUtc: Yup.date().nullable().required('Введите дату сдачи'),
-    submitDeadlineDateUtc: Yup.date().nullable().required('Введите дату оценки'),
+    assessmentDeadlineDateUtc: Yup.date().nullable().required('Введите дату оценки'),
+    submitDeadlineDateUtc: Yup.date().nullable().required('Введите дату сдачи'),
     materialsUrl: Yup.array().of(Yup.string().required('Введите ссылку')),
 });

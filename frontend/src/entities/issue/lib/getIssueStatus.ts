@@ -5,8 +5,8 @@ import { IssueStatus } from '@entities/issue/model/IssueStatus';
 import { GetSolution } from '@entities/solution/model/GetSolution';
 
 export function getIssueStatus(issue: GetIssueResponse): IssueStatus {
-    const workDeadline = dayjs(issue.assessmentDeadlineDateUtc).toDate();
-    const gradeDeadline = dayjs(issue.submitDeadlineDateUtc).toDate();
+    const workDeadline = dayjs(issue.submitDeadlineDateUtc).toDate();
+    const gradeDeadline = dayjs(issue.assessmentDeadlineDateUtc).toDate();
     const now = new Date();
 
     if (now < workDeadline) {

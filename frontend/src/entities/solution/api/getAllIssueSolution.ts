@@ -1,10 +1,11 @@
+import { GetSolutionForExpert } from '@entities/solution/model/GetSolutionForExpert';
+
 import { solutionHttp } from '@shared/config/axios';
 import { extractData } from '@shared/lib';
 import { GetListResponse, ListFilters } from '@shared/types';
 
-import { GetSolution } from '../model/GetSolution';
-
-export function getAllIssueSolution(issueId: string, filters: ListFilters): Promise<GetListResponse<GetSolution>> {
-    return solutionHttp.get<GetListResponse<GetSolution>>('organizer/solution/all', { params: { issueId, ...filters } })
-        .then(extractData);
+export function getAllIssueSolution(issueId: string, filters: ListFilters): Promise<GetSolutionForExpert[]> {
+    return solutionHttp.get<GetListResponse<GetSolutionForExpert>>('organizer/solution/all', { params: { issueId, ...filters } })
+        .then(extractData)
+        .then(data => data.entityList ?? []);
 };

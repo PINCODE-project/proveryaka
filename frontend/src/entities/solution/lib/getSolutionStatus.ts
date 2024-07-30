@@ -1,17 +1,16 @@
 import dayjs from 'dayjs';
 
-import { GetIssueResponse } from '@entities/issue';
-import { GetSolution } from '@entities/solution/model/GetSolution';
+import { GetSolutionForExpert } from '@entities/solution/model/GetSolutionForExpert';
 import { SolutionStatus } from '@entities/solution/model/SolutionStatus';
 
-export function getSolutionStatus(issue: GetIssueResponse, solution: GetSolution): SolutionStatus {
-    const gradeDeadline = dayjs(issue.submitDeadlineDateUtc).toDate();
+export function getSolutionStatus(solution: GetSolutionForExpert): SolutionStatus {
+    const gradeDeadline = dayjs(solution.assessmentDeadlineDateUtc).toDate();
     const now = new Date();
 
     if (now < gradeDeadline) {
         return SolutionStatus.InGrade;
     }
-    if (issue.reviewedSolutionCount < issue.allSolutionCount) {
+    if (solution.checksCountMax < solution.reviewCount) {
         return SolutionStatus.OverdueGrade;
     }
     return SolutionStatus.Done;

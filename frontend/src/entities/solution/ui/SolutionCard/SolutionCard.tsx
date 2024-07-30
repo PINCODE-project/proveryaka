@@ -1,14 +1,22 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
+
+import { GetIssueResponse } from '@entities/issue';
+import { IssueStatus } from '@entities/issue/model/IssueStatus';
+import { GetSolutionForExpert } from '@entities/solution/model/GetSolutionForExpert';
+import { SolutionStatus } from '@entities/solution/model/SolutionStatus';
 
 import Checkmark from '@shared/assets/icons/Checkmark.svg';
 import SubtractCircle from '@shared/assets/icons/SubtractCircle.svg';
-import { getBemClasses, typedMemo } from '@shared/lib';
+import { getBemClasses, getDateFromISO, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { FlexContainer, Image, SettingsDropdown, Text } from '@shared/ui';
 
 import styles from './SolutionCard.module.css';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
+    solution: GetSolutionForExpert;
+    issue?: GetIssueResponse;
+
     mark?: number;
     showAvatar?: boolean;
     showSpaceName?: boolean;
@@ -21,6 +29,8 @@ export type Props = ClassNameProps & TestProps & Readonly<{
 
 export const SolutionCard: FC<Props> = typedMemo(function SolutionCard({
     className,
+    solution,
+    issue,
     showAvatar = true,
     showSpaceName = true,
     showAssignmentDeadline = true,
@@ -31,6 +41,31 @@ export const SolutionCard: FC<Props> = typedMemo(function SolutionCard({
     mark,
     'data-testid': dataTestId = 'TaskCard',
 }) {
+    const statusComponent = useMemo(() => {
+        switch (solution.status) {
+            case SolutionStatus.InGrade:
+                return (
+                    <Text className={getBemClasses(styles, 'statusText')}>
+                        На проверке
+                    </Text>
+                );
+            case SolutionStatus.OverdueGrade:
+                return (
+                    <>
+                        <SubtractCircle className={getBemClasses(styles, 'statusIcon')} />
+                        <Text className={getBemClasses(styles, 'statusText')}>Не проверено</Text>
+                    </>
+                );
+            case SolutionStatus.Done:
+                return (
+                    <>
+                        <Checkmark className={getBemClasses(styles, 'statusIcon')} />
+                        <Text className={getBemClasses(styles, 'statusText')}>Завершено</Text>
+                    </>
+                );
+        }
+    }, [solution.status]);
+
     return (
         <FlexContainer
             direction="row"
@@ -58,20 +93,10 @@ export const SolutionCard: FC<Props> = typedMemo(function SolutionCard({
                     gap="xxs"
                 >
                     <Text className={getBemClasses(styles, 'name')}>
-                        Name
+                        {solution.issueName}
                     </Text>
-                    {showOverdueDeadline
-                        ? <Text className={getBemClasses(styles, 'deadline', { isError: true })}>
-                            Срок: Overdue deadline
-                        </Text>
-                        : null}
-                    {showSpaceName
-                        ? <Text className={getBemClasses(styles, 'spaceName')}>
-                            Space Name
-                        </Text>
-                        : null}
                 </FlexContainer>
-                {(showGradingDeadline || showAssignmentDeadline)
+                {(showGradingDeadline || (issue && showAssignmentDeadline))
                     ? <FlexContainer
                         direction="column"
                         overflow="nowrap"
@@ -79,12 +104,12 @@ export const SolutionCard: FC<Props> = typedMemo(function SolutionCard({
                     >
                         {showAssignmentDeadline
                             ? <Text className={getBemClasses(styles, 'deadline')}>
-                                Assignment deadline
+                                Сдача: {getDateFromISO(issue?.submitDeadlineDateUtc ?? '')}
                             </Text>
                             : null}
                         {showGradingDeadline
                             ? <Text className={getBemClasses(styles, 'deadline')}>
-                                Grading deadline
+                                Сдача: {getDateFromISO(solution?.assessmentDeadlineDateUtc ?? '')}
                             </Text>
                             : null}
                     </FlexContainer>
@@ -97,7 +122,7 @@ export const SolutionCard: FC<Props> = typedMemo(function SolutionCard({
                     >
                         {showGradingCount
                             ? <Text className={getBemClasses(styles, 'deadline')}>
-                                Оценок: 2/5
+                                Оценок: {solution.reviewCount}/{solution.checksCountMax}
                             </Text>
                             : null}
                     </FlexContainer>
@@ -127,26 +152,9 @@ export const SolutionCard: FC<Props> = typedMemo(function SolutionCard({
                     alignItems="center"
                     className={getBemClasses(styles, 'status', { status })}
                 >
-                    {true
-                        ? <Text className={getBemClasses(styles, 'statusText')}>
-                            Сдать до: 00.00.00
-                        </Text>
-                        : true
-                            ? <>
-                                <SubtractCircle className={getBemClasses(styles, 'statusIcon')} />
-                                <Text className={getBemClasses(styles, 'statusText')}>Не сдано</Text>
-                            </>
-                            : mark !== undefined
-                                ? <Text className={getBemClasses(styles, 'statusText')}>
-                                    Количество баллов: 100/100
-                                </Text>
-                                : <>
-                                    <Checkmark className={getBemClasses(styles, 'statusIcon')} />
-                                    <Text className={getBemClasses(styles, 'statusText')}>Сдано</Text>
-                                </>}
+                    {statusComponent}
                 </FlexContainer>
             </FlexContainer>
-
         </FlexContainer>
     );
 });

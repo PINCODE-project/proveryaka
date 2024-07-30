@@ -6,6 +6,7 @@ import { SpaceRouter } from '@pages/spaces';
 import { SolutionCard } from '@entities/solution';
 import { getSolutionStatus } from '@entities/solution/lib/getSolutionStatus';
 import { useGetExpertSolutions } from '@entities/solution/lib/useGetExpertSolutions';
+import { SolutionStatus } from '@entities/solution/model/SolutionStatus';
 import { TaskStatus } from '@entities/space';
 
 import { useListFilters } from '@shared/hooks';
@@ -24,14 +25,14 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
 }) {
     const spaceId = useSpaceId();
     const [filters] = useListFilters({ page: 0, count: 15 });
-    const [status, setStatus] = useState(TaskStatus.InWork);
+    const [status, setStatus] = useState(SolutionStatus.InGrade);
     const [search, setSearch] = useState('');
 
     const { data: rawSolutions } = useGetExpertSolutions(spaceId ?? '', filters);
     const solutions = useMemo(() => rawSolutions?.map(solution => ({
         ...solution,
-        // status: getSolutionStatus(solution),
-    })), []);
+        status: getSolutionStatus(solution),
+    })), [rawSolutions]);
 
     return (
         <FlexContainer
@@ -48,7 +49,6 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
                 justifyContent="space-between"
                 className={getBemClasses(styles, 'header')}
             >
-
                 <FlexContainer
                     direction="row"
                     overflow="nowrap"
@@ -56,29 +56,19 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
                     gap="l"
                 >
                     <NavTab
-                        isActive={status === TaskStatus.InWork}
-                        name="К выполнению"
-                        onClick={() => setStatus(TaskStatus.InWork)}
-                    />
-                    <NavTab
-                        isActive={status === TaskStatus.OverdueGrade}
-                        name="Просрочена сдача"
-                        onClick={() => setStatus(TaskStatus.OverdueGrade)}
-                    />
-                    <NavTab
-                        isActive={status === TaskStatus.OnGrade}
+                        isActive={status === SolutionStatus.InGrade}
                         name="На проверке"
-                        onClick={() => setStatus(TaskStatus.OnGrade)}
+                        onClick={() => setStatus(SolutionStatus.InGrade)}
                     />
                     <NavTab
-                        isActive={status === TaskStatus.OverdueGrade}
+                        isActive={status === SolutionStatus.OverdueGrade}
                         name="Просрочена проверка"
-                        onClick={() => setStatus(TaskStatus.OverdueGrade)}
+                        onClick={() => setStatus(SolutionStatus.OverdueGrade)}
                     />
                     <NavTab
-                        isActive={status === TaskStatus.Done}
+                        isActive={status === SolutionStatus.Done}
                         name="Завершенные"
-                        onClick={() => setStatus(TaskStatus.Done)}
+                        onClick={() => setStatus(SolutionStatus.Done)}
                     />
                 </FlexContainer>
 
@@ -102,48 +92,24 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
                 direction="column"
                 className={getBemClasses(styles, 'tasks')}
             >
-                <NavLink
-                    to={SpaceRouter.TaskWork(spaceId ?? '', 0, 0)}
-                    className={getBemClasses(styles, 'workLink')}
-                >
-                    <SolutionCard
-                        className={getBemClasses(styles, 'task')}
-                        showSpaceName={false}
-                    />
-                </NavLink>
-                <NavLink
-                    to={SpaceRouter.TaskWork(spaceId ?? '', 0, 0)}
-                    className={getBemClasses(styles, 'workLink')}
-                >
-                    <SolutionCard
-                        className={getBemClasses(styles, 'task')}
-                        showOverdueDeadline={false}
-                        showSpaceName={false}
-                    />
-                </NavLink>
-                <NavLink
-                    to={SpaceRouter.TaskWork(spaceId ?? '', 0, 0)}
-                    className={getBemClasses(styles, 'workLink')}
-                >
-                    <SolutionCard
-                        className={getBemClasses(styles, 'task')}
-                        showOverdueDeadline={false}
-                        showSpaceName={false}
-                    />
-                </NavLink>
-                <NavLink
-                    to={SpaceRouter.TaskWork(spaceId ?? '', 0, 0)}
-                    className={getBemClasses(styles, 'workLink')}
-                >
-                    <SolutionCard
-                        mark={100}
-                        className={getBemClasses(styles, 'task')}
-                        showOverdueDeadline={false}
-                        showSpaceName={false}
-                    />
-                </NavLink>
+                {
+                    solutions?.map(solution => (
+                        solution.status !== status
+                            ? null
+                            : <NavLink
+                                key={solution.id}
+                                to={SpaceRouter.TaskWork(spaceId ?? '', solution.issueId, solution.id)}
+                                className={getBemClasses(styles, 'workLink')}
+                            >
+                                <SolutionCard
+                                    solution={solution}
+                                    className={getBemClasses(styles, 'task')}
+                                    showSpaceName={false}
+                                />
+                            </NavLink>
+                    ))
+                }
             </FlexContainer>
-
         </FlexContainer>
     );
 });

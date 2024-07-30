@@ -1,3 +1,5 @@
+import { SolutionStatus } from '@entities/solution/model/SolutionStatus';
+
 import { GetSolutionValue } from './GetSolutionValue';
 
 export type GetSolutionForExpert = {
@@ -45,4 +47,8 @@ export type GetSolutionForExpert = {
      * Максимальное количество проверок
      */
     checksCountMax: number;
+
+    assessmentDeadlineDateUtc: string;
+
+    status?: SolutionStatus;
 };
