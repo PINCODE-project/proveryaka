@@ -57,17 +57,6 @@ export const SpaceTasksPage: FC<Props> = typedMemo(function SpaceTasksPage({
                 justifyContent="space-between"
                 className={getBemClasses(styles, 'header')}
             >
-                {isOrganizer
-                    ? <CreateIssueFullForm
-                        triggerElement={open => (
-                            <Button onClick={open}>
-                            Создать задание
-                            </Button>
-                        )}
-                        spaceId={spaceId ?? ''}
-                    />
-                    : null}
-
                 <FlexContainer
                     direction="row"
                     overflow="nowrap"
@@ -105,7 +94,18 @@ export const SpaceTasksPage: FC<Props> = typedMemo(function SpaceTasksPage({
                     />
                 </FlexContainer>
 
-                <FlexContainer
+                {isOrganizer
+                    ? <CreateIssueFullForm
+                        triggerElement={open => (
+                            <Button onClick={open}>
+                                Создать задание
+                            </Button>
+                        )}
+                        spaceId={spaceId ?? ''}
+                    />
+                    : null}
+
+                {/* <FlexContainer
                     direction="row"
                     overflow="nowrap"
                     alignItems="center"
@@ -117,7 +117,7 @@ export const SpaceTasksPage: FC<Props> = typedMemo(function SpaceTasksPage({
                         onChange={event => setSearch(event.target.value)}
                         onBlur={event => setSearch(event.target.value.trim())}
                     />
-                </FlexContainer>
+                </FlexContainer> */}
             </FlexContainer>
 
             <FlexContainer

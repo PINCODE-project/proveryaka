@@ -72,7 +72,7 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
                     />
                 </FlexContainer>
 
-                <FlexContainer
+                {/* <FlexContainer
                     direction="row"
                     overflow="nowrap"
                     alignItems="center"
@@ -84,7 +84,7 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
                         onChange={event => setSearch(event.target.value)}
                         onBlur={event => setSearch(event.target.value.trim())}
                     />
-                </FlexContainer>
+                </FlexContainer> */}
             </FlexContainer>
 
             <FlexContainer

@@ -132,11 +132,6 @@ export const SpacePage: FC<Props> = typedMemo(({
                     alignItems="center"
                     gap="m"
                 >
-                    <Link to={SpaceRouter.Main} className={getBemClasses(styles, 'backLink')}>
-                        <ChevronLeft className={getBemClasses(styles, 'backLinkIcon')} />
-                        Все пространства
-                    </Link>
-
                     <FlexContainer direction="row" alignItems="center" gap="s">
                         <Image
                             src={iconUrl}
