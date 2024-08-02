@@ -15,5 +15,4 @@ export type CreateSolution = {
      * Список решений пользователя на форме
      */
     solutionValueList: GetSolutionValue[] | null;
-
 };

@@ -1,5 +1,6 @@
 import { type FC, PropsWithChildren, ReactNode, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useQueryClient } from 'react-query';
 
 import { useAuthContext } from '@app/providers/AuthProvider';
 
@@ -25,9 +26,15 @@ export const PageComponent: FC<Props> = typedMemo(({
     children,
     'data-testid': dataTestId = 'PageComponent',
 }: Props) => {
+    const queryClient = useQueryClient();
     const { t } = useTranslation();
 
-    const { logout } = useAuthContext();
+    const { logout: logoutAuth } = useAuthContext();
+
+    const logout = useCallback(() => {
+        logoutAuth();
+        queryClient.resetQueries();
+    }, [logoutAuth]);
 
     return (
         <FlexContainer

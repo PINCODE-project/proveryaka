@@ -53,6 +53,7 @@ export const IssueFormList: FC<Props> = typedMemo(function IssueFormList({
             issueFormId: form.issueId,
         })) ?? [], [issueForm]);
 
+    console.log(form);
     return (
         <Formik
             initialValues={form ?? initialData}

@@ -1,6 +1,15 @@
 import { FC, useMemo, useState } from 'react';
 
-import { getBemClasses, typedMemo } from '@shared/lib';
+import { useGetIssueCriteria } from '@entities/criteria/lib/useGetIssueCriteria';
+import { useGetIssue } from '@entities/issue';
+import { useGetExpertSolution } from '@entities/solution/lib/useGetExpertSolution';
+import { useGetSolution } from '@entities/solution/lib/useGetSolution';
+import { useGetSpaceExperts } from '@entities/space';
+import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
+
+import { useListFilters } from '@shared/hooks';
+import { useSolutionId } from '@shared/hooks/useSolutionId';
+import { getBemClasses, getDateFromISO, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { FlexContainer, NavTab, Text } from '@shared/ui';
 
@@ -23,8 +32,17 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
     className,
     'data-testid': dataTestId = 'SpaceSolutionPage',
 }) {
-    const [activeSection, setActiveSection] = useState(ActiveSection.Description);
+    const solutionId = useSolutionId();
 
+    const { data: solution } = useGetExpertSolution(solutionId!);
+    const { data: issue } = useGetIssue(solution!.issueId, {
+        enabled: Boolean(solution?.issueId),
+    });
+    const [criteriaFilters] = useListFilters({ page: 0, count: 15 });
+    const { data: issueCriteria } = useGetIssueCriteria(solution!.issueId, criteriaFilters, {
+        enabled: Boolean(solution?.issueId),
+    });
+    const [activeSection, setActiveSection] = useState(ActiveSection.Description);
     const content = useMemo(() => {
         switch (activeSection) {
             case ActiveSection.Description:
@@ -32,15 +50,7 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
             case ActiveSection.Assignments:
                 return <SolutionAssignment />;
             case ActiveSection.Criteria:
-                return (<SolutionCriteria criteria={[{
-                    id: '0000',
-                    name: '0000',
-                    description: '0000',
-                    minScore: 0,
-                    maxScore: 100,
-                    weight: 1,
-                    issueId: '0000',
-                }]}
+                return (<SolutionCriteria criteria={issueCriteria?.entityList ?? []}
                 />);
             case ActiveSection.Grades:
                 return <SolutionGrades grades={[]} />;
@@ -56,9 +66,9 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
             data-testid={dataTestId}
         >
             <FlexContainer direction="column" gap="xs">
-                <Text>Задание 0. Мок</Text>
-                <Text>Сдать до: 00.00.0000</Text>
-                <Text>Оценить до: 00.00.0000</Text>
+                <Text>{issue?.name}</Text>
+                <Text>Сдать до: {getDateFromISO(issue?.submitDeadlineDateUtc ?? '')}</Text>
+                <Text>Оценить до: {getDateFromISO(issue?.assessmentDeadlineDateUtc ?? '')}</Text>
             </FlexContainer>
 
             <FlexContainer
