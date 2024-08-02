@@ -62,7 +62,7 @@ export const SpacePage: FC<Props> = typedMemo(({
                 {
                     key: 0,
                     label: <EditSpaceModal
-                        triggerElement={open => <Text onClick={open}>Управление командой</Text>}
+                        triggerElement={open => <Text onClick={open}>Управление пространством</Text>}
                         spaceId={spaceId ?? ''}
                     />,
                 },
@@ -134,7 +134,7 @@ export const SpacePage: FC<Props> = typedMemo(({
                 >
                     <Link to={SpaceRouter.Main} className={getBemClasses(styles, 'backLink')}>
                         <ChevronLeft className={getBemClasses(styles, 'backLinkIcon')} />
-                        Все команды
+                        Все пространства
                     </Link>
 
                     <FlexContainer direction="row" alignItems="center" gap="s">

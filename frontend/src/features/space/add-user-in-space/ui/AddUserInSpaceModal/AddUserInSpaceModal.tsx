@@ -1,6 +1,6 @@
 import { Modal, Select } from 'antd';
 import { Form, Formik } from 'formik';
-import { FC, ReactNode, useCallback, useEffect, useState } from 'react';
+import { FC, ReactNode, useCallback, useState } from 'react';
 import { useQueryClient } from 'react-query';
 import * as Yup from 'yup';
 
@@ -13,7 +13,7 @@ import { useGetUserAll } from '@entities/user';
 import { roles } from '@shared/consts';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { Button, FormField, getFlexContainerStyleClasses, SelectItem } from '@shared/ui';
+import { Button, FormField, getFlexContainerStyleClasses } from '@shared/ui';
 
 import styles from './AddUserInSpaceModal.module.css';
 
@@ -61,6 +61,7 @@ export const AddUserInSpaceModal: FC<Props> = typedMemo(function AddUserInSpaceM
     if (!users) {
         return null;
     }
+
     return (
         <>
             {triggerElement(() => setIsOpen(true))}
@@ -79,7 +80,11 @@ export const AddUserInSpaceModal: FC<Props> = typedMemo(function AddUserInSpaceM
                 >
                     {({ handleSubmit }) => (
                         <Form
-                            className={getFlexContainerStyleClasses({ direction: 'column', gap: 'm', alignItems: 'stretch' })}
+                            className={getFlexContainerStyleClasses({
+                                direction: 'column',
+                                gap: 'm',
+                                alignItems: 'stretch',
+                            })}
                         >
                             <FormField
                                 name="userProfileIdList"
@@ -94,14 +99,17 @@ export const AddUserInSpaceModal: FC<Props> = typedMemo(function AddUserInSpaceM
                                             onChange={userIds => {
                                                 onChange(userIds);
                                             }}
+                                            filterOption={(input, option) =>
+                                                ((option?.label ?? '')).toLowerCase().includes(input.toLowerCase())
+                                            }
                                             className={getBemClasses(styles, 'select')}
-                                        >
-                                            {users.userInfoList?.map(user => (
-                                                <Select.Option value={user.id} key={user.id}>
-                                                    {user.surname} {user.name?.[0]}.{user.patronymic?.[0]}.
-                                                </Select.Option>
+                                            options={users.userInfoList?.map(user => (
+                                                {
+                                                    value: user.id,
+                                                    label: `${user.surname} ${user.name} ${user.patronymic}`,
+                                                }
                                             ))}
-                                        </Select>
+                                        />
                                     )
                                 }
                             />
@@ -118,23 +126,26 @@ export const AddUserInSpaceModal: FC<Props> = typedMemo(function AddUserInSpaceM
                                                 onChange(role);
                                             }}
                                             className={getBemClasses(styles, 'select')}
-                                        >
-                                            {roles.map(role => (
-                                                <Select.Option value={role.value}>
-                                                    {role.label}
-                                                </Select.Option>
+                                            filterOption={(input, option) =>
+                                                ((option?.label ?? '')).toLowerCase().includes(input.toLowerCase())
+                                            }
+                                            options={roles.map(role => (
+                                                {
+                                                    value: role.value,
+                                                    label: `${role.label}`,
+                                                }
                                             ))}
-                                        </Select>
+                                        />
                                     )
                                 }
                             />
                             <Button onClick={() => handleSubmit()}>
                                 Добавить
-                            </Button>
-                        </Form>
+                            </Button >
+                        </Form >
                     )}
-                </Formik>
-            </Modal>
+                </Formik >
+            </Modal >
         </>
     );
 });

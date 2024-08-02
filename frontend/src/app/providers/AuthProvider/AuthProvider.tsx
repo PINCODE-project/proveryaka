@@ -1,11 +1,5 @@
-import {
-    createContext,
-    FC,
-    PropsWithChildren,
-    useCallback,
-    useContext, useEffect,
-    useState,
-} from 'react';
+import { createContext, FC, PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react';
+import { useQueryClient } from 'react-query';
 
 import { Token, TokenService, typedMemo } from '@shared/lib';
 import { Loader } from '@shared/ui';
@@ -35,6 +29,7 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = typedMemo(funct
 }) {
     const [isLoading, setIsLoading] = useState(true);
     const [isAuth, setIsAuth] = useState(false);
+    const queryClient = useQueryClient();
 
     useEffect(() => {
         setIsAuth(TokenService.getToken() !== null);
@@ -49,6 +44,7 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = typedMemo(funct
     const logout = useCallback(() => {
         setIsAuth(false);
         TokenService.removeToken();
+        queryClient.resetQueries();
     }, []);
 
     if (isLoading) {
