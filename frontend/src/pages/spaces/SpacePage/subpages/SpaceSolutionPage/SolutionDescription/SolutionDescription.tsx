@@ -1,5 +1,10 @@
 import { FC } from 'react';
 
+import { ExampleType } from '@entities/example/common';
+import { useGetIssueExamples } from '@entities/example/issue-example';
+import { useGetIssue } from '@entities/issue';
+
+import { useIssueId, useListFilters } from '@shared/hooks';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { Button, FlexContainer, Input, SolutionExample, Text } from '@shared/ui';
@@ -12,6 +17,12 @@ export const SolutionDescription: FC<Props> = typedMemo(function SolutionDescrip
     className,
     'data-testid': dataTestId = 'SolutionDescription',
 }) {
+    const issueId = useIssueId();
+    const { data: issue } = useGetIssue(issueId ?? '');
+
+    const [issueFilters] = useListFilters({ page: 0, count: 15 });
+    const { data: issueExample } = useGetIssueExamples(issueId ?? '', issueFilters);
+
     return (
         <FlexContainer
             direction="column"
@@ -20,7 +31,7 @@ export const SolutionDescription: FC<Props> = typedMemo(function SolutionDescrip
             data-testid={dataTestId}
         >
             <Text>
-                Предварительные выводы неутешительны: высокотехнологичная концепция общественного уклада напрямую зависит от соответствующих условий активизации. Однозначно, непосредственные участники технического прогресса могут быть подвергнуты целой серии независимых исследований. С учётом сложившейся международной обстановки, разбавленное изрядной долей эмпатии, рациональное мышление обеспечивает актуальность системы массового участия. А также предприниматели в сети интернет подвергнуты целой серии независимых исследований. Вот вам яркий пример современных тенденций — внедрение современных методик обеспечивает широкому кругу (специалистов) участие в формировании укрепления моральных ценностей.
+                {issue?.description}
             </Text>
 
             <FlexContainer
@@ -29,10 +40,10 @@ export const SolutionDescription: FC<Props> = typedMemo(function SolutionDescrip
             >
                 <SolutionExample
                     example={
-                        []
+                        issueExample?.entityList?.filter(example => example.exampleType === ExampleType.Standard) ?? []
                     }
                     antiExample={
-                        []
+                        issueExample?.entityList?.filter(example => example.exampleType === ExampleType.AntiExample) ?? []
                     }
                     triggerComponent={open =>
                         (<Button
