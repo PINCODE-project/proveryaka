@@ -73,7 +73,6 @@
 }
 
 .PageComponent__logo {
-  width: var(--icon-size-l);
-  height: var(--icon-size-l);
-  fill: var(--brand-forefround);
+  width: calc(var(--icon-size-l) * 2);
+  height: calc(var(--icon-size-l) * 2);
 }

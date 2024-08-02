@@ -27,6 +27,10 @@ export function buildPlugins({
             patterns: [
                 { from: 'public/_redirects' },
                 { from: 'public/robots.txt' },
+                { from: 'public/favicon.ico' },
+                { from: 'public/manifest.json' },
+                { from: 'public/logo192.png' },
+                { from: 'public/logo512.png' },
             ],
         }),
     ];

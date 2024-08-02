@@ -1,3 +1,4 @@
+import { IconUsersGroup } from '@tabler/icons-react';
 import { type FC, PropsWithChildren, ReactNode, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from 'react-query';
@@ -8,7 +9,7 @@ import { SpaceRouter } from '@pages/spaces';
 
 import { NavItem } from '@widgets/PageComponent/NavItem/NavItem';
 
-import Backpack from '@shared/assets/icons/Backpack.svg';
+import Logo from '@shared/assets/icons/Logo.svg';
 import PeopleTeam from '@shared/assets/icons/PeopleTeam.svg';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { TestProps, ClassNameProps } from '@shared/types';
@@ -45,7 +46,7 @@ export const PageComponent: FC<Props> = typedMemo(({
         >
             <header className={getBemClasses(styles, 'header')}>
                 <div className={getBemClasses(styles, 'headerSide')}>
-                    <PeopleTeam className={getBemClasses(styles, 'logo')} />
+                    <Logo className={getBemClasses(styles, 'logo')} />
                 </div>
 
                 <div className={getBemClasses(styles, 'headerContent')}>
@@ -58,7 +59,7 @@ export const PageComponent: FC<Props> = typedMemo(({
             <main className={getBemClasses(styles, 'main')}>
                 <nav className={getBemClasses(styles, 'navbar')}>
                     <div>
-                        <NavItem to={SpaceRouter.Main} icon={<PeopleTeam />} name="Пространства" />
+                        <NavItem to={SpaceRouter.Main} icon={<IconUsersGroup />} name="Пространства" />
                     </div>
                     <div>
                         <Button variant="outline" onClick={logout}>Выйти</Button>

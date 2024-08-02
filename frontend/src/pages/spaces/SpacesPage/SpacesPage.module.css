@@ -21,7 +21,7 @@
 .SpacesPage__addSpaceButtonIcon {
     width: var(--icon-size-m);
     height: var(--icon-size-m);
-    fill: var(--default-forefround);
+    color: var(--default-forefround);
 }
 
 .SpacesPage__settingsActionButton {

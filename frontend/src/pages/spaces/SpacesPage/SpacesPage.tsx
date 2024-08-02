@@ -1,3 +1,4 @@
+import { IconUsersPlus } from '@tabler/icons-react';
 import { Dropdown, MenuProps } from 'antd';
 import { type FC, useCallback, useState } from 'react';
 
@@ -67,7 +68,7 @@ export const SpacesPage: FC<Props> = typedMemo(({
                         variant="outline"
                         className={getBemClasses(styles, 'addSpaceButton')}
                     >
-                        <PeopleAdd className={getBemClasses(styles, 'addSpaceButtonIcon')} />
+                        <IconUsersPlus className={getBemClasses(styles, 'addSpaceButtonIcon')} />
                         Присоединиться или создать пространство
                     </Button>
                 </Dropdown>

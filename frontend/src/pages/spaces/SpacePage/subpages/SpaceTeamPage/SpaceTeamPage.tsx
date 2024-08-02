@@ -1,3 +1,4 @@
+import { IconSettings, IconUsersPlus } from '@tabler/icons-react';
 import { Button, CollapseProps, Collapse } from 'antd';
 import { FC, useMemo } from 'react';
 
@@ -10,8 +11,6 @@ import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 import { useGetSpaceTeams } from '@entities/team/lib/useGetSpaceTeams';
 import { useGetSpaceUserTeams } from '@entities/team/lib/useGetSpaceUserTeams';
 
-import PeopleAdd from '@shared/assets/icons/PeopleAdd.svg';
-import Settings from '@shared/assets/icons/Settings.svg';
 import { useListFilters } from '@shared/hooks';
 import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { getBemClasses, typedMemo } from '@shared/lib';
@@ -51,7 +50,7 @@ export const SpaceTeamPage: FC<Props> = typedMemo(function SpaceTeamPage({
                         team={team}
                         triggerElement={open => (
                             <Button onClick={open} type="text">
-                                <Settings className={getBemClasses(styles, 'actionIcon')} />
+                                <IconSettings className={getBemClasses(styles, 'actionIcon')} />
                             </Button>
                         )}
                         spaceId={spaceId ?? ''}
@@ -61,7 +60,7 @@ export const SpaceTeamPage: FC<Props> = typedMemo(function SpaceTeamPage({
                         team={team}
                         triggerElement={open => (
                             <Button onClick={open} type="text">
-                                <PeopleAdd className={getBemClasses(styles, 'actionIcon')} />
+                                <IconUsersPlus className={getBemClasses(styles, 'actionIcon')} />
                             </Button>
                         )}
                         spaceId={spaceId ?? ''}

@@ -8,7 +8,7 @@
 .NavItem svg {
     width: var(--icon-size-m);
     height: var(--icon-size-m);
-    fill: var(--default-forefround-1);
+    color: var(--default-forefround-1);
 }
 
 .NavItem__name {
@@ -22,7 +22,7 @@
 
 .NavItem:hover svg,
 .NavItem_isActive svg {
-    fill: var(--brand-forefround)
+    color: var(--brand-forefround)
 }
 
 .NavItem:hover .NavItem__name,
