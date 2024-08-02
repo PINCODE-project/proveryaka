@@ -11,7 +11,7 @@ import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { FlexContainer } from '@shared/ui';
 
-import styles from './SolutionAssignment.module.css';
+import styles from './SolutionReview.module.css';
 
 export type Props = ClassNameProps & TestProps & Readonly<{}>;
 

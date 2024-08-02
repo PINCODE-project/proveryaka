@@ -6,7 +6,10 @@ export type CriteriaReview = {
      */
     solutionId: string;
 
-    // likeType
+    /**
+     * Тип лайка
+     */
+    likeType: number;
 
     /**
      * Комметарий к оценке

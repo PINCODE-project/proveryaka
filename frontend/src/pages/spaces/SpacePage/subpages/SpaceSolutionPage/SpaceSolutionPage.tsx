@@ -1,5 +1,7 @@
 import { FC, useMemo, useState } from 'react';
 
+import { SolutionReview } from '@pages/spaces/SpacePage/subpages/SpaceSolutionPage/SolutionReview';
+
 import { useGetIssueCriteria } from '@entities/criteria/lib/useGetIssueCriteria';
 import { useGetIssue } from '@entities/issue';
 import { useGetExpertSolution } from '@entities/solution/lib/useGetExpertSolution';
@@ -23,7 +25,8 @@ enum ActiveSection {
     Description,
     Assignments,
     Criteria,
-    Grades
+    Grades,
+    Review
 }
 
 export type Props = ClassNameProps & TestProps & Readonly<{}>;
@@ -49,6 +52,8 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
                 return <SolutionDescription />;
             case ActiveSection.Assignments:
                 return <SolutionAssignment />;
+            case ActiveSection.Review:
+                return <SolutionReview />;
             case ActiveSection.Criteria:
                 return (<SolutionCriteria criteria={issueCriteria?.entityList ?? []}
                 />);
@@ -96,6 +101,11 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
                     isActive={activeSection === ActiveSection.Grades}
                     name="Оценки"
                     onClick={() => setActiveSection(ActiveSection.Grades)}
+                />
+                <NavTab
+                    isActive={activeSection === ActiveSection.Review}
+                    name="Оценить"
+                    onClick={() => setActiveSection(ActiveSection.Review)}
                 />
             </FlexContainer>
 

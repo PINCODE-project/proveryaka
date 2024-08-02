@@ -32,9 +32,11 @@ export const CriteriaForm: FC<Props> = typedMemo(function CriteriaForm({
         <FormField<CriteriaReviewByCriteria>
             name={`reviewsByCriteria[${order}]`}
             content={
-                ({ value }) => (
+                ({ value, error }) => (
                     <FlexContainer
-                        onClick={() => onSelect(order)}
+                        onClick={() => {
+                            onSelect(order);
+                        }}
                         className={getBemClasses(styles, null, { isOpen }, className)}
                         direction="column"
                         gap="m"

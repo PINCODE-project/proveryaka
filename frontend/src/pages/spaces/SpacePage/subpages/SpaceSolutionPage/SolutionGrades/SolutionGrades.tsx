@@ -45,7 +45,6 @@ export const SolutionGrades: FC<Props> = typedMemo(function SolutionGrades({
                         />
                     ))
                 }
-
             </FlexContainer>
         </FlexContainer>
     );
