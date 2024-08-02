@@ -1,6 +1,7 @@
 .SpaceSolutionsPage {
     background-color: var(--default-background-2);
-    height: 100%;
+    min-height: 100%;
+    flex: 1;
 }
 
 .SpaceSolutionsPage__header,

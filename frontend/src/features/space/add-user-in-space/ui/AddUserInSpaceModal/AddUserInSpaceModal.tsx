@@ -8,6 +8,7 @@ import { useAddUserInSpace } from '@features/space/add-user-in-space/lib/useAddU
 import { AddUserToSpaceRequest } from '@features/space/add-user-in-space/model/AddUserToSpaceRequest';
 
 import { getSpaceExpertsQueryKey, getSpaceOrganizerQueryKey, getSpaceStudentsQueryKey } from '@entities/space';
+import { useGetUserAll } from '@entities/user';
 
 import { roles } from '@shared/consts';
 import { getBemClasses, typedMemo } from '@shared/lib';
@@ -23,12 +24,12 @@ export type Props = ClassNameProps & TestProps & Readonly<{
 
 const initialValue: Omit<AddUserToSpaceRequest, 'spaceId'> = {
     userProfileIdList: [],
-    role: null,
+    spaceRoleType: null,
 };
 
 const validationSchema = Yup.object({
     userProfileIdList: Yup.array().min(1, 'Выберите пользователей'),
-    role: Yup.number().nullable().required('Выберите роль'),
+    spaceRoleType: Yup.number().nullable().required('Выберите роль'),
 });
 
 export const AddUserInSpaceModal: FC<Props> = typedMemo(function AddUserInSpaceModal({
@@ -40,9 +41,7 @@ export const AddUserInSpaceModal: FC<Props> = typedMemo(function AddUserInSpaceM
     const queryClient = useQueryClient();
     const [isOpen, setIsOpen] = useState(false);
 
-    const users: SelectItem<number>[] = [];
-    const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
-    const [selectedRoles, setSelectedRoles] = useState<number | null>(null);
+    const { data: users } = useGetUserAll();
 
     const { mutate: addUsers } = useAddUserInSpace({
         onSuccess: () => {
@@ -52,13 +51,6 @@ export const AddUserInSpaceModal: FC<Props> = typedMemo(function AddUserInSpaceM
         },
     });
 
-    useEffect(() => {
-        if (!isOpen) {
-            setSelectedUsers([]);
-            setSelectedRoles(null);
-        }
-    }, [isOpen]);
-
     const onSubmit = useCallback((form: Omit<AddUserToSpaceRequest, 'spaceId'>) => {
         addUsers({
             ...form,
@@ -66,6 +58,9 @@ export const AddUserInSpaceModal: FC<Props> = typedMemo(function AddUserInSpaceM
         });
     }, [addUsers, spaceId]);
 
+    if (!users) {
+        return null;
+    }
     return (
         <>
             {triggerElement(() => setIsOpen(true))}
@@ -90,42 +85,44 @@ export const AddUserInSpaceModal: FC<Props> = typedMemo(function AddUserInSpaceM
                                 name="userProfileIdList"
                                 label="Пользователи"
                                 content={
-                                    ({ onChange, isInvalid }) => (
+                                    ({ onChange, isInvalid, value }) => (
                                         <Select
                                             showSearch
                                             mode="multiple"
-                                            value={selectedUsers}
+                                            value={value}
                                             status={isInvalid ? 'error' : undefined}
                                             onChange={userIds => {
-                                                setSelectedUsers(userIds);
                                                 onChange(userIds);
                                             }}
                                             className={getBemClasses(styles, 'select')}
                                         >
-                                            {users.map(user => (
-                                                <Select.Option value={user.value}>{user.label}</Select.Option>
+                                            {users.userInfoList?.map(user => (
+                                                <Select.Option value={user.id} key={user.id}>
+                                                    {user.surname} {user.name?.[0]}.{user.patronymic?.[0]}.
+                                                </Select.Option>
                                             ))}
                                         </Select>
                                     )
                                 }
                             />
                             <FormField
-                                name="role"
+                                name="spaceRoleType"
                                 label="Роль"
                                 content={
-                                    ({ onChange, isInvalid }) => (
+                                    ({ onChange, isInvalid, value }) => (
                                         <Select
                                             showSearch
-                                            value={selectedRoles}
+                                            value={value}
                                             status={isInvalid ? 'error' : undefined}
                                             onChange={role => {
-                                                setSelectedRoles(role);
                                                 onChange(role);
                                             }}
                                             className={getBemClasses(styles, 'select')}
                                         >
                                             {roles.map(role => (
-                                                <Select.Option value={role.value}>{role.label}</Select.Option>
+                                                <Select.Option value={role.value}>
+                                                    {role.label}
+                                                </Select.Option>
                                             ))}
                                         </Select>
                                     )

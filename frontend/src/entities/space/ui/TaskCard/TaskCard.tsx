@@ -3,12 +3,10 @@ import { FC, useMemo } from 'react';
 import { EditIssueForm } from '@features/issue/edit-issue';
 
 import { GetIssueResponse } from '@entities/issue';
-import { getIssueStatus } from '@entities/issue/lib/getIssueStatus';
 import { IssueStatus } from '@entities/issue/model/IssueStatus';
 import { SpaceSettings } from '@entities/space';
 
 import Checkmark from '@shared/assets/icons/Checkmark.svg';
-import Settings from '@shared/assets/icons/Settings.svg';
 import SubtractCircle from '@shared/assets/icons/SubtractCircle.svg';
 import { getBemClasses, getDateFromISO, getTimeFromISO, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
@@ -165,7 +163,6 @@ export const TaskCard: FC<Props> = typedMemo(function TaskCard({
                                         triggerElement={open => <Text onClick={open}>Настройки</Text>}
                                         issue={issue}
                                     />,
-                                    icon: <Settings className={getBemClasses(styles, 'settingsActionButtonIcon')} />,
                                 },
                             ],
                         }}

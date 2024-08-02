@@ -7,7 +7,7 @@ export type AddUserToSpaceRequest = {
     /**
      * Роль пользователей
      */
-    role: number | null;
+    spaceRoleType: number | null;
 
     /**
      *  Идентификатор пространства в которое добавляем пользователей
