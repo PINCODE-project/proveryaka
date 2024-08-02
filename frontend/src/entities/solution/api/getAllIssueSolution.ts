@@ -5,7 +5,7 @@ import { extractData } from '@shared/lib';
 import { GetListResponse, ListFilters } from '@shared/types';
 
 export function getAllIssueSolution(issueId: string, filters: ListFilters): Promise<GetSolutionForExpert[]> {
-    return solutionHttp.get<GetListResponse<GetSolutionForExpert>>('organizer/solution/all', { params: { issueId, ...filters } })
+    return solutionHttp.get<{solutionList: GetSolutionForExpert[]}>('organizer/solution/all', { params: { issueId, ...filters } })
         .then(extractData)
-        .then(data => data.entityList ?? []);
+        .then(data => data.solutionList ?? []);
 };

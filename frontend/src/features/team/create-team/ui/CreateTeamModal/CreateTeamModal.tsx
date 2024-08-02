@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 
 import { useCreateTeam } from '@features/team/create-team/lib/useCreateTeam';
 
+import { getSpaceTeamsQueryKey } from '@entities/team/lib/getSpaceTeamsQueryKey';
 import { getSpaceUserTeamsQueryKey } from '@entities/team/lib/getSpaceUserTeamsQueryKey';
 
 import { getBemClasses, typedMemo } from '@shared/lib';
@@ -35,6 +36,7 @@ export const CreateTeamModal: FC<Props> = typedMemo(function CreateTeamModal({
     const { mutate: create } = useCreateTeam({
         onSuccess: () => {
             queryClient.resetQueries(getSpaceUserTeamsQueryKey(spaceId));
+            queryClient.resetQueries(getSpaceTeamsQueryKey(spaceId));
             setIsOpen(false);
         },
     });

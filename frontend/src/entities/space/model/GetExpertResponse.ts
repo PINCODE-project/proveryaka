@@ -39,5 +39,5 @@ export type GetExpertsListResponse = {
     /**
      * Список информации об экспертах в пространстве
      */
-    expertInfoList: GetExpertResponse[] | null;
+    expertsInfoList: GetExpertResponse[] | null;
 };

@@ -7,6 +7,7 @@ import * as Yup from 'yup';
 import { useCreateTeam } from '@features/team/create-team/lib/useCreateTeam';
 import { useEditTeam } from '@features/team/edit-team/lib/useEditTeam';
 
+import { getSpaceTeamsQueryKey } from '@entities/team/lib/getSpaceTeamsQueryKey';
 import { getSpaceUserTeamsQueryKey } from '@entities/team/lib/getSpaceUserTeamsQueryKey';
 import { GetTeam } from '@entities/team/model/GetTeam';
 
@@ -39,7 +40,7 @@ export const EditTeamModal: FC<Props> = typedMemo(function EditTeamModal({
     }), [team]);
     const { mutate: edit } = useEditTeam({
         onSuccess: () => {
-            queryClient.resetQueries(getSpaceUserTeamsQueryKey(spaceId));
+            queryClient.resetQueries(getSpaceTeamsQueryKey());
             setIsOpen(false);
         },
     });

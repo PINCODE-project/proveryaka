@@ -66,11 +66,11 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage({
         },
         {
             key: '2',
-            collapsible: (experts?.expertInfoList ?? []).length > 0 ? undefined : 'disabled',
+            collapsible: (experts?.expertsInfoList ?? []).length > 0 ? undefined : 'disabled',
             label: <Text className={getBemClasses(styles, 'collapseLabel')}>
-                Эксперты ({(experts?.expertInfoList ?? []).length})
+                Эксперты ({(experts?.expertsInfoList ?? []).length})
             </Text>,
-            children: <UserTable users={experts?.expertInfoList ?? []} actions={isOrganizer ? actions : undefined} />,
+            children: <UserTable users={experts?.expertsInfoList ?? []} actions={isOrganizer ? actions : undefined} />,
         },
         {
             key: '3',

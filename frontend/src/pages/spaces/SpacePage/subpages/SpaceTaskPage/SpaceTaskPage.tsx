@@ -68,6 +68,7 @@ export const SpaceTaskPage: FC<Props> = typedMemo(function SpaceTaskPage({
         <FlexContainer
             direction="column"
             gap="m"
+            overflow="nowrap"
             className={getBemClasses(styles, null, null, className)}
             data-testid={dataTestId}
         >
