@@ -104,12 +104,12 @@ export const SolutionCard: FC<Props> = typedMemo(function SolutionCard({
                     >
                         {showAssignmentDeadline
                             ? <Text className={getBemClasses(styles, 'deadline')}>
-                                Сдача: {getDateFromISO(issue?.submitDeadlineDateUtc ?? '')}
+                                Сдача: {getDateFromISO(solution?.submitAtUtc ?? '')}
                             </Text>
                             : null}
                         {showGradingDeadline
                             ? <Text className={getBemClasses(styles, 'deadline')}>
-                                Сдача: {getDateFromISO(solution?.assessmentDeadlineDateUtc ?? '')}
+                                Оценка: {getDateFromISO(solution?.assessmentDeadlineDateUtc ?? '')}
                             </Text>
                             : null}
                     </FlexContainer>

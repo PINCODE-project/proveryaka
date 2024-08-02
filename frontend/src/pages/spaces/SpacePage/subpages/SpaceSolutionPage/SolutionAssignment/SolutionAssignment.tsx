@@ -1,5 +1,14 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 
+import { useGetIssue } from '@entities/issue';
+import { useGetIssueFormList } from '@entities/issue/lib/useGetIssueFormList';
+import { IssueFormList } from '@entities/issue/ui/IssueFormList';
+import { useGetExpertSolution } from '@entities/solution/lib/useGetExpertSolution';
+import { useGetSolution } from '@entities/solution/lib/useGetSolution';
+import { useGetStudentIssueSolution } from '@entities/solution/lib/useGetStudentIssueSolution';
+
+import { useIssueId } from '@shared/hooks';
+import { useSolutionId } from '@shared/hooks/useSolutionId';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { FlexContainer, Input, Text } from '@shared/ui';
@@ -12,6 +21,10 @@ export const SolutionAssignment: FC<Props> = typedMemo(function SolutionAssignme
     className,
     'data-testid': dataTestId = 'SolutionAssignment',
 }) {
+    const solutionId = useSolutionId();
+    const issueId = useIssueId();
+    const { data: solution } = useGetExpertSolution(solutionId ?? '');
+
     return (
         <FlexContainer
             direction="column"
@@ -24,7 +37,12 @@ export const SolutionAssignment: FC<Props> = typedMemo(function SolutionAssignme
                 gap="s"
             >
                 <Text>Форма сдачи</Text>
-                <Input value="Текст" disabled />
+                <IssueFormList
+                    issueId={issueId ?? ''}
+                    form={solution?.solutionValueList ?? []}
+                    disabled
+                    onSubmit={() => {}}
+                />
             </FlexContainer>
         </FlexContainer>
     );

@@ -9,6 +9,7 @@ import { CriteriaForm } from '@features/solution/create-review/ui/CreateReviewFo
 import { GetCriteriaResponse } from '@entities/criteria';
 import { GetIssueResponse } from '@entities/issue';
 import { IssueFormList } from '@entities/issue/ui/IssueFormList';
+import { useGetSolution } from '@entities/solution/lib/useGetSolution';
 
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
@@ -35,6 +36,7 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
     issue,
     'data-testid': dataTestId = 'CreateReviewForm',
 }) {
+    const { data: solution } = useGetSolution(solutionId);
     const [currentTab, setCurrentTab] = useState(SolutionTab.Solution);
     const [currentCriteriaOrder, setCurrentCriteriaOrder] = useState(0);
 
@@ -90,6 +92,7 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
                                 ? <IssueFormList
                                     issueId={issue.id}
                                     disabled
+                                    form={solution?.solutionValueList ?? []}
                                     onSubmit={() => {}}
                                 />
                                 : currentTab === SolutionTab.Comment
