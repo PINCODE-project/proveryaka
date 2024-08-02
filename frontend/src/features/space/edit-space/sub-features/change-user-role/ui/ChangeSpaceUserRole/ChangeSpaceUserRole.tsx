@@ -31,8 +31,7 @@ export const ChangeSpaceUserRole: FC<Props> = typedMemo(function ChangeSpaceUser
             <Modal
                 title={`Изменить роль ${username}`}
                 open={isOpen}
-                onOk={console.log}
-                onCancel={console.log}
+                onCancel={() => setIsOpen(false)}
                 okText="Изменить"
                 cancelText="Отмена"
                 footer={false}
