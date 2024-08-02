@@ -14,6 +14,7 @@ import { getSpaceTeamsQueryKey } from '@entities/team/lib/getSpaceTeamsQueryKey'
 import { getSpaceUserTeamsQueryKey } from '@entities/team/lib/getSpaceUserTeamsQueryKey';
 import { GetTeam } from '@entities/team/model/GetTeam';
 
+import { roles } from '@shared/consts';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { Button, FormField, Input } from '@shared/ui';
@@ -87,13 +88,16 @@ export const AddUserTeamModal: FC<Props> = typedMemo(function AddUserTeamModal({
                                             mode="multiple"
                                             allowClear
                                             className={getBemClasses(styles, 'select')}
-                                        >
-                                            {userOptions.map(user => (
-                                                <Select.Option value={user.id}>
-                                                    {user.surname} {user.name} {user.patronymic}
-                                                </Select.Option>
+                                            filterOption={(input, option) =>
+                                                ((option?.label ?? '')).toLowerCase().includes(input.toLowerCase())
+                                            }
+                                            options={userOptions.map(user => (
+                                                {
+                                                    value: user.id,
+                                                    label: `${user.surname} ${user.name} ${user.patronymic}`,
+                                                }
                                             ))}
-                                        </Select>
+                                        />
                                     )
                                 }
                             />

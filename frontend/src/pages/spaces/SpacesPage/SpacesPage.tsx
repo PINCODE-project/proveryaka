@@ -56,7 +56,7 @@ export const SpacesPage: FC<Props> = typedMemo(({
                 className={getBemClasses(styles, 'header')}
             >
                 <Text className={getBemClasses(styles, 'headerTitle')}>
-                    Команды
+                    Пространства
                 </Text>
 
                 <Dropdown
@@ -68,7 +68,7 @@ export const SpacesPage: FC<Props> = typedMemo(({
                         className={getBemClasses(styles, 'addSpaceButton')}
                     >
                         <PeopleAdd className={getBemClasses(styles, 'addSpaceButtonIcon')} />
-                        Присоединиться или создать команду
+                        Присоединиться или создать пространство
                     </Button>
                 </Dropdown>
 
@@ -90,7 +90,7 @@ export const SpacesPage: FC<Props> = typedMemo(({
                                                 size="small"
                                                 className={getBemClasses(styles, 'settingsActionButton')}
                                             >
-                                            Управление командой
+                                            Управление пространством
                                             </Button>
                                         )}
                                         spaceId={space.id}

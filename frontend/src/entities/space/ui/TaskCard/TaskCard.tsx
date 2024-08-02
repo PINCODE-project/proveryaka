@@ -119,12 +119,12 @@ export const TaskCard: FC<Props> = typedMemo(function TaskCard({
                     >
                         {showAssignmentDeadline && issue.submitDeadlineDateUtc
                             ? <Text className={getBemClasses(styles, 'deadline')}>
-                                Сдача: {getDateFromISO(issue.submitDeadlineDateUtc)}, {getTimeFromISO(issue.submitDeadlineDateUtc)}
+                                Дедлайн сдачи: {getDateFromISO(issue.submitDeadlineDateUtc)}, {getTimeFromISO(issue.submitDeadlineDateUtc)}
                             </Text>
                             : null}
                         {showGradingDeadline && issue.assessmentDeadlineDateUtc
                             ? <Text className={getBemClasses(styles, 'deadline')}>
-                                Проверка: {getDateFromISO(issue.assessmentDeadlineDateUtc)}, {getTimeFromISO(issue.assessmentDeadlineDateUtc)}
+                                Дедлайн проверки: {getDateFromISO(issue.assessmentDeadlineDateUtc)}, {getTimeFromISO(issue.assessmentDeadlineDateUtc)}
                             </Text>
                             : null}
                     </FlexContainer>

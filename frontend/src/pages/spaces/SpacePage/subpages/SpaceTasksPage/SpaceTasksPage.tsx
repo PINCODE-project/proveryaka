@@ -76,7 +76,7 @@ export const SpaceTasksPage: FC<Props> = typedMemo(function SpaceTasksPage({
                 >
                     <NavTab
                         isActive={status === IssueStatus.InWork}
-                        name="К выполнению"
+                        name="Открыта сдача"
                         onClick={() => setStatus(IssueStatus.InWork)}
                     />
                     {isStudent
@@ -100,7 +100,7 @@ export const SpaceTasksPage: FC<Props> = typedMemo(function SpaceTasksPage({
                         : null}
                     <NavTab
                         isActive={status === IssueStatus.Done}
-                        name="Завершенные"
+                        name="Проверено"
                         onClick={() => setStatus(IssueStatus.Done)}
                     />
                 </FlexContainer>

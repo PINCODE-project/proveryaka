@@ -1,5 +1,7 @@
-import { type FC, PropsWithChildren, ReactNode } from 'react';
+import { type FC, PropsWithChildren, ReactNode, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import { useAuthContext } from '@app/providers/AuthProvider';
 
 import { SpaceRouter } from '@pages/spaces';
 
@@ -9,7 +11,7 @@ import Backpack from '@shared/assets/icons/Backpack.svg';
 import PeopleTeam from '@shared/assets/icons/PeopleTeam.svg';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { TestProps, ClassNameProps } from '@shared/types';
-import { FlexContainer } from '@shared/ui';
+import { Button, FlexContainer } from '@shared/ui';
 
 import styles from './PageComponent.module.css';
 
@@ -24,6 +26,8 @@ export const PageComponent: FC<Props> = typedMemo(({
     'data-testid': dataTestId = 'PageComponent',
 }: Props) => {
     const { t } = useTranslation();
+
+    const { logout } = useAuthContext();
 
     return (
         <FlexContainer
@@ -46,8 +50,12 @@ export const PageComponent: FC<Props> = typedMemo(({
 
             <main className={getBemClasses(styles, 'main')}>
                 <nav className={getBemClasses(styles, 'navbar')}>
-                    <NavItem to={SpaceRouter.Main} icon={<PeopleTeam />} name="Команды" />
-                    <NavItem to={'/'} icon={<Backpack />} name="Задания" />
+                    <div>
+                        <NavItem to={SpaceRouter.Main} icon={<PeopleTeam />} name="Пространства" />
+                    </div>
+                    <div>
+                        <Button variant="outline" onClick={logout}>Выйти</Button>
+                    </div>
                 </nav>
 
                 <div className={getBemClasses(styles, 'content')}>
