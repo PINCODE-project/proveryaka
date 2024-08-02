@@ -2,6 +2,12 @@
 
 }
 
+.SpacePage__loader {
+    width: 100%;
+    background-color: var(--default-background-2);
+    height: 100%;
+}
+
 .SpacePage__backLink {
     display: flex;
     align-items: center;

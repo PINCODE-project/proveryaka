@@ -1,5 +1,5 @@
 import { MenuProps } from 'antd';
-import { FC, useMemo } from 'react';
+import { FC, Suspense, useMemo } from 'react';
 import { useQueryClient } from 'react-query';
 import { Outlet, Navigate } from 'react-router-dom';
 
@@ -23,7 +23,7 @@ import { useFileUrlById } from '@shared/hooks';
 import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { TestProps, ClassNameProps } from '@shared/types';
-import { Button, FlexContainer, Image, Link, SettingsDropdown, Text } from '@shared/ui';
+import { Button, FlexContainer, Image, Link, Loader, SettingsDropdown, Text } from '@shared/ui';
 
 import { NavTab } from './NavTab/NavTab';
 import styles from './SpacePage.module.css';
@@ -156,7 +156,14 @@ export const SpacePage: FC<Props> = typedMemo(({
             </FlexContainer>
 
             <div className={getBemClasses(styles, 'content')}>
-                <Outlet />
+                <Suspense fallback={
+                    <div className={getBemClasses(styles, 'loader')}>
+                        <Loader />
+                    </div>
+                }
+                >
+                    <Outlet />
+                </Suspense>
             </div>
         </PageComponent>
     );
