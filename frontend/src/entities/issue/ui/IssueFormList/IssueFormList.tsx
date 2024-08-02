@@ -53,7 +53,6 @@ export const IssueFormList: FC<Props> = typedMemo(function IssueFormList({
             issueFormId: form.issueId,
         })) ?? [], [issueForm]);
 
-    console.log(form);
     return (
         <Formik
             initialValues={form ?? initialData}
@@ -76,6 +75,7 @@ export const IssueFormList: FC<Props> = typedMemo(function IssueFormList({
                                                 disabled={disabled}
                                                 maxCount={1}
                                                 beforeUpload={file => {
+                                                    console.log(file);
                                                     onChange([file]);
                                                     return false;
                                                 }}
@@ -110,7 +110,7 @@ export const IssueFormList: FC<Props> = typedMemo(function IssueFormList({
                             />
                     ))}
 
-                    {submitButton?.(() => handleSubmit())}
+                    {!disabled && submitButton?.(() => handleSubmit())}
                 </Form>
             )}
         </Formik>

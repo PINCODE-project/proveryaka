@@ -10,6 +10,8 @@ import { GetIssueResponse } from '@entities/issue';
 import { useGetIssueFormList } from '@entities/issue/lib/useGetIssueFormList';
 import { IssueFormList } from '@entities/issue/ui/IssueFormList';
 import { getStudentIssueSolutionQueryKey } from '@entities/solution/lib/getStudentIssueSolutionQueryKey';
+import { useGetExpertSolution } from '@entities/solution/lib/useGetExpertSolution';
+import { useGetSolution } from '@entities/solution/lib/useGetSolution';
 import { useGetStudentIssueSolution } from '@entities/solution/lib/useGetStudentIssueSolution';
 import { GetSolutionValue } from '@entities/solution/model/GetSolutionValue';
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
@@ -37,7 +39,7 @@ export const TaskDescription: FC<Props> = typedMemo(function TaskDescription({
 
     const { isOrganizer, isStudent } = useRolesCheck();
 
-    const { data: solution, error: solutionError } = useGetStudentIssueSolution(issue.id, {
+    const { data: issueSolution, error: solutionError } = useGetStudentIssueSolution(issue.id, {
         enabled: isStudent,
         onError: error => {
             if (isAxiosError(error) && error.response?.status === 404) {
@@ -46,6 +48,9 @@ export const TaskDescription: FC<Props> = typedMemo(function TaskDescription({
             throw error;
         },
         useErrorBoundary: false,
+    });
+    const { data: solution } = useGetSolution(issueSolution?.id ?? '', {
+        enabled: issueSolution !== undefined,
     });
     const [teamsFilters] = useListFilters({ page: 0, count: 15 });
     const { data: teams } = useGetSpaceUserTeams(spaceId ?? '', teamsFilters, {
@@ -94,14 +99,13 @@ export const TaskDescription: FC<Props> = typedMemo(function TaskDescription({
 
                 <IssueFormList
                     issueId={issue.id}
+                    form={solution?.solutionValueList ?? []}
                     onSubmit={onSubmitSolution}
-                    disabled={isOrganizer || solutionError !== null}
+                    disabled={isOrganizer || Boolean(solution) || !teams?.teamList[0]}
                     submitButton={handleSubmit => (
-                        isOrganizer || solutionError !== null
-                            ? null
-                            : <Button onClick={handleSubmit}>
+                        <Button onClick={handleSubmit}>
                             Сдать
-                            </Button>
+                        </Button>
                     )}
                 />
             </FlexContainer>

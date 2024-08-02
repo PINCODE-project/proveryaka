@@ -71,7 +71,7 @@ export const SpaceTeamPage: FC<Props> = typedMemo(function SpaceTeamPage({
             children: <UserTable isStudent={true} users={team.studentInfoList ?? []} />,
         })), [teams]);
 
-    if (teams?.teamList.length === 0 && isStudent) {
+    if (studentTeams?.teamList.length === 0 && isStudent) {
         return (
             <FlexContainer
                 direction="column"
