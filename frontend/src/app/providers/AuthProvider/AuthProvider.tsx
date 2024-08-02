@@ -46,7 +46,11 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = typedMemo(funct
     }, []);
 
     if (isLoading) {
-        return <Loader />;
+        return (
+            <div className="LoaderFallback">
+                <Loader />
+            </div>
+        );
     }
     return (
         <AuthProvider.Provider
