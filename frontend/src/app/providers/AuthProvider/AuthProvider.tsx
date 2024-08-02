@@ -42,9 +42,9 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = typedMemo(funct
     }, []);
 
     const logout = useCallback(() => {
+        queryClient.resetQueries();
         setIsAuth(false);
         TokenService.removeToken();
-        queryClient.resetQueries();
     }, []);
 
     if (isLoading) {
