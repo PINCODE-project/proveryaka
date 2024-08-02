@@ -29,7 +29,6 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = typedMemo(funct
 }) {
     const [isLoading, setIsLoading] = useState(true);
     const [isAuth, setIsAuth] = useState(false);
-    const queryClient = useQueryClient();
 
     useEffect(() => {
         setIsAuth(TokenService.getToken() !== null);
@@ -44,7 +43,6 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = typedMemo(funct
     const logout = useCallback(() => {
         setIsAuth(false);
         TokenService.removeToken();
-        queryClient.resetQueries();
     }, []);
 
     if (isLoading) {
