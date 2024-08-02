@@ -1,0 +1,8 @@
+.StartDistributionForm {
+
+}
+
+.StartDistributionForm__field,
+.StartDistributionForm__select {
+    width: 100%;
+}

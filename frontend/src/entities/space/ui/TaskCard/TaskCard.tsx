@@ -1,6 +1,7 @@
 import { FC, useMemo } from 'react';
 
 import { EditIssueForm } from '@features/issue/edit-issue';
+import { StartDistributionForm } from '@features/issue/start-distribution/ui/StartDistributionForm';
 
 import { GetIssueResponse } from '@entities/issue';
 import { IssueStatus } from '@entities/issue/model/IssueStatus';
@@ -162,6 +163,14 @@ export const TaskCard: FC<Props> = typedMemo(function TaskCard({
                                         spaceId={space?.id ?? ''}
                                         triggerElement={open => <Text onClick={open}>Настройки</Text>}
                                         issue={issue}
+                                    />,
+                                },
+                                {
+                                    key: 1,
+                                    label: <StartDistributionForm
+                                        spaceId={space?.id ?? ''}
+                                        triggerElement={open => <Text onClick={open}>Назначить</Text>}
+                                        issueId={issue.id}
                                     />,
                                 },
                             ],
