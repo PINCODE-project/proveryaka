@@ -55,32 +55,46 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage({
     const { data: students } = useGetSpaceStudents(spaceId ?? '');
     const { isOrganizer, isStudent } = useRolesCheck();
 
-    const items = useMemo<CollapseProps['items']>(() => [
-        {
-            key: '1',
-            label: <Text className={getBemClasses(styles, 'collapseLabel')}>
-                Владельцы ({(organizers?.organizerInfoList ?? []).length})
-            </Text>,
-            collapsible: (organizers?.organizerInfoList ?? []).length > 0 ? undefined : 'disabled',
-            children: <UserTable users={organizers?.organizerInfoList ?? []} actions={isOrganizer ? actions : undefined} />,
-        },
-        {
-            key: '2',
-            collapsible: (experts?.expertsInfoList ?? []).length > 0 ? undefined : 'disabled',
-            label: <Text className={getBemClasses(styles, 'collapseLabel')}>
-                Эксперты ({(experts?.expertsInfoList ?? []).length})
-            </Text>,
-            children: <UserTable users={experts?.expertsInfoList ?? []} actions={isOrganizer ? actions : undefined} />,
-        },
-        {
+    const items = useMemo<CollapseProps['items']>(() => {
+        const items: CollapseProps['items'] = [
+            {
+                key: '1',
+                label: <Text className={getBemClasses(styles, 'collapseLabel')}>
+                    Владельцы ({(organizers?.organizerInfoList ?? []).length})
+                </Text>,
+                collapsible: (organizers?.organizerInfoList ?? []).length > 0 ? undefined : 'disabled',
+                children: <UserTable users={organizers?.organizerInfoList ?? []}
+                    actions={isOrganizer ? actions : undefined}
+                />,
+            },
+        ];
+
+        if (isOrganizer) {
+            items.push({
+                key: '2',
+                collapsible: (experts?.expertsInfoList ?? []).length > 0 ? undefined : 'disabled',
+                label: <Text className={getBemClasses(styles, 'collapseLabel')}>
+                        Эксперты ({(experts?.expertsInfoList ?? []).length})
+                </Text>,
+                children: <UserTable users={experts?.expertsInfoList ?? []}
+                    actions={isOrganizer ? actions : undefined}
+                />,
+            });
+        }
+
+        items.push({
             key: '3',
             collapsible: (students?.studentInfoList ?? []).length > 0 ? undefined : 'disabled',
             label: <Text className={getBemClasses(styles, 'collapseLabel')}>
                 Студенты ({(students?.studentInfoList ?? []).length})
             </Text>,
-            children: <UserTable users={students?.studentInfoList ?? []} isStudent={true} actions={isOrganizer ? actions : undefined} />,
-        },
-    ], [organizers, experts, students]);
+            children: <UserTable users={students?.studentInfoList ?? []} isStudent={true}
+                actions={isOrganizer ? actions : undefined}
+            />,
+        });
+
+        return items;
+    }, [organizers, experts, students]);
 
     return (
         <FlexContainer
