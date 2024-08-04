@@ -134,6 +134,7 @@ export const SpaceTasksPage: FC<Props> = typedMemo(function SpaceTasksPage({
                             <TaskCard
                                 className={getBemClasses(styles, 'task')}
                                 showSpaceName={false}
+                                showAvatar={false}
                                 status={issue.innerStatus}
                                 issue={issue}
                                 space={space}

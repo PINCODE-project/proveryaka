@@ -84,20 +84,27 @@ export const TaskDescription: FC<Props> = typedMemo(function TaskDescription({
         <FlexContainer
             direction="column"
             gap="m"
+            alignItems="stretch"
             className={getBemClasses(styles, null, null, className)}
             data-testid={dataTestId}
         >
-            <Text>
-                {issue.description}
-            </Text>
+            <FlexContainer direction="column">
+                <Text className={getBemClasses(styles, 'subtitle')}>
+                   Описание
+                </Text>
+                <Text>
+                    {issue.description}
+                </Text>
+            </FlexContainer>
 
             <FlexContainer
                 direction="column"
-                gap="s"
+                gap="xs"
             >
-                <Text>Форма сдачи</Text>
+                <Text className={getBemClasses(styles, 'subtitle')}>Форма сдачи</Text>
 
                 <IssueFormList
+                    className={getBemClasses(styles, 'form')}
                     issueId={issue.id}
                     form={solution?.solutionValueList ?? []}
                     onSubmit={onSubmitSolution}

@@ -35,12 +35,17 @@ export const SpaceCard: FC<Props> = typedMemo(({
                 data-testid={dataTestId}
                 className={getBemClasses(styles, null, null, className)}
             >
-                <Image
+                <FlexContainer direction="column" alignItems="center" justifyContent="center"
+                    className={getBemClasses(styles, 'avatar')}
+                >
+                    {space.name?.[0]}
+                </FlexContainer>
+                {/* <Image
                     alt="space avatar"
                     src={iconUrl}
                     placeholderSrc={'https://masterpiecer-images.s3.yandex.net/4b4e8fbd579411ee8d01e6d39d9a42a4:upscaled'}
                     className={getBemClasses(styles, 'avatar')}
-                />
+                /> */}
 
                 <FlexContainer
                     direction="row"

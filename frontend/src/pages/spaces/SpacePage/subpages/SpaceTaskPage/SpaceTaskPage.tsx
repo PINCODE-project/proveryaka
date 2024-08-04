@@ -41,9 +41,9 @@ export const SpaceTaskPage: FC<Props> = typedMemo(function SpaceTaskPage({
         }
         switch (activeSection) {
             case ActiveSection.Description:
-                return <TaskDescription issue={issue} />;
+                return <TaskDescription issue={issue} className={getBemClasses(styles, 'content')} />;
             case ActiveSection.Solutions:
-                return <TaskSolutions issue={issue} />;
+                return <TaskSolutions issue={issue} className={getBemClasses(styles, 'content')} />;
             case ActiveSection.Criteria:
                 return (<TaskCriteria issue={issue} criteria={[{
                     id: '0000',
@@ -54,9 +54,10 @@ export const SpaceTaskPage: FC<Props> = typedMemo(function SpaceTaskPage({
                     weight: 1,
                     issueId: '0000',
                 }]}
+                className={getBemClasses(styles, 'content')}
                 />);
             case ActiveSection.Preparation:
-                return <TaskPreparation issue={issue} />;
+                return <TaskPreparation issue={issue} className={getBemClasses(styles, 'content')} />;
         }
         return null;
     }, [activeSection, issue]);
@@ -67,15 +68,15 @@ export const SpaceTaskPage: FC<Props> = typedMemo(function SpaceTaskPage({
     return (
         <FlexContainer
             direction="column"
-            gap="m"
+            gap="l"
             overflow="nowrap"
             className={getBemClasses(styles, null, null, className)}
             data-testid={dataTestId}
         >
-            <FlexContainer direction="column" gap="xs">
-                <Text>{issue.name}</Text>
-                <Text>Сдача до: {getDateFromISO(issue.submitDeadlineDateUtc ?? '')}</Text>
-                <Text>Проверка до: {getDateFromISO(issue.assessmentDeadlineDateUtc ?? '')}</Text>
+            <FlexContainer direction="column" className={getBemClasses(styles, 'header')}>
+                <Text className={getBemClasses(styles, 'name')}>{issue.name}</Text>
+                <Text className={getBemClasses(styles, 'deadline')}>Сдача до: {getDateFromISO(issue.submitDeadlineDateUtc ?? '')}</Text>
+                <Text className={getBemClasses(styles, 'deadline')}>Проверка до: {getDateFromISO(issue.assessmentDeadlineDateUtc ?? '')}</Text>
             </FlexContainer>
 
             <FlexContainer

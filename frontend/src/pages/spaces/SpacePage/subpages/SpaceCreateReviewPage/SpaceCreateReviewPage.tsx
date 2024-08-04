@@ -36,7 +36,7 @@ export const SpaceCreateReviewPage: FC<Props> = typedMemo(function SpaceCreateRe
     const { data: criteria } = useGetIssueCriteria(issue?.id ?? '', filters);
 
     const canReview = useCanReviewSolution(solutionId ?? '', spaceId ?? '');
-    const hasReview = useHasCurrentUserMark(solutionId ?? '', user?.id ?? '');
+    const hasReview = undefined; // useHasCurrentUserMark(solutionId ?? '', user?.id ?? '');
 
     if (!canReview || hasReview !== undefined) {
         return <Navigate to={SpaceRouter.Space(spaceId ?? '')} />;

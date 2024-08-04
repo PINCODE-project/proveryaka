@@ -17,7 +17,7 @@ export type Props = ClassNameProps & TestProps & Readonly<{
     order: number;
     isOpen: boolean;
     criteria: GetCriteriaResponse;
-    onSelect: (order: number) => void;
+    onSelect: (order: number | null) => void;
 }>;
 
 export const CriteriaForm: FC<Props> = typedMemo(function CriteriaForm({
@@ -31,12 +31,10 @@ export const CriteriaForm: FC<Props> = typedMemo(function CriteriaForm({
     return (
         <FormField<CriteriaReviewByCriteria>
             name={`reviewsByCriteria[${order}]`}
+            className={getBemClasses(styles, 'field')}
             content={
                 ({ value, error }) => (
                     <FlexContainer
-                        onClick={() => {
-                            onSelect(order);
-                        }}
                         className={getBemClasses(styles, null, { isOpen }, className)}
                         direction="column"
                         gap="m"
@@ -45,6 +43,9 @@ export const CriteriaForm: FC<Props> = typedMemo(function CriteriaForm({
                             direction="row"
                             overflow="nowrap"
                             gap="s"
+                            onClick={() => {
+                                onSelect(isOpen ? null : order);
+                            }}
                             justifyContent="space-between"
                             className={getBemClasses(styles, 'header')}
                         >
@@ -64,8 +65,13 @@ export const CriteriaForm: FC<Props> = typedMemo(function CriteriaForm({
                             </Typography>
                         </FlexContainer>
 
-                        <FlexContainer direction="column" gap="m" className={getBemClasses(styles, 'additional')}>
-                            <Typography>
+                        <FlexContainer
+                            alignItems="stretch"
+                            direction="column"
+                            gap="s"
+                            className={getBemClasses(styles, 'additional')}
+                        >
+                            <Typography className={getBemClasses(styles, 'criteriaDesc')}>
                                 {criteria.description}
                             </Typography>
 
@@ -79,6 +85,7 @@ export const CriteriaForm: FC<Props> = typedMemo(function CriteriaForm({
                                                 min={criteria.minScore}
                                                 max={criteria.maxScore}
                                                 value={value}
+                                                className={getBemClasses(styles, 'numberField')}
                                                 onChange={value => onChange(value ?? 0)}
                                             />
                                         )

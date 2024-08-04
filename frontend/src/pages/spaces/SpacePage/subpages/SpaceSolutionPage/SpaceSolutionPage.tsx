@@ -64,19 +64,20 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
 
     const { data: user } = useGetCurrentUserInfo();
     const canReview = useCanReviewSolution(solutionId ?? '', spaceId ?? '');
-    const hasReview = useHasCurrentUserMark(solutionId ?? '', user?.id ?? '');
+    const hasReview = undefined; // useHasCurrentUserMark(solutionId ?? '', user?.id ?? '');
 
     return (
         <FlexContainer
             direction="column"
             gap="m"
+            alignItems="stretch"
             className={getBemClasses(styles, null, null, className)}
             data-testid={dataTestId}
         >
-            <FlexContainer direction="column" gap="xs">
-                <Text>{issue?.name}</Text>
-                <Text>Сдать до: {getDateFromISO(issue?.submitDeadlineDateUtc ?? '')}</Text>
-                <Text>Оценить до: {getDateFromISO(issue?.assessmentDeadlineDateUtc ?? '')}</Text>
+            <FlexContainer direction="column" className={getBemClasses(styles, 'header')}>
+                <Text className={getBemClasses(styles, 'name')}>{issue?.name}</Text>
+                <Text className={getBemClasses(styles, 'deadline')}>Сдать до: {getDateFromISO(issue?.submitDeadlineDateUtc ?? '')}</Text>
+                <Text className={getBemClasses(styles, 'deadline')}>Оценить до: {getDateFromISO(issue?.assessmentDeadlineDateUtc ?? '')}</Text>
             </FlexContainer>
 
             <FlexContainer

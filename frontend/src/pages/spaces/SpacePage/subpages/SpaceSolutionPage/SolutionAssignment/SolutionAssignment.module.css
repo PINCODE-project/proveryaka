@@ -1,3 +1,14 @@
-.SolutionDescription {
+.SolutionAssignment {
 
+}
+
+.SolutionAssignment__form {
+    width: 100%;
+    max-width: 500px;
+}
+
+.SolutionAssignment__subtitle {
+    font-size: 10px;
+    font-weight: var(--font-weight-semibold);
+    color: var(--default-forefround-2)
 }

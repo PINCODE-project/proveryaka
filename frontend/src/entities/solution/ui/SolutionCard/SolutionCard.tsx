@@ -44,7 +44,7 @@ export const SolutionCard: FC<Props> = typedMemo(function SolutionCard({
     'data-testid': dataTestId = 'TaskCard',
 }) {
     const { data: user } = useGetCurrentUserInfo();
-    const markReview = useHasCurrentUserMark(solution.id, user?.id ?? '');
+    const markReview = undefined;/* useHasCurrentUserMark(solution.id, user?.id ?? ''); */
 
     const statusComponent = useMemo(() => {
         if (markReview) {

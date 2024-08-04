@@ -1,4 +1,9 @@
-.CriteriaForm {
+.CriteriaForm,
+.CriteriaForm__styles {
+    width: 100%;
+}
+
+.CriteriaForm__additional {
     width: 100%;
 }
 
@@ -35,4 +40,12 @@
 
 .CriteriaForm__headerName {
     flex: 1;
+}
+
+.CriteriaForm__numberField {
+    width: 100%;
+}
+
+.CriteriaForm__criteriaDesc {
+    color: var(--default-forefround-3)
 }

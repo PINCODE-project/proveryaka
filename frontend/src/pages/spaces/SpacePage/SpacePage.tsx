@@ -133,12 +133,17 @@ export const SpacePage: FC<Props> = typedMemo(({
                     gap="m"
                 >
                     <FlexContainer direction="row" alignItems="center" gap="s">
-                        <Image
+                        <FlexContainer direction="column" alignItems="center" justifyContent="center"
+                            className={getBemClasses(styles, 'avatar')}
+                        >
+                            {space.name?.[0]}
+                        </FlexContainer>
+                        {/* <Image
                             src={iconUrl}
                             alt="space avatar"
                             placeholderSrc={'https://masterpiecer-images.s3.yandex.net/4b4e8fbd579411ee8d01e6d39d9a42a4:upscaled'}
                             className={getBemClasses(styles, 'avatar')}
-                        />
+                        /> */}
                         <Text className={getBemClasses(styles, 'name')}>
                             {space.name}
                         </Text>

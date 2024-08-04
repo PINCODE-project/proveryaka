@@ -103,6 +103,7 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
                                 className={getBemClasses(styles, 'workLink')}
                             >
                                 <SolutionCard
+                                    showAvatar={false}
                                     solution={solution}
                                     className={getBemClasses(styles, 'task')}
                                     showSpaceName={false}

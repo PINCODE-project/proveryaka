@@ -9,3 +9,22 @@
 .SpaceSolutionPage__navPanel {
     width: 100%;
 }
+
+.SpaceSolutionPage__content {
+    width: 100%;
+}
+
+.SpaceSolutionPage__name {
+    font-size: 20px;
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: 13px;
+}
+
+.SpaceSolutionPage__deadline {
+    font-size: 12px;
+    color: var(--default-forefround-3);
+}
+
+.SpaceSolutionPage__header {
+    margin-bottom: var(--space-s);
+}

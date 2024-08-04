@@ -76,6 +76,9 @@
     border-radius: var(--border-radius-m);
     object-position: center;
     object-fit: cover;
+    background-color: var(--brand-forefround);
+    color: #fff;
+    font-size: 14px
 }
 
 .SpacePage__header {

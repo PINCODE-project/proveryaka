@@ -29,15 +29,17 @@ export const SolutionAssignment: FC<Props> = typedMemo(function SolutionAssignme
         <FlexContainer
             direction="column"
             gap="m"
+            alignItems="stretch"
             className={getBemClasses(styles, null, null, className)}
             data-testid={dataTestId}
         >
             <FlexContainer
                 direction="column"
-                gap="s"
+                gap="xs"
             >
-                <Text>Форма сдачи</Text>
+                <Text className={getBemClasses(styles, 'subtitle')}>Форма сдачи</Text>
                 <IssueFormList
+                    className={getBemClasses(styles, 'form')}
                     issueId={issueId ?? ''}
                     form={solution?.solutionValueList ?? []}
                     disabled

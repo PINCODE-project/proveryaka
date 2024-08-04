@@ -40,7 +40,7 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
 }) {
     const { data: solution } = useGetExpertSolution(solutionId);
     const [currentTab, setCurrentTab] = useState(SolutionTab.Solution);
-    const [currentCriteriaOrder, setCurrentCriteriaOrder] = useState(0);
+    const [currentCriteriaOrder, setCurrentCriteriaOrder] = useState<number | null>(null);
     const { mutate: review } = useCreateReview({
         onSuccess: () => {
 
@@ -132,8 +132,12 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
                             }
                         </FlexContainer>
 
-                        <FlexContainer direction="column" gap="m" overflow="nowrap">
-                            <FlexContainer direction="column" gap="s">
+                        <FlexContainer direction="column" gap="m" overflow="nowrap"
+                            alignItems="stretch"
+                        >
+                            <FlexContainer direction="row" gap="m" justifyContent="space-between"
+                                alignItems="center"
+                            >
                                 <Typography className={getBemClasses(styles, 'mark')}>
                                 Итоговая оценка: {getMark(values)}/{maxMark}
                                 </Typography>

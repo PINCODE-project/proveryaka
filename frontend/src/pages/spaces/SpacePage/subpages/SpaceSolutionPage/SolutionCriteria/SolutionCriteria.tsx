@@ -1,5 +1,7 @@
 import { FC } from 'react';
 
+import { TaskCriteriaItem } from '@pages/spaces/SpacePage/subpages/SpaceTaskPage/TaskCriteria/TaskCriteriaItem';
+
 import { GetCriteriaResponse } from '@entities/criteria';
 
 import { getBemClasses, typedMemo } from '@shared/lib';
@@ -26,21 +28,7 @@ export const SolutionCriteria: FC<Props> = typedMemo(function SolutionCriteria({
         >
             {
                 criteria.map(item => (
-                    <FlexContainer direction="column" key={item.id}>
-                        <Text>{item.name}</Text>
-                        <Text>Вес: {item.weight}</Text>
-                        <Text>Шкала оценивания: {item.minScore} - {item.maxScore}</Text>
-                        <Text>{item.description}</Text>
-                        <SolutionExample
-                            example={[]}
-                            antiExample={[]}
-                            triggerComponent={open => (
-                                <Button variant="ghost" onClick={open}>
-                                    Пример выполнения
-                                </Button>
-                            )}
-                        />
-                    </FlexContainer>
+                    <TaskCriteriaItem criteria={item} />
                 ))
             }
         </FlexContainer>

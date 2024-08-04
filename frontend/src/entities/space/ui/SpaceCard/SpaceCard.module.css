@@ -20,7 +20,10 @@
     object-fit: cover;
     align-self: center;
     object-position: center;
+    background-color: var(--brand-forefround);
     border-radius: var(--border-radius-m);
+    color: #fff;
+    font-size: 24px
 }
 
 .SpaceCard__name {

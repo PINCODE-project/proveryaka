@@ -30,9 +30,14 @@ export const SolutionDescription: FC<Props> = typedMemo(function SolutionDescrip
             className={getBemClasses(styles, null, null, className)}
             data-testid={dataTestId}
         >
-            <Text>
-                {issue?.description}
-            </Text>
+            <FlexContainer direction="column">
+                <Text className={getBemClasses(styles, 'subtitle')}>
+                    Описание
+                </Text>
+                <Text>
+                    {issue?.description}
+                </Text>
+            </FlexContainer>
 
             <FlexContainer
                 direction="column"

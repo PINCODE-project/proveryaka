@@ -1,3 +1,4 @@
+import { Collapse } from 'antd';
 import { FC, useMemo } from 'react';
 
 import { GetCriteriaResponse } from '@entities/criteria';
@@ -27,20 +28,42 @@ export const TaskCriteriaItem: FC<Props> = typedMemo(function TaskCriteriaItem({
         ?.filter(example => example.exampleType == ExampleType.AntiExample) ?? [], [examples]);
 
     return (
-        <FlexContainer direction="column" key={criteria.id}>
-            <Text>{criteria.name}</Text>
-            <Text>Вес: {criteria.weight}</Text>
-            <Text>Шкала оценивания: {criteria.minScore} - {criteria.maxScore}</Text>
-            <Text>{criteria.description}</Text>
-            <SolutionExample
-                example={standardExamples}
-                antiExample={antiExamples}
-                triggerComponent={open => (
-                    <Button variant="ghost" onClick={open}>
-                        Пример выполнения
-                    </Button>
-                )}
-            />
-        </FlexContainer>
+        <Collapse
+            className={getBemClasses(styles)}
+            items={[{
+                key: '1',
+                label: <FlexContainer direction="row" gap="m" justifyContent="space-between"
+                    overflow="nowrap"
+                >
+                    <Text className={getBemClasses(styles, 'name')}>{criteria.name}</Text>
+
+                    <FlexContainer direction="row" gap="xs" alignItems="center">
+                        <Text className={getBemClasses(styles, 'params')}>
+                            Шкала оценки: {criteria.minScore} - {criteria.maxScore}
+                        </Text>
+                    </FlexContainer>
+                </FlexContainer>,
+                children: <FlexContainer direction="column" gap="m">
+                    <FlexContainer direction="column">
+                        <Text className={getBemClasses(styles, 'subtitle')}>
+                            Описание
+                        </Text>
+                        <Text>
+                            {criteria.description}
+                        </Text>
+                    </FlexContainer>
+
+                    <SolutionExample
+                        example={standardExamples}
+                        antiExample={antiExamples}
+                        triggerComponent={open => (
+                            <Button variant="ghost" onClick={open}>
+                            Пример выполнения
+                            </Button>
+                        )}
+                    />
+                </FlexContainer>,
+            }]}
+        />
     );
 });

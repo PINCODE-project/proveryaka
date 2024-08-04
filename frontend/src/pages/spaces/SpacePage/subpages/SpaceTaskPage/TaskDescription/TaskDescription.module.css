@@ -1,3 +1,14 @@
 .TaskDescription {
 
 }
+
+.TaskDescription__form {
+    width: 100%;
+    max-width: 500px;
+}
+
+.TaskDescription__subtitle {
+    font-size: 10px;
+    font-weight: var(--font-weight-semibold);
+    color: var(--default-forefround-2)
+}

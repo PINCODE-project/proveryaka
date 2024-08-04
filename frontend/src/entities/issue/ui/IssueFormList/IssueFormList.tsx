@@ -61,7 +61,7 @@ export const IssueFormList: FC<Props> = typedMemo(function IssueFormList({
             validationSchema={validationSchema}
         >
             {({ handleSubmit }) => (
-                <Form>
+                <Form className={className}>
                     {issueForm?.issueFormList.map((form, index) => (
                         form.formSolutionType === FormSolutionType.File
                             ? <FormField<UploadFile[]>
@@ -95,7 +95,7 @@ export const IssueFormList: FC<Props> = typedMemo(function IssueFormList({
                                 label={form.name ?? ''}
                                 content={
                                     ({ onChange, value, isInvalid }) => (
-                                        <FlexContainer direction="column" gap="xs">
+                                        <FlexContainer direction="column" gap="xs" style={{ width: '100%' }}>
                                             <Text>{form.description}</Text>
                                             <Textarea
                                                 disabled={disabled}

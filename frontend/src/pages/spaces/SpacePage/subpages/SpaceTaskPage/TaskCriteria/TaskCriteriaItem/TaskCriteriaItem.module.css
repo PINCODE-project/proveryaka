@@ -1,3 +1,18 @@
 .TaskCriteriaItem {
+    width: 100%;
+}
 
+.TaskCriteriaItem__params {
+    font-size: 12px;
+    color: var(--default-forefround-3)
+}
+
+.TaskCriteriaItem__subtitle {
+    font-size: 10px;
+    font-weight: var(--font-weight-semibold);
+    color: var(--default-forefround-2)
+}
+
+.TaskCriteriaItem__name {
+    flex: 1;
 }
