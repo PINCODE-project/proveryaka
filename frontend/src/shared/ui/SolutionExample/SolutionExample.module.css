@@ -3,3 +3,28 @@
     grid-template-columns: 1fr 1fr;
     grid-gap: var(--space-l);
 }
+
+.SolutionExample_isOneColumn {
+    grid-template-columns: 1fr;
+}
+
+.SolutionExample__column {
+    overflow: hidden;
+    max-width: 100%;
+}
+
+.SolutionExample__modal {
+    max-width: 1000px;
+    width: 100%;
+    padding:40px 60px;
+}
+
+.SolutionExample__modal:has(> .SolutionExample_isOneColumn){
+    max-width: 600px;
+}
+
+.SolutionExample__header {
+    margin-bottom: var(--space-m);
+    font-size: var(--subheadline-font-size);
+    line-height: var(--subheadline-font-size);
+}

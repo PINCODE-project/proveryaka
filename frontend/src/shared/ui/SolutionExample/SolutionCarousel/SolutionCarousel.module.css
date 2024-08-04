@@ -22,3 +22,14 @@
     background-color: var(--brand-forefround);
     color: var(--default-background);
 }
+
+.SolutionCarousel__solutionScroll {
+    max-width: 100%;
+    overflow: hidden;
+}
+
+
+.SolutionCarousel__description {
+    margin-top: var(--space-m);
+    color: var(--default-forefround-3);
+}

@@ -37,10 +37,10 @@ export const SolutionCarousel: FC<Props> = typedMemo(function SolutionCarousel({
 
             {solutions.length > 0 &&
                 <div className={getBemClasses(styles, 'solutionScroll')}>
-                    <Text>
+                    <Text className={getBemClasses(styles, 'link')}>
                         {solutions[currentIndex].exampleLink ?? ''}
                     </Text>
-                    <Text>
+                    <Text className={getBemClasses(styles, 'description')}>
                         {solutions[currentIndex].description ?? ''}
                     </Text>
                 </div>}
