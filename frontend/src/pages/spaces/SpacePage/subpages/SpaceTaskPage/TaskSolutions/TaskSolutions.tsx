@@ -26,7 +26,7 @@ export const TaskSolutions: FC<Props> = typedMemo(function TaskSolutions({
     'data-testid': dataTestId = 'TaskSolutions',
 }) {
     const spaceId = useSpaceId();
-    const [filters] = useListFilters({ page: 0, count: 15 });
+    const [filters] = useListFilters();
 
     const { data: rawSolutions } = useGetIssueSolutions(issue.id, filters);
     const solutions = useMemo(() => rawSolutions?.map(solution => ({

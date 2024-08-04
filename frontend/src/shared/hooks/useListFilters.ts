@@ -15,7 +15,9 @@ type ReturnType<TFilters extends Filters> = [
     (key: keyof TFilters, name: TFilters[keyof TFilters]) => void
 ];
 
-export function useListFilters<TFilters extends Filters>(initialValue: TFilters): ReturnType<TFilters> {
+export function useListFilters<TFilters extends Filters>(
+    initialValue: TFilters = { page: 0, count: 1000 } as TFilters,
+): ReturnType<TFilters> {
     const [filters, setFilters] = useState<TFilters>(initialValue);
 
     const changeFilter = useCallback((key: keyof TFilters, name: TFilters[keyof TFilters]) => {

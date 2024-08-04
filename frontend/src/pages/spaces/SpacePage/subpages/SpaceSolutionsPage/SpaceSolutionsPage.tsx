@@ -24,7 +24,7 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
     'data-testid': dataTestId = 'SpaceSolutionsPage',
 }) {
     const spaceId = useSpaceId();
-    const [filters] = useListFilters({ page: 0, count: 15 });
+    const [filters] = useListFilters();
     const [status, setStatus] = useState(SolutionStatus.InGrade);
     const [search, setSearch] = useState('');
 

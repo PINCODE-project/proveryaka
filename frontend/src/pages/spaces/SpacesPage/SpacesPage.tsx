@@ -41,7 +41,7 @@ export const SpacesPage: FC<Props> = typedMemo(({
     className,
     'data-testid': dataTestId = 'SpacesPage',
 }: Props) => {
-    const [filters, changeFilter] = useListFilters({ page: 0, count: 15 });
+    const [filters, changeFilter] = useListFilters();
     const { data, isLoading } = useGetSpaces(filters);
 
     return (

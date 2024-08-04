@@ -52,7 +52,7 @@ export const TaskDescription: FC<Props> = typedMemo(function TaskDescription({
     const { data: solution } = useGetSolution(issueSolution?.id ?? '', {
         enabled: issueSolution !== undefined,
     });
-    const [teamsFilters] = useListFilters({ page: 0, count: 15 });
+    const [teamsFilters] = useListFilters();
     const { data: teams } = useGetSpaceUserTeams(spaceId ?? '', teamsFilters, {
         enabled: isStudent,
     });
@@ -73,7 +73,7 @@ export const TaskDescription: FC<Props> = typedMemo(function TaskDescription({
         });
     }, [issue, teams, createSolution]);
 
-    const [exampleFilters] = useListFilters({ count: 15, page: 0 });
+    const [exampleFilters] = useListFilters();
     const { data: examples } = useGetIssueExamples(issue.id, exampleFilters);
     const standardExamples = useMemo(() => examples?.entityList
         ?.filter(example => example.exampleType === ExampleType.Standard) ?? [], [examples]);

@@ -18,7 +18,7 @@ export type Props = ClassNameProps & TestProps & Readonly<{
 export const TaskCriteriaItem: FC<Props> = typedMemo(function TaskCriteriaItem({
     criteria,
 }) {
-    const [filters] = useListFilters({ count: 15, page: 0 });
+    const [filters] = useListFilters();
 
     const { data: examples } = useGetCriteriaExamples(criteria.id, filters);
     const standardExamples = useMemo(() => examples?.entityList

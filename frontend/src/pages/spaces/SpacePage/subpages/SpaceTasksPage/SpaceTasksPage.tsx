@@ -32,7 +32,7 @@ export const SpaceTasksPage: FC<Props> = typedMemo(function SpaceTasksPage({
 
     const [status, setStatus] = useState(IssueStatus.InWork);
     const [search, setSearch] = useState('');
-    const [filters, changeFilter] = useListFilters({ page: 0, count: 15 });
+    const [filters, changeFilter] = useListFilters();
 
     const { isOrganizer, isStudent } = useRolesCheck();
 

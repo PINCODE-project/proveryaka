@@ -23,7 +23,7 @@ export const TaskCriteria: FC<Props> = typedMemo(function TaskCriteria({
     issue,
     'data-testid': dataTestId = 'TaskCriteria',
 }) {
-    const [filters] = useListFilters({ count: 15, page: 0 });
+    const [filters] = useListFilters();
     const { data: criteria } = useGetIssueCriteria(issue.id, filters);
 
     if (!criteria) {

@@ -41,7 +41,7 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
     const { data: issue } = useGetIssue(solution!.issueId, {
         enabled: Boolean(solution?.issueId),
     });
-    const [criteriaFilters] = useListFilters({ page: 0, count: 15 });
+    const [criteriaFilters] = useListFilters();
     const { data: issueCriteria } = useGetIssueCriteria(solution!.issueId, criteriaFilters, {
         enabled: Boolean(solution?.issueId),
     });

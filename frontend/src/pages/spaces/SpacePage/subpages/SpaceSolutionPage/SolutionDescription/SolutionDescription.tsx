@@ -20,7 +20,7 @@ export const SolutionDescription: FC<Props> = typedMemo(function SolutionDescrip
     const issueId = useIssueId();
     const { data: issue } = useGetIssue(issueId ?? '');
 
-    const [issueFilters] = useListFilters({ page: 0, count: 15 });
+    const [issueFilters] = useListFilters();
     const { data: issueExample } = useGetIssueExamples(issueId ?? '', issueFilters);
 
     return (

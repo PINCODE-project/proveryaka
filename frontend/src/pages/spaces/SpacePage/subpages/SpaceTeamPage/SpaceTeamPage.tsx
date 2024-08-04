@@ -25,7 +25,7 @@ export const SpaceTeamPage: FC<Props> = typedMemo(function SpaceTeamPage({
     className,
 }) {
     const spaceId = useSpaceId();
-    const [filters] = useListFilters({ count: 15, page: 0 });
+    const [filters] = useListFilters();
     const { isStudent, isOrganizer } = useRolesCheck();
 
     const { data: teams } = useGetSpaceTeams(spaceId ?? '', filters, {

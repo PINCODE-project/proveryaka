@@ -23,7 +23,7 @@ export const SolutionReview: FC<Props> = typedMemo(function SolutionReview({
     const issueId = useIssueId();
 
     const { data: issue } = useGetIssue(issueId ?? '');
-    const [filters] = useListFilters({ page: 0, count: 15 });
+    const [filters] = useListFilters();
     const { data: criteria } = useGetIssueCriteria(issue?.id ?? '', filters);
 
     if (!issue || !criteria) {
