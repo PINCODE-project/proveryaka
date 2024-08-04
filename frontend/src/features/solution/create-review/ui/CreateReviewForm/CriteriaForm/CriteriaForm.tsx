@@ -78,7 +78,7 @@ export const CriteriaForm: FC<Props> = typedMemo(function CriteriaForm({
                             <FlexContainer direction="column" gap="s">
                                 <FormField<number>
                                     name={`reviewsByCriteria[${order}].scoreCount`}
-                                    label={`Оценка (${criteria.minScore}-${criteria.maxScore}`}
+                                    label={`Оценка: ${criteria.minScore}-${criteria.maxScore}`}
                                     content={
                                         ({ onChange, value, isInvalid }) => (
                                             <InputNumber

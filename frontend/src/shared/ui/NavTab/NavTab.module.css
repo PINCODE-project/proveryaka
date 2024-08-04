@@ -29,7 +29,7 @@
     background-color: var(--default-border);
 }
 
-.NavTab_isActive:after {
+.NavTab.NavTab_isActive:after {
     background-color: var(--brand-forefround);
 }
 

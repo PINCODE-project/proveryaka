@@ -1,7 +1,7 @@
 .CreateReviewForm {
     display: grid;
     grid-template-columns: 1fr 400px;
-    gap: var(--space-m);
+    gap: var(--space-xl);
     width: 100%;
 }
 
@@ -17,4 +17,20 @@
     font-size: var(--subheadline-font-size);
     line-height: var(--subheadline-font-size);
     font-weight: var(--font-weight-semibold);
+}
+
+.CreateReviewForm__form {
+    width: 100%;
+    max-width: 500px;
+}
+
+.CreateReviewForm__subtitle {
+    font-size: 10px;
+    font-weight: var(--font-weight-semibold);
+    color: var(--default-forefround-2)
+}
+
+.CreateReviewForm__tab_invalid:after {
+    background-color: var(--red-forefround) !important;
+    opacity: 0.6;
 }

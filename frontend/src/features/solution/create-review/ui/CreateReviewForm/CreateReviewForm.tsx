@@ -8,14 +8,17 @@ import { CriteriaReview } from '@features/solution/create-review/model/CriteriaR
 import { CriteriaForm } from '@features/solution/create-review/ui/CreateReviewForm/CriteriaForm';
 
 import { GetCriteriaResponse } from '@entities/criteria';
+import { ExampleType } from '@entities/example/common';
+import { useGetIssueExamples } from '@entities/example/issue-example';
 import { GetIssueResponse } from '@entities/issue';
 import { IssueFormList } from '@entities/issue/ui/IssueFormList';
 import { useGetExpertSolution } from '@entities/solution/lib/useGetExpertSolution';
 import { useGetSolution } from '@entities/solution/lib/useGetSolution';
 
+import { useListFilters } from '@shared/hooks';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { Button, FlexContainer, FormField, NavTab, Textarea } from '@shared/ui';
+import { Button, FlexContainer, FormField, NavTab, SolutionExample, Text, Textarea } from '@shared/ui';
 
 import styles from './CreateReviewForm.module.css';
 
@@ -47,6 +50,13 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
         },
     });
 
+    const [exampleFilters] = useListFilters();
+    const { data: examples } = useGetIssueExamples(issue.id, exampleFilters);
+    const standardExamples = useMemo(() => examples?.entityList
+        ?.filter(example => example.exampleType === ExampleType.Standard) ?? [], [examples]);
+    const antiExamples = useMemo(() => examples?.entityList
+        ?.filter(example => example.exampleType === ExampleType.AntiExample) ?? [], [examples]);
+
     const initialValue = useMemo((): CriteriaReview => ({
         solutionId,
         comment: '',
@@ -63,7 +73,10 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
             comment: Yup.string().required('Введите общий комментарий'),
             // @ts-ignore
             reviewsByCriteria: Yup.tuple(criteria.map(item => Yup.object({
-                scoreCount: Yup.number().nullable().required().min(item.minScore).max(item.maxScore),
+                scoreCount: Yup.number().nullable()
+                    .required(`Введите оценку от ${item.minScore} до ${item.maxScore}`)
+                    .min(item.minScore, `Введите оценку от ${item.minScore} до ${item.maxScore}`)
+                    .max(item.maxScore, `Введите оценку от ${item.minScore} до ${item.maxScore}`),
                 comment: Yup.string(),
             }))),
         });
@@ -79,14 +92,19 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
 
     return (
         <Formik initialValues={initialValue} onSubmit={review} validationSchema={validationSchema}>
-            {({ handleSubmit, values }) => {
+            {({ handleSubmit, values, errors }) => {
                 return (
                     <div
                         className={getBemClasses(styles, null, null, className)}
                         data-testid={dataTestId}
                     >
-                        <FlexContainer direction="column" gap="m">
+                        <FlexContainer direction="column" gap="l" alignItems="stretch">
                             <FlexContainer direction="row" gap="s">
+                                <NavTab
+                                    name="Задание"
+                                    isActive={currentTab === SolutionTab.Description}
+                                    onClick={() => setCurrentTab(SolutionTab.Description)}
+                                />
                                 <NavTab
                                     name="Работа"
                                     isActive={currentTab === SolutionTab.Solution}
@@ -96,11 +114,7 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
                                     name="Общий комментарий"
                                     isActive={currentTab === SolutionTab.Comment}
                                     onClick={() => setCurrentTab(SolutionTab.Comment)}
-                                />
-                                <NavTab
-                                    name="Описание"
-                                    isActive={currentTab === SolutionTab.Description}
-                                    onClick={() => setCurrentTab(SolutionTab.Description)}
+                                    className={getBemClasses(styles, 'tab', { invalid: Boolean(errors.comment) })}
                                 />
                             </FlexContainer>
 
@@ -117,8 +131,9 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
                                         ? <FormField<string>
                                             name="comment"
                                             content={
-                                                ({ onChange, value }) => (
+                                                ({ onChange, value, isInvalid }) => (
                                                     <Textarea
+                                                        invalid={isInvalid}
                                                         value={value}
                                                         onChange={event => onChange(event.target.value)}
                                                         onBlur={event => onChange(event.target.value.trim())}
@@ -126,9 +141,40 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
                                                 )
                                             }
                                         />
-                                        : <Typography>
-                                            {issue.description}
-                                        </Typography>
+                                        : <FlexContainer
+                                            direction="column"
+                                            gap="m"
+                                            alignItems="stretch"
+                                            className={getBemClasses(styles, 'content')}
+                                            data-testid={dataTestId}
+                                        >
+                                            <FlexContainer direction="column">
+                                                <Text className={getBemClasses(styles, 'subtitle')}>
+                                                    Описание
+                                                </Text>
+                                                <Text>
+                                                    {issue.description}
+                                                </Text>
+                                            </FlexContainer>
+
+                                            <FlexContainer
+                                                direction="column"
+                                                gap="s"
+                                            >
+                                                <SolutionExample
+                                                    example={standardExamples}
+                                                    antiExample={antiExamples}
+                                                    triggerComponent={open =>
+                                                        (<Button
+                                                            variant="ghost"
+                                                            color="primary"
+                                                            onClick={open}
+                                                        >
+                                                            Примеры работ
+                                                        </Button>)}
+                                                />
+                                            </FlexContainer>
+                                        </FlexContainer>
                             }
                         </FlexContainer>
 
