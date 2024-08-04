@@ -6,6 +6,7 @@ import { SpaceRouter } from '@pages/spaces';
 import { SolutionCard } from '@entities/solution';
 import { getSolutionStatus } from '@entities/solution/lib/getSolutionStatus';
 import { useGetExpertSolutions } from '@entities/solution/lib/useGetExpertSolutions';
+import { useHasCurrentUserMark } from '@entities/solution/lib/useHasCurrentUserMark';
 import { SolutionStatus } from '@entities/solution/model/SolutionStatus';
 import { TaskStatus } from '@entities/space';
 

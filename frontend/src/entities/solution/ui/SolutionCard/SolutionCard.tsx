@@ -2,8 +2,10 @@ import { FC, useMemo } from 'react';
 
 import { GetIssueResponse } from '@entities/issue';
 import { IssueStatus } from '@entities/issue/model/IssueStatus';
+import { useHasCurrentUserMark } from '@entities/solution/lib/useHasCurrentUserMark';
 import { GetSolutionForExpert } from '@entities/solution/model/GetSolutionForExpert';
 import { SolutionStatus } from '@entities/solution/model/SolutionStatus';
+import { useGetCurrentUserInfo } from '@entities/user';
 
 import Checkmark from '@shared/assets/icons/Checkmark.svg';
 import SubtractCircle from '@shared/assets/icons/SubtractCircle.svg';
@@ -41,7 +43,16 @@ export const SolutionCard: FC<Props> = typedMemo(function SolutionCard({
     mark,
     'data-testid': dataTestId = 'TaskCard',
 }) {
+    const { data: user } = useGetCurrentUserInfo();
+    const markReview = useHasCurrentUserMark(solution.id, user?.id ?? '');
+
     const statusComponent = useMemo(() => {
+        if (markReview) {
+            <>
+                <Checkmark className={getBemClasses(styles, 'statusIcon')} />
+                <Text className={getBemClasses(styles, 'statusText')}>Завершено</Text>
+            </>;
+        }
         switch (solution.status) {
             case SolutionStatus.InGrade:
                 return (
@@ -150,7 +161,7 @@ export const SolutionCard: FC<Props> = typedMemo(function SolutionCard({
                     overflow="nowrap"
                     gap="xxs"
                     alignItems="center"
-                    className={getBemClasses(styles, 'status', { status })}
+                    className={getBemClasses(styles, 'status', { status: markReview ? SolutionStatus.Done : solution.status })}
                 >
                     {statusComponent}
                 </FlexContainer>
