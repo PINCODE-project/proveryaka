@@ -51,7 +51,7 @@ export const TaskDescription: FC<Props> = typedMemo(function TaskDescription({
         useErrorBoundary: false,
     });
     const { data: solution } = useGetSolution(issueSolution?.id ?? '', {
-        enabled: issueSolution !== undefined,
+        enabled: Boolean(issueSolution),
     });
     const [teamsFilters] = useListFilters();
     const { data: teams } = useGetSpaceUserTeams(spaceId ?? '', teamsFilters, {

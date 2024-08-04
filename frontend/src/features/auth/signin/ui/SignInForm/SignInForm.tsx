@@ -38,7 +38,6 @@ export const SignInForm: FC<Props> = typedMemo(function SignInForm({
     const { login } = useAuthContext();
     const { mutate: signIn } = useSignIn({
         onSuccess: token => {
-            console.log(token);
             login(token);
         },
         onError: error => {

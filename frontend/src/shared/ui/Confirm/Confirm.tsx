@@ -50,7 +50,6 @@ export const Confirm: FC<Props> = typedMemo(function Confirm({
     'data-testid': dataTestId = 'Confirm',
 }) {
     const { t, i18n } = useTranslation([Namespace.Common.ns]);
-    console.log(t, i18n);
     const cancel = useCallback((): void => giveAnswer(false), [giveAnswer]);
 
     const agree = useCallback((): void => giveAnswer(true), [giveAnswer]);
