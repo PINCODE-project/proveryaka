@@ -1,3 +1,20 @@
 .CreateReviewForm {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: var(--space-m);
+    width: 100%;
+}
 
+.CreateReviewForm__criteriaScroll {
+    height: calc(100vh - 215px - var(--space-m) * 2);
+    overflow: auto;
+    background-color: #fff;
+    border-radius: var(--border-radius-m);
+    padding: var(--space-m);
+}
+
+.CreateReviewForm__mark {
+    font-size: var(--subheadline-font-size);
+    line-height: var(--subheadline-font-size);
+    font-weight: var(--font-weight-semibold);
 }

@@ -1,6 +1,6 @@
 import { Typography } from 'antd';
 import { Formik } from 'formik';
-import { FC, useMemo, useState } from 'react';
+import { FC, useCallback, useMemo, useState } from 'react';
 import * as Yup from 'yup';
 
 import { useCreateReview } from '@features/solution/create-review/lib/useCreateReview';
@@ -52,7 +52,7 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
         comment: '',
         likeType: 0,
         reviewsByCriteria: criteria.map(item => ({
-            scoreCount: item.minScore,
+            scoreCount: null,
             comment: '',
             criteriaId: item.id,
         })),
@@ -63,15 +63,23 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
             comment: Yup.string().required('Введите общий комментарий'),
             // @ts-ignore
             reviewsByCriteria: Yup.tuple(criteria.map(item => Yup.object({
-                scoreCount: Yup.number().min(item.minScore).max(item.maxScore),
+                scoreCount: Yup.number().nullable().required().min(item.minScore).max(item.maxScore),
                 comment: Yup.string(),
             }))),
         });
     }, [criteria]);
 
+    const getMark = useCallback((form: CriteriaReview) => {
+        return form.reviewsByCriteria.reduce((prev, curr) => prev + (curr.scoreCount ?? 0), 0);
+    }, []);
+
+    const maxMark = useMemo(() => {
+        return criteria.reduce((prev, curr) => prev + curr.maxScore, 0);
+    }, [criteria]);
+
     return (
         <Formik initialValues={initialValue} onSubmit={review} validationSchema={validationSchema}>
-            {({ handleSubmit, errors }) => {
+            {({ handleSubmit, values }) => {
                 return (
                     <div
                         className={getBemClasses(styles, null, null, className)}
@@ -124,14 +132,23 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
                             }
                         </FlexContainer>
 
-                        <FlexContainer direction="column" gap="m">
-                            <Typography>Итоговая оценка: -1/-1</Typography>
-
-                            <Button onClick={() => handleSubmit()}>
-                                Оценить
-                            </Button>
-
+                        <FlexContainer direction="column" gap="m" overflow="nowrap">
                             <FlexContainer direction="column" gap="s">
+                                <Typography className={getBemClasses(styles, 'mark')}>
+                                Итоговая оценка: {getMark(values)}/{maxMark}
+                                </Typography>
+
+                                <Button onClick={() => handleSubmit()}>
+                                Оценить
+                                </Button>
+                            </FlexContainer>
+
+                            <FlexContainer
+                                overflow="nowrap"
+                                direction="column"
+                                gap="s"
+                                className={getBemClasses(styles, 'criteriaScroll')}
+                            >
                                 {criteria.map((item, order) => (
                                     <CriteriaForm
                                         key={item.id}

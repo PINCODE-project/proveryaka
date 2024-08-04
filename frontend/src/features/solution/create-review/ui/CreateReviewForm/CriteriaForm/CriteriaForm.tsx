@@ -41,13 +41,27 @@ export const CriteriaForm: FC<Props> = typedMemo(function CriteriaForm({
                         direction="column"
                         gap="m"
                     >
-                        <FlexContainer direction="row" gap="s" justifyContent="space-between">
-                            <FlexContainer direction="row" gap="xs">
+                        <FlexContainer
+                            direction="row"
+                            overflow="nowrap"
+                            gap="s"
+                            justifyContent="space-between"
+                            className={getBemClasses(styles, 'header')}
+                        >
+                            <FlexContainer
+                                direction="row"
+                                gap="xs"
+                                className={getBemClasses(styles, 'headerName')}
+                                overflow="nowrap"
+                                alignItems="start"
+                            >
                                 <ChevronDown className={getBemClasses(styles, 'openArrowIcon')} />
                                 {order}. {criteria.name}
                             </FlexContainer>
 
-                            <Typography>{value.scoreCount}/{criteria.maxScore}</Typography>
+                            <Typography className={getBemClasses(styles, 'score', { done: value.scoreCount !== null })}>
+                                {value.scoreCount ?? '-'}/{criteria.maxScore}
+                            </Typography>
                         </FlexContainer>
 
                         <FlexContainer direction="column" gap="m" className={getBemClasses(styles, 'additional')}>

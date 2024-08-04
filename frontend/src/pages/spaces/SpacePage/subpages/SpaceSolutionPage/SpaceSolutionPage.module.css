@@ -5,3 +5,7 @@
     width: 100%;
     padding: var(--space-l)
 }
+
+.SpaceSolutionPage__navPanel {
+    width: 100%;
+}

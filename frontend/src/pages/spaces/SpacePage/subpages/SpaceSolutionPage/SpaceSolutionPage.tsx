@@ -1,19 +1,18 @@
 import { FC, useMemo, useState } from 'react';
+import { NavLink } from 'react-router-dom';
 
-import { SolutionReview } from '@pages/spaces/SpacePage/subpages/SpaceSolutionPage/SolutionReview';
+import { SpaceRouter } from '@pages/spaces';
 
 import { useGetIssueCriteria } from '@entities/criteria/lib/useGetIssueCriteria';
 import { useGetIssue } from '@entities/issue';
 import { useGetExpertSolution } from '@entities/solution/lib/useGetExpertSolution';
-import { useGetSolution } from '@entities/solution/lib/useGetSolution';
-import { useGetSpaceExperts } from '@entities/space';
-import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
-import { useListFilters } from '@shared/hooks';
+import { useIssueId, useListFilters } from '@shared/hooks';
 import { useSolutionId } from '@shared/hooks/useSolutionId';
+import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { getBemClasses, getDateFromISO, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { FlexContainer, NavTab, Text } from '@shared/ui';
+import { Button, FlexContainer, NavTab, Text } from '@shared/ui';
 
 import { SolutionAssignment } from './SolutionAssignment';
 import { SolutionCriteria } from './SolutionCriteria';
@@ -25,8 +24,7 @@ enum ActiveSection {
     Description,
     Assignments,
     Criteria,
-    Grades,
-    Review
+    Grades
 }
 
 export type Props = ClassNameProps & TestProps & Readonly<{}>;
@@ -35,12 +33,12 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
     className,
     'data-testid': dataTestId = 'SpaceSolutionPage',
 }) {
+    const spaceId = useSpaceId();
+    const issueId = useIssueId();
     const solutionId = useSolutionId();
 
     const { data: solution } = useGetExpertSolution(solutionId!);
-    const { data: issue } = useGetIssue(solution!.issueId, {
-        enabled: Boolean(solution?.issueId),
-    });
+    const { data: issue } = useGetIssue(issueId!);
     const [criteriaFilters] = useListFilters();
     const { data: issueCriteria } = useGetIssueCriteria(solution!.issueId, criteriaFilters, {
         enabled: Boolean(solution?.issueId),
@@ -52,8 +50,6 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
                 return <SolutionDescription />;
             case ActiveSection.Assignments:
                 return <SolutionAssignment />;
-            case ActiveSection.Review:
-                return <SolutionReview />;
             case ActiveSection.Criteria:
                 return (<SolutionCriteria criteria={issueCriteria?.entityList ?? []}
                 />);
@@ -78,35 +74,43 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
 
             <FlexContainer
                 direction="row"
-                overflow="nowrap"
-                alignItems="center"
                 gap="l"
+                alignItems="center"
+                justifyContent="space-between"
+                className={getBemClasses(styles, 'navPanel')}
             >
-                <NavTab
-                    isActive={activeSection === ActiveSection.Description}
-                    name="Описание"
-                    onClick={() => setActiveSection(ActiveSection.Description)}
-                />
-                <NavTab
-                    isActive={activeSection === ActiveSection.Assignments}
-                    name="Работа"
-                    onClick={() => setActiveSection(ActiveSection.Assignments)}
-                />
-                <NavTab
-                    isActive={activeSection === ActiveSection.Criteria}
-                    name="Критерии"
-                    onClick={() => setActiveSection(ActiveSection.Criteria)}
-                />
-                <NavTab
-                    isActive={activeSection === ActiveSection.Grades}
-                    name="Оценки"
-                    onClick={() => setActiveSection(ActiveSection.Grades)}
-                />
-                <NavTab
-                    isActive={activeSection === ActiveSection.Review}
-                    name="Оценить"
-                    onClick={() => setActiveSection(ActiveSection.Review)}
-                />
+                <FlexContainer
+                    direction="row"
+                    overflow="nowrap"
+                    alignItems="center"
+                    gap="l"
+                >
+                    <NavTab
+                        isActive={activeSection === ActiveSection.Description}
+                        name="Описание"
+                        onClick={() => setActiveSection(ActiveSection.Description)}
+                    />
+                    <NavTab
+                        isActive={activeSection === ActiveSection.Assignments}
+                        name="Работа"
+                        onClick={() => setActiveSection(ActiveSection.Assignments)}
+                    />
+                    <NavTab
+                        isActive={activeSection === ActiveSection.Criteria}
+                        name="Критерии"
+                        onClick={() => setActiveSection(ActiveSection.Criteria)}
+                    />
+                    <NavTab
+                        isActive={activeSection === ActiveSection.Grades}
+                        name="Оценки"
+                        onClick={() => setActiveSection(ActiveSection.Grades)}
+                    />
+                </FlexContainer>
+                <NavLink to={SpaceRouter.EstimateTaskWork(spaceId ?? '', issueId ?? '', solutionId ?? '')}>
+                    <Button>
+                        Оценить работу
+                    </Button>
+                </NavLink>
             </FlexContainer>
 
             {content}

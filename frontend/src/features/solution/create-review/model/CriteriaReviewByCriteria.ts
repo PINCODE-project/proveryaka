@@ -10,7 +10,7 @@ export type CriteriaReviewByCriteria = {
     /**
      * Оценка - кол-во баллов по критерия
      */
-    scoreCount: number;
+    scoreCount: number | null;
 
     /**
      * Необязательный комментарий к оценке по критерию

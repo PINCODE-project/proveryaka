@@ -1,3 +1,4 @@
+import { SpaceCreateReviewPage } from '@pages/spaces/SpacePage/subpages/SpaceCreateReviewPage';
 import { SpaceSolutionPage } from '@pages/spaces/SpacePage/subpages/SpaceSolutionPage';
 import { SpaceSolutionsPage } from '@pages/spaces/SpacePage/subpages/SpaceSolutionsPage/SpaceSolutionsPage';
 import { SpaceTaskPage } from '@pages/spaces/SpacePage/subpages/SpaceTaskPage';
@@ -45,7 +46,7 @@ export const spacesRouteConfig: ConfigRouteProps[] = [
             },
             {
                 path: SpaceRouter.EstimateTaskWork(':spaceId', ':issueId', ':solutionId'),
-                element: null,
+                element: <SpaceCreateReviewPage />,
             },
             {
                 path: SpaceRouter.Task(':spaceId', ':issueId'),

@@ -1,5 +1,5 @@
 .CriteriaForm {
-
+    width: 100%;
 }
 
 .CriteriaForm:not(.CriteriaForm_isOpen) .CriteriaForm__additional {
@@ -7,11 +7,32 @@
 }
 
 .CriteriaForm__openArrowIcon {
-    width: var(--icon-size-l);
-    height: var(--icon-size-l);
+    width: var(--icon-size-s);
+    height: var(--icon-size-s);
     transition: transform 0.3s;
+    margin-top: 2px;
 }
 
 .CriteriaForm_isOpen .CriteriaForm__openArrowIcon {
     transform: rotate(180deg);
+}
+
+.CriteriaForm__score {
+    font-weight: var(--font-weight-bold);
+    color: var(--default-forefround-3);
+    font-size: 16px;
+    opacity: 0.8;
+    line-height: 16px;
+}
+
+.CriteriaForm__score_done {
+    color: #2a965c;
+}
+
+.CriteriaForm__header {
+    width: 100%;
+}
+
+.CriteriaForm__headerName {
+    flex: 1;
 }

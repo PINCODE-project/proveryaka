@@ -1,2 +1,2 @@
-export { SpaceSolutionPage } from './SpaceSolutionPage';
-export type { Props as SpaceSolutionPageProps } from './SpaceSolutionPage';
+export { SpaceCreateReviewPage } from './SpaceCreateReviewPage';
+export type { Props as SpaceSolutionPageProps } from './SpaceCreateReviewPage';
