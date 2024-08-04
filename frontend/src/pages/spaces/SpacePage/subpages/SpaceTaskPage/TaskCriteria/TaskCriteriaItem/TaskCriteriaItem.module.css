@@ -16,3 +16,7 @@
 .TaskCriteriaItem__name {
     flex: 1;
 }
+
+.TaskCriteriaItem__description {
+    white-space: pre-wrap;
+}

@@ -48,7 +48,7 @@ export const TaskCriteriaItem: FC<Props> = typedMemo(function TaskCriteriaItem({
                         <Text className={getBemClasses(styles, 'subtitle')}>
                             Описание
                         </Text>
-                        <Text>
+                        <Text className={getBemClasses(styles, 'description')}>
                             {criteria.description}
                         </Text>
                     </FlexContainer>

@@ -103,7 +103,7 @@ export const TaskDescription: FC<Props> = typedMemo(function TaskDescription({
                 <Text className={getBemClasses(styles, 'subtitle')}>
                    Описание
                 </Text>
-                <Text>
+                <Text className={getBemClasses(styles, 'desc')}>
                     {issue.description}
                 </Text>
             </FlexContainer>
