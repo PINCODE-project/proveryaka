@@ -17,6 +17,7 @@ import { GetSolutionValue } from '@entities/solution/model/GetSolutionValue';
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 import { useGetSpaceUserTeams } from '@entities/team/lib/useGetSpaceUserTeams';
 
+import { createFile } from '@shared/api/file/createFile';
 import { useListFilters } from '@shared/hooks';
 import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { getBemClasses, typedMemo } from '@shared/lib';
@@ -62,13 +63,18 @@ export const TaskDescription: FC<Props> = typedMemo(function TaskDescription({
         },
     });
 
-    const onSubmitSolution = useCallback((form: GetSolutionValue[]) => {
+    const onSubmitSolution = useCallback(async (form: GetSolutionValue[]) => {
+        const solutionValueList = await Promise.all(
+            form.map(async form =>
+                (form as any).file
+                    ? ({ ...form, formIdFile: (await createFile((form as any).file)).id })
+                    : form));
         createSolution({
             issueId: issue.id,
             data: {
                 teamId: teams?.teamList[0]?.id ?? '',
                 issueId: issue.id,
-                solutionValueList: form,
+                solutionValueList,
             },
         });
     }, [issue, teams, createSolution]);

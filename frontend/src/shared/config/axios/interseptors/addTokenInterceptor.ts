@@ -8,6 +8,7 @@ import { TokenService } from '@shared/lib';
  */
 export function addTokenInterceptor(config: InternalAxiosRequestConfig): InternalAxiosRequestConfig {
     const token = TokenService.getToken();
+    console.log(token, 'ttttpte');
     if (token === null) {
         return config;
     }

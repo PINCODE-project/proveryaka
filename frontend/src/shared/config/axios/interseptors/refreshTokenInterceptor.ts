@@ -11,11 +11,11 @@ import { extractData, Token, TokenService } from '@shared/lib';
  * @param refreshCallback Коллбек для повтора запроса
  */
 export function refreshSecretInterceptor(error: AxiosError)/*: RefreshResult */ {
-    if (error.code !== 'ERR_NETWORK') {
-        throw error;
+    if (error.response?.status === 401) {
+        return refreshSecretInner(error);
     }
 
-    return refreshSecretInner(error);
+    throw error;
 }
 
 const refreshSecretInner = async (requestError: AxiosError)/* RefreshResult */ => {

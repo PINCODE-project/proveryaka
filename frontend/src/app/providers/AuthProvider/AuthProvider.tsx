@@ -36,8 +36,8 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = typedMemo(funct
     }, []);
 
     const login = useCallback((token: Token) => {
-        setIsAuth(true);
         TokenService.setToken(token);
+        setTimeout(() => setIsAuth(true), 500);
     }, []);
 
     const logout = useCallback(() => {

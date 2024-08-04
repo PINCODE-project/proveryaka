@@ -1,4 +1,4 @@
-import { Select } from 'antd';
+import { Select, Upload } from 'antd';
 import { FC } from 'react';
 
 import { ExampleType } from '@entities/example/common/model/ExampleType';
@@ -6,7 +6,7 @@ import { ExampleType } from '@entities/example/common/model/ExampleType';
 import { roles } from '@shared/consts';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { FormField, Input, Textarea } from '@shared/ui';
+import { Button, FormField, Input, Textarea } from '@shared/ui';
 
 import styles from './ExampleForm.module.css';
 
@@ -31,7 +31,7 @@ export const ExampleForm: FC<Props> = typedMemo(function ExampleForm({
             {withTypeSelect
                 ? <FormField
                     name={`${formParentFieldName ? formParentFieldName + '.' : ''}exampleType`}
-                    label="Тип примеры"
+                    label="Тип примера"
                     content={
                         ({ onChange, isInvalid, value }) => (
                             <Select
@@ -54,18 +54,27 @@ export const ExampleForm: FC<Props> = typedMemo(function ExampleForm({
                     }
                 />
                 : null}
-            <FormField<string>
-                name={`${formParentFieldName ? formParentFieldName + '.' : ''}exampleLink`}
-                label="Ссылка на пример"
+            <FormField<File | null>
+                name={`${formParentFieldName ? formParentFieldName + '.' : ''}file`}
+                label="file"
                 content={
                     ({ value, onChange, isInvalid }) => (
-                        <Input
-                            value={value}
-                            placeholder="Введите ссылку"
-                            onChange={event => onChange(event.target.value)}
-                            onBlur={event => onChange(event.target.value.trim())}
-                            invalid={isInvalid}
-                        />
+                        <Upload
+                            maxCount={1}
+                            showUploadList={{
+                                showDownloadIcon: true,
+                                downloadIcon: 'Down',
+                            }}
+                            beforeUpload={(file, fileList) => {
+                                onChange(file);
+                                return false;
+                            }}
+                            onRemove={() => onChange(null)}
+                        >
+                            <Button variant="outline">
+                                Загрузить файл
+                            </Button>
+                        </Upload>
                     )
                 }
             />

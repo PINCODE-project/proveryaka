@@ -74,8 +74,9 @@ export const IssueFormList: FC<Props> = typedMemo(function IssueFormList({
                                             <Upload
                                                 disabled={disabled}
                                                 maxCount={1}
-                                                beforeUpload={file => {
-                                                    console.log(file);
+                                                beforeUpload={(file, fileList) => {
+                                                    file.arrayBuffer();
+                                                    console.log(file.arrayBuffer());
                                                     onChange([file]);
                                                     return false;
                                                 }}
