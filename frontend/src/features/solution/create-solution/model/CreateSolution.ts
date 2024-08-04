@@ -14,5 +14,5 @@ export type CreateSolution = {
     /**
      * Список решений пользователя на форме
      */
-    solutionValueList: GetSolutionValue[] | null;
+    solutionValueList: Omit<GetSolutionValue, 'id'>[] | null;
 };

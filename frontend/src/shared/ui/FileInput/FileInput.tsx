@@ -40,6 +40,8 @@ export type Props = ClassNameProps & TestProps & InputProps & PropsWithChildren 
      * Поддерживаемые форматы файлов
      */
     acceptType: string[];
+
+    filename?: string;
 }>;
 
 const ERROR_DISPLAY_TIME = 3000;
@@ -56,6 +58,7 @@ const flexContainerStyleClasses = getFlexContainerStyleClasses({
 export const FileInput: FC<Props> = typedMemo(function FileInput({
     fileUrl,
     onChangeFile,
+    filename,
     maxSizeByMb = 0.5,
     acceptType,
     children,
@@ -116,7 +119,9 @@ export const FileInput: FC<Props> = typedMemo(function FileInput({
     }, []);
 
     return (
-        <FileInputContextProvider fileUrl={fileUrl} onClear={onClear} disabled={disabled}>
+        <FileInputContextProvider fileUrl={fileUrl} onClear={onClear} disabled={disabled}
+            filename={filename}
+        >
             <label
                 htmlFor={id}
                 className={getBemClasses(

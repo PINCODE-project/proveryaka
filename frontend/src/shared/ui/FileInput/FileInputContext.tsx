@@ -51,10 +51,12 @@ export type FileInputContextProviderProps = PropsWithChildren & {
      * Заблокировано ли поле
      */
     disabled: boolean;
+
+    filename?: string;
 };
 
 export const FileInputContextProvider = typedMemo(
-    function FileInputContextProvider({ children, fileUrl, onClear, disabled }: FileInputContextProviderProps) {
+    function FileInputContextProvider({ children, fileUrl, onClear, disabled, filename }: FileInputContextProviderProps) {
         const fileName = useMemo(() => {
             if (!fileUrl) {
                 return null;
@@ -69,7 +71,7 @@ export const FileInputContextProvider = typedMemo(
                 value={{
                     fileUrl,
                     onClear,
-                    fileName,
+                    fileName: filename ?? fileName,
                     disabled,
                 }}
             >

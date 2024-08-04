@@ -14,6 +14,8 @@ export type GetSolutionValue = {
      */
     fileIdList: string[] | null;
 
+    file?: File | null;
+
     /**
      * Идентификатор формы задания
      */

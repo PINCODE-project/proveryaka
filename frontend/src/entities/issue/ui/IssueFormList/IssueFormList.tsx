@@ -9,7 +9,7 @@ import { GetSolutionValue } from '@entities/solution/model/GetSolutionValue';
 
 import { typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { Button, FlexContainer, FormField, Text, Textarea } from '@shared/ui';
+import { Button, FileInput, FileInputName, FlexContainer, FormField, Text, Textarea } from '@shared/ui';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     issueId: string;
@@ -50,7 +50,7 @@ export const IssueFormList: FC<Props> = typedMemo(function IssueFormList({
         issueForm?.issueFormList.map(form => ({
             textValue: '',
             fileIdList: [],
-            issueFormId: form.issueId,
+            issueFormId: form.id,
         })) ?? [], [issueForm]);
 
     return (
@@ -60,33 +60,25 @@ export const IssueFormList: FC<Props> = typedMemo(function IssueFormList({
             disabled={disabled}
             validationSchema={validationSchema}
         >
-            {({ handleSubmit }) => (
+            {({ handleSubmit, values }) => (
                 <Form className={className}>
                     {issueForm?.issueFormList.map((form, index) => (
                         form.formSolutionType === FormSolutionType.File
-                            ? <FormField<UploadFile[]>
-                                name={`[${index}].fileIdList`}
+                            ? <FormField<File | null>
+                                name={`[${index}].file`}
                                 label={form.name ?? ''}
                                 content={
                                     ({ onChange, value, isInvalid }) => (
                                         <FlexContainer direction="column" gap="xs">
                                             <Text>{form.description}</Text>
-                                            <Upload
-                                                disabled={disabled}
-                                                maxCount={1}
-                                                beforeUpload={(file, fileList) => {
-                                                    file.arrayBuffer();
-                                                    console.log(file.arrayBuffer());
-                                                    onChange([file]);
-                                                    return false;
-                                                }}
-                                                onRemove={() => onChange([])}
-                                                fileList={value}
+                                            <FileInput
+                                                fileUrl={value ? URL.createObjectURL(value) : null}
+                                                filename={value?.name}
+                                                onChangeFile={file => onChange(file)}
+                                                acceptType={['.docs', '.pdf', '.png', '.jpg', '.xlsx']}
                                             >
-                                                <Button variant="outline" disabled={disabled}>
-                                                    Загрузить файл
-                                                </Button>
-                                            </Upload>
+                                                <FileInputName tooltipType="name" />
+                                            </FileInput>
                                         </FlexContainer>
                                     )
                                 }

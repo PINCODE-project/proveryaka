@@ -63,12 +63,17 @@ export const TaskDescription: FC<Props> = typedMemo(function TaskDescription({
         },
     });
 
-    const onSubmitSolution = useCallback(async (form: GetSolutionValue[]) => {
+    const onSubmitSolution = useCallback(async (list: Omit<GetSolutionValue, 'id'>[]) => {
         const solutionValueList = await Promise.all(
-            form.map(async form =>
-                (form as any).file
-                    ? ({ ...form, formIdFile: (await createFile((form as any).file)).id })
-                    : form));
+            list.map(async form => {
+                return ({
+                    textValue: form.textValue ?? null,
+                    fileIdList: (form as any).file ? [(await createFile((form as any).file)).id] : [],
+                    file: undefined,
+                    issueFormId: form.issueFormId,
+                });
+            }));
+
         createSolution({
             issueId: issue.id,
             data: {
