@@ -16,11 +16,13 @@ import { GetSpaceResponse } from '../../model/GetSpaceResponse';
 export type Props = TestProps & ClassNameProps & Readonly<{
     space: GetSpaceResponse;
     actions?: ReactNode;
+    showActions?: boolean;
 }>;
 
 export const SpaceCard: FC<Props> = typedMemo(({
     space,
     actions,
+    showActions,
     className,
     'data-testid': dataTestId = 'SpaceCard',
 }: Props) => {
@@ -59,21 +61,23 @@ export const SpaceCard: FC<Props> = typedMemo(({
                         {space.name}
                     </Text>
 
-                    <DropDown
-                        renderLabel={
-                            <FlexContainer
-                                direction="row"
-                                alignItems="center"
-                                justifyContent="center"
-                                className={getBemClasses(styles, 'settings')}
-                            >
-                                <ThreeDots className={getBemClasses(styles, 'settingsIcon')} />
-                            </FlexContainer>
-                        }
-                        contentClassName={getBemClasses(styles, 'settingsModal')}
-                    >
-                        {actions}
-                    </DropDown>
+                    {showActions
+                        ? <DropDown
+                            renderLabel={
+                                <FlexContainer
+                                    direction="row"
+                                    alignItems="center"
+                                    justifyContent="center"
+                                    className={getBemClasses(styles, 'settings')}
+                                >
+                                    <ThreeDots className={getBemClasses(styles, 'settingsIcon')} />
+                                </FlexContainer>
+                            }
+                            contentClassName={getBemClasses(styles, 'settingsModal')}
+                        >
+                            {actions}
+                        </DropDown>
+                        : null}
                 </FlexContainer>
             </FlexContainer>
         </Link>

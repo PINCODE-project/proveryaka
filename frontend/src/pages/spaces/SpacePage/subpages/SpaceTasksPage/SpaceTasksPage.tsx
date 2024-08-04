@@ -132,6 +132,7 @@ export const SpaceTasksPage: FC<Props> = typedMemo(function SpaceTasksPage({
                             className={getBemClasses(styles, 'taskLink')}
                         >
                             <TaskCard
+                                showActions={isOrganizer}
                                 className={getBemClasses(styles, 'task')}
                                 showSpaceName={false}
                                 showAvatar={false}

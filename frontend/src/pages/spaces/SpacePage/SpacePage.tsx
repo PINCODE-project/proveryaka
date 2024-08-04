@@ -155,9 +155,11 @@ export const SpacePage: FC<Props> = typedMemo(({
                     {(isOrganizer || isStudent) ? <NavTab to={SpaceRouter.Team(spaceId)} name="Команды" /> : null}
                 </FlexContainer>
 
-                <SettingsDropdown
-                    menu={{ items: settingsItem }}
-                />
+                {isOrganizer
+                    ? <SettingsDropdown
+                        menu={{ items: settingsItem }}
+                    />
+                    : null}
             </FlexContainer>
 
             <div className={getBemClasses(styles, 'content')}>

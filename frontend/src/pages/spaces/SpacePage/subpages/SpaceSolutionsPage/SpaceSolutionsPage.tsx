@@ -9,6 +9,7 @@ import { useGetExpertSolutions } from '@entities/solution/lib/useGetExpertSoluti
 import { useHasCurrentUserMark } from '@entities/solution/lib/useHasCurrentUserMark';
 import { SolutionStatus } from '@entities/solution/model/SolutionStatus';
 import { TaskStatus } from '@entities/space';
+import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
 import { useListFilters } from '@shared/hooks';
 import { useSpaceId } from '@shared/hooks/useSpaceId';
@@ -24,6 +25,7 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
     className,
     'data-testid': dataTestId = 'SpaceSolutionsPage',
 }) {
+    const { isOrganizer } = useRolesCheck();
     const spaceId = useSpaceId();
     const [filters] = useListFilters();
     const [status, setStatus] = useState(SolutionStatus.InGrade);
@@ -104,6 +106,7 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
                             >
                                 <SolutionCard
                                     showAvatar={false}
+                                    showActions={isOrganizer}
                                     solution={solution}
                                     className={getBemClasses(styles, 'task')}
                                     showSpaceName={false}

@@ -6,6 +6,7 @@ import { StartDistributionForm } from '@features/issue/start-distribution/ui/Sta
 import { GetIssueResponse } from '@entities/issue';
 import { IssueStatus } from '@entities/issue/model/IssueStatus';
 import { SpaceSettings } from '@entities/space';
+import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
 import Checkmark from '@shared/assets/icons/Checkmark.svg';
 import SubtractCircle from '@shared/assets/icons/SubtractCircle.svg';

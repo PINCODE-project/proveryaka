@@ -1,6 +1,6 @@
 import { IconUsersPlus } from '@tabler/icons-react';
 import { Dropdown, MenuProps } from 'antd';
-import { type FC, useCallback, useState } from 'react';
+import { type FC, useCallback, useMemo, useState } from 'react';
 
 import { PageComponent } from '@widgets/PageComponent';
 
@@ -12,6 +12,7 @@ import { EnterSpaceByCodeModal } from '@features/space/enter-space-by-code';
 import { RegenerateSpaceCodeButton } from '@features/space/regenerate-space-code';
 
 import { GetSpaceFilters, SpaceCard, useGetSpaces } from '@entities/space';
+import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
 import PeopleAdd from '@shared/assets/icons/PeopleAdd.svg';
 import Settings from '@shared/assets/icons/Settings.svg';
@@ -24,25 +25,33 @@ import styles from './SpacesPage.module.css';
 
 export type Props = TestProps & ClassNameProps & Readonly<{}>;
 
-const buttonMenu: MenuProps['items'] = [
-    {
-        key: '1',
-        label: (
-            <CreateSpaceModal triggerElement={open => <Text onClick={open}>Создать пространство</Text>} />
-        ),
-    },
-    {
-        key: '',
-        label: <EnterSpaceByCodeModal triggerElement={open => <Text onClick={open}>Присоединиться к пространству</Text>} />,
-    },
-];
-
 export const SpacesPage: FC<Props> = typedMemo(({
     className,
     'data-testid': dataTestId = 'SpacesPage',
 }: Props) => {
     const [filters, changeFilter] = useListFilters();
     const { data, isLoading } = useGetSpaces(filters);
+    const isOrganizer = true;
+
+    const buttonMenu: MenuProps['items'] = useMemo(() => {
+        const menu = [];
+        if (isOrganizer) {
+            menu.push({
+                key: '1',
+                label: (
+                    <CreateSpaceModal triggerElement={open => <Text onClick={open}>Создать пространство</Text>} />
+                ),
+            });
+        }
+        menu.push({
+            key: '',
+            label: <EnterSpaceByCodeModal
+                triggerElement={open => <Text onClick={open}>Присоединиться к пространству</Text>}
+            />,
+        });
+
+        return menu;
+    }, []);
 
     return (
         <PageComponent
@@ -69,7 +78,7 @@ export const SpacesPage: FC<Props> = typedMemo(({
                         className={getBemClasses(styles, 'addSpaceButton')}
                     >
                         <IconUsersPlus className={getBemClasses(styles, 'addSpaceButtonIcon')} />
-                        Присоединиться или создать пространство
+                        Присоединиться {isOrganizer ? 'или создать пространство' : ''}
                     </Button>
                 </Dropdown>
 
@@ -82,36 +91,38 @@ export const SpacesPage: FC<Props> = typedMemo(({
                             space={space}
                             key={space.id}
                             actions={
-                                <>
-                                    <EditSpaceModal
-                                        triggerElement={open => (
-                                            <Button
-                                                onClick={open}
-                                                variant="ghost"
-                                                size="small"
-                                                className={getBemClasses(styles, 'settingsActionButton')}
-                                            >
+                                isOrganizer
+                                    ? <>
+                                        <EditSpaceModal
+                                            triggerElement={open => (
+                                                <Button
+                                                    onClick={open}
+                                                    variant="ghost"
+                                                    size="small"
+                                                    className={getBemClasses(styles, 'settingsActionButton')}
+                                                >
                                             Управление пространством
-                                            </Button>
-                                        )}
-                                        spaceId={space.id}
-                                    />
-                                    {space.inviteCode ? <CopySpaceCode inviteCode={space.inviteCode} /> : null}
-                                    <RegenerateSpaceCodeButton spaceId={space.id} />
-                                    <AddUserInSpaceModal
-                                        triggerElement={open => (
-                                            <Button
-                                                onClick={open}
-                                                variant="ghost"
-                                                size="small"
-                                                className={getBemClasses(styles, 'settingsActionButton')}
-                                            >
+                                                </Button>
+                                            )}
+                                            spaceId={space.id}
+                                        />
+                                        {space.inviteCode ? <CopySpaceCode inviteCode={space.inviteCode} /> : null}
+                                        <RegenerateSpaceCodeButton spaceId={space.id} />
+                                        <AddUserInSpaceModal
+                                            triggerElement={open => (
+                                                <Button
+                                                    onClick={open}
+                                                    variant="ghost"
+                                                    size="small"
+                                                    className={getBemClasses(styles, 'settingsActionButton')}
+                                                >
                                                 Добавить пользователей
-                                            </Button>
-                                        )}
-                                        spaceId={space.id}
-                                    />
-                                </>
+                                                </Button>
+                                            )}
+                                            spaceId={space.id}
+                                        />
+                                    </>
+                                    : null
                             }
                         />))
                 }
