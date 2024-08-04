@@ -5,7 +5,10 @@ import { SpaceRouter } from '@pages/spaces';
 
 import { useGetIssueCriteria } from '@entities/criteria/lib/useGetIssueCriteria';
 import { useGetIssue } from '@entities/issue';
+import { useCanReviewSolution } from '@entities/solution/lib/useCanReviewSolution';
 import { useGetExpertSolution } from '@entities/solution/lib/useGetExpertSolution';
+import { useHasCurrentUserMark } from '@entities/solution/lib/useHasCurrentUserMark';
+import { useGetCurrentUserInfo } from '@entities/user';
 
 import { useIssueId, useListFilters } from '@shared/hooks';
 import { useSolutionId } from '@shared/hooks/useSolutionId';
@@ -54,10 +57,14 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
                 return (<SolutionCriteria criteria={issueCriteria?.entityList ?? []}
                 />);
             case ActiveSection.Grades:
-                return <SolutionGrades grades={[]} />;
+                return <SolutionGrades />;
         }
         return null;
     }, [activeSection]);
+
+    const { data: user } = useGetCurrentUserInfo();
+    const canReview = useCanReviewSolution(solutionId ?? '', spaceId ?? '');
+    const hasReview = useHasCurrentUserMark(solutionId ?? '', user?.id ?? '');
 
     return (
         <FlexContainer
@@ -106,11 +113,13 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
                         onClick={() => setActiveSection(ActiveSection.Grades)}
                     />
                 </FlexContainer>
-                <NavLink to={SpaceRouter.EstimateTaskWork(spaceId ?? '', issueId ?? '', solutionId ?? '')}>
-                    <Button>
+                {canReview && hasReview === undefined
+                    ? <NavLink to={SpaceRouter.EstimateTaskWork(spaceId ?? '', issueId ?? '', solutionId ?? '')}>
+                        <Button>
                         Оценить работу
-                    </Button>
-                </NavLink>
+                        </Button>
+                    </NavLink>
+                    : null}
             </FlexContainer>
 
             {content}

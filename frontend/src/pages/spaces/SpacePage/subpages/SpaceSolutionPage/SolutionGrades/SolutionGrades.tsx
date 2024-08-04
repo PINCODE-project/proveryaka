@@ -1,21 +1,38 @@
+import { Table } from 'antd';
 import { FC, useState } from 'react';
 
+import { useGetSolutionReviews } from '@entities/solution/lib/useGetSolutionReviews';
+
+import { useSolutionId } from '@shared/hooks/useSolutionId';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { FlexContainer, NavTab } from '@shared/ui';
+import { Button, FlexContainer, NavTab, SolutionExample, Text } from '@shared/ui';
 
 import styles from './SolutionGrades.module.css';
 
-export type Props = ClassNameProps & TestProps & Readonly<{
-    grades: any[];
-}>;
+export type Props = ClassNameProps & TestProps & Readonly<{}>;
+
+const columns = [
+    {
+        title: 'Общая оценка',
+        dataIndex: 'mark',
+        key: 'mark',
+    },
+    {
+        title: 'Комментарий',
+        dataIndex: 'comment',
+        key: 'comment',
+    },
+];
 
 export const SolutionGrades: FC<Props> = typedMemo(function SolutionGrades({
     className,
-    grades,
     'data-testid': dataTestId = 'SolutionGrades',
 }) {
+    const solutionId = useSolutionId();
+
     const [currentIndex, setCurrentIndex] = useState<number | null>(null);
+    const { data: reviews } = useGetSolutionReviews(solutionId ?? '');
 
     return (
         <FlexContainer
@@ -36,7 +53,7 @@ export const SolutionGrades: FC<Props> = typedMemo(function SolutionGrades({
                     onClick={() => setCurrentIndex(null)}
                 />
                 {
-                    grades.map((_, index) => (
+                    reviews?.reviews.map((_, index) => (
                         <NavTab
                             key={index}
                             isActive={currentIndex === index}
@@ -46,6 +63,21 @@ export const SolutionGrades: FC<Props> = typedMemo(function SolutionGrades({
                     ))
                 }
             </FlexContainer>
+
+            {
+                currentIndex === null
+                    ? <Table columns={columns} dataSource={reviews?.reviews ?? []} />
+                    : reviews?.reviews?.[currentIndex]?.reviews.map(review => (
+                        <FlexContainer direction="column" key={review.id}>
+                            <Text>{review.name}</Text>
+                            <Text>Оценка: {review.scoreCount}/{review.maxScore}</Text>
+                            <FlexContainer direction="column" gap="xs">
+                                <Text>Комментарий</Text>
+                                <Text>{review.comment}</Text>
+                            </FlexContainer>
+                        </FlexContainer>
+                    ))
+            }
         </FlexContainer>
     );
 });
