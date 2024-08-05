@@ -22,6 +22,9 @@
 
 .TaskCard__name {
     font-weight: var(--font-weight-light);
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .TaskCard__spaceName,

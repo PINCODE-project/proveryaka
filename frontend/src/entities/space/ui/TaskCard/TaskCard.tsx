@@ -88,6 +88,7 @@ export const TaskCard: FC<Props> = typedMemo(function TaskCard({
             direction="row"
             alignItems="start"
             gap="m"
+            overflow="nowrap"
             justifyContent="space-between"
             className={getBemClasses(styles, null, null, className)}
             data-testid={dataTestId}
@@ -97,6 +98,7 @@ export const TaskCard: FC<Props> = typedMemo(function TaskCard({
                 gap="m"
                 alignItems="start"
                 overflow="nowrap"
+                style={{ overflow: 'hidden', flex: 1 }}
             >
                 {showAvatar && space
                     ? <Image
@@ -110,6 +112,7 @@ export const TaskCard: FC<Props> = typedMemo(function TaskCard({
                     direction="column"
                     overflow="nowrap"
                     gap="xxs"
+                    style={{ overflow: 'hidden', flex: 1 }}
                 >
                     <Text className={getBemClasses(styles, 'name')}>
                         {issue.name}
