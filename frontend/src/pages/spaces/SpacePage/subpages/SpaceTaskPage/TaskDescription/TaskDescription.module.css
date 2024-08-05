@@ -16,3 +16,8 @@
 .TaskDescription__desc {
         white-space: pre-wrap;
 }
+
+.TaskDescription__teamWarn {
+    color: var(--default-forefround-3);
+    font-weight: var(--font-weight-semibold);
+}

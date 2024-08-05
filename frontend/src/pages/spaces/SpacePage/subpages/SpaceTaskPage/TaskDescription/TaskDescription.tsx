@@ -1,6 +1,9 @@
 import { isAxiosError } from 'axios';
 import { FC, useCallback, useMemo } from 'react';
 import { useQueryClient } from 'react-query';
+import { NavLink } from 'react-router-dom';
+
+import { SpaceRouter } from '@pages/spaces';
 
 import { useCreateSolution } from '@features/solution/create-solution/lib/useCreateSolution';
 
@@ -38,7 +41,7 @@ export const TaskDescription: FC<Props> = typedMemo(function TaskDescription({
     const queryClient = useQueryClient();
     const spaceId = useSpaceId();
 
-    const { isOrganizer, isStudent } = useRolesCheck();
+    const { isOrganizer, isStudent, isExpert } = useRolesCheck();
 
     const { data: issueSolution, error: solutionError } = useGetStudentIssueSolution(issue.id, {
         enabled: isStudent,
@@ -132,18 +135,32 @@ export const TaskDescription: FC<Props> = typedMemo(function TaskDescription({
             >
                 <Text className={getBemClasses(styles, 'subtitle')}>Форма сдачи</Text>
 
-                <IssueFormList
-                    className={getBemClasses(styles, 'form')}
-                    issueId={issue.id}
-                    form={solution?.solutionValueList ?? undefined}
-                    onSubmit={onSubmitSolution}
-                    disabled={isOrganizer || Boolean(solution) || !teams?.teamList[0]}
-                    submitButton={handleSubmit => (
-                        <Button onClick={handleSubmit}>
-                            Сдать
-                        </Button>
-                    )}
-                />
+                {(isOrganizer || isExpert) || Boolean(solution) || teams?.teamList[0]
+                    ? <IssueFormList
+                        className={getBemClasses(styles, 'form')}
+                        issueId={issue.id}
+                        form={solution?.solutionValueList ?? undefined}
+                        onSubmit={onSubmitSolution}
+                        disabled={isOrganizer || Boolean(solution) || !teams?.teamList[0]}
+                        submitButton={handleSubmit => (
+                            <Button onClick={handleSubmit}>
+                                Сдать
+                            </Button>
+                        )}
+                    />
+                    : <FlexContainer direction="column" gap="m">
+                        <Text className={getBemClasses(styles, 'teamWarn')}>
+                            Для сдачи решения необходимо вступить в команду или создать ее
+                        </Text>
+
+                        <NavLink to={SpaceRouter.Team(spaceId ?? '')}>
+                            <Button>
+                            К командам
+                            </Button>
+                        </NavLink>
+                    </FlexContainer>
+                }
+
             </FlexContainer>
         </FlexContainer>
     );
