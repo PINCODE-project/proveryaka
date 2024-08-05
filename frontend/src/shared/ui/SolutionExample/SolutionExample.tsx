@@ -45,7 +45,7 @@ export const SolutionExample = typedMemo(function SolutionExample<TExample exten
                     </FlexContainer>}
 
                     {antiExample.length > 0 && <FlexContainer direction="column" className={getBemClasses(styles, 'column')}>
-                        <Typography className={getBemClasses(styles, 'header')}>Антиримеры</Typography>
+                        <Typography className={getBemClasses(styles, 'header')}>Антипримеры</Typography>
                         <SolutionCarousel solutions={antiExample} />
                     </FlexContainer>}
                 </div>

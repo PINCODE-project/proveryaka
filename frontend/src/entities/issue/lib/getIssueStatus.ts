@@ -4,15 +4,18 @@ import { GetIssueResponse } from '@entities/issue';
 import { IssueStatus } from '@entities/issue/model/IssueStatus';
 import { GetSolution } from '@entities/solution/model/GetSolution';
 
-export function getIssueStatus(issue: GetIssueResponse): IssueStatus {
+export function getIssueStatus(issue: GetIssueResponse, hasSolution: boolean): IssueStatus {
     const workDeadline = dayjs(issue.submitDeadlineDateUtc).toDate();
     const gradeDeadline = dayjs(issue.assessmentDeadlineDateUtc).toDate();
     const now = new Date();
 
-    if (now < workDeadline) {
+    if (now < workDeadline && !hasSolution) {
         return IssueStatus.InWork;
     }
-    if (now < gradeDeadline) {
+    if (now > workDeadline && !hasSolution) {
+        return IssueStatus.OverdueWork;
+    }
+    if (now < gradeDeadline || hasSolution) {
         return IssueStatus.InGrade;
     }
     if (issue.reviewedSolutionCount < issue.allSolutionCount) {

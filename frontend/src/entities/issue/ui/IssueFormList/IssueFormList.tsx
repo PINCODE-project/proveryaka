@@ -36,7 +36,7 @@ export const IssueFormList: FC<Props> = typedMemo(function IssueFormList({
             issueForm?.issueFormList.map(form => {
                 if (form.formSolutionType === FormSolutionType.File) {
                     return Yup.object({
-                        fileIdList: form.isRequired ? Yup.array().min(1, 'Выберите файл') : Yup.array(),
+                        file: form.isRequired ? Yup.mixed().required('Выберите файл') : Yup.mixed(),
                     });
                 } else {
                     return Yup.object({
@@ -48,7 +48,7 @@ export const IssueFormList: FC<Props> = typedMemo(function IssueFormList({
 
     const initialData = useMemo((): Omit<GetSolutionValue, 'id'>[] =>
         issueForm?.issueFormList.map(form => ({
-            textValue: '',
+            textValue: null,
             fileIdList: [],
             issueFormId: form.id,
         })) ?? [], [issueForm]);

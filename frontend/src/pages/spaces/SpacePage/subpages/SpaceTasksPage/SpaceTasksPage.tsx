@@ -1,4 +1,4 @@
-import { FC, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/spaces';
@@ -8,6 +8,7 @@ import { CreateIssueFullForm } from '@features/issue/create-issue/ui/CreateIssue
 import { GetIssueResponse, useGetSpaceIssue } from '@entities/issue';
 import { getIssueStatus } from '@entities/issue/lib/getIssueStatus';
 import { IssueStatus } from '@entities/issue/model/IssueStatus';
+import { getStudentIssueSolution } from '@entities/solution/api/getStudentIssueSolution';
 import { useGetStudentIssueSolution } from '@entities/solution/lib/useGetStudentIssueSolution';
 import { TaskCard } from '@entities/space';
 import { useGetSpace } from '@entities/space/lib/useGetSpace';
@@ -37,10 +38,24 @@ export const SpaceTasksPage: FC<Props> = typedMemo(function SpaceTasksPage({
     const { isOrganizer, isStudent } = useRolesCheck();
 
     const { data: rawIssues } = useGetSpaceIssue(spaceId ?? '', filters);
-    const issues: GetIssueResponse[] = useMemo(() => rawIssues?.entityList?.map(issue => ({
-        ...issue,
-        innerStatus: getIssueStatus(issue),
-    })) ?? [], [rawIssues]);
+    const [issues, setIssues] = useState<GetIssueResponse[]>([]);
+
+    useEffect(() => {
+        (async () => {
+            if (!rawIssues || !rawIssues.entityList) {
+                return;
+            }
+            const issues = await Promise.all(rawIssues!.entityList!.map(async issue => {
+                const solution = isStudent ? await getStudentIssueSolution(issue.id) : false;
+
+                return ({
+                    ...issue,
+                    innerStatus: getIssueStatus(issue, Boolean(solution)),
+                });
+            }));
+            setIssues(issues);
+        })();
+    }, [rawIssues]);
 
     return (
         <FlexContainer
@@ -70,9 +85,9 @@ export const SpaceTasksPage: FC<Props> = typedMemo(function SpaceTasksPage({
                     />
                     {isStudent
                         ? <NavTab
-                            isActive={status === IssueStatus.OverdueGrade}
+                            isActive={status === IssueStatus.OverdueWork}
                             name="Просрочена сдача"
-                            onClick={() => setStatus(IssueStatus.OverdueGrade)}
+                            onClick={() => setStatus(IssueStatus.OverdueWork)}
                         />
                         : null}
                     <NavTab
@@ -136,6 +151,8 @@ export const SpaceTasksPage: FC<Props> = typedMemo(function SpaceTasksPage({
                                 className={getBemClasses(styles, 'task')}
                                 showSpaceName={false}
                                 showAvatar={false}
+                                showAssignmentCount={isOrganizer}
+                                showGradingCount={isOrganizer}
                                 status={issue.innerStatus}
                                 issue={issue}
                                 space={space}

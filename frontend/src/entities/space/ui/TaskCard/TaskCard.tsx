@@ -53,6 +53,13 @@ export const TaskCard: FC<Props> = typedMemo(function TaskCard({
                             Выполняется
                     </Text>
                 );
+            case IssueStatus.OverdueWork:
+                return (
+                    <>
+                        <SubtractCircle className={getBemClasses(styles, 'statusIcon')} />
+                        <Text className={getBemClasses(styles, 'statusText')}>Не сдано</Text>
+                    </>
+                );
             case IssueStatus.InGrade:
                 return (
                     <Text className={getBemClasses(styles, 'statusText')}>
@@ -89,6 +96,7 @@ export const TaskCard: FC<Props> = typedMemo(function TaskCard({
                 direction="row"
                 gap="m"
                 alignItems="start"
+                overflow="nowrap"
             >
                 {showAvatar && space
                     ? <Image

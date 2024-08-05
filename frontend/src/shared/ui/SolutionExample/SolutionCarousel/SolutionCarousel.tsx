@@ -26,7 +26,7 @@ export const SolutionCarousel: FC<Props> = typedMemo(function SolutionCarousel({
             direction="column"
             gap="m"
         >
-            <FlexContainer direction="row" gap="xs">
+            {solutions.length > 1 && <FlexContainer direction="row" gap="xs">
                 {solutions.map((_, index) => (
                     <button
                         onClick={() => setCurrentIndex(index)}
@@ -35,7 +35,7 @@ export const SolutionCarousel: FC<Props> = typedMemo(function SolutionCarousel({
                         {index + 1}
                     </button>
                 ))}
-            </FlexContainer>
+            </FlexContainer>}
 
             {solutions.length > 0 &&
                 <Item sol={solutions[currentIndex]} />}
