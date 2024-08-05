@@ -20,7 +20,7 @@
     top: 20px !important;
 }
 
-.SolutionExample__modal:has(> .SolutionExample_isOneColumn){
+.SolutionExample__modal:has(> * .SolutionExample_isOneColumn){
     max-width: 600px;
 }
 

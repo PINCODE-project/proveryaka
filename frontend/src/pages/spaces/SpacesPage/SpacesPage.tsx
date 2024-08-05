@@ -1,6 +1,7 @@
 import { IconUsersPlus } from '@tabler/icons-react';
 import { Dropdown, MenuProps } from 'antd';
 import { type FC, useCallback, useMemo, useState } from 'react';
+import { useQuery } from 'react-query';
 
 import { PageComponent } from '@widgets/PageComponent';
 
@@ -16,6 +17,7 @@ import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
 import PeopleAdd from '@shared/assets/icons/PeopleAdd.svg';
 import Settings from '@shared/assets/icons/Settings.svg';
+import { ssoHttp } from '@shared/config/axios';
 import { useListFilters } from '@shared/hooks';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { TestProps, ClassNameProps } from '@shared/types';
@@ -31,7 +33,10 @@ export const SpacesPage: FC<Props> = typedMemo(({
 }: Props) => {
     const [filters, changeFilter] = useListFilters();
     const { data, isLoading } = useGetSpaces(filters);
-    const isOrganizer = true;
+    const { data: isOrganizer } = useQuery('userinfo', async () => {
+        const a: any = await ssoHttp.get('connect/userinfo');
+        return a['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] === 'admin';
+    });
 
     const buttonMenu: MenuProps['items'] = useMemo(() => {
         const menu = [];
@@ -51,8 +56,8 @@ export const SpacesPage: FC<Props> = typedMemo(({
         });
 
         return menu;
-    }, []);
-
+    }, [isOrganizer]);
+    console.log(isOrganizer);
     return (
         <PageComponent
             data-testid={dataTestId}
@@ -69,18 +74,30 @@ export const SpacesPage: FC<Props> = typedMemo(({
                     Пространства
                 </Text>
 
-                <Dropdown
-                    menu={{ items: buttonMenu }}
-                    placement="bottom"
-                >
-                    <Button
-                        variant="outline"
-                        className={getBemClasses(styles, 'addSpaceButton')}
+                {isOrganizer
+                    ? <Dropdown
+                        menu={{ items: buttonMenu }}
+                        placement="bottom"
                     >
-                        <IconUsersPlus className={getBemClasses(styles, 'addSpaceButtonIcon')} />
-                        Присоединиться {isOrganizer ? 'или создать пространство' : ''}
-                    </Button>
-                </Dropdown>
+                        <Button
+                            variant="outline"
+                            className={getBemClasses(styles, 'addSpaceButton')}
+                        >
+                            <IconUsersPlus className={getBemClasses(styles, 'addSpaceButtonIcon')} />
+                            Присоединиться или создать пространство
+                        </Button>
+                    </Dropdown>
+                    : <EnterSpaceByCodeModal
+                        triggerElement={open =>
+                            (<Button
+                                onClick={open}
+                                variant="outline"
+                                className={getBemClasses(styles, 'addSpaceButton')}
+                            >
+                                <IconUsersPlus className={getBemClasses(styles, 'addSpaceButtonIcon')} />
+                                Присоединиться к пространству
+                            </Button>)}
+                    />}
 
             </FlexContainer>
 
@@ -101,7 +118,7 @@ export const SpacesPage: FC<Props> = typedMemo(({
                                                     size="small"
                                                     className={getBemClasses(styles, 'settingsActionButton')}
                                                 >
-                                            Управление пространством
+                                                    Управление пространством
                                                 </Button>
                                             )}
                                             spaceId={space.id}
@@ -116,7 +133,7 @@ export const SpacesPage: FC<Props> = typedMemo(({
                                                     size="small"
                                                     className={getBemClasses(styles, 'settingsActionButton')}
                                                 >
-                                                Добавить пользователей
+                                                    Добавить пользователей
                                                 </Button>
                                             )}
                                             spaceId={space.id}
