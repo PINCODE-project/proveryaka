@@ -98,13 +98,19 @@ export const CreateIssueFullForm: FC<Props> = typedMemo(function CreateIssueFull
 
     const onSubmit = useCallback(async (form: CreateInfoWithFullInfo) => {
         form.issueExampleList = await Promise.all(form.issueExampleList.map(async ex => ({
-            ...ex,
+            description: ex.description,
+            exampleLink: ex.exampleLink,
+            exampleType: ex.exampleType,
+            textValue: ex.textValue,
             fileIdValue: ex.file ? (await createFile(ex.file)).id : null,
         })));
         form.criteriaList = await Promise.all(form.criteriaList.map(async list => ({
             ...list,
             criteriaExampleList: await Promise.all(list.criteriaExampleList?.map(async ex => ({
-                ...ex,
+                description: ex.description,
+                exampleLink: ex.exampleLink,
+                exampleType: ex.exampleType,
+                textValue: ex.textValue,
                 fileIdValue: ex.file ? (await createFile(ex.file)).id : null,
             }))),
         })));

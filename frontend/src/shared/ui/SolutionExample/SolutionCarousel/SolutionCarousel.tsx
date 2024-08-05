@@ -2,9 +2,11 @@ import { FC, useState } from 'react';
 
 import { ExampleResponse } from '@entities/example/common';
 
+import { getFile } from '@shared/api';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { FlexContainer, Text } from '@shared/ui';
+import { Item } from '@shared/ui/SolutionExample/SolutionCarousel/Item';
 
 import styles from './SolutionCarousel.module.css';
 
@@ -36,14 +38,7 @@ export const SolutionCarousel: FC<Props> = typedMemo(function SolutionCarousel({
             </FlexContainer>
 
             {solutions.length > 0 &&
-                <div className={getBemClasses(styles, 'solutionScroll')}>
-                    <Text className={getBemClasses(styles, 'link')}>
-                        {solutions[currentIndex].exampleLink ?? ''}
-                    </Text>
-                    <Text className={getBemClasses(styles, 'description')}>
-                        {solutions[currentIndex].description ?? ''}
-                    </Text>
-                </div>}
+                <Item sol={solutions[currentIndex]} />}
         </FlexContainer>
     );
 });
