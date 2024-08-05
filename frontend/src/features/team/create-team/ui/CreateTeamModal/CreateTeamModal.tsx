@@ -35,8 +35,8 @@ export const CreateTeamModal: FC<Props> = typedMemo(function CreateTeamModal({
     }), [spaceId]);
     const { mutate: create } = useCreateTeam({
         onSuccess: () => {
-            queryClient.resetQueries(getSpaceUserTeamsQueryKey(spaceId));
-            queryClient.resetQueries(getSpaceTeamsQueryKey(spaceId));
+            queryClient.resetQueries(getSpaceUserTeamsQueryKey());
+            queryClient.resetQueries(getSpaceTeamsQueryKey());
             setIsOpen(false);
         },
     });

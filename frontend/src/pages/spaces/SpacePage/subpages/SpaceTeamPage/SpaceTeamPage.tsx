@@ -68,7 +68,7 @@ export const SpaceTeamPage: FC<Props> = typedMemo(function SpaceTeamPage({
                 </FlexContainer>
             </FlexContainer>,
             children: <UserTable isStudent={true} users={team.studentInfoList ?? []} />,
-        })), [teams]);
+        })), [teams, studentTeams]);
 
     if (studentTeams?.teamList.length === 0 && isStudent) {
         return (
