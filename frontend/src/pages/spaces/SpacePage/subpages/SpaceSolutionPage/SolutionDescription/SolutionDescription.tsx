@@ -52,7 +52,6 @@ export const SolutionDescription: FC<Props> = typedMemo(function SolutionDescrip
                     }
                     triggerComponent={open =>
                         (<Button
-                            variant="ghost"
                             color="primary"
                             onClick={open}
                         >

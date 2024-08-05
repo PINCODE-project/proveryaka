@@ -66,10 +66,10 @@ export const TaskDescription: FC<Props> = typedMemo(function TaskDescription({
     const onSubmitSolution = useCallback(async (list: Omit<GetSolutionValue, 'id'>[]) => {
         const solutionValueList = await Promise.all(
             list.map(async form => {
+                const fileId = (form as any).file ? (await createFile((form as any).file)).id : null;
                 return ({
                     textValue: form.textValue ?? null,
-                    fileIdList: (form as any).file ? [(await createFile((form as any).file)).id] : [],
-                    file: undefined,
+                    fileIdList: fileId ? [fileId] : [],
                     issueFormId: form.issueFormId,
                 });
             }));
@@ -110,6 +110,24 @@ export const TaskDescription: FC<Props> = typedMemo(function TaskDescription({
 
             <FlexContainer
                 direction="column"
+                gap="s"
+                style={{ marginBottom: '10px' }}
+            >
+                <SolutionExample
+                    example={standardExamples}
+                    antiExample={antiExamples}
+                    triggerComponent={open =>
+                        (<Button
+                            color="primary"
+                            onClick={open}
+                        >
+                            Примеры работ
+                        </Button>)}
+                />
+            </FlexContainer>
+
+            <FlexContainer
+                direction="column"
                 gap="xs"
             >
                 <Text className={getBemClasses(styles, 'subtitle')}>Форма сдачи</Text>
@@ -117,7 +135,7 @@ export const TaskDescription: FC<Props> = typedMemo(function TaskDescription({
                 <IssueFormList
                     className={getBemClasses(styles, 'form')}
                     issueId={issue.id}
-                    form={solution?.solutionValueList ?? []}
+                    form={solution?.solutionValueList ?? undefined}
                     onSubmit={onSubmitSolution}
                     disabled={isOrganizer || Boolean(solution) || !teams?.teamList[0]}
                     submitButton={handleSubmit => (
@@ -125,24 +143,6 @@ export const TaskDescription: FC<Props> = typedMemo(function TaskDescription({
                             Сдать
                         </Button>
                     )}
-                />
-            </FlexContainer>
-
-            <FlexContainer
-                direction="column"
-                gap="s"
-            >
-                <SolutionExample
-                    example={standardExamples}
-                    antiExample={antiExamples}
-                    triggerComponent={open =>
-                        (<Button
-                            variant="ghost"
-                            color="primary"
-                            onClick={open}
-                        >
-                            Примеры работ
-                        </Button>)}
                 />
             </FlexContainer>
         </FlexContainer>

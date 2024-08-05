@@ -72,10 +72,11 @@ export const IssueFormList: FC<Props> = typedMemo(function IssueFormList({
                                         <FlexContainer direction="column" gap="xs">
                                             <Text>{form.description}</Text>
                                             <FileInput
+                                                disabled={disabled}
                                                 fileUrl={value ? URL.createObjectURL(value) : null}
                                                 filename={value?.name}
                                                 onChangeFile={file => onChange(file)}
-                                                acceptType={['.docs', '.pdf', '.png', '.jpg', '.xlsx']}
+                                                acceptType={['.docs', '.pdf', '.png', '.jpg', '.xlsx', '.word']}
                                             >
                                                 <FileInputName tooltipType="name" />
                                             </FileInput>

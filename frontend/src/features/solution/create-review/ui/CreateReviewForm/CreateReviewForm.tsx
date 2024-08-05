@@ -166,7 +166,6 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
                                                     antiExample={antiExamples}
                                                     triggerComponent={open =>
                                                         (<Button
-                                                            variant="ghost"
                                                             color="primary"
                                                             onClick={open}
                                                         >

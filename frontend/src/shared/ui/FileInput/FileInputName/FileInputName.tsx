@@ -46,11 +46,25 @@ export const FileInputName: FC<Props> = typedMemo(function FileInputName({
         );
     }, [fileUrl, t]);
 
+    function downloadURI() {
+        if (!fileUrl) {
+            return;
+        }
+        const link = document.createElement('a');
+        link.download = fileName ?? '';
+        link.href = fileUrl;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
     return (
-        <div className={getBemClasses(styles, 'wrapper', null, wrapperClassName)}>
+        <div
+            onClick={() => disabled && downloadURI()}
+            className={getBemClasses(styles, 'wrapper', null, wrapperClassName)}
+        >
             <Tooltip
-                hidden={disabled}
-                content={tooltipType === 'image' ? undefined : fileName!}
+                content={tooltipType === 'image' ? undefined : disabled ? 'Скачать' : fileName!}
                 render={tooltipType === 'image'
                     ? tooltipImage
                     : undefined}

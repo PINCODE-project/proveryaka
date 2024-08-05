@@ -57,7 +57,7 @@ export const TaskCriteriaItem: FC<Props> = typedMemo(function TaskCriteriaItem({
                         example={standardExamples}
                         antiExample={antiExamples}
                         triggerComponent={open => (
-                            <Button variant="ghost" onClick={open}>
+                            <Button onClick={open}>
                             Пример выполнения
                             </Button>
                         )}
