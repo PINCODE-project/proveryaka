@@ -30,4 +30,6 @@ export type ExampleResponse = {
      * Пример идентификатором файла
      */
     fileIdValue: string | null;
+
+    file?: File | null;
 };

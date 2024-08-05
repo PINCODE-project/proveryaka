@@ -6,7 +6,7 @@ import { ExampleType } from '@entities/example/common/model/ExampleType';
 import { roles } from '@shared/consts';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { Button, FormField, Input, Textarea } from '@shared/ui';
+import { Button, FileInput, FileInputName, FlexContainer, FormField, Input, Text, Textarea } from '@shared/ui';
 
 import styles from './ExampleForm.module.css';
 
@@ -54,27 +54,20 @@ export const ExampleForm: FC<Props> = typedMemo(function ExampleForm({
                     }
                 />
                 : null}
+
             <FormField<File | null>
                 name={`${formParentFieldName ? formParentFieldName + '.' : ''}file`}
                 label="file"
                 content={
                     ({ value, onChange, isInvalid }) => (
-                        <Upload
-                            maxCount={1}
-                            showUploadList={{
-                                showDownloadIcon: true,
-                                downloadIcon: 'Down',
-                            }}
-                            beforeUpload={(file, fileList) => {
-                                onChange(file);
-                                return false;
-                            }}
-                            onRemove={() => onChange(null)}
+                        <FileInput
+                            fileUrl={value ? URL.createObjectURL(value) : null}
+                            filename={value?.name}
+                            onChangeFile={file => onChange(file)}
+                            acceptType={['.png', '.jpg']}
                         >
-                            <Button variant="outline">
-                                Загрузить файл
-                            </Button>
-                        </Upload>
+                            <FileInputName tooltipType="image" />
+                        </FileInput>
                     )
                 }
             />

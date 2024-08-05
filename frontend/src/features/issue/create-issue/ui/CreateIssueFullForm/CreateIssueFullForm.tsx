@@ -12,6 +12,7 @@ import { validationSchema as validationSchemaCriteria } from '@entities/criteria
 import { ExampleForm, ExampleType, validationSchema as validationSchemaExample } from '@entities/example/common';
 import { getSpaceIssueQueryKey, IssueForm, validationSchema as validationSchemaIssue } from '@entities/issue';
 
+import { createFile } from '@shared/api/file/createFile';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { Button, FlexContainer, Text } from '@shared/ui';
@@ -95,6 +96,22 @@ export const CreateIssueFullForm: FC<Props> = typedMemo(function CreateIssueFull
         }
     }, [step]);
 
+    const onSubmit = useCallback(async (form: CreateInfoWithFullInfo) => {
+        form.issueExampleList = await Promise.all(form.issueExampleList.map(async ex => ({
+            ...ex,
+            fileIdValue: ex.file ? (await createFile(ex.file)).id : null,
+        })));
+        form.criteriaList = await Promise.all(form.criteriaList.map(async list => ({
+            ...list,
+            criteriaExampleList: await Promise.all(list.criteriaExampleList?.map(async ex => ({
+                ...ex,
+                fileIdValue: ex.file ? (await createFile(ex.file)).id : null,
+            }))),
+        })));
+
+        create({ spaceId, data: form });
+    }, [create]);
+
     return (
         <>
             {triggerElement(() => setIsOpen(true))}
@@ -134,10 +151,11 @@ export const CreateIssueFullForm: FC<Props> = typedMemo(function CreateIssueFull
 
                 <Formik
                     initialValues={initialValue}
-                    onSubmit={data => create({ data, spaceId })}
+                    onSubmit={onSubmit}
                     validationSchema={validationSchema}
                 >
                     {({ handleSubmit, errors }) => {
+                        console.log(errors);
                         return (
                             <Form>
                                 {getContent(handleSubmit)}

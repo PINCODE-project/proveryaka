@@ -26,7 +26,7 @@
 
 .Checkbox__labelCheckbox {
     background-color: transparent;
-    border: 1px solid var(--border-on-surface-color);
+    border: 1px solid var(--default-forefround-3);
     border-radius: var(--border-radius-s);
     width: 20px;
     height: 20px;
@@ -38,17 +38,17 @@
 }
 
 .Checkbox__label:hover .Checkbox__labelCheckbox{
-    border-color: var(--secondary-text-color);
+    border-color: var(--default-background-2);
 }
 
 .Checkbox__input:disabled ~ label .Checkbox__labelValue {
-    color: var(--secondary-text-color);
+    color: var(--default-forefround-2);
 }
 
 .Checkbox__input:disabled ~ label .Checkbox__labelCheckbox {
     opacity: var(--disabled-opacity);
     pointer-events: none;
-    border-color: var(--secondary-text-color);
+    border-color: var(--default-forefround-2);
 }
 
 .Checkbox__input:checked ~ label .Checkbox__labelCheckbox::after {
@@ -65,8 +65,8 @@
 }
 
 .Checkbox__input:checked ~ label .Checkbox__labelCheckbox {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
+    background-color: var(--brand-forefround);
+    border-color: var(--brand-forefround);
 }
 
 
