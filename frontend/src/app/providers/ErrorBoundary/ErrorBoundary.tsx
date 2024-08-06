@@ -1,3 +1,4 @@
+import { Typography } from 'antd';
 import { Component, type ErrorInfo, type PropsWithChildren, Suspense } from 'react';
 
 type ErrorBoundaryProps = PropsWithChildren;
@@ -27,8 +28,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
         if (hasError) {
             return (
                 <Suspense fallback="">
-                    Упс, произошла ошибка 🥲 <br />
-                    Оставьте сообщение, чтобы мы могли разобраться:
+                    <Typography.Title>Упс, произошла ошибка 🥲 <br /></Typography.Title>
+                    Оставьте сообщение, чтобы мы могли разобраться:{' '}
                     <a href={'https://docs.google.com/forms/d/e/1FAIpQLSc0bhr6uMUgHcM3COjc4LpBJ8fDG8qzvpx_rw188ot4UR7jKA/viewform?embedded=true'} target="_blank" rel="noreferrer">
                         форма обратной связи
                     </a>
