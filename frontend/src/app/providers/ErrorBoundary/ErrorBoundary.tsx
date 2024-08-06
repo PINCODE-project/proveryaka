@@ -34,7 +34,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
                         Упс, произошла ошибка 🥲 <br />
                     </Typography.Title>
                     <Typography.Paragraph style={{ textAlign: 'center' }}>
-                        Оставьте сообщение, чтобы мы могли разобраться:{' '}
+                        Обновите страницу или оставьте сообщение, чтобы мы могли разобраться:{' '}
                     </Typography.Paragraph>
                     <a href={'https://docs.google.com/forms/d/e/1FAIpQLSc0bhr6uMUgHcM3COjc4LpBJ8fDG8qzvpx_rw188ot4UR7jKA/viewform?embedded=true'} target="_blank" rel="noreferrer">
                         форма обратной связи
