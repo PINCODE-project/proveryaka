@@ -1,4 +1,4 @@
-import { Table } from 'antd';
+import { Collapse, Table } from 'antd';
 import { FC, useState } from 'react';
 
 import { useGetSolutionReviews } from '@entities/solution/lib/useGetSolutionReviews';
@@ -40,6 +40,7 @@ export const SolutionGrades: FC<Props> = typedMemo(function SolutionGrades({
             gap="m"
             className={getBemClasses(styles, null, null, className)}
             data-testid={dataTestId}
+            alignItems="stretch"
         >
             <FlexContainer
                 direction="row"
@@ -67,16 +68,38 @@ export const SolutionGrades: FC<Props> = typedMemo(function SolutionGrades({
             {
                 currentIndex === null
                     ? <Table columns={columns} dataSource={reviews?.reviews ?? []} />
-                    : reviews?.reviews?.[currentIndex]?.reviews.map(review => (
-                        <FlexContainer direction="column" key={review.id}>
-                            <Text>{review.name}</Text>
-                            <Text>Оценка: {review.scoreCount}/{review.maxScore}</Text>
-                            <FlexContainer direction="column" gap="xs">
-                                <Text>Комментарий</Text>
-                                <Text>{review.comment}</Text>
-                            </FlexContainer>
-                        </FlexContainer>
-                    ))
+                    : <FlexContainer direction="column" gap="m">
+                        <Text className={getBemClasses(styles, 'rate')}>Оценка: {reviews?.reviews?.[currentIndex].mark}</Text>
+
+                        {reviews?.reviews?.[currentIndex]?.reviews.map(review => (
+                            <Collapse
+                                className={getBemClasses(styles, 'collapse')}
+                                items={[{
+                                    key: '1',
+                                    label: <FlexContainer direction="row" gap="m" justifyContent="space-between"
+                                        overflow="nowrap"
+                                    >
+                                        <Text className={getBemClasses(styles, 'name')}>{review.name}</Text>
+
+                                        <FlexContainer direction="row" gap="xs" alignItems="center">
+                                            <Text className={getBemClasses(styles, 'params')}>
+                                                Оценка: {review.scoreCount}/{review.maxScore}
+                                            </Text>
+                                        </FlexContainer>
+                                    </FlexContainer>,
+                                    children: <FlexContainer direction="column" gap="m">
+                                        <FlexContainer direction="column">
+                                            <Text className={getBemClasses(styles, 'subtitle')}>
+                                                Комментарий
+                                            </Text>
+                                            <Text className={getBemClasses(styles, 'description')}>
+                                                {review.comment || '-'}
+                                            </Text>
+                                        </FlexContainer>
+                                    </FlexContainer>,
+                                }]}
+                            />))}
+                    </FlexContainer>
             }
         </FlexContainer>
     );
