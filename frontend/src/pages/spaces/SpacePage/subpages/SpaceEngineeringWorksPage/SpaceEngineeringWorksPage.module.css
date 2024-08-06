@@ -1,0 +1,24 @@
+.SpaceEngineeringWorksPage {
+    background-color: var(--default-background-2);
+    min-height: 100%;
+    flex: 1;
+    width: 100%;
+    padding: var(--space-l)
+}
+
+.SpaceEngineeringWorksPage__img{
+    width: 100px;
+    margin-bottom: var(--space-m);
+    height: 100px;
+}
+
+.SpaceEngineeringWorksPage__title{
+    font-size: 20px;
+    font-weight: var(--font-weight-semibold);
+    color:var(--default-forefround-2);
+}
+
+.SpaceEngineeringWorksPage__desc{
+    text-align: center;
+    color:var(--default-forefround-3);
+}

@@ -2,6 +2,7 @@ import { FC, useMemo, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/spaces';
+import { SpaceEngineeringWorksPage } from '@pages/spaces/SpacePage/subpages/SpaceEngineeringWorksPage';
 
 import { useGetIssueCriteria } from '@entities/criteria/lib/useGetIssueCriteria';
 import { useGetIssue } from '@entities/issue';
@@ -78,6 +79,9 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
     const canReview = useCanReviewSolution(solutionId ?? '', spaceId ?? '');
     const hasReview = undefined; // useHasCurrentUserMark(solutionId ?? '', user?.id ?? '');
 
+    if (false && !isOrganizer) {
+        return <SpaceEngineeringWorksPage />;
+    }
     return (
         <FlexContainer
             direction="column"
