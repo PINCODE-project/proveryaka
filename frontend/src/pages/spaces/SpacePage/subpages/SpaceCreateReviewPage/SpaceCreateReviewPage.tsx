@@ -38,7 +38,7 @@ export const SpaceCreateReviewPage: FC<Props> = typedMemo(function SpaceCreateRe
     const canReview = useCanReviewSolution(solutionId ?? '', spaceId ?? '');
     const hasReview = useHasCurrentUserMark(solutionId ?? '', user?.id ?? '');
 
-    if (!canReview || hasReview !== undefined) {
+    if (!canReview || hasReview !== undefined || new Date(issue?.assessmentDeadlineDateUtc ?? 0) < new Date()) {
         return <Navigate to={SpaceRouter.Space(spaceId ?? '')} />;
     }
     if (!issue || !criteria) {

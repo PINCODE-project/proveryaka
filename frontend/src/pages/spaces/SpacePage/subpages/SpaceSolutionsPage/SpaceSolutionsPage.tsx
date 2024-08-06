@@ -32,6 +32,7 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
     const [search, setSearch] = useState('');
 
     const { data: rawSolutions } = useGetExpertSolutions(spaceId ?? '', filters);
+
     const solutions = useMemo(() => rawSolutions?.map(solution => ({
         ...solution,
         status: getSolutionStatus(solution),
@@ -68,11 +69,6 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
                         name="Просрочена проверка"
                         onClick={() => setStatus(SolutionStatus.OverdueGrade)}
                     />
-                    <NavTab
-                        isActive={status === SolutionStatus.Done}
-                        name="Завершенные"
-                        onClick={() => setStatus(SolutionStatus.Done)}
-                    />
                 </FlexContainer>
 
                 {/* <FlexContainer
@@ -108,6 +104,7 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
                                     order={index}
                                     showOrder={true}
                                     showAvatar={false}
+                                    showGradingCount={isOrganizer}
                                     showActions={isOrganizer}
                                     solution={solution}
                                     className={getBemClasses(styles, 'task')}
