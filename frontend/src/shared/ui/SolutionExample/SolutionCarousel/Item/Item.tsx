@@ -29,7 +29,7 @@ export const Item: FC<Props> = typedMemo(function Item({
             })();
         }
     }, [sol]);
-    console.log(file, sol.fileIdValue);
+
     return (
         <div className={getBemClasses(styles, 'solutionScroll')}>
             {fileUrl ? <img src={fileUrl} className={getBemClasses(styles, 'img')} /> : null}

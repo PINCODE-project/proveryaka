@@ -1,6 +1,6 @@
 import { Typography } from 'antd';
 import { Formik } from 'formik';
-import { FC, useCallback, useMemo, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import * as Yup from 'yup';
 
 import { useCreateReview } from '@features/solution/create-review/lib/useCreateReview';
@@ -14,7 +14,10 @@ import { GetIssueResponse } from '@entities/issue';
 import { IssueFormList } from '@entities/issue/ui/IssueFormList';
 import { useGetExpertSolution } from '@entities/solution/lib/useGetExpertSolution';
 import { useGetSolution } from '@entities/solution/lib/useGetSolution';
+import { GetSolution } from '@entities/solution/model/GetSolution';
+import { GetSolutionForExpert } from '@entities/solution/model/GetSolutionForExpert';
 
+import { getFile } from '@shared/api/file/solution/getFile';
 import { useListFilters } from '@shared/hooks';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
@@ -41,7 +44,29 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
     issue,
     'data-testid': dataTestId = 'CreateReviewForm',
 }) {
-    const { data: solution } = useGetExpertSolution(solutionId);
+    const { data: rawSolution } = useGetExpertSolution(solutionId);
+    const [solution, setSolution] = useState<GetSolutionForExpert | null>(null);
+
+    useEffect(() => {
+        if (!rawSolution) {
+            return;
+        }
+        (async () => {
+            const solutionValueList = await Promise.all((rawSolution.solutionValueList ?? []).map(async item => {
+                const blob = item.fileIdList?.[0] ? await getFile(item.fileIdList?.[0] ?? '') : null;
+                return {
+                    ...item,
+                    file: blob ? new File([blob], 'file.docx') : null,
+                };
+            }));
+
+            setSolution({
+                ...rawSolution,
+                solutionValueList: solutionValueList ?? [],
+            });
+        })();
+    }, [rawSolution]);
+
     const [currentTab, setCurrentTab] = useState(SolutionTab.Solution);
     const [currentCriteriaOrder, setCurrentCriteriaOrder] = useState<number | null>(null);
     const { mutate: review } = useCreateReview({
@@ -83,8 +108,15 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
     }, [criteria]);
 
     const getMark = useCallback((form: CriteriaReview) => {
-        return form.reviewsByCriteria.reduce((prev, curr) => prev + (curr.scoreCount ?? 0), 0);
-    }, []);
+        let totalPercent = 0;
+        let mark = 0;
+
+        for (let i = 0; i <= criteria.length; i++) {
+            mark += (form.reviewsByCriteria[i]?.scoreCount ?? 0) * criteria[0].maxScore;
+            totalPercent += criteria[0].maxScore;
+        }
+        return Math.floor(mark / totalPercent);
+    }, [criteria]);
 
     const maxMark = useMemo(() => {
         return criteria.reduce((prev, curr) => prev + curr.maxScore, 0);

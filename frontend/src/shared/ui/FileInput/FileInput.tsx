@@ -73,7 +73,7 @@ export const FileInput: FC<Props> = typedMemo(function FileInput({
     const [error, setError] = useState<string | null>(null);
     const errorTimeout = useRef<ReturnType<typeof setTimeout>>(null);
     const [isDragging, setIsDragging] = useState(false);
-
+    console.log(fileUrl);
     const changeError = useCallback((error: string | null) => {
         setError(error);
 

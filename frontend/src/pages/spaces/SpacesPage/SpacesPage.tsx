@@ -19,7 +19,7 @@ import PeopleAdd from '@shared/assets/icons/PeopleAdd.svg';
 import Settings from '@shared/assets/icons/Settings.svg';
 import { ssoHttp } from '@shared/config/axios';
 import { useListFilters } from '@shared/hooks';
-import { getBemClasses, typedMemo } from '@shared/lib';
+import { extractData, getBemClasses, typedMemo } from '@shared/lib';
 import { TestProps, ClassNameProps } from '@shared/types';
 import { Button, FlexContainer, Text } from '@shared/ui';
 
@@ -34,8 +34,9 @@ export const SpacesPage: FC<Props> = typedMemo(({
     const [filters, changeFilter] = useListFilters();
     const { data, isLoading } = useGetSpaces(filters);
     const { data: isOrganizer } = useQuery('userinfo', async () => {
-        const a: any = await ssoHttp.get('connect/userinfo');
-        return a['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] === 'admin';
+        const a: any = await ssoHttp.get('connect/userinfo').then(extractData);
+        console.log(a);
+        return a.role === 'admin';
     });
 
     const buttonMenu: MenuProps['items'] = useMemo(() => {
@@ -57,7 +58,7 @@ export const SpacesPage: FC<Props> = typedMemo(({
 
         return menu;
     }, [isOrganizer]);
-    console.log(isOrganizer);
+
     return (
         <PageComponent
             data-testid={dataTestId}

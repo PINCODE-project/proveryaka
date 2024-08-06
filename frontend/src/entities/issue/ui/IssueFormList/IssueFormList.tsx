@@ -52,12 +52,12 @@ export const IssueFormList: FC<Props> = typedMemo(function IssueFormList({
             fileIdList: [],
             issueFormId: form.id,
         })) ?? [], [issueForm]);
-
     return (
         <Formik
             initialValues={form ?? initialData}
             onSubmit={onSubmit}
             disabled={disabled}
+            enableReinitialize
             validationSchema={validationSchema}
         >
             {({ handleSubmit, values }) => (
@@ -76,7 +76,7 @@ export const IssueFormList: FC<Props> = typedMemo(function IssueFormList({
                                                 fileUrl={value ? URL.createObjectURL(value) : null}
                                                 filename={value?.name}
                                                 onChangeFile={file => onChange(file)}
-                                                acceptType={['.docs', '.pdf', '.png', '.jpg', '.xlsx', '.word']}
+                                                acceptType={['.docx']}
                                             >
                                                 <FileInputName tooltipType="name" />
                                             </FileInput>

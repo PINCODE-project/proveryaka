@@ -1,5 +1,7 @@
+import * as constants from 'constants';
+
 import { isAxiosError } from 'axios';
-import { FC, useCallback, useMemo } from 'react';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { useQueryClient } from 'react-query';
 import { NavLink } from 'react-router-dom';
 
@@ -16,11 +18,13 @@ import { getStudentIssueSolutionQueryKey } from '@entities/solution/lib/getStude
 import { useGetExpertSolution } from '@entities/solution/lib/useGetExpertSolution';
 import { useGetSolution } from '@entities/solution/lib/useGetSolution';
 import { useGetStudentIssueSolution } from '@entities/solution/lib/useGetStudentIssueSolution';
+import { GetSolution } from '@entities/solution/model/GetSolution';
 import { GetSolutionValue } from '@entities/solution/model/GetSolutionValue';
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 import { useGetSpaceUserTeams } from '@entities/team/lib/useGetSpaceUserTeams';
 
-import { createFile } from '@shared/api/file/createFile';
+import { createFile } from '@shared/api/file/solution/createFile';
+import { getFile } from '@shared/api/file/solution/getFile';
 import { useListFilters } from '@shared/hooks';
 import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { getBemClasses, typedMemo } from '@shared/lib';
@@ -53,9 +57,31 @@ export const TaskDescription: FC<Props> = typedMemo(function TaskDescription({
         },
         useErrorBoundary: false,
     });
-    const { data: solution } = useGetSolution(issueSolution?.id ?? '', {
+    const { data: rawSolution } = useGetSolution(issueSolution?.id ?? '', {
         enabled: Boolean(issueSolution),
     });
+    const [solution, setSolution] = useState<GetSolution | null>(null);
+
+    useEffect(() => {
+        if (!rawSolution) {
+            return;
+        }
+        (async () => {
+            const solutionValueList = await Promise.all((rawSolution.solutionValueList ?? []).map(async item => {
+                const blob = item.fileIdList?.[0] ? await getFile(item.fileIdList?.[0] ?? '') : null;
+                return {
+                    ...item,
+                    file: blob ? new File([blob], 'file.docx') : null,
+                };
+            }));
+
+            setSolution({
+                ...rawSolution,
+                solutionValueList: solutionValueList ?? [],
+            });
+        })();
+    }, [rawSolution]);
+
     const [teamsFilters] = useListFilters();
     const { data: teams } = useGetSpaceUserTeams(spaceId ?? '', teamsFilters, {
         enabled: isStudent,

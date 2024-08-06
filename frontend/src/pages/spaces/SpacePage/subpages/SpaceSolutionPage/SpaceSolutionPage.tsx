@@ -7,7 +7,9 @@ import { useGetIssueCriteria } from '@entities/criteria/lib/useGetIssueCriteria'
 import { useGetIssue } from '@entities/issue';
 import { useCanReviewSolution } from '@entities/solution/lib/useCanReviewSolution';
 import { useGetExpertSolution } from '@entities/solution/lib/useGetExpertSolution';
+import { useGetOrganizerSolution } from '@entities/solution/lib/useGetOrganizerSolution';
 import { useHasCurrentUserMark } from '@entities/solution/lib/useHasCurrentUserMark';
+import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 import { useGetCurrentUserInfo } from '@entities/user';
 
 import { useIssueId, useListFilters } from '@shared/hooks';
@@ -36,11 +38,21 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
     className,
     'data-testid': dataTestId = 'SpaceSolutionPage',
 }) {
+    const { isOrganizer, isStudent } = useRolesCheck();
     const spaceId = useSpaceId();
     const issueId = useIssueId();
     const solutionId = useSolutionId();
 
-    const { data: solution } = useGetExpertSolution(solutionId!);
+    const { data: expertSolution } = useGetExpertSolution(solutionId!, {
+        enabled: !isOrganizer,
+    });
+    const { data: organizerSolution } = useGetOrganizerSolution(solutionId!, {
+        enabled: isOrganizer,
+    });
+    const solution = useMemo(() => isOrganizer
+        ? organizerSolution
+        : expertSolution, [isOrganizer, organizerSolution, expertSolution]);
+
     const { data: issue } = useGetIssue(issueId!);
     const [criteriaFilters] = useListFilters();
     const { data: issueCriteria } = useGetIssueCriteria(solution!.issueId, criteriaFilters, {
