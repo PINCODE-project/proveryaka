@@ -18,9 +18,11 @@ import styles from './SolutionCard.module.css';
 export type Props = ClassNameProps & TestProps & Readonly<{
     solution: GetSolutionForExpert;
     issue?: GetIssueResponse;
+    order?: number;
 
     mark?: number;
     showAvatar?: boolean;
+    showOrder?: boolean;
     showSpaceName?: boolean;
     showAssignmentDeadline?: boolean;
     showOverdueDeadline?: boolean;
@@ -34,6 +36,8 @@ export const SolutionCard: FC<Props> = typedMemo(function SolutionCard({
     solution,
     issue,
     showAvatar = true,
+    order,
+    showOrder,
     showSpaceName = true,
     showAssignmentDeadline = true,
     showOverdueDeadline = true,
@@ -91,6 +95,11 @@ export const SolutionCard: FC<Props> = typedMemo(function SolutionCard({
                 gap="m"
                 alignItems="start"
             >
+                {showOrder
+                    ? <Text className={getBemClasses(styles, 'order')}>
+                        {order}
+                    </Text>
+                    : null}
                 {showAvatar
                     ? <Image
                         className={getBemClasses(styles, 'avatar')}

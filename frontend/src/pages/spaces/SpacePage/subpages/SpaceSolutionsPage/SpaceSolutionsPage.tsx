@@ -96,7 +96,7 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
                 className={getBemClasses(styles, 'tasks')}
             >
                 {
-                    solutions?.map(solution => (
+                    solutions?.map((solution, index) => (
                         solution.status !== status
                             ? null
                             : <NavLink
@@ -105,6 +105,8 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
                                 className={getBemClasses(styles, 'workLink')}
                             >
                                 <SolutionCard
+                                    order={index}
+                                    showOrder={true}
                                     showAvatar={false}
                                     showActions={isOrganizer}
                                     solution={solution}

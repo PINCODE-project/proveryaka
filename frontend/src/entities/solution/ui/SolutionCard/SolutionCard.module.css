@@ -20,8 +20,13 @@
     object-fit: cover;
 }
 
-.TaskCard__name {
+.TaskCard__name,
+.TaskCard__order {
     font-weight: var(--font-weight-light);
+}
+
+.TaskCard__order {
+    color: #919191
 }
 
 .TaskCard__spaceName,
