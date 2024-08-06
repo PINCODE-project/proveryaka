@@ -75,6 +75,10 @@ export const CriteriaForm: FC<Props> = typedMemo(function CriteriaForm({
                                 {criteria.description}
                             </Typography>
 
+                            <Typography className={getBemClasses(styles, 'weight')}>
+                                Вес критерия: {criteria.weight}
+                            </Typography>
+
                             <FlexContainer direction="column" gap="s">
                                 <FormField<number>
                                     name={`reviewsByCriteria[${order}].scoreCount`}
