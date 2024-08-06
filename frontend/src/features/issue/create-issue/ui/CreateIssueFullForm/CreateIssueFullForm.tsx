@@ -161,7 +161,6 @@ export const CreateIssueFullForm: FC<Props> = typedMemo(function CreateIssueFull
                     validationSchema={validationSchema}
                 >
                     {({ handleSubmit, errors }) => {
-                        console.log(errors);
                         return (
                             <Form>
                                 {getContent(handleSubmit)}

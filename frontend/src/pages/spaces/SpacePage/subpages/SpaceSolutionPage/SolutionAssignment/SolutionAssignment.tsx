@@ -4,9 +4,11 @@ import { useGetIssue } from '@entities/issue';
 import { useGetIssueFormList } from '@entities/issue/lib/useGetIssueFormList';
 import { IssueFormList } from '@entities/issue/ui/IssueFormList';
 import { useGetExpertSolution } from '@entities/solution/lib/useGetExpertSolution';
+import { useGetOrganizerSolution } from '@entities/solution/lib/useGetOrganizerSolution';
 import { useGetSolution } from '@entities/solution/lib/useGetSolution';
 import { useGetStudentIssueSolution } from '@entities/solution/lib/useGetStudentIssueSolution';
 import { GetSolutionForExpert } from '@entities/solution/model/GetSolutionForExpert';
+import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
 import { getFile } from '@shared/api/file/solution/getFile';
 import { useIssueId } from '@shared/hooks';
@@ -25,24 +27,38 @@ export const SolutionAssignment: FC<Props> = typedMemo(function SolutionAssignme
 }) {
     const solutionId = useSolutionId();
     const issueId = useIssueId();
-    const { data: rawSolution } = useGetExpertSolution(solutionId ?? '');
-    const [solution, setSolution] = useState<GetSolutionForExpert>(rawSolution!);
+
+    const { isOrganizer } = useRolesCheck();
+    const { data: rawOrganizerSolution } = useGetOrganizerSolution(solutionId ?? '', {
+        enabled: isOrganizer,
+    });
+    const { data: rawExpertSolution } = useGetExpertSolution(solutionId ?? '', {
+        enabled: !isOrganizer,
+    });
+
+    const [solution, setSolution] = useState<GetSolutionForExpert | null>(null);
 
     useEffect(() => {
+        const rawSolution = isOrganizer
+            ? rawOrganizerSolution
+            : rawExpertSolution;
         if (!rawSolution) {
             return;
         }
 
         (async () => {
             const solution = await Promise.all(rawSolution?.solutionValueList
-                .map(async item => ({
-                    ...item,
-                    file: item.fileIdList?.[0] ? await getFile(item.fileIdList?.[0]) : null,
-                })));
+                .map(async item => {
+                    const blob = item.fileIdList?.[0] ? await getFile(item.fileIdList?.[0]) : null;
+                    return {
+                        ...item,
+                        file: blob ? new File([blob], 'uploadFile.docx') : null,
+                    };
+                }));
 
             setSolution({ ...rawSolution, solutionValueList: solution });
         })();
-    }, [rawSolution]);
+    }, [rawExpertSolution, rawOrganizerSolution]);
 
     return (
         <FlexContainer

@@ -167,7 +167,7 @@ export const TaskDescription: FC<Props> = typedMemo(function TaskDescription({
                         issueId={issue.id}
                         form={solution?.solutionValueList ?? undefined}
                         onSubmit={onSubmitSolution}
-                        disabled={isOrganizer || Boolean(solution) || !teams?.teamList[0]}
+                        disabled={isOrganizer || Boolean(solution) || !teams?.teamList[0] || new Date(issue.submitDeadlineDateUtc ?? 0) < new Date()}
                         submitButton={handleSubmit => (
                             <Button onClick={handleSubmit}>
                                 Сдать

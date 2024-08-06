@@ -68,20 +68,22 @@ export const IssueFormList: FC<Props> = typedMemo(function IssueFormList({
                                 name={`[${index}].file`}
                                 label={form.name ?? ''}
                                 content={
-                                    ({ onChange, value, isInvalid }) => (
-                                        <FlexContainer direction="column" gap="xs">
-                                            <Text>{form.description}</Text>
-                                            <FileInput
-                                                disabled={disabled}
-                                                fileUrl={value ? URL.createObjectURL(value) : null}
-                                                filename={value?.name}
-                                                onChangeFile={file => onChange(file)}
-                                                acceptType={['.docx']}
-                                            >
-                                                <FileInputName tooltipType="name" />
-                                            </FileInput>
-                                        </FlexContainer>
-                                    )
+                                    ({ onChange, value, isInvalid }) => {
+                                        return (
+                                            <FlexContainer direction="column" gap="xs">
+                                                <Text>{form.description}</Text>
+                                                <FileInput
+                                                    disabled={disabled}
+                                                    fileUrl={value ? URL.createObjectURL(value) : null}
+                                                    filename={value?.name}
+                                                    onChangeFile={file => onChange(file)}
+                                                    acceptType={['.docx']}
+                                                >
+                                                    <FileInputName tooltipType="name" />
+                                                </FileInput>
+                                            </FlexContainer>
+                                        );
+                                    }
                                 }
                             />
                             : <FormField<string>

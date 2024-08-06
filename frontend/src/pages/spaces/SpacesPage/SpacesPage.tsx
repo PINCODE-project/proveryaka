@@ -35,7 +35,6 @@ export const SpacesPage: FC<Props> = typedMemo(({
     const { data, isLoading } = useGetSpaces(filters);
     const { data: isOrganizer } = useQuery('userinfo', async () => {
         const a: any = await ssoHttp.get('connect/userinfo').then(extractData);
-        console.log(a);
         return a.role === 'admin';
     });
 
