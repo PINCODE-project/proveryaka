@@ -1,6 +1,7 @@
 import { Typography } from 'antd';
 import { Formik } from 'formik';
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { useQueryClient } from 'react-query';
 import * as Yup from 'yup';
 
 import { useCreateReview } from '@features/solution/create-review/lib/useCreateReview';
@@ -44,6 +45,7 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
     issue,
     'data-testid': dataTestId = 'CreateReviewForm',
 }) {
+    const queryClient = useQueryClient();
     const { data: rawSolution } = useGetExpertSolution(solutionId);
     const [solution, setSolution] = useState<GetSolutionForExpert | null>(null);
 
@@ -71,7 +73,10 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
     const [currentCriteriaOrder, setCurrentCriteriaOrder] = useState<number | null>(null);
     const { mutate: review } = useCreateReview({
         onSuccess: () => {
-
+            queryClient.resetQueries(['solution-reviews/get', solutionId]);
+        },
+        onSettled: () => {
+            queryClient.resetQueries(['solution-reviews/get', solutionId]);
         },
     });
 
@@ -108,18 +113,23 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
     }, [criteria]);
 
     const getMark = useCallback((form: CriteriaReview) => {
-        let totalPercent = 0;
         let mark = 0;
 
-        for (let i = 0; i <= criteria.length; i++) {
-            mark += (form.reviewsByCriteria[i]?.scoreCount ?? 0) * criteria[0].maxScore;
-            totalPercent += criteria[0].maxScore;
+        for (let i = 0; i < criteria.length; i++) {
+            mark += (form.reviewsByCriteria[i]?.scoreCount ?? 0) * criteria[i].weight;
         }
-        return Math.floor(mark / totalPercent);
+
+        return mark;
     }, [criteria]);
 
     const maxMark = useMemo(() => {
-        return criteria.reduce((prev, curr) => prev + curr.maxScore, 0);
+        let mark = 0;
+
+        for (let i = 0; i < criteria.length; i++) {
+            mark += criteria[i].maxScore * criteria[i].weight;
+        }
+
+        return mark;
     }, [criteria]);
 
     return (

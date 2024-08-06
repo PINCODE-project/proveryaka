@@ -49,3 +49,7 @@
 .CriteriaForm__criteriaDesc {
     color: var(--default-forefround-3)
 }
+
+.CriteriaForm__weight {
+    font-weight: var(--font-weight-medium)
+}
