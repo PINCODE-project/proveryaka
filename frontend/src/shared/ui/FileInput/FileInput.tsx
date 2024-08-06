@@ -1,5 +1,6 @@
 import {
-    ChangeEventHandler, DragEventHandler,
+    ChangeEventHandler,
+    DragEventHandler,
     FC,
     MouseEventHandler,
     PropsWithChildren,
@@ -18,7 +19,11 @@ import { InputProps, Text, getFlexContainerStyleClasses } from '@shared/ui';
 import styles from './FileInput.module.css';
 import { FileInputContextProvider } from './FileInputContext';
 
-export type Props = ClassNameProps & TestProps & InputProps & PropsWithChildren & Readonly<{
+export type Props = ClassNameProps &
+  TestProps &
+  InputProps &
+  PropsWithChildren &
+  Readonly<{
     /**
      * Ссылка на выбранный файл
      */
@@ -42,7 +47,7 @@ export type Props = ClassNameProps & TestProps & InputProps & PropsWithChildren 
     acceptType: string[];
 
     filename?: string;
-}>;
+  }>;
 
 const ERROR_DISPLAY_TIME = 3000;
 
@@ -59,7 +64,7 @@ export const FileInput: FC<Props> = typedMemo(function FileInput({
     fileUrl,
     onChangeFile,
     filename,
-    maxSizeByMb = 0.5,
+    maxSizeByMb = 100,
     acceptType,
     children,
     placeholder,
@@ -89,26 +94,34 @@ export const FileInput: FC<Props> = typedMemo(function FileInput({
         }
     }, []);
 
-    const onChange: ChangeEventHandler<HTMLInputElement> = useCallback(event => {
-        const file = event.target.files?.[0] ?? null;
-        const fileNameParts = file?.name.split('.') ?? [null];
-        const fileType = fileNameParts[fileNameParts.length - 1];
+    const onChange: ChangeEventHandler<HTMLInputElement> = useCallback(
+        event => {
+            const file = event.target.files?.[0] ?? null;
+            const fileNameParts = file?.name.split('.') ?? [null];
+            const fileType = fileNameParts[fileNameParts.length - 1];
 
-        if (file && file.size > maxSizeByMb * 1024 * 1024 * 8) {
-            changeError(t('warning_file_size', { size: maxSizeByMb }));
-        } else if (file && fileType && !acceptType?.includes(`.${fileType}`)) {
-            changeError(`${t('warning_file_formats')} ${acceptType.join(', ')}`);
-        } else {
+            if (file && file.size > maxSizeByMb * 1024 * 1024 * 8) {
+                changeError(
+                    t('Минимальный размер файла: 100мб', { size: maxSizeByMb }),
+                );
+            } else if (file && fileType && !acceptType?.includes(`.${fileType}`)) {
+                changeError(`${t('Допустимые расширения файла:')} ${acceptType.join(', ')}`);
+            } else {
+                changeError(null);
+                file && onChangeFile(file);
+            }
+        },
+        [changeError, maxSizeByMb, acceptType, onChangeFile, t],
+    );
+
+    const onClear: MouseEventHandler<HTMLButtonElement> = useCallback(
+        event => {
+            event.preventDefault();
+            onChangeFile(null);
             changeError(null);
-            file && onChangeFile(file);
-        }
-    }, [changeError, maxSizeByMb, acceptType, onChangeFile, t]);
-
-    const onClear: MouseEventHandler<HTMLButtonElement> = useCallback(event => {
-        event.preventDefault();
-        onChangeFile(null);
-        changeError(null);
-    }, [onChangeFile, changeError]);
+        },
+        [onChangeFile, changeError],
+    );
 
     const onDragEnter: DragEventHandler<HTMLInputElement> = useCallback(() => {
         setIsDragging(true);
@@ -119,7 +132,10 @@ export const FileInput: FC<Props> = typedMemo(function FileInput({
     }, []);
 
     return (
-        <FileInputContextProvider fileUrl={fileUrl} onClear={onClear} disabled={disabled}
+        <FileInputContextProvider
+            fileUrl={fileUrl}
+            onClear={onClear}
+            disabled={disabled}
             filename={filename}
         >
             <label
@@ -146,16 +162,18 @@ export const FileInput: FC<Props> = typedMemo(function FileInput({
                     onChange={onChange}
                 />
 
-                {
-                    fileUrl
-                        ? children
-                        : <Text
+                {fileUrl
+                    ? (
+                        children
+                    )
+                    : (
+                        <Text
                             className={getBemClasses(styles, 'placeholder')}
                             data-testid={`${dataTestId}.placeholder${error ? '.error' : ''}`}
                         >
                             {error ?? placeholder ?? t('click_or_drag_files')}
                         </Text>
-                }
+                    )}
             </label>
         </FileInputContextProvider>
     );
