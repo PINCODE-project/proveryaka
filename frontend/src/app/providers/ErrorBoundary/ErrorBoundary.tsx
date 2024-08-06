@@ -26,10 +26,12 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
         if (hasError) {
             return (
-                <Suspense fallback="" >
+                <Suspense fallback="">
                     Упс, произошла ошибка 🥲 <br />
                     Оставьте сообщение, чтобы мы могли разобраться:
-                    https://docs.google.com/forms/d/e/1FAIpQLSc0bhr6uMUgHcM3COjc4LpBJ8fDG8qzvpx_rw188ot4UR7jKA/viewform?embedded=true
+                    <a href={'https://docs.google.com/forms/d/e/1FAIpQLSc0bhr6uMUgHcM3COjc4LpBJ8fDG8qzvpx_rw188ot4UR7jKA/viewform?embedded=true'} target="_blank" rel="noreferrer">
+                        форма обратной связи
+                    </a>
                 </Suspense >
             );
         }
