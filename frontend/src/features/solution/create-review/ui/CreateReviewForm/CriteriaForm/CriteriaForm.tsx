@@ -1,15 +1,20 @@
 import { InputNumber, Typography } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 
 import { CriteriaReviewByCriteria } from '@features/solution/create-review/model/CriteriaReviewByCriteria';
 
 import { GetCriteriaResponse } from '@entities/criteria';
+import { useGetIssueCriteria } from '@entities/criteria/lib/useGetIssueCriteria';
+import { ExampleType } from '@entities/example/common';
+import { useGetCriteriaExamples } from '@entities/example/criteria-example';
 
 import ChevronDown from '@shared/assets/icons/ChevronDown.svg';
+import WarningCircle from '@shared/assets/icons/WarningCircle.svg';
+import { useListFilters } from '@shared/hooks';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { FlexContainer, FormField } from '@shared/ui';
+import { Button, FlexContainer, FormField, SolutionExample } from '@shared/ui';
 
 import styles from './CriteriaForm.module.css';
 
@@ -28,6 +33,13 @@ export const CriteriaForm: FC<Props> = typedMemo(function CriteriaForm({
     className,
     'data-testid': dataTestId = 'CriteriaForm',
 }) {
+    const [filters] = useListFilters();
+    const { data: examples } = useGetCriteriaExamples(criteria.id, filters);
+    const standardExamples = useMemo(() => examples?.entityList
+        ?.filter(example => example.exampleType == ExampleType.Standard) ?? [], [examples]);
+    const antiExamples = useMemo(() => examples?.entityList
+        ?.filter(example => example.exampleType == ExampleType.AntiExample) ?? [], [examples]);
+
     return (
         <FormField<CriteriaReviewByCriteria>
             name={`reviewsByCriteria[${order}]`}
@@ -35,7 +47,15 @@ export const CriteriaForm: FC<Props> = typedMemo(function CriteriaForm({
             content={
                 ({ value, error }) => (
                     <FlexContainer
-                        className={getBemClasses(styles, null, { isOpen }, className)}
+                        className={getBemClasses(
+                            styles,
+                            null,
+                            {
+                                isOpen,
+                                isError: Boolean(error),
+                                isDone: true,
+                            },
+                            className)}
                         direction="column"
                         gap="m"
                     >
@@ -57,12 +77,20 @@ export const CriteriaForm: FC<Props> = typedMemo(function CriteriaForm({
                                 alignItems="start"
                             >
                                 <ChevronDown className={getBemClasses(styles, 'openArrowIcon')} />
-                                {order}. {criteria.name}
+                                {order + 1}. {criteria.name}
                             </FlexContainer>
 
-                            <Typography className={getBemClasses(styles, 'score', { done: value.scoreCount !== null })}>
-                                {value.scoreCount ?? '-'}/{criteria.maxScore}
-                            </Typography>
+                            {value?.scoreCount !== null && value?.scoreCount !== undefined
+                                ? (
+                                    <Typography
+                                        className={getBemClasses(styles, 'score', { done: value?.scoreCount !== null })}
+                                    >
+                                        {value?.scoreCount}/{criteria.maxScore}
+                                    </Typography>
+                                )
+                                : error
+                                    ? null
+                                    : <WarningCircle className={getBemClasses(styles, 'warningIcon')} />}
                         </FlexContainer>
 
                         <FlexContainer
@@ -75,6 +103,16 @@ export const CriteriaForm: FC<Props> = typedMemo(function CriteriaForm({
                                 {criteria.description}
                             </Typography>
 
+                            <SolutionExample
+                                example={standardExamples}
+                                antiExample={antiExamples}
+                                triggerComponent={open => (
+                                    <Typography onClick={open} className={getBemClasses(styles, 'exampleButton')}>
+                                        Примеры выполнения
+                                    </Typography>
+                                )}
+                            />
+
                             <Typography className={getBemClasses(styles, 'weight')}>
                                 Вес критерия: {criteria.weight}
                             </Typography>
@@ -82,13 +120,14 @@ export const CriteriaForm: FC<Props> = typedMemo(function CriteriaForm({
                             <FlexContainer direction="column" gap="s">
                                 <FormField<number>
                                     name={`reviewsByCriteria[${order}].scoreCount`}
-                                    label={`Оценка: ${criteria.minScore}-${criteria.maxScore}`}
+                                    label={`Оценка от ${criteria.minScore} до ${criteria.maxScore}:`}
                                     content={
                                         ({ onChange, value, isInvalid }) => (
                                             <InputNumber
                                                 min={criteria.minScore}
                                                 max={criteria.maxScore}
                                                 value={value}
+                                                status={isInvalid ? 'error' : undefined}
                                                 className={getBemClasses(styles, 'numberField')}
                                                 onChange={value => onChange(value ?? 0)}
                                             />

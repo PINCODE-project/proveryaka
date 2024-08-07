@@ -3,8 +3,20 @@
     width: 100%;
 }
 
+.CriteriaForm {
+    border: 2px solid transparent;
+    border-radius: var(--border-radius-m);
+    overflow: hidden;
+    background-color: var(--default-background-2);
+}
+
+.CriteriaForm_isError {
+    border-color: #ff4d4f;
+}
+
 .CriteriaForm__additional {
     width: 100%;
+    padding: 8px 12px;
 }
 
 .CriteriaForm:not(.CriteriaForm_isOpen) .CriteriaForm__additional {
@@ -36,6 +48,19 @@
 
 .CriteriaForm__header {
     width: 100%;
+    padding: 8px 12px;
+}
+
+.CriteriaForm_isError .CriteriaForm__header {
+    background-color: #ff4d4f;
+}
+
+.CriteriaForm_isError .CriteriaForm__headerName{
+    color: #fff
+}
+
+.CriteriaForm_isError .CriteriaForm__score {
+    color: #fff
 }
 
 .CriteriaForm__headerName {
@@ -53,4 +78,24 @@
 
 .CriteriaForm__weight {
     font-weight: var(--font-weight-medium)
+}
+
+.CriteriaForm__field {
+    gap: 0;
+}
+
+.CriteriaForm__field > p {
+    display: none;
+}
+
+.CriteriaForm__warningIcon {
+    width: 20px;
+    height: 20px;
+    fill: #faad14;
+}
+
+.CriteriaForm__exampleButton {
+    color: var(--brand-background);
+    cursor: pointer;
+    font-weight: var(--font-weight-semibold);
 }

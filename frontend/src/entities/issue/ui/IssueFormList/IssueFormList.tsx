@@ -7,9 +7,11 @@ import { useGetIssueFormList } from '@entities/issue/lib/useGetIssueFormList';
 import { FormSolutionType } from '@entities/issue/model/FormSolutionType';
 import { GetSolutionValue } from '@entities/solution/model/GetSolutionValue';
 
-import { typedMemo } from '@shared/lib';
+import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { Button, FileInput, FileInputName, FlexContainer, FormField, Text, Textarea } from '@shared/ui';
+
+import styles from './IssueFormList.module.css';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     issueId: string;
@@ -94,6 +96,7 @@ export const IssueFormList: FC<Props> = typedMemo(function IssueFormList({
                                         <FlexContainer direction="column" gap="xs" style={{ width: '100%' }}>
                                             <Text>{form.description}</Text>
                                             <Textarea
+                                                className={getBemClasses(styles, 'textarea', { disabled })}
                                                 disabled={disabled}
                                                 value={value}
                                                 invalid={isInvalid}

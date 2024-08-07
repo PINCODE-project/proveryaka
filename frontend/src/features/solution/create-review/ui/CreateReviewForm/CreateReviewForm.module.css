@@ -9,7 +9,7 @@
     height: calc(100vh - 215px - var(--space-m) * 2);
     overflow: auto;
     background-color: #fff;
-    border-radius: var(--border-radius-m);
+    border-radius: var(--border-radius-l);
     padding: var(--space-m);
 }
 

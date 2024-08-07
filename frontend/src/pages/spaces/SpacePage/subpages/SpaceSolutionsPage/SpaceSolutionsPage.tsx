@@ -101,7 +101,7 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
                                 className={getBemClasses(styles, 'workLink')}
                             >
                                 <SolutionCard
-                                    order={index}
+                                    order={index + 1}
                                     showOrder={true}
                                     showAvatar={false}
                                     showGradingCount={isOrganizer}

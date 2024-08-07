@@ -8,22 +8,21 @@ import { SpaceRouter } from '@pages/spaces';
 import { PageComponent } from '@widgets/PageComponent';
 
 import { AddUserInSpaceModal } from '@features/space/add-user-in-space';
-import { copySpaceCode, CopySpaceCode } from '@features/space/copy-space-code';
+import { copySpaceCode } from '@features/space/copy-space-code';
 import { useDeleteSpace } from '@features/space/delete-space';
 import { EditSpaceModal } from '@features/space/edit-space';
-import { RegenerateSpaceCodeButton, useRegenerateSpaceCode } from '@features/space/regenerate-space-code';
+import { useRegenerateSpaceCode } from '@features/space/regenerate-space-code';
 
 import { getSpacesQueryKey } from '@entities/space';
 import { getSpaceQueryKey } from '@entities/space/lib/getSpaceQueryKey';
 import { useGetSpace } from '@entities/space/lib/useGetSpace';
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
-import ChevronLeft from '@shared/assets/icons/ChevronLeft.svg';
 import { useFileUrlById } from '@shared/hooks';
 import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { TestProps, ClassNameProps } from '@shared/types';
-import { Button, FlexContainer, Image, Link, Loader, SettingsDropdown, Text } from '@shared/ui';
+import { FlexContainer, Loader, SettingsDropdown, Text } from '@shared/ui';
 
 import { NavTab } from './NavTab/NavTab';
 import styles from './SpacePage.module.css';
@@ -138,19 +137,13 @@ export const SpacePage: FC<Props> = typedMemo(({
                         >
                             {space.name?.[0]}
                         </FlexContainer>
-                        {/* <Image
-                            src={iconUrl}
-                            alt="space avatar"
-                            placeholderSrc={'https://masterpiecer-images.s3.yandex.net/4b4e8fbd579411ee8d01e6d39d9a42a4:upscaled'}
-                            className={getBemClasses(styles, 'avatar')}
-                        /> */}
                         <Text className={getBemClasses(styles, 'name')}>
                             {space.name}
                         </Text>
                     </FlexContainer>
 
                     {(isOrganizer || isStudent) ? <NavTab to={SpaceRouter.Tasks(spaceId)} name="Задания" /> : null}
-                    <NavTab to={SpaceRouter.Works(spaceId)} name="Работы" />
+                    <NavTab to={SpaceRouter.Works(spaceId)} name="Работы" end={false} />
                     {(isOrganizer || isStudent) ? <NavTab to={SpaceRouter.Users(spaceId)} name="Участники" /> : null}
                     {(isOrganizer || isStudent) ? <NavTab to={SpaceRouter.Team(spaceId)} name="Команды" /> : null}
                 </FlexContainer>

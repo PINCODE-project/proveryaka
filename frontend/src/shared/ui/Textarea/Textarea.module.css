@@ -44,7 +44,6 @@
 }
 
 .Textarea:disabled {
-    pointer-events: none;
     background-color: var(--default-background-2);
     color: var(--default-forefround-2);
 }

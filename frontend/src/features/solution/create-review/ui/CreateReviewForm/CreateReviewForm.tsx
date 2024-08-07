@@ -2,6 +2,7 @@ import { Typography } from 'antd';
 import { Formik } from 'formik';
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { useQueryClient } from 'react-query';
+import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 
 import { useCreateReview } from '@features/solution/create-review/lib/useCreateReview';
@@ -74,6 +75,7 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
     const { mutate: review } = useCreateReview({
         onSuccess: () => {
             queryClient.resetQueries(['solution-reviews/get', solutionId]);
+            toast.success('Работа оценена');
         },
         onSettled: () => {
             queryClient.resetQueries(['solution-reviews/get', solutionId]);
@@ -103,7 +105,8 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
             comment: Yup.string().required('Введите общий комментарий'),
             // @ts-ignore
             reviewsByCriteria: Yup.tuple(criteria.map(item => Yup.object({
-                scoreCount: Yup.number().nullable()
+                scoreCount: Yup.number()
+                    .nullable(`Введите оценку от ${item.minScore} до ${item.maxScore}`)
                     .required(`Введите оценку от ${item.minScore} до ${item.maxScore}`)
                     .min(item.minScore, `Введите оценку от ${item.minScore} до ${item.maxScore}`)
                     .max(item.maxScore, `Введите оценку от ${item.minScore} до ${item.maxScore}`),
@@ -116,25 +119,25 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
         let mark = 0;
 
         for (let i = 0; i < criteria.length; i++) {
-            mark += (form.reviewsByCriteria[i]?.scoreCount ?? 0) * criteria[i].weight;
+            mark += (form.reviewsByCriteria[i]?.scoreCount ?? 0) / (criteria[i].maxScore) * criteria[i].weight;
         }
 
-        return mark;
+        return mark * 100;
     }, [criteria]);
 
     const maxMark = useMemo(() => {
         let mark = 0;
 
         for (let i = 0; i < criteria.length; i++) {
-            mark += criteria[i].maxScore * criteria[i].weight;
+            mark += criteria[i].weight;
         }
 
-        return mark;
+        return mark * 100;
     }, [criteria]);
 
     return (
         <Formik initialValues={initialValue} onSubmit={review} validationSchema={validationSchema}>
-            {({ handleSubmit, values, errors }) => {
+            {({ handleSubmit, values, errors, isValid }) => {
                 return (
                     <div
                         className={getBemClasses(styles, null, null, className)}
@@ -226,11 +229,14 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
                                 alignItems="center"
                             >
                                 <Typography className={getBemClasses(styles, 'mark')}>
-                                Итоговая оценка: {getMark(values)}/{maxMark}
+                                    Итоговая оценка: {getMark(values)}/{maxMark}
                                 </Typography>
 
-                                <Button onClick={() => handleSubmit()}>
-                                Оценить
+                                <Button
+                                    onClick={() => handleSubmit()}
+                                    disabled={!isValid}
+                                >
+                                    Оценить
                                 </Button>
                             </FlexContainer>
 
