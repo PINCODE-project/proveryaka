@@ -17,14 +17,25 @@ export const SpaceRouter = {
     Main: '/spaces',
     Space: (spaceId: number | string) => `/spaces/${spaceId}`,
     Tasks: (spaceId: number | string) => `/spaces/${spaceId}/tasks`,
-    Task: (spaceId: number | string, issueId: number | string) => `/spaces/${spaceId}/tasks/${issueId}`,
-    EditTask: (spaceId: number | string, issueId: number | string) => `/spaces/${spaceId}/tasks/${issueId}/edit`,
-    TaskWork: (spaceId: number | string, issueId: number | string, workId: number | string) => `/spaces/${spaceId}/tasks/${issueId}/works/${workId}`,
-    EstimateTaskWork: (spaceId: number | string, issueId: number | string, workId: number | string) => `/spaces/${spaceId}/tasks/${issueId}/works/${workId}/estimate`,
+    Task: (spaceId: number | string, issueId: number | string) =>
+        `/spaces/${spaceId}/tasks/${issueId}`,
+    EditTask: (spaceId: number | string, issueId: number | string) =>
+        `/spaces/${spaceId}/tasks/${issueId}/edit`,
+    TaskWork: (
+        spaceId: number | string,
+        issueId: number | string,
+        workId: number | string,
+    ) => `/spaces/${spaceId}/tasks/${issueId}/works/${workId}`,
+    EstimateTaskWork: (
+        spaceId: number | string,
+        issueId: number | string,
+        workId: number | string,
+    ) => `/spaces/${spaceId}/tasks/${issueId}/works/${workId}/estimate`,
     Works: (spaceId: number | string) => `/spaces/${spaceId}/works`,
     Users: (spaceId: number | string) => `/spaces/${spaceId}/users`,
     Team: (spaceId: number | string) => `/spaces/${spaceId}/team`,
-    User: (spaceId: number | string, userId: number | string) => `/spaces/${spaceId}/users/${userId}`,
+    User: (spaceId: number | string, userId: number | string) =>
+        `/spaces/${spaceId}/users/${userId}`,
 };
 
 export const spacesRouteConfig: ConfigRouteProps[] = [
@@ -46,7 +57,11 @@ export const spacesRouteConfig: ConfigRouteProps[] = [
                 element: <SpaceSolutionPage />,
             },
             {
-                path: SpaceRouter.EstimateTaskWork(':spaceId', ':issueId', ':solutionId'),
+                path: SpaceRouter.EstimateTaskWork(
+                    ':spaceId',
+                    ':issueId',
+                    ':solutionId',
+                ),
                 element: <SpaceEngineeringWorksPage />, // <SpaceCreateReviewPage />, //
             },
             {
@@ -59,7 +74,7 @@ export const spacesRouteConfig: ConfigRouteProps[] = [
             },
             {
                 path: SpaceRouter.Works(':spaceId'),
-                element: <SpaceSolutionsPage />,
+                element: <SpaceEngineeringWorksPage />, // <SpaceSolutionsPage />,
             },
             {
                 path: SpaceRouter.User(':spaceId', ':userId'),
