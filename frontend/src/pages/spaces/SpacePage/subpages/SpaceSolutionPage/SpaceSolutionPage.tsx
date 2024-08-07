@@ -79,7 +79,7 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
     const canReview = useCanReviewSolution(solutionId ?? '', spaceId ?? '');
     const hasReview = useHasCurrentUserMark(solutionId ?? '', user?.id ?? '');
     console.log(canReview, hasReview);
-    if (false && !isOrganizer) {
+    if (!isOrganizer) {
         return <SpaceEngineeringWorksPage />;
     }
     return (
