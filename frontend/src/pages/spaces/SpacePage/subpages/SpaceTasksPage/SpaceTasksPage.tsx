@@ -50,7 +50,7 @@ export const SpaceTasksPage: FC<Props> = typedMemo(function SpaceTasksPage({
 
                 return ({
                     ...issue,
-                    innerStatus: getIssueStatus(issue, Boolean(solution)),
+                    innerStatus: getIssueStatus(issue, Boolean(solution), isStudent),
                 });
             }));
             setIssues(issues);

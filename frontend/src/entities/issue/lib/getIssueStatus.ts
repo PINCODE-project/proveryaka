@@ -4,7 +4,7 @@ import { GetIssueResponse } from '@entities/issue';
 import { IssueStatus } from '@entities/issue/model/IssueStatus';
 import { GetSolution } from '@entities/solution/model/GetSolution';
 
-export function getIssueStatus(issue: GetIssueResponse, hasSolution: boolean): IssueStatus {
+export function getIssueStatus(issue: GetIssueResponse, hasSolution: boolean, isStudent: boolean): IssueStatus {
     const workDeadline = dayjs(issue.submitDeadlineDateUtc).toDate();
     const gradeDeadline = dayjs(issue.assessmentDeadlineDateUtc).toDate();
     const now = new Date();
@@ -12,7 +12,7 @@ export function getIssueStatus(issue: GetIssueResponse, hasSolution: boolean): I
     if (now < workDeadline && !hasSolution) {
         return IssueStatus.InWork;
     }
-    if (now > workDeadline && !hasSolution) {
+    if (now > workDeadline && !hasSolution && isStudent) {
         return IssueStatus.OverdueWork;
     }
     if (now < gradeDeadline || hasSolution) {
