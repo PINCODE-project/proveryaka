@@ -47,7 +47,7 @@ export const spacesRouteConfig: ConfigRouteProps[] = [
             },
             {
                 path: SpaceRouter.EstimateTaskWork(':spaceId', ':issueId', ':solutionId'),
-                element: <SpaceEngineeringWorksPage />, // <SpaceCreateReviewPage />, //
+                element: <SpaceCreateReviewPage />, // <SpaceEngineeringWorksPage/>
             },
             {
                 path: SpaceRouter.Task(':spaceId', ':issueId'),
