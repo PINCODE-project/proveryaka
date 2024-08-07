@@ -1,19 +1,22 @@
-import { FC, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/spaces';
 
 import { SolutionCard } from '@entities/solution';
+import { getSolutionReviews } from '@entities/solution/api/getSolutionReviews';
 import { getSolutionStatus } from '@entities/solution/lib/getSolutionStatus';
 import { useGetExpertSolutions } from '@entities/solution/lib/useGetExpertSolutions';
 import { useHasCurrentUserMark } from '@entities/solution/lib/useHasCurrentUserMark';
+import { GetSolutionForExpert } from '@entities/solution/model/GetSolutionForExpert';
 import { SolutionStatus } from '@entities/solution/model/SolutionStatus';
 import { TaskStatus } from '@entities/space';
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
+import { useGetCurrentUserInfo } from '@entities/user';
 
 import { useListFilters } from '@shared/hooks';
 import { useSpaceId } from '@shared/hooks/useSpaceId';
-import { getBemClasses, typedMemo } from '@shared/lib';
+import { extractData, getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { FlexContainer, Input, NavTab } from '@shared/ui';
 
@@ -31,12 +34,30 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
     const [status, setStatus] = useState(SolutionStatus.InGrade);
     const [search, setSearch] = useState('');
 
+    const { data: user } = useGetCurrentUserInfo();
     const { data: rawSolutions } = useGetExpertSolutions(spaceId ?? '', filters);
 
-    const solutions = useMemo(() => rawSolutions?.map(solution => ({
-        ...solution,
-        status: getSolutionStatus(solution),
-    })), [rawSolutions]);
+    const [solutions, setSolutions] = useState<GetSolutionForExpert[] | null>(null);
+
+    useEffect(() => {
+        if (!rawSolutions) {
+            return;
+        }
+
+        (async () => {
+            const solutions = await Promise.all(rawSolutions?.map(async solution => {
+                const hasReview = (await getSolutionReviews(solution.id))
+                    ?.reviews.find(review => review.userId === user?.id);
+
+                return {
+                    ...solution,
+                    status: getSolutionStatus(solution, Boolean(hasReview)),
+                };
+            }));
+
+            setSolutions(solutions);
+        })();
+    }, [user, rawSolutions]);
 
     return (
         <FlexContainer
@@ -68,6 +89,11 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
                         isActive={status === SolutionStatus.OverdueGrade}
                         name="Просрочена проверка"
                         onClick={() => setStatus(SolutionStatus.OverdueGrade)}
+                    />
+                    <NavTab
+                        isActive={status === SolutionStatus.Done}
+                        name="Завершено"
+                        onClick={() => setStatus(SolutionStatus.Done)}
                     />
                 </FlexContainer>
 
