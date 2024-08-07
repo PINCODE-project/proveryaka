@@ -45,14 +45,18 @@ export const SpaceTasksPage: FC<Props> = typedMemo(function SpaceTasksPage({
             if (!rawIssues || !rawIssues.entityList) {
                 return;
             }
-            const issues = await Promise.all(rawIssues!.entityList!.map(async issue => {
-                const solution = isStudent ? await getStudentIssueSolution(issue.id) : false;
+            const issues = await Promise.all(
+        rawIssues!.entityList!.map(async issue => {
+            const solution = isStudent
+                ? await getStudentIssueSolution(issue.id)
+                : false;
 
-                return ({
-                    ...issue,
-                    innerStatus: getIssueStatus(issue, Boolean(solution)),
-                });
-            }));
+            return {
+                ...issue,
+                innerStatus: getIssueStatus(issue, Boolean(solution), isStudent),
+            };
+        }),
+            );
             setIssues(issues);
         })();
     }, [rawIssues]);
@@ -84,11 +88,13 @@ export const SpaceTasksPage: FC<Props> = typedMemo(function SpaceTasksPage({
                         onClick={() => setStatus(IssueStatus.InWork)}
                     />
                     {isStudent
-                        ? <NavTab
-                            isActive={status === IssueStatus.OverdueWork}
-                            name="Просрочена сдача"
-                            onClick={() => setStatus(IssueStatus.OverdueWork)}
-                        />
+                        ? (
+                            <NavTab
+                                isActive={status === IssueStatus.OverdueWork}
+                                name="Просрочена сдача"
+                                onClick={() => setStatus(IssueStatus.OverdueWork)}
+                            />
+                        )
                         : null}
                     <NavTab
                         isActive={status === IssueStatus.InGrade}
@@ -96,11 +102,13 @@ export const SpaceTasksPage: FC<Props> = typedMemo(function SpaceTasksPage({
                         onClick={() => setStatus(IssueStatus.InGrade)}
                     />
                     {isOrganizer
-                        ? <NavTab
-                            isActive={status === IssueStatus.OverdueGrade}
-                            name="Просрочена проверка"
-                            onClick={() => setStatus(IssueStatus.OverdueGrade)}
-                        />
+                        ? (
+                            <NavTab
+                                isActive={status === IssueStatus.OverdueGrade}
+                                name="Просрочена проверка"
+                                onClick={() => setStatus(IssueStatus.OverdueGrade)}
+                            />
+                        )
                         : null}
                     <NavTab
                         isActive={status === IssueStatus.Done}
@@ -110,14 +118,14 @@ export const SpaceTasksPage: FC<Props> = typedMemo(function SpaceTasksPage({
                 </FlexContainer>
 
                 {isOrganizer
-                    ? <CreateIssueFullForm
-                        triggerElement={open => (
-                            <Button onClick={open}>
-                                Создать задание
-                            </Button>
-                        )}
-                        spaceId={spaceId ?? ''}
-                    />
+                    ? (
+                        <CreateIssueFullForm
+                            triggerElement={open => (
+                                <Button onClick={open}>Создать задание</Button>
+                            )}
+                            spaceId={spaceId ?? ''}
+                        />
+                    )
                     : null}
 
                 {/* <FlexContainer
@@ -140,26 +148,28 @@ export const SpaceTasksPage: FC<Props> = typedMemo(function SpaceTasksPage({
                 direction="column"
                 className={getBemClasses(styles, 'tasks')}
             >
-                {issues.map(issue => (
+                {issues.map(issue =>
                     issue.innerStatus === status
-                        ? <NavLink
-                            to={SpaceRouter.Task(spaceId ?? '', issue.id)}
-                            className={getBemClasses(styles, 'taskLink')}
-                        >
-                            <TaskCard
-                                showActions={isOrganizer}
-                                className={getBemClasses(styles, 'task')}
-                                showSpaceName={false}
-                                showAvatar={false}
-                                showAssignmentCount={isOrganizer}
-                                showGradingCount={isOrganizer}
-                                status={issue.innerStatus}
-                                issue={issue}
-                                space={space}
-                            />
-                        </NavLink>
-                        : null
-                ))}
+                        ? (
+                            <NavLink
+                                to={SpaceRouter.Task(spaceId ?? '', issue.id)}
+                                className={getBemClasses(styles, 'taskLink')}
+                            >
+                                <TaskCard
+                                    showActions={isOrganizer}
+                                    className={getBemClasses(styles, 'task')}
+                                    showSpaceName={false}
+                                    showAvatar={false}
+                                    showAssignmentCount={isOrganizer}
+                                    showGradingCount={isOrganizer}
+                                    status={issue.innerStatus}
+                                    issue={issue}
+                                    space={space}
+                                />
+                            </NavLink>
+                        )
+                        : null,
+                )}
             </FlexContainer>
         </FlexContainer>
     );
