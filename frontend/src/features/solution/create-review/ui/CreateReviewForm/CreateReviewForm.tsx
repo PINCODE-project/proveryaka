@@ -122,7 +122,7 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
             mark += (form.reviewsByCriteria[i]?.scoreCount ?? 0) / (criteria[i].maxScore) * criteria[i].weight;
         }
 
-        return mark * 100;
+        return Math.min(Math.floor(mark * 100), 100);
     }, [criteria]);
 
     const maxMark = useMemo(() => {
@@ -132,7 +132,7 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
             mark += criteria[i].weight;
         }
 
-        return mark * 100;
+        return Math.min(Math.floor(mark * 100), 100);
     }, [criteria]);
 
     return (
