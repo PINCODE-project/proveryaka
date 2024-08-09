@@ -82,6 +82,7 @@
 
 .CriteriaForm__field {
     gap: 0;
+    max-height: fit-content;
 }
 
 .CriteriaForm__field > p {

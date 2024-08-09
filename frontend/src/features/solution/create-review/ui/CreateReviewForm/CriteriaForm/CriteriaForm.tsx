@@ -141,6 +141,9 @@ export const CriteriaForm: FC<Props> = typedMemo(function CriteriaForm({
                                         ({ onChange, value, isInvalid }) => (
                                             <TextArea
                                                 value={value}
+                                                showCount
+                                                status={isInvalid ? 'error' : undefined}
+                                                maxLength={256}
                                                 onChange={event => onChange(event.target.value)}
                                                 onBlur={event => onChange(event.target.value.trim())}
                                             />

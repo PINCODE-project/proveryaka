@@ -1,4 +1,5 @@
 import { Typography } from 'antd';
+import TextArea from 'antd/lib/input/TextArea';
 import { Formik } from 'formik';
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { useQueryClient } from 'react-query';
@@ -110,7 +111,7 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
                     .required(`Введите оценку от ${item.minScore} до ${item.maxScore}`)
                     .min(item.minScore, `Введите оценку от ${item.minScore} до ${item.maxScore}`)
                     .max(item.maxScore, `Введите оценку от ${item.minScore} до ${item.maxScore}`),
-                comment: Yup.string(),
+                comment: Yup.string().max(256, 'Максимальная длина текста: 256'),
             }))),
         });
     }, [criteria]);
@@ -177,8 +178,11 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
                                             name="comment"
                                             content={
                                                 ({ onChange, value, isInvalid }) => (
-                                                    <Textarea
-                                                        invalid={isInvalid}
+                                                    <TextArea
+                                                        maxLength={256}
+                                                        showCount
+                                                        variant="filled"
+                                                        status={isInvalid ? 'error' : undefined}
                                                         value={value}
                                                         onChange={event => onChange(event.target.value)}
                                                         onBlur={event => onChange(event.target.value.trim())}
