@@ -111,7 +111,7 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
                     .required(`Введите оценку от ${item.minScore} до ${item.maxScore}`)
                     .min(item.minScore, `Введите оценку от ${item.minScore} до ${item.maxScore}`)
                     .max(item.maxScore, `Введите оценку от ${item.minScore} до ${item.maxScore}`),
-                comment: Yup.string().max(256, 'Максимальная длина текста: 256'),
+                comment: Yup.string().max(2047, 'Максимальная длина текста: 256'),
             }))),
         });
     }, [criteria]);
@@ -179,7 +179,7 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
                                             content={
                                                 ({ onChange, value, isInvalid }) => (
                                                     <TextArea
-                                                        maxLength={256}
+                                                        maxLength={2047}
                                                         showCount
                                                         variant="filled"
                                                         status={isInvalid ? 'error' : undefined}

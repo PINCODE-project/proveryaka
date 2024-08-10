@@ -143,7 +143,7 @@ export const CriteriaForm: FC<Props> = typedMemo(function CriteriaForm({
                                                 value={value}
                                                 showCount
                                                 status={isInvalid ? 'error' : undefined}
-                                                maxLength={256}
+                                                maxLength={2047}
                                                 onChange={event => onChange(event.target.value)}
                                                 onBlur={event => onChange(event.target.value.trim())}
                                             />
