@@ -1,5 +1,7 @@
 import { FC, useMemo, useState } from 'react';
 
+import { SolutionGrades } from '@pages/spaces/SpacePage/subpages/SpaceSolutionPage/SolutionGrades';
+
 import { useGetIssue } from '@entities/issue';
 import { useGetStudentIssueSolution } from '@entities/solution/lib/useGetStudentIssueSolution';
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
@@ -34,6 +36,9 @@ export const SpaceTaskPage: FC<Props> = typedMemo(function SpaceTaskPage({
     const [activeSection, setActiveSection] = useState(ActiveSection.Description);
 
     const { isOrganizer, isStudent } = useRolesCheck();
+    const { data: solution } = useGetStudentIssueSolution(issueId ?? '', {
+        enabled: isStudent,
+    });
 
     const content = useMemo(() => {
         if (!issue) {
@@ -56,6 +61,8 @@ export const SpaceTaskPage: FC<Props> = typedMemo(function SpaceTaskPage({
                 }]}
                 className={getBemClasses(styles, 'content')}
                 />);
+            case ActiveSection.Grades:
+                return <SolutionGrades solutionId={solution?.id ?? ''} />;
             case ActiveSection.Preparation:
                 return <TaskPreparation issue={issue} className={getBemClasses(styles, 'content')} />;
         }
@@ -69,6 +76,7 @@ export const SpaceTaskPage: FC<Props> = typedMemo(function SpaceTaskPage({
         <FlexContainer
             direction="column"
             gap="l"
+            alignItems="stretch"
             overflow="nowrap"
             className={getBemClasses(styles, null, null, className)}
             data-testid={dataTestId}

@@ -18,3 +18,9 @@ a {
     height: 100vh;
     background-color: var(--default-background-2);
 }
+
+.ant-pagination > * {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}

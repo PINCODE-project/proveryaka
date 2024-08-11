@@ -70,7 +70,7 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
                 return (<SolutionCriteria criteria={issueCriteria?.entityList ?? []}
                 />);
             case ActiveSection.Grades:
-                return <SolutionGrades />;
+                return <SolutionGrades solutionId={solutionId ?? ''} />;
         }
         return null;
     }, [activeSection]);
@@ -131,7 +131,7 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
                         onClick={() => setActiveSection(ActiveSection.Grades)}
                     />
                 </FlexContainer>
-                {canReview && hasReview === undefined
+                {canReview && hasReview === undefined && new Date() > new Date(solution?.assessmentDeadlineDateUtc ?? '')
                     ? <NavLink to={SpaceRouter.EstimateTaskWork(spaceId ?? '', issueId ?? '', solutionId ?? '')}>
                         <Button>
                         Оценить работу

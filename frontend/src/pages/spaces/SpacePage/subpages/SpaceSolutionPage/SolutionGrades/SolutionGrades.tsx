@@ -10,7 +10,9 @@ import { Button, FlexContainer, NavTab, SolutionExample, Text } from '@shared/ui
 
 import styles from './SolutionGrades.module.css';
 
-export type Props = ClassNameProps & TestProps & Readonly<{}>;
+export type Props = ClassNameProps & TestProps & Readonly<{
+    solutionId: string;
+}>;
 
 const columns = [
     {
@@ -27,10 +29,9 @@ const columns = [
 
 export const SolutionGrades: FC<Props> = typedMemo(function SolutionGrades({
     className,
+    solutionId,
     'data-testid': dataTestId = 'SolutionGrades',
 }) {
-    const solutionId = useSolutionId();
-
     const [currentIndex, setCurrentIndex] = useState<number | null>(null);
     const { data: reviews } = useGetSolutionReviews(solutionId ?? '');
 
