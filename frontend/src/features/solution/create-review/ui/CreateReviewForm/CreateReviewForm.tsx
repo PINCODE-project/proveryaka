@@ -73,7 +73,7 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
 
     const [currentTab, setCurrentTab] = useState(SolutionTab.Solution);
     const [currentCriteriaOrder, setCurrentCriteriaOrder] = useState<number | null>(null);
-    const { mutate: review } = useCreateReview({
+    const { mutate: review, isLoading } = useCreateReview({
         onSuccess: () => {
             queryClient.resetQueries(['solution-reviews/get', solutionId]);
             toast.success('Работа оценена');
@@ -238,7 +238,7 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
 
                                 <Button
                                     onClick={() => handleSubmit()}
-                                    disabled={!isValid}
+                                    disabled={!isValid || isLoading}
                                 >
                                     Оценить
                                 </Button>
