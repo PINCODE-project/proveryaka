@@ -13,7 +13,7 @@ export function getSolutionStatus(solution: GetSolutionForExpert, hasReview?: bo
         }
         return SolutionStatus.InGrade;
     }
-    if (solution.checksCountMax < solution.reviewCount) {
+    if (solution.reviewCount < solution.checksCountMax) {
         return SolutionStatus.OverdueGrade;
     }
     return SolutionStatus.Done;

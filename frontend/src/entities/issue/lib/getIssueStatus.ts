@@ -15,10 +15,10 @@ export function getIssueStatus(issue: GetIssueResponse, hasSolution: boolean, is
     if (now > workDeadline && !hasSolution && isStudent) {
         return IssueStatus.OverdueWork;
     }
-    if (now < gradeDeadline || hasSolution) {
+    if (now < gradeDeadline) {
         return IssueStatus.InGrade;
     }
-    if (issue.reviewedSolutionCount < issue.allSolutionCount) {
+    if (issue.reviewedSolutionCount < issue.allSolutionCount && !isStudent) {
         return IssueStatus.OverdueGrade;
     }
     return IssueStatus.Done;

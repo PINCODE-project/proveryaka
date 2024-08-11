@@ -131,7 +131,7 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
                         onClick={() => setActiveSection(ActiveSection.Grades)}
                     />
                 </FlexContainer>
-                {canReview && hasReview === undefined && new Date() > new Date(solution?.assessmentDeadlineDateUtc ?? '')
+                {canReview && hasReview === undefined && new Date() < new Date(solution?.assessmentDeadlineDateUtc ?? '')
                     ? <NavLink to={SpaceRouter.EstimateTaskWork(spaceId ?? '', issueId ?? '', solutionId ?? '')}>
                         <Button>
                         Оценить работу
