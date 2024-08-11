@@ -12,7 +12,7 @@ export type GetSolutionReviews = {
     teamId: string;
 
     /**
-     * Дата сдачи
+     * Дедлайн сдачи
      */
     submitAtUtc: string;
 

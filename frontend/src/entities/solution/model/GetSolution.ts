@@ -22,7 +22,7 @@ export type GetSolution = {
     solutionValueList: GetSolutionValue[] | null;
 
     /**
-     * Дата сдачи
+     * Дедлайн сдачи
      */
     submitAtUtc: string;
 

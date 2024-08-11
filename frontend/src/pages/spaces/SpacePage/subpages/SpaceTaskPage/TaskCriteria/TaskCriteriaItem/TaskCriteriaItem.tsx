@@ -46,6 +46,15 @@ export const TaskCriteriaItem: FC<Props> = typedMemo(function TaskCriteriaItem({
                 children: <FlexContainer direction="column" gap="m">
                     <FlexContainer direction="column">
                         <Text className={getBemClasses(styles, 'subtitle')}>
+                            Вес
+                        </Text>
+                        <Text className={getBemClasses(styles, 'description')}>
+                            {criteria.weight}
+                        </Text>
+                    </FlexContainer>
+
+                    <FlexContainer direction="column">
+                        <Text className={getBemClasses(styles, 'subtitle')}>
                             Описание
                         </Text>
                         <Text className={getBemClasses(styles, 'description')}>

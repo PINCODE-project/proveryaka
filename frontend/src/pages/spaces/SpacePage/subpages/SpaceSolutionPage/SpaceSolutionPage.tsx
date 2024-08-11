@@ -16,7 +16,7 @@ import { useGetCurrentUserInfo } from '@entities/user';
 import { useIssueId, useListFilters } from '@shared/hooks';
 import { useSolutionId } from '@shared/hooks/useSolutionId';
 import { useSpaceId } from '@shared/hooks/useSpaceId';
-import { getBemClasses, getDateFromISO, typedMemo } from '@shared/lib';
+import { getBemClasses, getDateFromISO, getTimeFromISO, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { Button, FlexContainer, NavTab, Text } from '@shared/ui';
 
@@ -89,8 +89,12 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
         >
             <FlexContainer direction="column" className={getBemClasses(styles, 'header')}>
                 <Text className={getBemClasses(styles, 'name')}>{issue?.name}</Text>
-                <Text className={getBemClasses(styles, 'deadline')}>Сдать до: {getDateFromISO(issue?.submitDeadlineDateUtc ?? '')}</Text>
-                <Text className={getBemClasses(styles, 'deadline')}>Оценить до: {getDateFromISO(issue?.assessmentDeadlineDateUtc ?? '')}</Text>
+                <Text className={getBemClasses(styles, 'deadline')}>
+                    Сдать до: {getDateFromISO(issue?.submitDeadlineDateUtc ?? '')}, {getTimeFromISO(issue?.submitDeadlineDateUtc ?? '')}
+                </Text>
+                <Text className={getBemClasses(styles, 'deadline')}>
+                    Оценить до: {getDateFromISO(issue?.assessmentDeadlineDateUtc ?? '')}, {getTimeFromISO(issue?.assessmentDeadlineDateUtc ?? '')}
+                </Text>
             </FlexContainer>
 
             <FlexContainer

@@ -24,7 +24,7 @@ export type GetSolutionForExpert = {
     solutionValueList: GetSolutionValue[];
 
     /**
-     * Дата сдачи
+     * Дедлайн сдачи
      */
     submitAtUtc: string;
 

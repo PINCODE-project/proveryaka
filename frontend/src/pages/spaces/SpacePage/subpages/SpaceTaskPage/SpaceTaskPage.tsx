@@ -5,7 +5,7 @@ import { useGetStudentIssueSolution } from '@entities/solution/lib/useGetStudent
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
 import { useIssueId } from '@shared/hooks';
-import { getBemClasses, getDateFromISO, typedMemo } from '@shared/lib';
+import { getBemClasses, getDateFromISO, getTimeFromISO, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { FlexContainer, NavTab, Text } from '@shared/ui';
 
@@ -75,8 +75,12 @@ export const SpaceTaskPage: FC<Props> = typedMemo(function SpaceTaskPage({
         >
             <FlexContainer direction="column" className={getBemClasses(styles, 'header')}>
                 <Text className={getBemClasses(styles, 'name')}>{issue.name}</Text>
-                <Text className={getBemClasses(styles, 'deadline')}>Сдача до: {getDateFromISO(issue.submitDeadlineDateUtc ?? '')}</Text>
-                <Text className={getBemClasses(styles, 'deadline')}>Проверка до: {getDateFromISO(issue.assessmentDeadlineDateUtc ?? '')}</Text>
+                <Text className={getBemClasses(styles, 'deadline')}>
+                    Сдача до: {getDateFromISO(issue.submitDeadlineDateUtc ?? '')}, {getTimeFromISO(issue?.submitDeadlineDateUtc ?? '')}
+                </Text>
+                <Text className={getBemClasses(styles, 'deadline')}>
+                    Проверка до: {getDateFromISO(issue.assessmentDeadlineDateUtc ?? '')}, {getTimeFromISO(issue?.submitDeadlineDateUtc ?? '')}
+                </Text>
             </FlexContainer>
 
             <FlexContainer

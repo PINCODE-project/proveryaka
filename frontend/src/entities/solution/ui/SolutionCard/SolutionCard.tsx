@@ -9,7 +9,7 @@ import { useGetCurrentUserInfo } from '@entities/user';
 
 import Checkmark from '@shared/assets/icons/Checkmark.svg';
 import SubtractCircle from '@shared/assets/icons/SubtractCircle.svg';
-import { getBemClasses, getDateFromISO, typedMemo } from '@shared/lib';
+import { getBemClasses, getDateFromISO, getTimeFromISO, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { FlexContainer, Image, SettingsDropdown, Text } from '@shared/ui';
 
@@ -124,12 +124,12 @@ export const SolutionCard: FC<Props> = typedMemo(function SolutionCard({
                     >
                         {showAssignmentDeadline
                             ? <Text className={getBemClasses(styles, 'deadline')}>
-                                Сдача: {getDateFromISO(solution?.submitAtUtc ?? '')}
+                                Сдача: {getDateFromISO(solution?.submitAtUtc ?? '')}, {getTimeFromISO(solution?.submitAtUtc ?? '')}
                             </Text>
                             : null}
                         {showGradingDeadline
                             ? <Text className={getBemClasses(styles, 'deadline')}>
-                                Оценка: {getDateFromISO(solution?.assessmentDeadlineDateUtc ?? '')}
+                                Оценка: {getDateFromISO(solution?.assessmentDeadlineDateUtc ?? '')}, {getTimeFromISO(solution?.assessmentDeadlineDateUtc ?? '')}
                             </Text>
                             : null}
                     </FlexContainer>

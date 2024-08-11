@@ -102,7 +102,7 @@ export const IssueForm: FC<Props> = typedMemo(function IssueForm({}) {
                 <Text>Дедлайны</Text>
                 <FormField<Date>
                     name="assessmentDeadlineDateUtc"
-                    label="Дата сдачи"
+                    label="Дедлайн сдачи"
                     content={
                         ({ value, onChange, isInvalid }) => (
                             <DatePicker
@@ -115,7 +115,7 @@ export const IssueForm: FC<Props> = typedMemo(function IssueForm({}) {
                 />
                 <FormField<Date>
                     name="submitDeadlineDateUtc"
-                    label="Дата оценки"
+                    label="Дедлайн проверки"
                     content={
                         ({ value, onChange, isInvalid }) => (
                             <DatePicker
