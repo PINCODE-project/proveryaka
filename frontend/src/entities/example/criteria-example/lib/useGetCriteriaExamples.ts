@@ -4,6 +4,6 @@ import { GetCriteriaExample, getCriteriaExamples, getCriteriaExamplesQueryKey } 
 
 import { AxiosUseQueryOptions, GetListResponse, ListFilters } from '@shared/types';
 
-export function useGetCriteriaExamples(criteriaId: string, filters: ListFilters, options?: AxiosUseQueryOptions<GetListResponse<GetCriteriaExample>>) {
+export function useGetCriteriaExamples(criteriaId: string, filters?: ListFilters, options?: AxiosUseQueryOptions<GetListResponse<GetCriteriaExample>>) {
     return useQuery(getCriteriaExamplesQueryKey(criteriaId, filters), () => getCriteriaExamples(criteriaId, filters), options);
 }

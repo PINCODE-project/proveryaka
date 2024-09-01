@@ -4,10 +4,10 @@ import { ExampleType } from '@entities/example/common';
 import { useGetIssueExamples } from '@entities/example/issue-example';
 import { useGetIssue } from '@entities/issue';
 
-import { useIssueId, useListFilters } from '@shared/hooks';
+import { useIssueId } from '@shared/hooks';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { Button, FlexContainer, Input, SolutionExample, Text } from '@shared/ui';
+import { Button, FlexContainer, SolutionExample, Text } from '@shared/ui';
 
 import styles from './SolutionDescription.module.css';
 
@@ -20,8 +20,7 @@ export const SolutionDescription: FC<Props> = typedMemo(function SolutionDescrip
     const issueId = useIssueId();
     const { data: issue } = useGetIssue(issueId ?? '');
 
-    const [issueFilters] = useListFilters();
-    const { data: issueExample } = useGetIssueExamples(issueId ?? '', issueFilters);
+    const { data: issueExample } = useGetIssueExamples(issueId ?? '');
 
     return (
         <FlexContainer

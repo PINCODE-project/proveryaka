@@ -6,6 +6,6 @@ import { GetIssueExample } from '@entities/example/issue-example/model/GetIssueE
 
 import { AxiosUseQueryOptions, GetListResponse, ListFilters } from '@shared/types';
 
-export function useGetIssueExamples(issueId: string, filters: ListFilters, options?: AxiosUseQueryOptions<GetListResponse<GetIssueExample>>) {
+export function useGetIssueExamples(issueId: string, filters?: ListFilters, options?: AxiosUseQueryOptions<GetListResponse<GetIssueExample>>) {
     return useQuery(getIssueExamplesQueryKey(issueId, filters), () => getIssueExamples(issueId, filters), options);
 }

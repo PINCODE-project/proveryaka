@@ -8,7 +8,6 @@ import { SolutionCard } from '@entities/solution';
 import { getSolutionStatus } from '@entities/solution/lib/getSolutionStatus';
 import { useGetIssueSolutions } from '@entities/solution/lib/useGetIssueSolutions';
 
-import { useListFilters } from '@shared/hooks';
 import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
@@ -26,9 +25,8 @@ export const TaskSolutions: FC<Props> = typedMemo(function TaskSolutions({
     'data-testid': dataTestId = 'TaskSolutions',
 }) {
     const spaceId = useSpaceId();
-    const [filters] = useListFilters();
 
-    const { data: rawSolutions } = useGetIssueSolutions(issue.id, filters);
+    const { data: rawSolutions } = useGetIssueSolutions(issue.id);
     const solutions = useMemo(() => rawSolutions?.map(solution => ({
         ...solution,
         status: getSolutionStatus(solution),

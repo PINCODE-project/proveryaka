@@ -2,9 +2,9 @@ import { GetSolutionForExpert } from '@entities/solution/model/GetSolutionForExp
 
 import { solutionHttp } from '@shared/config/axios';
 import { extractData } from '@shared/lib';
-import { GetListResponse, ListFilters } from '@shared/types';
+import { ListFilters } from '@shared/types';
 
-export function getAllIssueSolution(issueId: string, filters: ListFilters): Promise<GetSolutionForExpert[]> {
+export function getAllIssueSolution(issueId: string, filters?: ListFilters): Promise<GetSolutionForExpert[]> {
     return solutionHttp.get<{solutionList: GetSolutionForExpert[]}>('organizer/solution/all', { params: { issueId, ...filters } })
         .then(extractData)
         .then(data => data.solutionList ?? []);

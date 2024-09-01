@@ -2,7 +2,6 @@ import { FC, useMemo, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/spaces';
-import { SpaceEngineeringWorksPage } from '@pages/spaces/SpacePage/subpages/SpaceEngineeringWorksPage';
 
 import { useGetIssueCriteria } from '@entities/criteria/lib/useGetIssueCriteria';
 import { useGetIssue } from '@entities/issue';
@@ -13,7 +12,7 @@ import { useHasCurrentUserMark } from '@entities/solution/lib/useHasCurrentUserM
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 import { useGetCurrentUserInfo } from '@entities/user';
 
-import { useIssueId, useListFilters } from '@shared/hooks';
+import { useIssueId } from '@shared/hooks';
 import { useSolutionId } from '@shared/hooks/useSolutionId';
 import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { getBemClasses, getDateFromISO, getTimeFromISO, typedMemo } from '@shared/lib';
@@ -39,7 +38,7 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
     className,
     'data-testid': dataTestId = 'SpaceSolutionPage',
 }) {
-    const { isOrganizer, isStudent } = useRolesCheck();
+    const { isOrganizer } = useRolesCheck();
     const spaceId = useSpaceId();
     const issueId = useIssueId();
     const solutionId = useSolutionId();
@@ -55,8 +54,7 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
         : expertSolution, [isOrganizer, organizerSolution, expertSolution]);
 
     const { data: issue } = useGetIssue(issueId!);
-    const [criteriaFilters] = useListFilters();
-    const { data: issueCriteria } = useGetIssueCriteria(solution!.issueId, criteriaFilters, {
+    const { data: issueCriteria } = useGetIssueCriteria(solution!.issueId, undefined, {
         enabled: Boolean(solution?.issueId),
     });
     const [activeSection, setActiveSection] = useState(ActiveSection.Description);

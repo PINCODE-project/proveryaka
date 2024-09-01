@@ -6,6 +6,6 @@ import { GetSolutionForExpert } from '@entities/solution/model/GetSolutionForExp
 
 import { AxiosUseMutationOptions, AxiosUseQueryOptions, ListFilters } from '@shared/types';
 
-export function useGetIssueSolutions(issueId: string, filters: ListFilters, options?: AxiosUseQueryOptions<GetSolutionForExpert[]>) {
-    return useQuery(['issue-solutions/get'], () => getAllIssueSolution(issueId, filters), options);
+export function useGetIssueSolutions(issueId: string, filters?: ListFilters, options?: AxiosUseQueryOptions<GetSolutionForExpert[]>) {
+    return useQuery(['issue-solutions/get', filters], () => getAllIssueSolution(issueId, filters), options);
 }

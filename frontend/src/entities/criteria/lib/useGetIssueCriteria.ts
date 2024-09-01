@@ -6,6 +6,6 @@ import { getIssueCriteriaQueryKey } from '@entities/criteria/lib/getIssueCriteri
 
 import { AxiosUseQueryOptions, GetListResponse, ListFilters } from '@shared/types';
 
-export function useGetIssueCriteria(issueId: string, filters: ListFilters, options?: AxiosUseQueryOptions<GetListResponse<GetCriteriaResponse>>) {
+export function useGetIssueCriteria(issueId: string, filters?: ListFilters, options?: AxiosUseQueryOptions<GetListResponse<GetCriteriaResponse>>) {
     return useQuery(getIssueCriteriaQueryKey(issueId, filters), () => getIssueCriteria(issueId, filters), options);
 }

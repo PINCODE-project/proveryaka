@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/spaces';
@@ -9,16 +9,14 @@ import { GetIssueResponse, useGetSpaceIssue } from '@entities/issue';
 import { getIssueStatus } from '@entities/issue/lib/getIssueStatus';
 import { IssueStatus } from '@entities/issue/model/IssueStatus';
 import { getStudentIssueSolution } from '@entities/solution/api/getStudentIssueSolution';
-import { useGetStudentIssueSolution } from '@entities/solution/lib/useGetStudentIssueSolution';
 import { TaskCard } from '@entities/space';
 import { useGetSpace } from '@entities/space/lib/useGetSpace';
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
-import { useListFilters } from '@shared/hooks';
 import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { Button, FlexContainer, Input, NavTab } from '@shared/ui';
+import { Button, FlexContainer, NavTab } from '@shared/ui';
 
 import styles from './SpaceTasksPage.module.css';
 
@@ -32,12 +30,10 @@ export const SpaceTasksPage: FC<Props> = typedMemo(function SpaceTasksPage({
     const { data: space } = useGetSpace(spaceId ?? '');
 
     const [status, setStatus] = useState(IssueStatus.InWork);
-    const [search, setSearch] = useState('');
-    const [filters, changeFilter] = useListFilters();
 
     const { isOrganizer, isStudent } = useRolesCheck();
 
-    const { data: rawIssues } = useGetSpaceIssue(spaceId ?? '', filters);
+    const { data: rawIssues } = useGetSpaceIssue(spaceId ?? '');
     const [issues, setIssues] = useState<GetIssueResponse[]>([]);
 
     useEffect(() => {

@@ -1,6 +1,6 @@
 import { IconUsersPlus } from '@tabler/icons-react';
 import { Dropdown, MenuProps } from 'antd';
-import { type FC, useCallback, useMemo, useState } from 'react';
+import { type FC, useMemo } from 'react';
 import { useQuery } from 'react-query';
 
 import { PageComponent } from '@widgets/PageComponent';
@@ -12,13 +12,9 @@ import { EditSpaceModal } from '@features/space/edit-space';
 import { EnterSpaceByCodeModal } from '@features/space/enter-space-by-code';
 import { RegenerateSpaceCodeButton } from '@features/space/regenerate-space-code';
 
-import { GetSpaceFilters, SpaceCard, useGetSpaces } from '@entities/space';
-import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
+import { SpaceCard, useGetSpaces } from '@entities/space';
 
-import PeopleAdd from '@shared/assets/icons/PeopleAdd.svg';
-import Settings from '@shared/assets/icons/Settings.svg';
 import { ssoHttp } from '@shared/config/axios';
-import { useListFilters } from '@shared/hooks';
 import { extractData, getBemClasses, typedMemo } from '@shared/lib';
 import { TestProps, ClassNameProps } from '@shared/types';
 import { Button, FlexContainer, Text } from '@shared/ui';
@@ -31,8 +27,7 @@ export const SpacesPage: FC<Props> = typedMemo(({
     className,
     'data-testid': dataTestId = 'SpacesPage',
 }: Props) => {
-    const [filters, changeFilter] = useListFilters();
-    const { data, isLoading } = useGetSpaces(filters);
+    const { data, isLoading } = useGetSpaces();
     const { data: isOrganizer } = useQuery('userinfo', async () => {
         const a: any = await ssoHttp.get('connect/userinfo').then(extractData);
         return a.role === 'admin';

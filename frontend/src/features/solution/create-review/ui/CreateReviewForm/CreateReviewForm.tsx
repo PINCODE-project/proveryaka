@@ -16,15 +16,12 @@ import { useGetIssueExamples } from '@entities/example/issue-example';
 import { GetIssueResponse } from '@entities/issue';
 import { IssueFormList } from '@entities/issue/ui/IssueFormList';
 import { useGetExpertSolution } from '@entities/solution/lib/useGetExpertSolution';
-import { useGetSolution } from '@entities/solution/lib/useGetSolution';
-import { GetSolution } from '@entities/solution/model/GetSolution';
 import { GetSolutionForExpert } from '@entities/solution/model/GetSolutionForExpert';
 
 import { getFile } from '@shared/api/file/solution/getFile';
-import { useListFilters } from '@shared/hooks';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { Button, FlexContainer, FormField, NavTab, SolutionExample, Text, Textarea } from '@shared/ui';
+import { Button, FlexContainer, FormField, NavTab, SolutionExample, Text } from '@shared/ui';
 
 import styles from './CreateReviewForm.module.css';
 
@@ -83,8 +80,7 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
         },
     });
 
-    const [exampleFilters] = useListFilters();
-    const { data: examples } = useGetIssueExamples(issue.id, exampleFilters);
+    const { data: examples } = useGetIssueExamples(issue.id);
     const standardExamples = useMemo(() => examples?.entityList
         ?.filter(example => example.exampleType === ExampleType.Standard) ?? [], [examples]);
     const antiExamples = useMemo(() => examples?.entityList

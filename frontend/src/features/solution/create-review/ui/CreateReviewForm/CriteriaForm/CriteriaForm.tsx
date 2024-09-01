@@ -5,16 +5,14 @@ import { FC, useMemo } from 'react';
 import { CriteriaReviewByCriteria } from '@features/solution/create-review/model/CriteriaReviewByCriteria';
 
 import { GetCriteriaResponse } from '@entities/criteria';
-import { useGetIssueCriteria } from '@entities/criteria/lib/useGetIssueCriteria';
 import { ExampleType } from '@entities/example/common';
 import { useGetCriteriaExamples } from '@entities/example/criteria-example';
 
 import ChevronDown from '@shared/assets/icons/ChevronDown.svg';
 import WarningCircle from '@shared/assets/icons/WarningCircle.svg';
-import { useListFilters } from '@shared/hooks';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { Button, FlexContainer, FormField, SolutionExample } from '@shared/ui';
+import { FlexContainer, FormField, SolutionExample } from '@shared/ui';
 
 import styles from './CriteriaForm.module.css';
 
@@ -33,8 +31,7 @@ export const CriteriaForm: FC<Props> = typedMemo(function CriteriaForm({
     className,
     'data-testid': dataTestId = 'CriteriaForm',
 }) {
-    const [filters] = useListFilters();
-    const { data: examples } = useGetCriteriaExamples(criteria.id, filters);
+    const { data: examples } = useGetCriteriaExamples(criteria.id);
     const standardExamples = useMemo(() => examples?.entityList
         ?.filter(example => example.exampleType == ExampleType.Standard) ?? [], [examples]);
     const antiExamples = useMemo(() => examples?.entityList

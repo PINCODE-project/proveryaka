@@ -11,7 +11,6 @@ import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 import { useGetSpaceTeams } from '@entities/team/lib/useGetSpaceTeams';
 import { useGetSpaceUserTeams } from '@entities/team/lib/useGetSpaceUserTeams';
 
-import { useListFilters } from '@shared/hooks';
 import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
@@ -25,13 +24,12 @@ export const SpaceTeamPage: FC<Props> = typedMemo(function SpaceTeamPage({
     className,
 }) {
     const spaceId = useSpaceId();
-    const [filters] = useListFilters();
     const { isStudent, isOrganizer } = useRolesCheck();
 
-    const { data: teams } = useGetSpaceTeams(spaceId ?? '', filters, {
+    const { data: teams } = useGetSpaceTeams(spaceId ?? '', undefined, {
         enabled: isOrganizer,
     });
-    const { data: studentTeams } = useGetSpaceUserTeams(spaceId ?? '', filters, {
+    const { data: studentTeams } = useGetSpaceUserTeams(spaceId ?? '', undefined, {
         enabled: isStudent,
     });
 

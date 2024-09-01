@@ -11,7 +11,7 @@ import { useCanReviewSolution } from '@entities/solution/lib/useCanReviewSolutio
 import { useHasCurrentUserMark } from '@entities/solution/lib/useHasCurrentUserMark';
 import { useGetCurrentUserInfo } from '@entities/user';
 
-import { useIssueId, useListFilters } from '@shared/hooks';
+import { useIssueId } from '@shared/hooks';
 import { useSolutionId } from '@shared/hooks/useSolutionId';
 import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { getBemClasses, typedMemo } from '@shared/lib';
@@ -32,8 +32,7 @@ export const SpaceCreateReviewPage: FC<Props> = typedMemo(function SpaceCreateRe
     const { data: user } = useGetCurrentUserInfo();
 
     const { data: issue } = useGetIssue(issueId ?? '');
-    const [filters] = useListFilters();
-    const { data: criteria } = useGetIssueCriteria(issue?.id ?? '', filters);
+    const { data: criteria } = useGetIssueCriteria(issue?.id ?? '');
 
     const canReview = useCanReviewSolution(solutionId ?? '', spaceId ?? '');
     const hasReview = useHasCurrentUserMark(solutionId ?? '', user?.id ?? '');

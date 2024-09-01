@@ -1,12 +1,8 @@
 import { useCallback, useState } from 'react';
 
-import { GetSpaceFilters } from '@entities/space';
-
 import { ListFilters } from '@shared/types';
 
-type Filters = {
-    page: number;
-    count: number;
+type Filters = ListFilters & {
     [key: string]: any;
 };
 

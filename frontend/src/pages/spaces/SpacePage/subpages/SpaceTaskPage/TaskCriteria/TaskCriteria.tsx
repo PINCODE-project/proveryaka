@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 
 import { TaskCriteriaItem } from '@pages/spaces/SpacePage/subpages/SpaceTaskPage/TaskCriteria/TaskCriteriaItem';
 
@@ -6,10 +6,9 @@ import { GetCriteriaResponse } from '@entities/criteria';
 import { useGetIssueCriteria } from '@entities/criteria/lib/useGetIssueCriteria';
 import { GetIssueResponse } from '@entities/issue';
 
-import { useListFilters } from '@shared/hooks';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { Button, FlexContainer, SolutionExample, Text } from '@shared/ui';
+import { FlexContainer } from '@shared/ui';
 
 import styles from './TaskCriteria.module.css';
 
@@ -23,8 +22,7 @@ export const TaskCriteria: FC<Props> = typedMemo(function TaskCriteria({
     issue,
     'data-testid': dataTestId = 'TaskCriteria',
 }) {
-    const [filters] = useListFilters();
-    const { data: criteria } = useGetIssueCriteria(issue.id, filters);
+    const { data: criteria } = useGetIssueCriteria(issue.id);
 
     if (!criteria) {
         return null;

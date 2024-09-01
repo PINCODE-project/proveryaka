@@ -1,5 +1,3 @@
-import * as constants from 'constants';
-
 import { isAxiosError } from 'axios';
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { useQueryClient } from 'react-query';
@@ -12,10 +10,8 @@ import { useCreateSolution } from '@features/solution/create-solution/lib/useCre
 import { ExampleType } from '@entities/example/common';
 import { useGetIssueExamples } from '@entities/example/issue-example';
 import { GetIssueResponse } from '@entities/issue';
-import { useGetIssueFormList } from '@entities/issue/lib/useGetIssueFormList';
 import { IssueFormList } from '@entities/issue/ui/IssueFormList';
 import { getStudentIssueSolutionQueryKey } from '@entities/solution/lib/getStudentIssueSolutionQueryKey';
-import { useGetExpertSolution } from '@entities/solution/lib/useGetExpertSolution';
 import { useGetSolution } from '@entities/solution/lib/useGetSolution';
 import { useGetStudentIssueSolution } from '@entities/solution/lib/useGetStudentIssueSolution';
 import { GetSolution } from '@entities/solution/model/GetSolution';
@@ -25,11 +21,10 @@ import { useGetSpaceUserTeams } from '@entities/team/lib/useGetSpaceUserTeams';
 
 import { createFile } from '@shared/api/file/solution/createFile';
 import { getFile } from '@shared/api/file/solution/getFile';
-import { useListFilters } from '@shared/hooks';
 import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { Button, FlexContainer, Input, SolutionExample, Text } from '@shared/ui';
+import { Button, FlexContainer, SolutionExample, Text } from '@shared/ui';
 
 import styles from './TaskDescription.module.css';
 
@@ -82,8 +77,7 @@ export const TaskDescription: FC<Props> = typedMemo(function TaskDescription({
         })();
     }, [rawSolution]);
 
-    const [teamsFilters] = useListFilters();
-    const { data: teams } = useGetSpaceUserTeams(spaceId ?? '', teamsFilters, {
+    const { data: teams } = useGetSpaceUserTeams(spaceId ?? '', undefined, {
         enabled: isStudent,
     });
     const { mutate: createSolution } = useCreateSolution({
@@ -113,8 +107,7 @@ export const TaskDescription: FC<Props> = typedMemo(function TaskDescription({
         });
     }, [issue, teams, createSolution]);
 
-    const [exampleFilters] = useListFilters();
-    const { data: examples } = useGetIssueExamples(issue.id, exampleFilters);
+    const { data: examples } = useGetIssueExamples(issue.id, undefined);
     const standardExamples = useMemo(() => examples?.entityList
         ?.filter(example => example.exampleType === ExampleType.Standard) ?? [], [examples]);
     const antiExamples = useMemo(() => examples?.entityList
