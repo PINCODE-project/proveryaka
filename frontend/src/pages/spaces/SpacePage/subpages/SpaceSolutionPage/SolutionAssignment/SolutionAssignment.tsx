@@ -3,10 +3,10 @@ import { FC, useEffect, useMemo, useState } from 'react';
 import { useGetIssue } from '@entities/issue';
 import { useGetIssueFormList } from '@entities/issue/lib/useGetIssueFormList';
 import { IssueFormList } from '@entities/issue/ui/IssueFormList';
-import { useGetExpertSolution } from '@entities/solution/lib/useGetExpertSolution';
 import { useGetOrganizerSolution } from '@entities/solution/lib/useGetOrganizerSolution';
 import { useGetSolution } from '@entities/solution/lib/useGetSolution';
 import { useGetStudentIssueSolution } from '@entities/solution/lib/useGetStudentIssueSolution';
+import { useGetStudentSolution } from '@entities/solution/lib/useGetStudentSolution';
 import { GetSolutionForExpert } from '@entities/solution/model/GetSolutionForExpert';
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
@@ -32,7 +32,7 @@ export const SolutionAssignment: FC<Props> = typedMemo(function SolutionAssignme
     const { data: rawOrganizerSolution } = useGetOrganizerSolution(solutionId ?? '', {
         enabled: isOrganizer,
     });
-    const { data: rawExpertSolution } = useGetExpertSolution(solutionId ?? '', {
+    const { data: rawExpertSolution } = useGetSolution(solutionId ?? '', {
         enabled: !isOrganizer,
     });
 

@@ -1,7 +1,7 @@
 import { useQuery } from 'react-query';
 
 import { getAllIssueSolution } from '@entities/solution/api/getAllIssueSolution';
-import { getExpertSolutions } from '@entities/solution/api/getExpertSolutions';
+import { getSolutions } from '@entities/solution/api/getSolutions';
 import { GetSolutionForExpert } from '@entities/solution/model/GetSolutionForExpert';
 
 import { AxiosUseMutationOptions, AxiosUseQueryOptions, ListFilters } from '@shared/types';

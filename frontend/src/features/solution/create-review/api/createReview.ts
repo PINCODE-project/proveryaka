@@ -3,5 +3,5 @@ import { CriteriaReview } from '@features/solution/create-review/model/CriteriaR
 import { solutionHttp } from '@shared/config/axios';
 
 export function createReview(data: CriteriaReview): Promise<void> {
-    return solutionHttp.post('expert/review/create', data).then();
+    return solutionHttp.post('review/create', data).then();
 }

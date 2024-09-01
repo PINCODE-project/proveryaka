@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 
 import { useStartDistribution } from '@features/issue/start-distribution/lib/useStartDistribution';
 
-import { useGetExpertSolutions } from '@entities/solution/lib/useGetExpertSolutions';
+import { useGetSolutions } from '@entities/solution/lib/useGetSolutions';
 import { useGetSpaceExperts, useGetSpaceOrganizers, useGetSpaceStudents } from '@entities/space';
 import { useGetUserAll } from '@entities/user';
 

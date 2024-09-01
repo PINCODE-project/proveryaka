@@ -1,12 +1,11 @@
 import { Collapse, Table } from 'antd';
 import { FC, useState } from 'react';
 
-import { useGetSolutionReviews } from '@entities/solution/lib/useGetSolutionReviews';
+import { useGetStudentSolutionReviews } from '@entities/solution/lib/useGetStudentSolutionReviews';
 
-import { useSolutionId } from '@shared/hooks/useSolutionId';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { Button, FlexContainer, NavTab, SolutionExample, Text } from '@shared/ui';
+import { FlexContainer, NavTab, Text } from '@shared/ui';
 
 import styles from './SolutionGrades.module.css';
 
@@ -33,7 +32,7 @@ export const SolutionGrades: FC<Props> = typedMemo(function SolutionGrades({
     'data-testid': dataTestId = 'SolutionGrades',
 }) {
     const [currentIndex, setCurrentIndex] = useState<number | null>(null);
-    const { data: reviews } = useGetSolutionReviews(solutionId ?? '');
+    const { data: reviews } = useGetStudentSolutionReviews(solutionId ?? '');
 
     return (
         <FlexContainer

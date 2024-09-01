@@ -6,8 +6,8 @@ import { SpaceRouter } from '@pages/spaces';
 import { useGetIssueCriteria } from '@entities/criteria/lib/useGetIssueCriteria';
 import { useGetIssue } from '@entities/issue';
 import { useCanReviewSolution } from '@entities/solution/lib/useCanReviewSolution';
-import { useGetExpertSolution } from '@entities/solution/lib/useGetExpertSolution';
 import { useGetOrganizerSolution } from '@entities/solution/lib/useGetOrganizerSolution';
+import { useGetSolution } from '@entities/solution/lib/useGetSolution';
 import { useHasCurrentUserMark } from '@entities/solution/lib/useHasCurrentUserMark';
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 import { useGetCurrentUserInfo } from '@entities/user';
@@ -43,7 +43,7 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
     const issueId = useIssueId();
     const solutionId = useSolutionId();
 
-    const { data: expertSolution } = useGetExpertSolution(solutionId!, {
+    const { data: expertSolution } = useGetSolution(solutionId!, {
         enabled: !isOrganizer,
     });
     const { data: organizerSolution } = useGetOrganizerSolution(solutionId!, {

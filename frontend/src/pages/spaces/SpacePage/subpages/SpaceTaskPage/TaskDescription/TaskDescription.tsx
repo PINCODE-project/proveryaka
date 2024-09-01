@@ -12,8 +12,8 @@ import { useGetIssueExamples } from '@entities/example/issue-example';
 import { GetIssueResponse } from '@entities/issue';
 import { IssueFormList } from '@entities/issue/ui/IssueFormList';
 import { getStudentIssueSolutionQueryKey } from '@entities/solution/lib/getStudentIssueSolutionQueryKey';
-import { useGetSolution } from '@entities/solution/lib/useGetSolution';
 import { useGetStudentIssueSolution } from '@entities/solution/lib/useGetStudentIssueSolution';
+import { useGetStudentSolution } from '@entities/solution/lib/useGetStudentSolution';
 import { GetSolution } from '@entities/solution/model/GetSolution';
 import { GetSolutionValue } from '@entities/solution/model/GetSolutionValue';
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
@@ -52,7 +52,7 @@ export const TaskDescription: FC<Props> = typedMemo(function TaskDescription({
         },
         useErrorBoundary: false,
     });
-    const { data: rawSolution } = useGetSolution(issueSolution?.id ?? '', {
+    const { data: rawSolution } = useGetStudentSolution(issueSolution?.id ?? '', {
         enabled: Boolean(issueSolution),
     });
     const [solution, setSolution] = useState<GetSolution | null>(null);

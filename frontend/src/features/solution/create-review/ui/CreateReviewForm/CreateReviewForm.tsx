@@ -15,7 +15,7 @@ import { ExampleType } from '@entities/example/common';
 import { useGetIssueExamples } from '@entities/example/issue-example';
 import { GetIssueResponse } from '@entities/issue';
 import { IssueFormList } from '@entities/issue/ui/IssueFormList';
-import { useGetExpertSolution } from '@entities/solution/lib/useGetExpertSolution';
+import { useGetSolution } from '@entities/solution/lib/useGetSolution';
 import { GetSolutionForExpert } from '@entities/solution/model/GetSolutionForExpert';
 
 import { getFile } from '@shared/api/file/solution/getFile';
@@ -45,7 +45,7 @@ export const CreateReviewForm: FC<Props> = typedMemo(function CreateReviewForm({
     'data-testid': dataTestId = 'CreateReviewForm',
 }) {
     const queryClient = useQueryClient();
-    const { data: rawSolution } = useGetExpertSolution(solutionId);
+    const { data: rawSolution } = useGetSolution(solutionId);
     const [solution, setSolution] = useState<GetSolutionForExpert | null>(null);
 
     useEffect(() => {

@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 
-import { useGetExpertSolutions } from '@entities/solution/lib/useGetExpertSolutions';
+import { useGetSolutions } from '@entities/solution/lib/useGetSolutions';
 
 export function useCanReviewSolution(solutionId: string, spaceId: string) {
-    const { data: solutions } = useGetExpertSolutions(spaceId);
+    const { data: solutions } = useGetSolutions(spaceId);
 
     return useMemo(() => solutions?.findIndex(solution => solution.id === solutionId) !== -1,
         [solutionId, solutions]);

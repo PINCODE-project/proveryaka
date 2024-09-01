@@ -4,9 +4,9 @@ import { NavLink } from 'react-router-dom';
 import { SpaceRouter } from '@pages/spaces';
 
 import { SolutionCard } from '@entities/solution';
-import { getSolutionReviews } from '@entities/solution/api/getSolutionReviews';
+import { getStudentSolutionReviews } from '@entities/solution/api/getStudentSolutionReviews';
 import { getSolutionStatus } from '@entities/solution/lib/getSolutionStatus';
-import { useGetExpertSolutions } from '@entities/solution/lib/useGetExpertSolutions';
+import { useGetSolutions } from '@entities/solution/lib/useGetSolutions';
 import { GetSolutionForExpert } from '@entities/solution/model/GetSolutionForExpert';
 import { SolutionStatus } from '@entities/solution/model/SolutionStatus';
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
@@ -30,7 +30,7 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
     const [status, setStatus] = useState(SolutionStatus.InGrade);
 
     const { data: user } = useGetCurrentUserInfo();
-    const { data: rawSolutions } = useGetExpertSolutions(spaceId ?? '');
+    const { data: rawSolutions } = useGetSolutions(spaceId ?? '');
 
     const [solutions, setSolutions] = useState<GetSolutionForExpert[] | null>(null);
 
@@ -41,7 +41,7 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
 
         (async () => {
             const solutions = await Promise.all(rawSolutions?.map(async solution => {
-                const hasReview = (await getSolutionReviews(solution.id))
+                const hasReview = (await getStudentSolutionReviews(solution.id))
                     ?.reviews.find(review => review.userId === user?.id);
 
                 return {

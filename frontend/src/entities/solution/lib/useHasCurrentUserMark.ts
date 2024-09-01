@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 
-import { useGetSolutionReviews } from '@entities/solution/lib/useGetSolutionReviews';
+import { useGetStudentSolutionReviews } from '@entities/solution/lib/useGetStudentSolutionReviews';
 
 export function useHasCurrentUserMark(solutionId: string, userId: string) {
-    const { data: reviews } = useGetSolutionReviews(solutionId);
+    const { data: reviews } = useGetStudentSolutionReviews(solutionId);
 
     return useMemo(() => reviews?.reviews.find(review => review.userId === userId), [reviews, userId]);
 }

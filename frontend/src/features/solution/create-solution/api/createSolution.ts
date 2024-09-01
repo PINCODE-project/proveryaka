@@ -3,5 +3,5 @@ import { CreateSolution } from '@features/solution/create-solution/model/CreateS
 import { solutionHttp } from '@shared/config/axios';
 
 export function createSolution(issueId: string, data: CreateSolution): Promise<void> {
-    return solutionHttp.post('student/solution/create', data).then();
+    return solutionHttp.post('student/studentsolution/create', data).then();
 };
