@@ -1,2 +1,16 @@
 @import url("@shared/styles/normilize.css");
 @import url("@shared/styles/variables.css");
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#root {
+    max-width: 1180px;
+    flex: 1;
+    width: 100%;
+    padding: 20px;
+}
