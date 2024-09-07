@@ -1,7 +1,7 @@
 import {
-    ChangeEventHandler,
+    ChangeEventHandler, DetailedHTMLProps,
     DragEventHandler,
-    FC,
+    FC, HTMLAttributes,
     MouseEventHandler,
     PropsWithChildren,
     useCallback,
@@ -14,40 +14,43 @@ import { useTranslation } from 'react-i18next';
 import { Namespace } from '@shared/config/i18n';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { InputProps, Text, getFlexContainerStyleClasses } from '@shared/ui';
+import { getFlexContainerStyleClasses } from '@shared/ui';
 
 import styles from './FileInput.module.css';
 import { FileInputContextProvider } from './FileInputContext';
 
 export type Props = ClassNameProps &
-  TestProps &
-  InputProps &
-  PropsWithChildren &
-  Readonly<{
-    /**
-     * Ссылка на выбранный файл
-     */
-    fileUrl: string | null;
+    TestProps &
+    PropsWithChildren &
+    Readonly<{
+        /**
+         * Ссылка на выбранный файл
+         */
+        fileUrl: string | null;
 
-    /**
-     * Метод выбора файла
-     * @param file выбранный файл
-     */
-    onChangeFile: (file: File | null) => void;
+        /**
+         * Метод выбора файла
+         * @param file выбранный файл
+         */
+        onChangeFile: (file: File | null) => void;
 
-    /**
-     * Максимальный размер файла в Mb
-     * @default 0.5
-     */
-    maxSizeByMb?: number;
+        /**
+         * Максимальный размер файла в Mb
+         * @default 0.5
+         */
+        maxSizeByMb?: number;
 
-    /**
-     * Поддерживаемые форматы файлов
-     */
-    acceptType: string[];
+        /**
+         * Поддерживаемые форматы файлов
+         */
+        acceptType: string[];
 
-    filename?: string;
-  }>;
+        filename?: string;
+
+        placeholder?: string;
+
+        disabled?: boolean;
+    }>;
 
 const ERROR_DISPLAY_TIME = 3000;
 
@@ -167,12 +170,12 @@ export const FileInput: FC<Props> = typedMemo(function FileInput({
                         children
                     )
                     : (
-                        <Text
+                        <p
                             className={getBemClasses(styles, 'placeholder')}
                             data-testid={`${dataTestId}.placeholder${error ? '.error' : ''}`}
                         >
                             {error ?? placeholder ?? t('click_or_drag_files')}
-                        </Text>
+                        </p>
                     )}
             </label>
         </FileInputContextProvider>

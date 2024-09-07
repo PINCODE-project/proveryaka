@@ -1,7 +1,7 @@
 import { screen, render } from '@testing-library/react';
+import { Input } from 'antd';
 
 import { createWrapper, FormikWrapper } from '@shared/mock/jest';
-import { Input } from '@shared/ui';
 
 import { FormField } from './FormField';
 

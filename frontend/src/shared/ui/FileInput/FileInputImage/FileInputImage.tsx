@@ -1,3 +1,4 @@
+import { Button, Image } from 'antd';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -5,12 +6,11 @@ import Cross from '@shared/assets/icons/Cross.svg';
 import { Namespace } from '@shared/config/i18n';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { Button, Image, ImageProps } from '@shared/ui';
 
 import styles from './FileInputImage.module.css';
 import { useFileInputContext } from '../FileInputContext';
 
-export type Props = ClassNameProps & TestProps & Omit<ImageProps, 'src' | 'alt'> & Readonly<{}>;
+export type Props = ClassNameProps & TestProps & Readonly<{}>;
 
 /**
  * Отображение выбранного файла в виде изображения
@@ -37,8 +37,6 @@ export const FileInputImage: FC<Props> = typedMemo(function FileInputImage({
             {!disabled && <Button
                 onClick={onClear}
                 className={getBemClasses(styles, 'clearButton')}
-                isIconButton
-                variant="ghost"
                 data-testid={`${dataTestId}.clearButton`}
             >
                 <Cross className={getBemClasses(styles, 'clearButtonIcon')} />

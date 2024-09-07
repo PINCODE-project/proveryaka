@@ -1,7 +1,5 @@
 import { FC } from 'react';
 
-import { SignUpForm } from '@features/auth/signup';
-
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { FlexContainer } from '@shared/ui';
@@ -22,7 +20,6 @@ export const SignUpPage: FC<Props> = typedMemo(function SignUpPage({
             className={getBemClasses(styles, null, null, className)}
             data-testid={dataTestId}
         >
-            <SignUpForm />
         </FlexContainer>
     );
 });

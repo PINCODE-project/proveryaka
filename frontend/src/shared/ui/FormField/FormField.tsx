@@ -1,9 +1,10 @@
+import { Typography } from 'antd';
 import { useField, ErrorMessage } from 'formik';
 import { ReactElement } from 'react';
 
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { FlexContainer, Text } from '@shared/ui';
+import { FlexContainer } from '@shared/ui';
 
 import styles from './FormField.module.css';
 
@@ -104,9 +105,9 @@ export const FormField = typedMemo(function FormField<TValue>({
                 }
             </div>
 
-            <Text className={getBemClasses(styles, 'error')}>
+            <Typography.Text className={getBemClasses(styles, 'error')}>
                 {isInvalid && typeof fieldMeta.error === 'string' ? <ErrorMessage name={name} /> : null}
-            </Text>
+            </Typography.Text>
         </FlexContainer>
     );
 });

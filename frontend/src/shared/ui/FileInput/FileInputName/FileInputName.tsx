@@ -1,3 +1,4 @@
+import { Button, Image, Tooltip, Typography } from 'antd';
 import { FC, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -5,7 +6,6 @@ import Cross from '@shared/assets/icons/Cross.svg';
 import { Namespace } from '@shared/config/i18n';
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { Button, Image, Text, Tooltip } from '@shared/ui';
 
 import styles from './FileInputName.module.css';
 import { useFileInputContext } from '../FileInputContext';
@@ -64,27 +64,22 @@ export const FileInputName: FC<Props> = typedMemo(function FileInputName({
             className={getBemClasses(styles, 'wrapper', null, wrapperClassName)}
         >
             <Tooltip
-                content={tooltipType === 'image' ? undefined : disabled ? 'Скачать' : fileName!}
-                render={tooltipType === 'image'
-                    ? tooltipImage
-                    : undefined}
+                title={tooltipType === 'image' ? undefined : disabled ? 'Скачать' : fileName!}
             >
                 <div
                     className={getBemClasses(styles, null, { disabled }, className)}
                     data-testid={dataTestId}
                 >
-                    <Text className={getBemClasses(styles, 'name')}>
+                    <Typography.Text className={getBemClasses(styles, 'name')}>
                         {fileName}
-                    </Text>
+                    </Typography.Text>
                 </div>
             </Tooltip>
             {!disabled && <Button
                 onClick={onClear}
                 className={getBemClasses(styles, 'clearButton')}
-                isIconButton
                 data-testid={`${dataTestId}.clearButton`}
                 size="small"
-                variant="ghost"
             >
                 <Cross className={getBemClasses(styles, 'clearButtonIcon')} />
             </Button>}

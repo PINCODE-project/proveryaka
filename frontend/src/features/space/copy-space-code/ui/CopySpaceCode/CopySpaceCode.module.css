@@ -1,6 +1,0 @@
-.CopySpaceCode {
-    display: flex;
-    align-items: center;
-    gap: var(--space-xs);
-    font-weight: var(--font-weight-regular);
-}

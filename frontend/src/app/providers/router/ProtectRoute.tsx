@@ -4,7 +4,6 @@ import { Navigate, useSearchParams } from 'react-router-dom';
 import { useAuthContext } from '@app/providers/AuthProvider';
 
 import { AuthRouter } from '@pages/auth';
-import { SpaceRouter } from '@pages/spaces';
 
 import { typedMemo } from '@shared/lib';
 
@@ -27,7 +26,7 @@ export const ProtectRoute: FC<Props> = typedMemo(function ProtectRoute({
     }
     if (withNoAuthGuard && isAuth) {
         const returnUrl = searchParams.get('ReturnUrl');
-        const decodedReturnUrl = returnUrl ? decodeURIComponent(returnUrl) : SpaceRouter.Main;
+        const decodedReturnUrl = returnUrl ? decodeURIComponent(returnUrl) : 'main';
         return <Navigate to={decodedReturnUrl} />;
     }
     return children;

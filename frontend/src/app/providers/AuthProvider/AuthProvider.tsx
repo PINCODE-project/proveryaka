@@ -1,8 +1,7 @@
+import { Spin } from 'antd';
 import { createContext, FC, PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react';
-import { useQueryClient } from 'react-query';
 
 import { Token, TokenService, typedMemo } from '@shared/lib';
-import { Loader } from '@shared/ui';
 
 export type AuthContextProps = {
     login: (token: Token) => void;
@@ -48,7 +47,7 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = typedMemo(funct
     if (isLoading) {
         return (
             <div className="LoaderFallback">
-                <Loader />
+                <Spin />
             </div>
         );
     }

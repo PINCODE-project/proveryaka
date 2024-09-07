@@ -1,8 +1,8 @@
+import { Spin } from 'antd';
 import { Suspense, useCallback } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
 import { ConfigRouteProps } from '@shared/types';
-import { Loader } from '@shared/ui';
 
 import { routeConfig } from './config';
 import { ProtectRoute } from './ProtectRoute';
@@ -26,7 +26,7 @@ export const AppRouter = () => {
 
     return (
         <Suspense fallback={<div className="LoaderFallback">
-            <Loader />
+            <Spin />
         </div>}
         >
             <Routes>

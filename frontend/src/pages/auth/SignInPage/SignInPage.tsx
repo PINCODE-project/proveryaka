@@ -1,7 +1,5 @@
 import { FC } from 'react';
 
-import { SignInForm } from '@features/auth/signin';
-
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { FlexContainer } from '@shared/ui';
@@ -22,7 +20,6 @@ export const SignInPage: FC<Props> = typedMemo(function SignInPage({
             className={getBemClasses(styles, null, null, className)}
             data-testid={dataTestId}
         >
-            <SignInForm />
         </FlexContainer>
     );
 });

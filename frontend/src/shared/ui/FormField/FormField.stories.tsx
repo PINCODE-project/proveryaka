@@ -1,8 +1,8 @@
 import { Meta, StoryObj } from '@storybook/react';
+import { Input } from 'antd';
 import * as Yup from 'yup';
 
 import { createDecorators, FormikDecorator } from '@shared/mock/storybook';
-import { Input } from '@shared/ui';
 
 import { FormField, Props } from './FormField';
 
