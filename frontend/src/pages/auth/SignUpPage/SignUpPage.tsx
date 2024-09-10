@@ -1,6 +1,10 @@
 import { FC } from 'react';
 
-import { getBemClasses, typedMemo } from '@shared/lib';
+import { SignUpForm } from '@features/auth/signup';
+
+import Logo from '@shared/assets/images/logo.svg';
+import { typedMemo } from '@shared/lib';
+import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { FlexContainer } from '@shared/ui';
 
@@ -17,9 +21,15 @@ export const SignUpPage: FC<Props> = typedMemo(function SignUpPage({
             direction="column"
             alignItems="center"
             justifyContent="center"
-            className={getBemClasses(styles, null, null, className)}
+            overflow="nowrap"
+            gap="m"
+            className={getModuleClasses(styles, 'root', null, className)}
             data-testid={dataTestId}
         >
+            <FlexContainer direction="row" justifyContent="start" className={getModuleClasses(styles, 'header')}>
+                <Logo />
+            </FlexContainer>
+            <SignUpForm />
         </FlexContainer>
     );
 });

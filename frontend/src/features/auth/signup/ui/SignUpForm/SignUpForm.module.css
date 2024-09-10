@@ -1,0 +1,38 @@
+.form {
+    max-width: 440px;
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    padding: var(--space-xxl);
+    border-radius: var(--border-radius-l);
+    display: flex;
+    flex-direction: column;
+}
+
+.links {
+    width: 100%;
+    margin-bottom: var(--space-m);
+}
+
+.link {
+    font-weight: var(--font-weight-semibold);
+    color: #000000;
+    opacity: 0.4;
+    font-size: var(--subheadline-font-size);
+    transition: opacity 0.3s;
+}
+
+.link.isActive,
+.link:hover {
+    opacity: 1;
+    color: #000000;
+}
+
+.policyPrivacy {
+    font-size: var(--caption-font-size);
+    line-height: var(--caption-line-height);
+}
+
+.policyPrivacyLink {
+    font-size: inherit;
+    font-weight: var(--font-weight-semibold);
+}

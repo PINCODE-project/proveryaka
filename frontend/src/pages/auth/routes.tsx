@@ -6,6 +6,7 @@ import { SignUpPage } from './SignUpPage';
 export const AuthRouter = {
     SignIn: '/signin',
     SignUp: '/signup',
+    RestorePassword: '/restore-password',
 };
 
 export const authRouteConfig: ConfigRouteProps[] = [

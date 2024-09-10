@@ -9,14 +9,23 @@ import { QueryProvider } from '@app/providers/QueryProvider';
 
 import App from './app/App';
 
+import { ConfigProvider } from 'antd';
+
 const root = createRoot(document.getElementById('root')!);
 root.render(
     <ErrorBoundary>
         <BrowserRouter>
             <AuthContextProvider>
                 <QueryProvider>
-                    <App />
-                    <ToastContainer />
+                    <ConfigProvider
+                        theme={{
+                            token: {
+                                colorPrimary: '#0D9E47',
+                            },
+                        }}
+                    >
+                        <App />
+                    </ConfigProvider>
                 </QueryProvider>
             </AuthContextProvider>
         </BrowserRouter>

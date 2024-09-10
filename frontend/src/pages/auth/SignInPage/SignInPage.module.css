@@ -1,4 +1,3 @@
-.SignInPage {
-    background-image: url(@shared/assets/images/signin_background.png);
-    padding: var(--space-xl);
+.header {
+    width: 100%;
 }

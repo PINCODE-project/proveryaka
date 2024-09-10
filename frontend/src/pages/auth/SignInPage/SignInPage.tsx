@@ -1,6 +1,10 @@
 import { FC } from 'react';
 
-import { getBemClasses, typedMemo } from '@shared/lib';
+import { SignInForm } from '@features/auth/signin';
+
+import Logo from '@shared/assets/images/logo.svg';
+import { typedMemo } from '@shared/lib';
+import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { FlexContainer } from '@shared/ui';
 
@@ -17,9 +21,15 @@ export const SignInPage: FC<Props> = typedMemo(function SignInPage({
             direction="column"
             alignItems="center"
             justifyContent="center"
-            className={getBemClasses(styles, null, null, className)}
+            overflow="nowrap"
+            gap="m"
+            className={getModuleClasses(styles, 'root', null, className)}
             data-testid={dataTestId}
         >
+            <FlexContainer direction="row" justifyContent="start" className={getModuleClasses(styles, 'header')}>
+                <Logo />
+            </FlexContainer>
+            <SignInForm />
         </FlexContainer>
     );
 });
