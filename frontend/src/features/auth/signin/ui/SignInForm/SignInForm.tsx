@@ -47,6 +47,7 @@ export const SignInForm: FC<Props> = typedMemo(function SignInForm({
             name="SignInForm"
             layout="vertical"
             onFinish={signIn}
+            requiredMark={false}
         >
             <Flex
                 align="center"
@@ -73,7 +74,10 @@ export const SignInForm: FC<Props> = typedMemo(function SignInForm({
             <Form.Item<SignIn>
                 label="Почта"
                 name="username"
-                rules={[{ required: true, message: 'Введите почту' }]}
+                rules={[
+                    { required: true, message: 'Введите почту' },
+                    { type: 'email', message: 'Введите почту' },
+                ]}
             >
                 <Input placeholder="ivanivanov@yandex.ru" />
             </Form.Item>

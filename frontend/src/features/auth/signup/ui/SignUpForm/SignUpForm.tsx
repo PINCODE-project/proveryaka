@@ -71,7 +71,6 @@ export const SignUpForm: FC<Props> = typedMemo(function SignInForm({
             <Form.Item<SignUp>
                 label="Отчество"
                 name="patronymic"
-                rules={[{ required: true, message: 'Введите отчество' }]}
             >
                 <Input placeholder="Иванович" />
             </Form.Item>
@@ -79,7 +78,10 @@ export const SignUpForm: FC<Props> = typedMemo(function SignInForm({
             <Form.Item<SignUp>
                 label="Почта"
                 name="email"
-                rules={[{ required: true, message: 'Введите почту' }]}
+                rules={[
+                    { required: true, message: 'Введите почту' },
+                    { type: 'email', message: 'Введите почту' },
+                ]}
             >
                 <Input placeholder="ivanivanov@yandex.ru" />
             </Form.Item>
@@ -114,7 +116,7 @@ export const SignUpForm: FC<Props> = typedMemo(function SignInForm({
                 <Input.Password />
             </Form.Item>
 
-            <Form.Item>
+            <Form.Item className={getModuleClasses(styles, 'submitButton')}>
                 <Button type="primary" htmlType="submit" block>
                     Войти
                 </Button>

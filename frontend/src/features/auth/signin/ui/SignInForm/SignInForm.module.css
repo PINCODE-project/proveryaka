@@ -2,7 +2,7 @@
     max-width: 440px;
     width: 100%;
     border: 1px solid rgba(0, 0, 0, 0.06);
-    padding: var(--space-xxl);
+    padding: var(--space-l) var(--space-xxl);
     border-radius: var(--border-radius-l);
 }
 
