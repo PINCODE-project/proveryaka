@@ -1,5 +1,5 @@
 import { EllipsisOutlined } from '@ant-design/icons';
-import { Dropdown, Flex, MenuProps, TableColumnProps, Typography } from 'antd';
+import { Dropdown, Flex, MenuProps, Typography } from 'antd';
 import { FC, useCallback } from 'react';
 
 import { SpacesTable } from '@entities/space';
@@ -16,7 +16,6 @@ export type Props = ClassNameProps & TestProps & Readonly<{}>;
 
 export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
     className,
-    'data-testid': dataTestId = 'SpacesPage',
 }) {
     const renderActions = useCallback((_: string, record: GetSpaceResponse) => {
         const items: MenuProps['items'] = [
@@ -67,7 +66,6 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
             vertical
             gap="large"
             className={getBemClasses(styles, 'root', null, className)}
-            data-testid={dataTestId}
         >
             <Flex justify="space-between" gap="middle">
                 <Logo />

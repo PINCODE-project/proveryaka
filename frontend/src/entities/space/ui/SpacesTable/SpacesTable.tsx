@@ -1,5 +1,5 @@
 import { Avatar, Flex, Table, TableColumnProps, Typography } from 'antd';
-import { FC, useMemo } from 'react';
+import { FC, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/space';
@@ -58,13 +58,13 @@ export const SpacesTable: FC<Props> = typedMemo(function SpacesTable({
         },
     ], [renderActions]);
 
+    const onRow = useCallback((record: GetSpaceResponse) => ({
+        onClick: () => navigate(SpaceRouter.Space(record.id)),
+    }), [navigate]);
+
     return (
         <Table
-            onRow={record => {
-                return {
-                    onClick: () => navigate(SpaceRouter.Space(record.id)),
-                };
-            }}
+            onRow={onRow}
             pagination={false}
             columns={columns}
             dataSource={spaces!.entityList ?? []}
