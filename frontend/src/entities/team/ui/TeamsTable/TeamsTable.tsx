@@ -1,8 +1,6 @@
 import { Table, TableColumnsType } from 'antd';
 import { FC, useCallback } from 'react';
 
-import { useGetSpaceTeams } from '@entities/team/lib/useGetSpaceTeams';
-
 import { typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { EmptyTable } from '@shared/ui';
@@ -36,9 +34,9 @@ const columns: TableColumnsType<GetTeam> = [
 export const TeamsTable: FC<Props> = typedMemo(function TeamsTable({
     spaceId,
 }) {
-    const { data: teams, isLoading } = useGetSpaceTeams(spaceId);
+    const { data: teams } = useGetSpaceUserTeams(spaceId);
     const expandedRowRender = useCallback((record: GetTeam) => {
-        // TODO: возвращает StudentsTable (адо написать)
+        // TODO: возвращает StudentsTable (надо написать)
         return null;
     }, []);
 
