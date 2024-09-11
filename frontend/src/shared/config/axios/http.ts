@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import { addTokenInterceptor } from '@shared/config/axios/interseptors/addTokenInterceptor';
+import { notifyError } from '@shared/config/axios/interseptors/notifyError';
 import { refreshSecretInterceptor } from '@shared/config/axios/interseptors/refreshTokenInterceptor';
 
 const BASE_API_URL = 'https://dev.pincode-dev.ru/proverayka/';
@@ -18,7 +19,10 @@ estimateHttp.interceptors.request.use(config => addTokenInterceptor(config),
     error => Promise.reject(error));
 
 estimateHttp.interceptors.response.use(response => response,
-    error => refreshSecretInterceptor(error));
+    error => {
+        notifyError(error);
+        refreshSecretInterceptor(error);
+    });
 
 export const solutionHttp = axios.create({
     baseURL: `${BASE_API_URL}solution-api/api/v1/public`,
@@ -33,7 +37,10 @@ solutionHttp.interceptors.request.use(config => addTokenInterceptor(config),
     error => Promise.reject(error));
 
 solutionHttp.interceptors.response.use(response => response,
-    error => refreshSecretInterceptor(error));
+    error => {
+        notifyError(error);
+        refreshSecretInterceptor(error);
+    });
 
 export const ssoHttp = axios.create({
     baseURL: `${BASE_API_URL}sso`,
@@ -48,4 +55,7 @@ ssoHttp.interceptors.request.use(config => addTokenInterceptor(config),
     error => Promise.reject(error));
 
 ssoHttp.interceptors.response.use(response => response,
-    error => refreshSecretInterceptor(error));
+    error => {
+        notifyError(error);
+        refreshSecretInterceptor(error);
+    });
