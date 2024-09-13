@@ -27,9 +27,9 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
         if (hasError) {
             return (
-                <Suspense fallback="">
+                <>
                     <Typography.Title level={3} style={{ textAlign: 'center', marginTop: '50px' }}>
-                        Упс, произошла ошибка 🥲 <br />
+                        Упс, произошла ошибка 🤯 <br />
                     </Typography.Title >
                     <Typography.Paragraph style={{ textAlign: 'center' }}>
                         Обновите страницу или оставьте сообщение, чтобы мы могли разобраться:{' '}
@@ -42,7 +42,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
                             форма обратной связи
                         </a >
                     </Typography.Paragraph >
-                </Suspense >
+                </>
             );
         }
 
