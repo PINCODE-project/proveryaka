@@ -21,6 +21,7 @@ import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { ClassNameProps, TestProps } from '@shared/types';
+import { Sidebar, SidebarItem } from '@shared/ui';
 
 import styles from './SpacePage.module.css';
 
@@ -76,51 +77,28 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
             className={getModuleClasses(styles, 'root', null, className)}
             data-testid={dataTestId}
         >
-            <Flex vertical gap={26} align="center"
-                className={getModuleClasses(styles, 'menu')}
-            >
-                <LogoMin className={getModuleClasses(styles, 'logo')} />
-
-                <NavLink
+            <Sidebar>
+                <SidebarItem
                     to={SpaceRouter.SpaceTasks(spaceId)}
-                    className={({ isActive }) => getModuleClasses(styles, 'navItem', { isActive })}
-                >
-                    <FolderOpenOutlined className={getModuleClasses(styles, 'navIcon')} />
-                    <Typography.Text className={getModuleClasses(styles, 'navText')}>
-                        Задания
-                    </Typography.Text>
-                </NavLink>
-
-                <NavLink
-                    to={SpaceRouter.SpaceSolutions(spaceId)}
-                    className={({ isActive }) => getModuleClasses(styles, 'navItem', { isActive })}
-                >
-                    <FileDoneOutlined className={getModuleClasses(styles, 'navIcon')} />
-                    <Typography.Text className={getModuleClasses(styles, 'navText')}>
-                        Работы
-                    </Typography.Text>
-                </NavLink>
-
-                <NavLink
+                    text="Задания"
+                    icon={className => <FolderOpenOutlined className={className} /> }
+                />
+                <SidebarItem
+                    to={SpaceRouter.SpaceTasks(spaceId)}
+                    text="Задания"
+                    icon={className => <FileDoneOutlined className={className} /> }
+                />
+                <SidebarItem
                     to={SpaceRouter.SpaceUsers(spaceId)}
-                    className={({ isActive }) => getModuleClasses(styles, 'navItem', { isActive })}
-                >
-                    <UserOutlined className={getModuleClasses(styles, 'navIcon')} />
-                    <Typography.Text className={getModuleClasses(styles, 'navText')}>
-                        Участники
-                    </Typography.Text>
-                </NavLink>
-
-                <NavLink
+                    text="Участники"
+                    icon={className => <UserOutlined className={className} /> }
+                />
+                <SidebarItem
                     to={SpaceRouter.SpaceTeams(spaceId)}
-                    className={({ isActive }) => getModuleClasses(styles, 'navItem', { isActive })}
-                >
-                    <TeamOutlined className={getModuleClasses(styles, 'navIcon')} />
-                    <Typography.Text className={getModuleClasses(styles, 'navText')}>
-                        Команды
-                    </Typography.Text>
-                </NavLink>
-            </Flex>
+                    text="Команды"
+                    icon={className => <TeamOutlined className={className} /> }
+                />
+            </Sidebar>
 
             <Flex vertical gap={32} className={getModuleClasses(styles, 'content')}>
                 <Flex
