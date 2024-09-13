@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom';
+import { SpacePage } from '@pages/space/SpacePage';
 
 import { ConfigRouteProps } from '@shared/types';
 
@@ -22,7 +22,7 @@ export const spaceRouteConfig: ConfigRouteProps[] = [
     {
         path: SpaceRouter.Space(':spaceId'),
         withAuthGuard: true,
-        element: <Outlet />,
+        element: <SpacePage />,
         children: [
             {
                 path: SpaceRouter.SpaceTasks(':spaceId'),
