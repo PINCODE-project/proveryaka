@@ -91,7 +91,7 @@ export const SignInForm: FC<Props> = typedMemo(function SignInForm({
             </Form.Item>
 
             <Form.Item>
-                <Link to={AuthRouter.RestorePassword}>
+                <Link to={AuthRouter.ResetPassword}>
                     <Typography.Link color="primary" type="success">
                         Забыли пароль?
                     </Typography.Link>
