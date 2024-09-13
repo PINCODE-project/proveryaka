@@ -18,5 +18,6 @@ export * from './lib/getSpaceExpertsQueryKey';
 export * from './lib/useGetSpaceExperts';
 export * from './lib/getSpaceStudentsQueryKey';
 export * from './lib/useGetSpaceStudents';
+export * from './lib/isOrganizer';
 
 export * from './ui/SpacesTable';
