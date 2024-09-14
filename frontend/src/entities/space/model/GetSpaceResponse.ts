@@ -35,7 +35,7 @@ export type GetSpaceResponse = {
     inviteCode: string | null;
 
     /**
-     * Идентификаторы органищаторов
+     * Идентификаторы организаторов
      */
     organizerIdList: string[] | null;
 };

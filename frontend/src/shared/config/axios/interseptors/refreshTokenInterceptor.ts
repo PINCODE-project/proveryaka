@@ -11,7 +11,8 @@ import { extractData, Token, TokenService } from '@shared/lib';
  * @param refreshCallback Коллбек для повтора запроса
  */
 export function refreshSecretInterceptor(error: AxiosError)/*: RefreshResult */ {
-    if (error.response?.status === 401) {
+    console.log(error);
+    if (error.response?.status === 401 || error.code === 'ERR_NETWORK') {
         return refreshSecretInner(error);
     }
 
@@ -23,6 +24,7 @@ const refreshSecretInner = async (requestError: AxiosError)/* RefreshResult */ =
     if (secret === null || requestError.config === undefined) {
         throw requestError;
     }
+    console.log(secret, requestError.config);
 
     try {
         const newSecret = await refreshToken();

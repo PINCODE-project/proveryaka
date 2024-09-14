@@ -18,3 +18,6 @@ export * from './lib/getSpaceExpertsQueryKey';
 export * from './lib/useGetSpaceExperts';
 export * from './lib/getSpaceStudentsQueryKey';
 export * from './lib/useGetSpaceStudents';
+
+export * from './ui/SpacesTable';
+export * from './ui/SpaceForm';
