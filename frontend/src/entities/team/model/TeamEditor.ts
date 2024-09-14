@@ -7,5 +7,5 @@ export type TeamEditor = {
     /**
      * Идентификатор пространтства
      */
-    spaceId?: string;
+    entityId?: string;
 };

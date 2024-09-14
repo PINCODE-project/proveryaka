@@ -1,9 +1,9 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Form, Modal, notification } from 'antd';
-import { FC, useCallback, useState } from 'react';
+import { Button, Flex, Form, Modal, notification, Spin } from 'antd';
+import { FC, Suspense, useCallback, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
-import { TeamForm } from '@entities/team';
+import { TeamEditor, TeamForm } from '@entities/team';
 import { getSpaceTeamsQueryKey } from '@entities/team/lib/getSpaceTeamsQueryKey';
 import { getSpaceUserTeamsQueryKey } from '@entities/team/lib/getSpaceUserTeamsQueryKey';
 
@@ -44,6 +44,13 @@ export const CreateTeamModal: FC<Props> = typedMemo(function CreateTeamModal({
         setIsOpen(false);
     }, []);
 
+    const submit = useCallback((form: TeamEditor) => {
+        create({
+            ...form,
+            entityId: spaceId,
+        });
+    }, [create, spaceId]);
+
     return (
         <>
             {contextHolder}
@@ -61,18 +68,19 @@ export const CreateTeamModal: FC<Props> = typedMemo(function CreateTeamModal({
                 onCancel={onClose}
                 onClose={onClose}
             >
-                <TeamForm
-                    spaceId={spaceId}
-                    submit={create}
-                    initialValues={{ spaceId }}
-                    submitButton={
-                        <Form.Item className={getModuleClasses(styles, 'submitButton')}>
-                            <Button type="primary" htmlType="submit" block>
+                <Suspense fallback={<Flex justify="center"><Spin /></Flex>}>
+                    <TeamForm
+                        spaceId={spaceId}
+                        submit={submit}
+                        submitButton={
+                            <Form.Item className={getModuleClasses(styles, 'submitButton')}>
+                                <Button type="primary" htmlType="submit">
                                 Создать
-                            </Button>
-                        </Form.Item>
-                    }
-                />
+                                </Button>
+                            </Form.Item>
+                        }
+                    />
+                </Suspense>
             </Modal>
         </>
     );

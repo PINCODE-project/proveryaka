@@ -48,10 +48,10 @@ export const TeamForm = typedMemo(function TeamForm<TTeam extends TeamEditor>({
 
             <Form.Item<TeamEditor>
                 label="Участники"
-                name="users"
+                // name="users"
                 rules={[{ required: true, message: 'Выберите участников' }]}
             >
-                <Select mode="multiple">
+                <Select mode="multiple" placeholder="Не выбрано">
                     {students.studentInfoList?.map(student => (
                         <Select.Option value={student.id} key={student.id}>
                             {student.surname} {student.name} {student.patronymic}

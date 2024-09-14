@@ -1,3 +1,5 @@
 .submitButton {
-    margin-left: auto;
+    display: flex;
+    justify-content: end;
+    margin-bottom: 0;
 }
