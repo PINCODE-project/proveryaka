@@ -20,7 +20,7 @@ export const ProtectRoute: FC<Props> = typedMemo(function ProtectRoute({
 }) {
     const { isAuth } = useAuthContext();
     const [searchParams] = useSearchParams();
-    console.log(withAuthGuard, withNoAuthGuard, isAuth, window.location);
+
     if (withAuthGuard && !isAuth) {
         const encodeReturnUrl = encodeURIComponent(`${location.pathname}${location.search}`);
         return <Navigate to={`${AuthRouter.SignIn}?ReturnUrl=${encodeReturnUrl}`} />;
