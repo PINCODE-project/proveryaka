@@ -42,6 +42,8 @@
     --space-xxxl: 64px;
 
     /* Colors */
+    --primary-color: #0D9E47;
+
     --default-forefround: #242424;
     --default-forefround-1: #424242;
     --default-forefround-2: #616161;

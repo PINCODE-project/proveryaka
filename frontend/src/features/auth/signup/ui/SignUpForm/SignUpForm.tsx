@@ -113,7 +113,7 @@ export const SignUpForm: FC<Props> = typedMemo(function SignInForm({
                     }),
                 ]}
             >
-                <Input.Password />
+                <Input.Password placeholder="password" />
             </Form.Item>
 
             <Form.Item className={getModuleClasses(styles, 'submitButton')}>
