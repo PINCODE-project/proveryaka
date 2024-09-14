@@ -1,4 +1,4 @@
-export type CreateTeam = {
+export type TeamEditor = {
     /**
      * Название команды
      */
@@ -7,5 +7,5 @@ export type CreateTeam = {
     /**
      * Идентификатор пространтства
      */
-    spaceId: string;
+    spaceId?: string;
 };
