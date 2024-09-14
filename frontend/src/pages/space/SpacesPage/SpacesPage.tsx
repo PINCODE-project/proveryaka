@@ -71,7 +71,6 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
         >
             <Flex justify="space-between" gap="middle">
                 <Logo />
-
                 <Typography.Text>
                     <UserPanel />
                 </Typography.Text>
