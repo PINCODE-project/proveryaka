@@ -1,10 +1,17 @@
-import './styles/index.css';
+import { notification } from 'antd';
 
-import { AppRouter } from './providers/router/AppRouter';
 import '@shared/styles/index.css';
 
+import './styles/index.css';
+import { AppRouter } from './providers/router/AppRouter';
+
 const App = () => {
-    return <AppRouter />;
+    const [_, globalContextHolder] = notification.useNotification();
+
+    return (<>
+        {globalContextHolder}
+        <AppRouter />
+    </>);
 };
 
 export default App;

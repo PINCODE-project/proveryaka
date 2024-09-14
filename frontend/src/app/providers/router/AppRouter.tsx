@@ -1,4 +1,4 @@
-import { Spin } from 'antd';
+import { Flex, Spin } from 'antd';
 import { Suspense, useCallback } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
@@ -25,9 +25,16 @@ export const AppRouter = () => {
     }, []);
 
     return (
-        <Suspense fallback={<div className="LoaderFallback">
-            <Spin />
-        </div>}
+        <Suspense
+            fallback={
+                <Flex
+                    align="center"
+                    justify="center"
+                    className="LoaderFallback"
+                >
+                    <Spin size="large" />
+                </Flex>
+            }
         >
             <Routes>
                 {routeConfig.map(renderRoute)}
