@@ -2,11 +2,13 @@ import { EllipsisOutlined } from '@ant-design/icons';
 import { Dropdown, Flex, MenuProps, Typography } from 'antd';
 import { FC, useCallback } from 'react';
 
+import { UserPanel } from '@widgets/UserPanel';
+
 import { SpacesTable } from '@entities/space';
 import { GetSpaceResponse } from '@entities/space/model/GetSpaceResponse';
 
 import Logo from '@shared/assets/images/logo.svg';
-import { getBemClasses, typedMemo } from '@shared/lib';
+import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { ClassNameProps, TestProps } from '@shared/types';
 
@@ -65,12 +67,13 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
         <Flex
             vertical
             gap="large"
-            className={getBemClasses(styles, 'root', null, className)}
+            className={getModuleClasses(styles, 'root', null, className)}
         >
             <Flex justify="space-between" gap="middle">
                 <Logo />
-
-                <Typography.Text>User</Typography.Text>
+                <Typography.Text>
+                    <UserPanel />
+                </Typography.Text>
             </Flex>
 
             <Typography.Text>Filters</Typography.Text>

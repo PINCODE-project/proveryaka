@@ -1,4 +1,4 @@
-import { GetTeam } from '@entities/team/model/GetTeam';
+import { GetTeam } from './GetTeam';
 
 export type GetTeamList = {
     teamList: GetTeam[];

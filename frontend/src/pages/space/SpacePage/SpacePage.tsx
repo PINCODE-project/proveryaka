@@ -8,7 +8,7 @@ import {
 } from '@ant-design/icons';
 import { Avatar, Dropdown, Flex, MenuProps, Typography } from 'antd';
 import { FC } from 'react';
-import { Link, Navigate, NavLink, Outlet } from 'react-router-dom';
+import { Link, Navigate, Outlet, useLocation } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/space';
 
@@ -16,7 +16,6 @@ import { isOrganizer } from '@entities/space';
 import { useGetSpace } from '@entities/space/lib/useGetSpace';
 import { useGetSpaceRoles } from '@entities/space/lib/useGetSpaceRoles';
 
-import LogoMin from '@shared/assets/images/logo-min.svg';
 import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
@@ -64,12 +63,16 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
     className,
     'data-testid': dataTestId = 'SpacePage',
 }) {
+    const location = useLocation();
     const spaceId = useSpaceId();
     const { data: roles } = useGetSpaceRoles(spaceId ?? '');
     const { data: space } = useGetSpace(spaceId ?? '');
 
     if (!spaceId || !space) {
         return <Navigate to={SpaceRouter.Spaces} />;
+    }
+    if (location.pathname === SpaceRouter.Space(spaceId)) {
+        return <Navigate to={SpaceRouter.SpaceTasks(spaceId)} />;
     }
     return (
         <Flex
@@ -84,8 +87,8 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
                     icon={className => <FolderOpenOutlined className={className} /> }
                 />
                 <SidebarItem
-                    to={SpaceRouter.SpaceTasks(spaceId)}
-                    text="Задания"
+                    to={SpaceRouter.SpaceSolutions(spaceId)}
+                    text="Работы"
                     icon={className => <FileDoneOutlined className={className} /> }
                 />
                 <SidebarItem
@@ -137,7 +140,6 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
 
                 <Outlet />
             </Flex>
-            <Outlet />
         </Flex>
     );
 });
