@@ -1,3 +1,9 @@
-.SpaceForm {
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
 
+.formItem {
+    margin-bottom: 0;
 }
