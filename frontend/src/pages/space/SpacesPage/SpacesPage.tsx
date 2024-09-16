@@ -3,6 +3,8 @@ import { Button, Dropdown, Flex, MenuProps, Typography } from 'antd';
 import MenuItem from 'antd/lib/menu/MenuItem';
 import { FC, useCallback, useMemo } from 'react';
 
+import { UserPanel } from '@widgets/UserPanel';
+
 import { CreateSpaceModal } from '@features/space/create-space';
 import { EnterSpaceByCodeModal } from '@features/space/enter-space-by-code';
 
@@ -10,7 +12,7 @@ import { SpacesTable } from '@entities/space';
 import { GetSpaceResponse } from '@entities/space/model/GetSpaceResponse';
 
 import Logo from '@shared/assets/images/logo.svg';
-import { getBemClasses, typedMemo } from '@shared/lib';
+import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { ClassNameProps, TestProps } from '@shared/types';
 
@@ -98,15 +100,16 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
         <Flex
             vertical
             gap="large"
-            className={getBemClasses(styles, 'root', null, className)}
+            className={getModuleClasses(styles, 'root', null, className)}
         >
-            <Flex justify="space-between" gap="middle" align="center">
+            <Flex justify="space-between" gap="middle">
                 <Logo />
-
-                <Typography.Text>User</Typography.Text>
+                <Typography.Text>
+                    <UserPanel />
+                </Typography.Text>
             </Flex>
 
-            <Flex justify="space-between" gap="middle" align="center">
+           <Flex justify="space-between" gap="middle" align="center">
                 <Typography.Text>Filters</Typography.Text>
                 {SpacesButton}
             </Flex>

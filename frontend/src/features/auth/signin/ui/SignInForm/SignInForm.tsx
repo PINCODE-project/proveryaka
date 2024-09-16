@@ -1,5 +1,4 @@
-import { Button, Flex, Form, Input, notification, Typography } from 'antd';
-import { isAxiosError } from 'axios';
+import { Button, Flex, Form, Input, Typography } from 'antd';
 import { FC } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 
@@ -20,25 +19,12 @@ export type Props = ClassNameProps & TestProps & Readonly<{}>;
 export const SignInForm: FC<Props> = typedMemo(function SignInForm({
     className,
 }) {
-    const [api, contextHolder] = notification.useNotification();
-
     const { login } = useAuthContext();
     const { mutate: signIn } = useSignIn({
         onSuccess: token => {
             login(token);
         },
-        onError: error => {
-            if (!isAxiosError(error)) {
-                return;
-            }
-            const data = error.response?.data as { error_description: string } ?? { error_description: '' };
-            if (data.error_description === 'invalid_username_or_password') {
-                api.error({
-                    message: 'Неверные данные',
-                    description: 'Проверьте почту и пароль',
-                });
-            }
-        },
+        retry: false,
     });
 
     return (
@@ -69,8 +55,6 @@ export const SignInForm: FC<Props> = typedMemo(function SignInForm({
                 </NavLink>
             </Flex>
 
-            {contextHolder}
-
             <Form.Item<SignIn>
                 label="Почта"
                 name="username"
@@ -91,7 +75,7 @@ export const SignInForm: FC<Props> = typedMemo(function SignInForm({
             </Form.Item>
 
             <Form.Item>
-                <Link to={AuthRouter.RestorePassword}>
+                <Link to={AuthRouter.ResetPassword}>
                     <Typography.Link color="primary" type="success">
                         Забыли пароль?
                     </Typography.Link>
