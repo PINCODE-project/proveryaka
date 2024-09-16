@@ -38,7 +38,14 @@ export const SpaceForm = typedMemo(function SpaceForm<TData extends SpaceSetting
                 <Form.Item<CreateSpaceRequest> valuePropName="fileList" name="icon" className={styles.formItem}>
                     <FileInput
                         isEmpty={file === null}
-                        filledComponent={<img src={file ? URL.createObjectURL(file) : ''} />}
+                        filledComponent={
+                            <img
+                                src={file ? URL.createObjectURL(file) : ''}
+                                alt="avatar"
+                                style={{ width: '100%' }}
+                            />
+                        }
+                        listType="picture-card"
                         emptyText="Иконка"
                         onChangeFile={setFile}
                         showUploadList={false}
