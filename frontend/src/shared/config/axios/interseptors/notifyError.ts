@@ -7,8 +7,8 @@ import { isErrorResponse } from '@shared/lib';
  * Интерсептор отправки уведомления при ошибке
  * @param error Ошибка запроса
  */
-export function notifyError(error: AxiosError) {
-    const errorData = error.response?.data;
+export async function notifyError(error: AxiosError) {
+    const errorData = await parseErrorData(error);
 
     let message = 'Произошла ошибка';
     let description = 'Попробуйте перезагрузить страницу или повторить действие';
@@ -27,4 +27,17 @@ export function notifyError(error: AxiosError) {
         message,
         description,
     });
+}
+
+async function parseErrorData(error: AxiosError): Promise<unknown> {
+    let errorData = error.response?.data;
+
+    const isJsonBlob = (data: unknown): data is Blob => data instanceof Blob && data.type === 'application/json';
+
+    if (isJsonBlob(errorData)) {
+        const rawErrorData = await errorData.text();
+        errorData = JSON.parse(rawErrorData);
+    }
+
+    return errorData;
 }
