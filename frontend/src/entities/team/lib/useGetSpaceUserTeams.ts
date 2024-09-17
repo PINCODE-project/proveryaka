@@ -1,11 +1,15 @@
+import { useMemo } from 'react';
 import { useQuery } from 'react-query';
 
-import { getSpaceUserTeams } from '@entities/team/api/getSpaceUserTeams';
-import { getSpaceUserTeamsQueryKey } from '@entities/team/lib/getSpaceUserTeamsQueryKey';
-import { GetTeamList } from '@entities/team/model/GetTeamList';
+import { AxiosUseQueryOptions } from '@shared/types';
 
-import { AxiosUseQueryOptions, ListFilters } from '@shared/types';
+import { getSpaceUserTeamsQueryKey } from './getSpaceUserTeamsQueryKey';
+import { getSpaceUserTeams } from '../api/getSpaceUserTeams';
+import { GetTeamFilters } from '../model/GetTeamFilters';
+import { GetTeamList } from '../model/GetTeamList';
 
-export function useGetSpaceUserTeams(spaceId: string, filters?: ListFilters, options?: AxiosUseQueryOptions<GetTeamList>) {
-    return useQuery(getSpaceUserTeamsQueryKey(spaceId), () => getSpaceUserTeams(spaceId, filters), options);
+export function useGetSpaceUserTeams(spaceId: string, filters: GetTeamFilters, options?: AxiosUseQueryOptions<GetTeamList>) {
+    const queryKey = useMemo(() => getSpaceUserTeamsQueryKey(spaceId), [spaceId]);
+
+    return useQuery(queryKey, () => getSpaceUserTeams(spaceId, filters), options);
 };

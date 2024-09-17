@@ -2,6 +2,7 @@ import { SpacePage } from '@pages/space/SpacePage';
 
 import { ConfigRouteProps } from '@shared/types';
 
+import { SpaceTeamsPage } from './SpacePage/subpages/SpaceTeamsPage';
 import { SpacesPage } from './SpacesPage';
 
 export const SpaceRouter = {
@@ -41,7 +42,7 @@ export const spaceRouteConfig: ConfigRouteProps[] = [
             },
             {
                 path: SpaceRouter.SpaceTeams(':spaceId'),
-                element: null,
+                element: <SpaceTeamsPage />,
                 withAuthGuard: true,
             },
             {
