@@ -43,6 +43,7 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
                 key: '2',
                 label: 'Удалить из пространства',
                 disabled: true,
+                danger: true,
             },
         ];
 
