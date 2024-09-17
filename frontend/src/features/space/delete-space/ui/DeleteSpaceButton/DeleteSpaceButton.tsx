@@ -24,7 +24,7 @@ export const DeleteSpaceButton: FC<Props> = typedMemo(function DeleteSpaceButton
     const queryClient = useQueryClient();
     const [api, contextHolder] = notification.useNotification();
 
-    const { mutate: deleteSpace } = useDeleteSpace({
+    const { mutate: deleteSpace, isLoading } = useDeleteSpace({
         onSuccess: () => {
             queryClient.resetQueries(getSpacesQueryKey);
             queryClient.resetQueries(getSpaceQueryKey(spaceId ?? ''));
@@ -35,7 +35,8 @@ export const DeleteSpaceButton: FC<Props> = typedMemo(function DeleteSpaceButton
         },
     });
 
-    const onDelete = useCallback(() => deleteSpace(spaceId), [spaceId, deleteSpace]);
+    const onDelete = useCallback(() => !isLoading && deleteSpace(spaceId),
+        [spaceId, deleteSpace]);
 
     return (
         <>
