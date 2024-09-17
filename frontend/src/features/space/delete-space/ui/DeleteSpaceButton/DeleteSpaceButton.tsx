@@ -36,7 +36,7 @@ export const DeleteSpaceButton: FC<Props> = typedMemo(function DeleteSpaceButton
     });
 
     const onDelete = useCallback(() => !isLoading && deleteSpace(spaceId),
-        [spaceId, deleteSpace]);
+        [spaceId, deleteSpace, isLoading]);
 
     return (
         <>
