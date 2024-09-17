@@ -6,19 +6,17 @@ import {
     TeamOutlined,
     LeftOutlined,
 } from '@ant-design/icons';
-import { Avatar, Dropdown, Flex, MenuProps, notification, Typography } from 'antd';
+import { Avatar, Dropdown, Flex, MenuProps, Typography } from 'antd';
 import { FC, useMemo } from 'react';
-import { useQueryClient } from 'react-query';
 import { Link, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/space';
 
 import { UserPanel } from '@widgets/UserPanel';
 
-import { useDeleteSpace } from '@features/space/delete-space';
+import { DeleteSpaceButton } from '@features/space/delete-space';
 
-import { getSpacesQueryKey, isOrganizer } from '@entities/space';
-import { getSpaceQueryKey } from '@entities/space/lib/getSpaceQueryKey';
+import { isOrganizer } from '@entities/space';
 import { useGetSpace } from '@entities/space/lib/useGetSpace';
 import { useGetSpaceRoles } from '@entities/space/lib/useGetSpaceRoles';
 
@@ -36,26 +34,12 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
     className,
     'data-testid': dataTestId = 'SpacePage',
 }) {
-    const queryClient = useQueryClient();
     const navigate = useNavigate();
     const location = useLocation();
-
-    const [api, contextHolder] = notification.useNotification();
 
     const spaceId = useSpaceId();
     const { data: roles } = useGetSpaceRoles(spaceId ?? '');
     const { data: space } = useGetSpace(spaceId ?? '');
-
-    const { mutate: deleteSpace } = useDeleteSpace({
-        onSuccess: () => {
-            queryClient.resetQueries(getSpacesQueryKey);
-            queryClient.resetQueries(getSpaceQueryKey(spaceId ?? ''));
-            navigate(SpaceRouter.Spaces);
-            api.success({
-                message: 'Пространство удалено',
-            });
-        },
-    });
 
     const items: MenuProps['items'] = useMemo(() => [
         {
@@ -85,11 +69,17 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
         },
         {
             key: '6',
-            label: 'Удалить пространство',
+            label: <DeleteSpaceButton
+                spaceId={spaceId ?? ''}
+                onSuccess={() => navigate(SpaceRouter.Spaces)}
+                triggerComponent={onDelete => (
+                    <Typography.Text onClick={onDelete} className={styles.dangerMenuItem}>
+                        Удалить пространство
+                    </Typography.Text>)}
+            />,
             danger: true,
-            onClick: () => deleteSpace(spaceId ?? ''),
         },
-    ], [deleteSpace, spaceId]);
+    ], [spaceId]);
 
     if (!spaceId || !space) {
         return <Navigate to={SpaceRouter.Spaces} />;
@@ -103,7 +93,6 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
             className={getModuleClasses(styles, 'root', null, className)}
             data-testid={dataTestId}
         >
-            {contextHolder}
             <Sidebar>
                 <SidebarItem
                     to={SpaceRouter.SpaceTasks(spaceId)}

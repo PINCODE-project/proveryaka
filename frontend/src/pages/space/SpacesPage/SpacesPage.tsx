@@ -1,16 +1,14 @@
 import { EllipsisOutlined, UsergroupAddOutlined } from '@ant-design/icons';
-import { Button, Dropdown, Flex, MenuProps, notification, Typography } from 'antd';
+import { Button, Dropdown, Flex, MenuProps, Typography } from 'antd';
 import { FC, useCallback, useMemo } from 'react';
-import { useQueryClient } from 'react-query';
 
 import { UserPanel } from '@widgets/UserPanel';
 
 import { CreateSpaceModal } from '@features/space/create-space';
-import { useDeleteSpace } from '@features/space/delete-space';
+import { DeleteSpaceButton } from '@features/space/delete-space';
 import { EnterSpaceByCodeModal } from '@features/space/enter-space-by-code';
 
-import { getSpacesQueryKey, SpacesTable } from '@entities/space';
-import { getSpaceQueryKey } from '@entities/space/lib/getSpaceQueryKey';
+import { SpacesTable } from '@entities/space';
 import { GetSpaceResponse } from '@entities/space/model/GetSpaceResponse';
 
 import Logo from '@shared/assets/images/logo.svg';
@@ -25,19 +23,6 @@ export type Props = ClassNameProps & TestProps & Readonly<{}>;
 export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
     className,
 }) {
-    const [api, contextHolder] = notification.useNotification();
-    const queryClient = useQueryClient();
-
-    const { mutate: deleteSpace } = useDeleteSpace({
-        onSuccess: (_, spaceId) => {
-            queryClient.resetQueries(getSpacesQueryKey);
-            queryClient.resetQueries(getSpaceQueryKey(spaceId ?? ''));
-            api.success({
-                message: 'Пространство удалено',
-            });
-        },
-    });
-
     const renderActions = useCallback((_: string, record: GetSpaceResponse) => {
         const items: MenuProps['items'] = [
             {
@@ -67,9 +52,14 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
             },
             {
                 key: '6',
-                label: 'Удалить пространство',
+                label: <DeleteSpaceButton
+                    spaceId={record.id}
+                    triggerComponent={onDelete => (
+                        <Typography.Text onClick={onDelete} className={styles.dangerMenuItem}>
+                            Удалить пространство
+                        </Typography.Text>)}
+                />,
                 danger: true,
-                onClick: () => deleteSpace(record.id),
             },
         ];
 
@@ -117,7 +107,6 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
             gap="large"
             className={getModuleClasses(styles, 'root', null, className)}
         >
-            {contextHolder}
             <Flex justify="space-between" gap="middle">
                 <Logo />
                 <Typography.Text>
