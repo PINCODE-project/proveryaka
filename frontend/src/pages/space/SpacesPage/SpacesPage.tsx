@@ -1,11 +1,11 @@
 import { EllipsisOutlined, UsergroupAddOutlined } from '@ant-design/icons';
 import { Button, Dropdown, Flex, MenuProps, Typography } from 'antd';
-import MenuItem from 'antd/lib/menu/MenuItem';
 import { FC, useCallback, useMemo } from 'react';
 
 import { UserPanel } from '@widgets/UserPanel';
 
 import { CreateSpaceModal } from '@features/space/create-space';
+import { EditSpaceModal } from '@features/space/edit-space';
 import { EnterSpaceByCodeModal } from '@features/space/enter-space-by-code';
 
 import { SpacesTable } from '@entities/space';
@@ -27,8 +27,12 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
         const items: MenuProps['items'] = [
             {
                 key: '1',
-                label: 'Изменить пространство',
-                disabled: true,
+                label: <EditSpaceModal
+                    triggerComponent={
+                        onOpen => <Typography.Text onClick={onOpen}>Изменить пространство</Typography.Text>
+                    }
+                    spaceId={record.id}
+                />,
             },
             {
                 key: '2',
@@ -109,7 +113,7 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
                 </Typography.Text>
             </Flex>
 
-           <Flex justify="space-between" gap="middle" align="center">
+            <Flex justify="space-between" gap="middle" align="center">
                 <Typography.Text>Filters</Typography.Text>
                 {SpacesButton}
             </Flex>

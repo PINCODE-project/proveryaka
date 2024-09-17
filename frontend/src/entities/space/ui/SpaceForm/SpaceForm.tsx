@@ -31,6 +31,7 @@ export const SpaceForm = typedMemo(function SpaceForm<TData extends SpaceSetting
         submit(form, file);
     }, [file, submit]);
 
+    console.log(initialValues);
     return (
         <Form
             className={styles.form}

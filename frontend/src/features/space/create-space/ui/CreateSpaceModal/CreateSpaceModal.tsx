@@ -2,19 +2,17 @@ import { Button, Form, Modal, notification, Switch } from 'antd';
 import { FC, ReactNode, useCallback, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
-import { CreateSpaceRequest } from '@features/space/create-space/model/CreateSpaceRequest';
-
 import { getSpacesQueryKey, SpaceForm } from '@entities/space';
 import { SpaceAccessType } from '@entities/space/model/SpaceAccessType';
 import { useGetCurrentUserInfo } from '@entities/user';
 
 import { createFile } from '@shared/api/file/createFile';
 import { typedMemo } from '@shared/lib';
-import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { ClassNameProps, TestProps } from '@shared/types';
 
 import styles from './CreateSpaceModal.module.css';
 import { useCreateSpace } from '../../lib/useCreateSpace';
+import { CreateSpaceRequest } from '../../model/CreateSpaceRequest';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     triggerComponent: (onOpen: () => void) => ReactNode;

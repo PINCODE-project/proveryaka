@@ -21,12 +21,12 @@ export type SpaceSettings = {
     /**
      * Тип доступа
      */
-    accessType: SpaceAccessType;
+    accessType?: SpaceAccessType;
 
     /**
      * Идентификаторы организаторов
      */
-    organizerId: string[] | null;
+    organizerId?: string[] | null;
 
     /**
      * Пригласительный код
