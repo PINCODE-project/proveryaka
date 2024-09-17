@@ -5,6 +5,7 @@ import { useQueryClient } from 'react-query';
 import { CreateSpaceRequest } from '@features/space/create-space/model/CreateSpaceRequest';
 
 import { getSpacesQueryKey, SpaceForm } from '@entities/space';
+import { SpaceAccessType } from '@entities/space/model/SpaceAccessType';
 import { useGetCurrentUserInfo } from '@entities/user';
 
 import { createFile } from '@shared/api/file/createFile';
@@ -52,7 +53,7 @@ export const CreateSpaceModal: FC<Props> = typedMemo(function CreateSpaceModal({
             ...form,
             iconFileId: iconFileId ?? null,
             organizerId: [user?.id ?? ''],
-            accessType: 0,
+            accessType: SpaceAccessType.Private,
         });
     }, [create, user]);
 
