@@ -1,20 +1,22 @@
-import { Flex, Form, Input } from 'antd';
-import { ReactNode, useState } from 'react';
+import { Flex, Form, Input, UploadFile } from 'antd';
+import { ReactNode, useCallback, useState } from 'react';
 
 import { CreateSpaceRequest } from '@features/space/create-space/model/CreateSpaceRequest';
 
-import { typedMemo } from '@shared/lib';
+import { getFormItemUploadNotFileValue, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { FileInput } from '@shared/ui';
+import { FileInput, ImagePreview } from '@shared/ui';
 
 import styles from './SpaceForm.module.css';
 import { SpaceSettings } from '../../model/SpaceSettings';
 
+type SpaceSettingsWithFile = SpaceSettings & {fileList?: UploadFile[]};
+
 export type Props<TData extends SpaceSettings> = ClassNameProps & TestProps & Readonly<{
-    submit: (data: TData) => void;
+    submit: (data: TData, file: File | null) => void;
     additionalFormItems?: ReactNode;
     submitButton: ReactNode;
-    initialValues?: TData;
+    initialValues?: TData & SpaceSettingsWithFile;
 }>;
 
 export const SpaceForm = typedMemo(function SpaceForm<TData extends SpaceSettings>({
@@ -25,34 +27,39 @@ export const SpaceForm = typedMemo(function SpaceForm<TData extends SpaceSetting
 }: Props<TData>) {
     const [file, setFile] = useState<File | null>(null);
 
+    const onSubmit = useCallback((form: TData) => {
+        submit(form, file);
+    }, [file, submit]);
+
     return (
         <Form
             className={styles.form}
-            name="SignInForm"
+            name="SpaceForm"
             layout="vertical"
-            onFinish={submit}
+            onFinish={onSubmit}
             requiredMark={false}
             initialValues={initialValues}
         >
             <Flex gap={20}>
-                <Form.Item<CreateSpaceRequest> valuePropName="fileList" name="icon" className={styles.formItem}>
+                <Form.Item<SpaceSettingsWithFile>
+                    className={styles.formItem}
+                    getValueFromEvent={getFormItemUploadNotFileValue}
+                    name="fileList"
+                    valuePropName="fileList"
+                >
                     <FileInput
                         isEmpty={file === null}
-                        filledComponent={
-                            <img
-                                src={file ? URL.createObjectURL(file) : ''}
-                                alt="avatar"
-                                style={{ width: '100%' }}
-                            />
-                        }
+                        multiple={false}
+                        maxCount={1}
+                        showUploadList={false}
+                        filledComponent={<ImagePreview file={file} />}
                         listType="picture-card"
                         emptyText="Иконка"
                         onChangeFile={setFile}
-                        showUploadList={false}
                     />
                 </Form.Item>
-                <Form.Item<CreateSpaceRequest>
-                    className={styles.formItem}
+                <Form.Item<SpaceSettingsWithFile>
+                    className={styles.name}
                     label="Название"
                     name="name"
                     rules={[
@@ -62,7 +69,7 @@ export const SpaceForm = typedMemo(function SpaceForm<TData extends SpaceSetting
                     <Input placeholder="Введите название..." />
                 </Form.Item>
             </Flex>
-            <Form.Item<CreateSpaceRequest>
+            <Form.Item<SpaceSettingsWithFile>
                 label="Описание"
                 className={styles.formItem}
                 name="description"

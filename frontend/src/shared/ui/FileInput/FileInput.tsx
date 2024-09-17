@@ -5,12 +5,13 @@ import { FC, ReactNode, useCallback, useState } from 'react';
 
 import { typedMemo } from '@shared/lib';
 import { ClassNameProps } from '@shared/types';
+import { FileInputContextProvider } from '@shared/ui/FileInput/FileInputContext';
 
 export type Props = ClassNameProps & UploadProps & {
-    isEmpty: boolean;
-    filledComponent: ReactNode;
-    emptyText: string;
-    onChangeFile: (file: File) => void;
+    isEmpty?: boolean;
+    filledComponent?: ReactNode;
+    emptyText?: string;
+    onChangeFile?: (file: File | null) => void;
 };
 
 export type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
@@ -20,6 +21,7 @@ export const FileInput: FC<Props> = typedMemo(function FileInput({
     emptyText,
     onChangeFile,
     filledComponent,
+    onChange,
     ...uploadProps
 }) {
     const [loading, setLoading] = useState(false);
@@ -44,17 +46,22 @@ export const FileInput: FC<Props> = typedMemo(function FileInput({
         return new File([u8arr], filename, { type: mime });
     }, []);
 
-    const handleAvatarChange: UploadProps['onChange'] = useCallback((info: UploadChangeParam) => {
+    const handleChange: UploadProps['onChange'] = useCallback((info: UploadChangeParam) => {
+        onChange?.(info);
+
         if (info.file.status === 'uploading') {
             setLoading(true);
         } else if (info.file.status === 'done') {
             getBase64(info.file.originFileObj as FileType, url => {
                 const file = convertBase64ToFile(url, info.file.name);
-                onChangeFile(file);
+                onChangeFile?.(file);
             });
             setLoading(false);
+        } else if (info.file.status === 'removed') {
+            onChangeFile?.(null);
+            setLoading(false);
         }
-    }, [onChangeFile, convertBase64ToFile, getBase64]);
+    }, [onChangeFile, convertBase64ToFile, getBase64, onChange]);
 
     const dummyRequest = useCallback<Exclude<UploadProps['customRequest'], undefined>>(({ onSuccess }) => {
         setTimeout(() => {
@@ -63,19 +70,21 @@ export const FileInput: FC<Props> = typedMemo(function FileInput({
     }, []);
 
     return (
-        <Upload
-            onChange={handleAvatarChange}
-            customRequest={dummyRequest}
-            {...uploadProps}
-        >
-            {
-                isEmpty
-                    ? <button style={{ border: 0, background: 'none' }} type="button">
-                        {loading ? <LoadingOutlined /> : <PlusOutlined />}
-                        <div style={{ marginTop: 8 }}>{emptyText}</div>
-                    </button>
-                    : filledComponent
-            }
-        </Upload>
+        <FileInputContextProvider onChange={handleChange}>
+            <Upload
+                onChange={handleChange}
+                customRequest={dummyRequest}
+                {...uploadProps}
+            >
+                {
+                    isEmpty
+                        ? <button style={{ border: 0, background: 'none' }} type="button">
+                            {loading ? <LoadingOutlined /> : <PlusOutlined />}
+                            <div style={{ marginTop: 8 }}>{emptyText}</div>
+                        </button>
+                        : filledComponent
+                }
+            </Upload>
+        </FileInputContextProvider>
     );
 });

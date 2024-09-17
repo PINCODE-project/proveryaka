@@ -7,3 +7,8 @@
 .formItem {
     margin-bottom: 0;
 }
+
+.name {
+    margin-bottom: 0;
+    flex: 1;
+}

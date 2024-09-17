@@ -5,7 +5,9 @@ import { useQueryClient } from 'react-query';
 import { CreateSpaceRequest } from '@features/space/create-space/model/CreateSpaceRequest';
 
 import { getSpacesQueryKey, SpaceForm } from '@entities/space';
+import { useGetCurrentUserInfo } from '@entities/user';
 
+import { createFile } from '@shared/api/file/createFile';
 import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { ClassNameProps, TestProps } from '@shared/types';
@@ -22,6 +24,9 @@ export const CreateSpaceModal: FC<Props> = typedMemo(function CreateSpaceModal({
 }) {
     const [api, contextHolder] = notification.useNotification();
     const queryClient = useQueryClient();
+
+    const { data: user } = useGetCurrentUserInfo();
+
     const [isOpen, setIsOpen] = useState(false);
     const { mutate: create } = useCreateSpace({
         onSuccess: () => {
@@ -32,6 +37,24 @@ export const CreateSpaceModal: FC<Props> = typedMemo(function CreateSpaceModal({
             setIsOpen(false);
         },
     });
+
+    const onSubmit = useCallback(async (form: CreateSpaceRequest, file: File | null) => {
+        let iconFileId: string | null = null;
+        try {
+            if (file) {
+                iconFileId = (await createFile(file)).id;
+            }
+        } catch {
+
+        }
+
+        create({
+            ...form,
+            iconFileId: iconFileId ?? null,
+            organizerId: [user?.id ?? ''],
+            accessType: 0,
+        });
+    }, [create, user]);
 
     const onOpen = useCallback(() => setIsOpen(true), []);
 
@@ -49,10 +72,11 @@ export const CreateSpaceModal: FC<Props> = typedMemo(function CreateSpaceModal({
                 onCancel={onClose}
             >
                 <SpaceForm
-                    submit={create}
+                    submit={onSubmit}
                     additionalFormItems={
                         <Form.Item<CreateSpaceRequest>
                             label="Команды"
+                            className={styles.formItem}
                             layout="horizontal"
                             name={['spaceSettings', 'isUseTeam']}
                         >
@@ -60,7 +84,7 @@ export const CreateSpaceModal: FC<Props> = typedMemo(function CreateSpaceModal({
                         </Form.Item>
                     }
                     submitButton={(
-                        <Form.Item className={getModuleClasses(styles, 'formItem')}>
+                        <Form.Item className={styles.submitButton}>
                             <Button type="primary" htmlType="submit" block>
                                 Создать
                             </Button>

@@ -124,7 +124,7 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
 
                 <Flex gap={25} align="center">
                     <Flex gap={20} align="center">
-                        <Avatar shape="square" size={40} src={space.icon} />
+                        <Avatar shape="square" size={40} src={space.iconFileId} />
 
                         <Typography.Text className={getModuleClasses(styles, 'title')}>
                             {space.name}
