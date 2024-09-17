@@ -5,9 +5,7 @@ import { Navigate } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/space';
 
-import { GetSpaceResponse } from '@entities/space/model/GetSpaceResponse';
-import { TeamsTable } from '@entities/team';
-import { GetTeam } from '@entities/team/model/GetTeam';
+import { TeamsTable, GetTeam } from '@entities/team';
 
 import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { typedMemo } from '@shared/lib';

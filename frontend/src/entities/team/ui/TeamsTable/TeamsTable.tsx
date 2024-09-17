@@ -2,19 +2,20 @@ import { Table, TableColumnsType } from 'antd';
 import { ColumnType } from 'antd/lib/table';
 import { FC, useCallback, useMemo } from 'react';
 
-import { isOrganizer } from '@entities/space';
-import { useGetSpaceRoles } from '@entities/space/lib/useGetSpaceRoles';
-import { useGetSpaceTeams } from '@entities/team/lib/useGetSpaceTeams';
-import { GetTeamFilters } from '@entities/team/model/GetTeamFilters';
-import { TeamType } from '@entities/team/model/TeamType';
+// Сущность пространства много где зайдествуется
+// eslint-disable-next-line
+import { isOrganizer, StudentTable, useGetSpaceRoles } from '@entities/space';
 
 import { useListFilters } from '@shared/hooks';
 import { typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { EmptyTable } from '@shared/ui';
 
+import { useGetSpaceTeams } from '../../lib/useGetSpaceTeams';
 import { useGetSpaceUserTeams } from '../../lib/useGetSpaceUserTeams';
 import { GetTeam } from '../../model/GetTeam';
+import { GetTeamFilters } from '../../model/GetTeamFilters';
+import { TeamType } from '../../model/TeamType';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     spaceId: string;
@@ -63,8 +64,7 @@ export const TeamsTable: FC<Props> = typedMemo(function TeamsTable({
     ], [actionRender]);
 
     const expandedRowRender = useCallback((record: GetTeam) => {
-        // TODO: возвращает StudentsTable (надо написать)
-        return null;
+        return <StudentTable students={record.studentInfoList ?? []} />;
     }, []);
 
     if (teams.length === 0) {
