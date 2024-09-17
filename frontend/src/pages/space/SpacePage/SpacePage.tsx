@@ -12,6 +12,8 @@ import { Link, Navigate, Outlet, useLocation } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/space';
 
+import { UserPanel } from '@widgets/UserPanel';
+
 import { isOrganizer } from '@entities/space';
 import { useGetSpace } from '@entities/space/lib/useGetSpace';
 import { useGetSpaceRoles } from '@entities/space/lib/useGetSpaceRoles';
@@ -117,9 +119,7 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
                         </Typography.Text>
                     </Link>
 
-                    <Typography.Text>
-                        User
-                    </Typography.Text>
+                    <UserPanel />
                 </Flex>
 
                 <Flex gap={25} align="center">

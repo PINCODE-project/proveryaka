@@ -5,7 +5,10 @@ import { FC, useCallback, useMemo } from 'react';
 import { isOrganizer } from '@entities/space';
 import { useGetSpaceRoles } from '@entities/space/lib/useGetSpaceRoles';
 import { useGetSpaceTeams } from '@entities/team/lib/useGetSpaceTeams';
+import { GetTeamFilters } from '@entities/team/model/GetTeamFilters';
+import { TeamType } from '@entities/team/model/TeamType';
 
+import { useListFilters } from '@shared/hooks';
 import { typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { EmptyTable } from '@shared/ui';
@@ -24,10 +27,12 @@ export const TeamsTable: FC<Props> = typedMemo(function TeamsTable({
 }) {
     const { data: roles } = useGetSpaceRoles(spaceId ?? '');
 
-    const { data: studentTeams } = useGetSpaceUserTeams(spaceId, undefined, {
+    const [filters] = useListFilters<GetTeamFilters>({ teamType: TeamType.None });
+
+    const { data: studentTeams } = useGetSpaceUserTeams(spaceId, filters, {
         enabled: roles !== undefined && !isOrganizer(roles),
     });
-    const { data: organizerTeams } = useGetSpaceTeams(spaceId, undefined, {
+    const { data: organizerTeams } = useGetSpaceTeams(spaceId, filters, {
         enabled: roles !== undefined && isOrganizer(roles),
     });
     const teams = useMemo(() => {

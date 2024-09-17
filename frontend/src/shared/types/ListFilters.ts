@@ -1,4 +1,4 @@
-export type ListFilters = {
+export type ListFilters = Partial<{
     page: number;
     count: number;
-};
+}>;
