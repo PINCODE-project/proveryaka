@@ -7,12 +7,14 @@ import {
     LeftOutlined,
 } from '@ant-design/icons';
 import { Avatar, Dropdown, Flex, MenuProps, Typography } from 'antd';
-import { FC } from 'react';
-import { Link, Navigate, Outlet, useLocation } from 'react-router-dom';
+import { FC, useMemo } from 'react';
+import { Link, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/space';
 
 import { UserPanel } from '@widgets/UserPanel';
+
+import { ExitUserButton } from '@features/space/exit-user';
 
 import { isOrganizer } from '@entities/space';
 import { useGetSpace } from '@entities/space/lib/useGetSpace';
@@ -28,47 +30,56 @@ import styles from './SpacePage.module.css';
 
 export type Props = ClassNameProps & TestProps & Readonly<{}>;
 
-const items: MenuProps['items'] = [
-    {
-        key: '1',
-        label: 'Изменить пространство',
-        disabled: true,
-    },
-    {
-        key: '2',
-        label: 'Добавить пользователей',
-        disabled: true,
-    },
-    {
-        key: '3',
-        label: 'Скопировать код',
-        disabled: true,
-    },
-    {
-        key: '4',
-        label: 'Перегенрировать код',
-        disabled: true,
-    },
-    {
-        key: '5',
-        label: 'Покинуть пространство',
-        disabled: true,
-    },
-    {
-        key: '6',
-        label: 'Удалить пространство',
-        disabled: true,
-    },
-];
-
 export const SpacePage: FC<Props> = typedMemo(function SpacePage({
     className,
     'data-testid': dataTestId = 'SpacePage',
 }) {
+    const navigate = useNavigate();
     const location = useLocation();
+
     const spaceId = useSpaceId();
     const { data: roles } = useGetSpaceRoles(spaceId ?? '');
     const { data: space } = useGetSpace(spaceId ?? '');
+
+    const items: MenuProps['items'] = useMemo(() => [
+        {
+            key: '1',
+            label: 'Изменить пространство',
+            disabled: true,
+        },
+        {
+            key: '2',
+            label: 'Добавить пользователей',
+            disabled: true,
+        },
+        {
+            key: '3',
+            label: 'Скопировать код',
+            disabled: true,
+        },
+        {
+            key: '4',
+            label: 'Перегенрировать код',
+            disabled: true,
+        },
+        {
+            key: '5',
+            label: <ExitUserButton
+                spaceId={spaceId ?? ''}
+                onSuccess={() => navigate(SpaceRouter.Spaces)}
+                triggerComponent={onExit => (
+                    <Typography.Text onClick={onExit}>
+                        Покинуть пространство
+                    </Typography.Text>
+                )}
+            />,
+        },
+        {
+            key: '6',
+            label: 'Удалить пространство',
+            disabled: true,
+        },
+    ], [spaceId]);
 
     if (!spaceId || !space) {
         return <Navigate to={SpaceRouter.Spaces} />;
