@@ -34,7 +34,7 @@ export const ExitUserButton: FC<Props> = typedMemo(function ExitUserButton({
         },
     });
 
-    const onExit = useCallback(() => !isLoading && exit(spaceId), [spaceId, exit]);
+    const onExit = useCallback(() => !isLoading && exit(spaceId), [spaceId, exit, isLoading]);
 
     return (
         <>
