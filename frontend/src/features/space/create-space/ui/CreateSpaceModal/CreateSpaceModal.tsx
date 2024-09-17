@@ -45,9 +45,9 @@ export const CreateSpaceModal: FC<Props> = typedMemo(function CreateSpaceModal({
             if (file) {
                 iconFileId = (await createFile(file)).id;
             }
-        } catch {
-
-        }
+            // Обработка ошибки прописана в interceptor, здесь же необходим try для того
+            // чтобы избежать выпадения ошибки здесь
+        } catch {}
 
         create({
             ...form,
