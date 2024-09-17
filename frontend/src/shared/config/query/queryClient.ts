@@ -29,10 +29,10 @@ export const getQueryClient = (logout: () => void, navigate: NavigateFunction) =
     defaultOptions: {
         queries: {
             suspense: true,
-            retry: 2,
+            retry: false,
         },
         mutations: {
-            retry: 2,
+            retry: false,
         },
     },
 });

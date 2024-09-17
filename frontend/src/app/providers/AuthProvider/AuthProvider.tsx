@@ -1,5 +1,7 @@
-import { Spin } from 'antd';
+import { Flex, Spin } from 'antd';
 import { createContext, FC, PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react';
+
+import { refreshToken } from '@features/auth/refresh-token';
 
 import { Token, TokenService, typedMemo } from '@shared/lib';
 
@@ -29,11 +31,6 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = typedMemo(funct
     const [isLoading, setIsLoading] = useState(true);
     const [isAuth, setIsAuth] = useState(false);
 
-    useEffect(() => {
-        setIsAuth(TokenService.getToken() !== null);
-        setIsLoading(false);
-    }, []);
-
     const login = useCallback((token: Token) => {
         TokenService.setToken(token);
         setTimeout(() => setIsAuth(true), 500);
@@ -44,11 +41,40 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = typedMemo(funct
         TokenService.removeToken();
     }, []);
 
+    const setInitialAuth = useCallback(async () => {
+        let token: null | Token = TokenService.getToken();
+
+        if (!token) {
+            setIsLoading(false);
+            return;
+        }
+
+        try {
+            token = await refreshToken();
+            if (token) {
+                TokenService.setToken(token);
+                setIsAuth(true);
+            }
+        } catch {
+            TokenService.removeToken();
+        } finally {
+            setIsLoading(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        setInitialAuth();
+    }, []);
+
     if (isLoading) {
         return (
-            <div className="LoaderFallback">
-                <Spin />
-            </div>
+            <Flex
+                align="center"
+                justify="center"
+                className="LoaderFallback"
+            >
+                <Spin size="large" />
+            </Flex>
         );
     }
     return (

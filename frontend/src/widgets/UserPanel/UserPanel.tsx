@@ -41,7 +41,7 @@ export const UserPanel: FC<Props> = typedMemo(function UserPanel() {
 
             <Dropdown menu={{ items }} trigger={['click']} onOpenChange={setIsOpen}>
                 <Flex gap="small" align="center" className={getModuleClasses(styles, 'info')}>
-                    <Avatar size={32} src={''} />
+                    <Avatar size={32} src="" />
                     <Typography.Text>
                         {user.surname} {user.name}
                     </Typography.Text>

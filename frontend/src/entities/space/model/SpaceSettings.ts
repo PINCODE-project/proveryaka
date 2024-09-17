@@ -1,7 +1,7 @@
 import { SpaceAccessType } from '@entities/space/model/SpaceAccessType';
 
 export type SpaceSettings = {
-    id: string;
+    id?: string;
 
     /**
      * Название
@@ -16,7 +16,7 @@ export type SpaceSettings = {
     /**
      * Ссылка на иконку
      */
-    icon: string | null;
+    iconFileId: string | null;
 
     /**
      * Тип доступа

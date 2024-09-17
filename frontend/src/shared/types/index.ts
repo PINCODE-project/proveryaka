@@ -6,5 +6,6 @@ export * from './BemModificator';
 export * from './TestProps';
 export * from './ConfigRouteProps';
 export * from './ListFilters';
+export * from './ErrorResponse';
 
 export * from './api/GetListResponse';
