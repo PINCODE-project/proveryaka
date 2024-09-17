@@ -1,0 +1,14 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.formItem {
+    margin-bottom: 0;
+}
+
+.name {
+    margin-bottom: 0;
+    flex: 1;
+}

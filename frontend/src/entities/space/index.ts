@@ -21,3 +21,4 @@ export * from './lib/useGetSpaceStudents';
 export * from './lib/isOrganizer';
 
 export * from './ui/SpacesTable';
+export * from './ui/SpaceForm';

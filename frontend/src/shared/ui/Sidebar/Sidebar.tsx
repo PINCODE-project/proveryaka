@@ -1,5 +1,8 @@
 import { Flex } from 'antd';
 import { FC, PropsWithChildren } from 'react';
+import { NavLink } from 'react-router-dom';
+
+import { SpaceRouter } from '@pages/space';
 
 import LogoMin from '@shared/assets/images/logo-min.svg';
 import { typedMemo } from '@shared/lib';
@@ -21,7 +24,10 @@ export const Sidebar: FC<Props> = typedMemo(function Sidebar({
             align="center"
             className={getModuleClasses(styles, 'menu', null, className)}
         >
-            <LogoMin className={getModuleClasses(styles, 'logo')} />
+            <NavLink to={SpaceRouter.Spaces}>
+                <LogoMin className={getModuleClasses(styles, 'logo')} />
+            </NavLink>
+
             {children}
         </Flex>
     );

@@ -1,8 +1,12 @@
-import { EllipsisOutlined } from '@ant-design/icons';
-import { Dropdown, Flex, MenuProps, Typography } from 'antd';
-import { FC, useCallback } from 'react';
+import { EllipsisOutlined, UsergroupAddOutlined } from '@ant-design/icons';
+import { Button, Dropdown, Flex, MenuProps, Typography } from 'antd';
+import MenuItem from 'antd/lib/menu/MenuItem';
+import { FC, useCallback, useMemo } from 'react';
 
 import { UserPanel } from '@widgets/UserPanel';
+
+import { CreateSpaceModal } from '@features/space/create-space';
+import { EnterSpaceByCodeModal } from '@features/space/enter-space-by-code';
 
 import { SpacesTable } from '@entities/space';
 import { GetSpaceResponse } from '@entities/space/model/GetSpaceResponse';
@@ -63,6 +67,35 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
         );
     }, []);
 
+    const SpacesButton = useMemo(() => {
+        const items: MenuProps['items'] = [
+            {
+                key: '1',
+                label: <CreateSpaceModal
+                    triggerComponent={onOpen => (
+                        <Typography.Text onClick={onOpen}>Создать пространство</Typography.Text>
+                    )}
+                />,
+            },
+            {
+                key: '2',
+                label: <EnterSpaceByCodeModal
+                    triggerComponent={onOpen => (
+                        <Typography.Text onClick={onOpen}>Присоединиться к пространству</Typography.Text>
+                    )}
+                />,
+            },
+        ];
+
+        return (
+            <Dropdown menu={{ items }}>
+                <Button type="default" icon={<UsergroupAddOutlined />}>
+                    Создать или присоединиться к пространству
+                </Button>
+            </Dropdown>
+        );
+    }, []);
+
     return (
         <Flex
             vertical
@@ -76,7 +109,10 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
                 </Typography.Text>
             </Flex>
 
-            <Typography.Text>Filters</Typography.Text>
+           <Flex justify="space-between" gap="middle" align="center">
+                <Typography.Text>Filters</Typography.Text>
+                {SpacesButton}
+            </Flex>
 
             <SpacesTable renderActions={renderActions} />
         </Flex>
