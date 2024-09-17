@@ -118,7 +118,7 @@ export const SignUpForm: FC<Props> = typedMemo(function SignInForm({
 
             <Form.Item className={getModuleClasses(styles, 'submitButton')}>
                 <Button type="primary" htmlType="submit" block>
-                    Войти
+                    Зарегистрироваться
                 </Button>
             </Form.Item>
 

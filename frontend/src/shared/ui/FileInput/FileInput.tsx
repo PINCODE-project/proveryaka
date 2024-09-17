@@ -1,183 +1,81 @@
-import {
-    ChangeEventHandler, DetailedHTMLProps,
-    DragEventHandler,
-    FC, HTMLAttributes,
-    MouseEventHandler,
-    PropsWithChildren,
-    useCallback,
-    useId,
-    useRef,
-    useState,
-} from 'react';
-import { useTranslation } from 'react-i18next';
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { GetProp, Upload, UploadProps } from 'antd';
+import { UploadChangeParam } from 'antd/es/upload/interface';
+import { FC, ReactNode, useCallback, useState } from 'react';
 
-import { Namespace } from '@shared/config/i18n';
-import { getBemClasses, typedMemo } from '@shared/lib';
-import { ClassNameProps, TestProps } from '@shared/types';
-import { getFlexContainerStyleClasses } from '@shared/ui';
+import { typedMemo } from '@shared/lib';
+import { ClassNameProps } from '@shared/types';
 
-import styles from './FileInput.module.css';
-import { FileInputContextProvider } from './FileInputContext';
+export type Props = ClassNameProps & UploadProps & {
+    isEmpty: boolean;
+    filledComponent: ReactNode;
+    emptyText: string;
+    onChangeFile: (file: File) => void;
+};
 
-export type Props = ClassNameProps &
-    TestProps &
-    PropsWithChildren &
-    Readonly<{
-        /**
-         * Ссылка на выбранный файл
-         */
-        fileUrl: string | null;
+export type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
-        /**
-         * Метод выбора файла
-         * @param file выбранный файл
-         */
-        onChangeFile: (file: File | null) => void;
-
-        /**
-         * Максимальный размер файла в Mb
-         * @default 0.5
-         */
-        maxSizeByMb?: number;
-
-        /**
-         * Поддерживаемые форматы файлов
-         */
-        acceptType: string[];
-
-        filename?: string;
-
-        placeholder?: string;
-
-        disabled?: boolean;
-    }>;
-
-const ERROR_DISPLAY_TIME = 3000;
-
-const flexContainerStyleClasses = getFlexContainerStyleClasses({
-    direction: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-});
-
-/**
- * Поле для выбора файла
- */
 export const FileInput: FC<Props> = typedMemo(function FileInput({
-    fileUrl,
+    isEmpty,
+    emptyText,
     onChangeFile,
-    filename,
-    maxSizeByMb = 100,
-    acceptType,
-    children,
-    placeholder,
-    className,
-    'data-testid': dataTestId = 'FileInput',
-    disabled = false,
-    ...inputProps
+    filledComponent,
+    ...uploadProps
 }) {
-    const { t } = useTranslation([Namespace.Common.ns]);
-    const id = useId();
-    const [error, setError] = useState<string | null>(null);
-    const errorTimeout = useRef<ReturnType<typeof setTimeout>>(null);
-    const [isDragging, setIsDragging] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-    const changeError = useCallback((error: string | null) => {
-        setError(error);
+    const getBase64 = useCallback((img: FileType, callback: (url: string) => void) => {
+        const reader = new FileReader();
+        reader.addEventListener('load', () => callback(reader.result as string));
+        reader.readAsDataURL(img);
+    }, []);
 
-        errorTimeout.current && clearTimeout(errorTimeout.current);
+    const convertBase64ToFile = useCallback((base64: string, filename = 'file') => {
+        const arr = base64.split(',');
+        const mime = arr[0].match(/:(.*?);/)?.[1];
+        const bstr = atob(arr[1]);
+        let n = bstr.length;
+        const u8arr = new Uint8Array(n);
 
-        if (error) {
-            // @ts-expect-error Нужно переопределять current
-            errorTimeout.current = setTimeout(() => {
-                // @ts-expect-error Нужно переопределять current
-                errorTimeout.current = null;
-                setError(null);
-            }, ERROR_DISPLAY_TIME);
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
         }
+
+        return new File([u8arr], filename, { type: mime });
     }, []);
 
-    const onChange: ChangeEventHandler<HTMLInputElement> = useCallback(
-        event => {
-            const file = event.target.files?.[0] ?? null;
-            const fileNameParts = file?.name.split('.') ?? [null];
-            const fileType = fileNameParts[fileNameParts.length - 1];
+    const handleAvatarChange: UploadProps['onChange'] = useCallback((info: UploadChangeParam) => {
+        if (info.file.status === 'uploading') {
+            setLoading(true);
+        } else if (info.file.status === 'done') {
+            getBase64(info.file.originFileObj as FileType, url => {
+                const file = convertBase64ToFile(url, info.file.name);
+                onChangeFile(file);
+            });
+            setLoading(false);
+        }
+    }, [onChangeFile, convertBase64ToFile, getBase64]);
 
-            if (file && file.size > maxSizeByMb * 1024 * 1024 * 8) {
-                changeError(
-                    t('Минимальный размер файла: 100мб', { size: maxSizeByMb }),
-                );
-            } else if (file && fileType && !acceptType?.includes(`.${fileType}`)) {
-                changeError(`${t('Допустимые расширения файла:')} ${acceptType.join(', ')}`);
-            } else {
-                changeError(null);
-                file && onChangeFile(file);
-            }
-        },
-        [changeError, maxSizeByMb, acceptType, onChangeFile, t],
-    );
-
-    const onClear: MouseEventHandler<HTMLButtonElement> = useCallback(
-        event => {
-            event.preventDefault();
-            onChangeFile(null);
-            changeError(null);
-        },
-        [onChangeFile, changeError],
-    );
-
-    const onDragEnter: DragEventHandler<HTMLInputElement> = useCallback(() => {
-        setIsDragging(true);
-    }, []);
-
-    const onDragLeave: DragEventHandler<HTMLInputElement> = useCallback(() => {
-        setIsDragging(false);
+    const dummyRequest = useCallback<Exclude<UploadProps['customRequest'], undefined>>(({ onSuccess }) => {
+        setTimeout(() => {
+            onSuccess?.('ok');
+        }, 0);
     }, []);
 
     return (
-        <FileInputContextProvider
-            fileUrl={fileUrl}
-            onClear={onClear}
-            disabled={disabled}
-            filename={filename}
+        <Upload
+            onChange={handleAvatarChange}
+            customRequest={dummyRequest}
+            {...uploadProps}
         >
-            <label
-                htmlFor={id}
-                className={getBemClasses(
-                    styles,
-                    null,
-                    { invalid: error !== null, empty: !fileUrl, disabled, isDragging },
-                    className,
-                    !fileUrl ? flexContainerStyleClasses : null,
-                )}
-                data-testid={dataTestId}
-            >
-                <input
-                    type="file"
-                    id={id}
-                    onDragEnter={onDragEnter}
-                    onDragLeave={onDragLeave}
-                    accept={acceptType?.join(', ')}
-                    className={getBemClasses(styles, 'input')}
-                    data-testid={`${dataTestId}.input`}
-                    {...inputProps}
-                    disabled={disabled}
-                    onChange={onChange}
-                />
-
-                {fileUrl
-                    ? (
-                        children
-                    )
-                    : (
-                        <p
-                            className={getBemClasses(styles, 'placeholder')}
-                            data-testid={`${dataTestId}.placeholder${error ? '.error' : ''}`}
-                        >
-                            {error ?? placeholder ?? t('click_or_drag_files')}
-                        </p>
-                    )}
-            </label>
-        </FileInputContextProvider>
+            {
+                isEmpty
+                    ? <button style={{ border: 0, background: 'none' }} type="button">
+                        {loading ? <LoadingOutlined /> : <PlusOutlined />}
+                        <div style={{ marginTop: 8 }}>{emptyText}</div>
+                    </button>
+                    : filledComponent
+            }
+        </Upload>
     );
 });
