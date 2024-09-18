@@ -7,12 +7,14 @@ import {
     LeftOutlined,
 } from '@ant-design/icons';
 import { Dropdown, Flex, MenuProps, Typography } from 'antd';
-import { FC } from 'react';
-import { Link, Navigate, Outlet, useLocation } from 'react-router-dom';
+import { FC, useMemo } from 'react';
+import { Link, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/space';
 
 import { UserPanel } from '@widgets/UserPanel';
+
+import { DeleteSpaceButton } from '@features/space/delete-space';
 
 import { isOrganizer, useGetSpaceSettings } from '@entities/space';
 import { useGetSpace } from '@entities/space/lib/useGetSpace';
@@ -28,56 +30,65 @@ import styles from './SpacePage.module.css';
 
 export type Props = ClassNameProps & TestProps & Readonly<{}>;
 
-const items: MenuProps['items'] = [
-    {
-        key: '1',
-        label: 'Изменить пространство',
-        disabled: true,
-    },
-    {
-        key: '2',
-        label: 'Добавить пользователей',
-        disabled: true,
-    },
-    {
-        key: '3',
-        label: 'Скопировать код',
-        disabled: true,
-    },
-    {
-        key: '4',
-        label: 'Перегенрировать код',
-        disabled: true,
-    },
-    {
-        key: '5',
-        label: 'Покинуть пространство',
-        disabled: true,
-    },
-    {
-        key: '6',
-        label: 'Удалить пространство',
-        disabled: true,
-    },
-];
-
 export const SpacePage: FC<Props> = typedMemo(function SpacePage({
     className,
     'data-testid': dataTestId = 'SpacePage',
 }) {
+    const navigate = useNavigate();
     const location = useLocation();
+
     const spaceId = useSpaceId();
     const { data: roles } = useGetSpaceRoles(spaceId ?? '');
     const { data: space } = useGetSpace(spaceId ?? '');
     const { data: spaceSettings } = useGetSpaceSettings(spaceId ?? '');
 
-    if (!spaceId || !space || !spaceSettings) {
+    const items: MenuProps['items'] = useMemo(() => [
+        {
+            key: '1',
+            label: 'Изменить пространство',
+            disabled: true,
+        },
+        {
+            key: '2',
+            label: 'Добавить пользователей',
+            disabled: true,
+        },
+        {
+            key: '3',
+            label: 'Скопировать код',
+            disabled: true,
+        },
+        {
+            key: '4',
+            label: 'Перегенрировать код',
+            disabled: true,
+        },
+        {
+            key: '5',
+            label: 'Покинуть пространство',
+            disabled: true,
+        },
+        {
+            key: '6',
+            label: <DeleteSpaceButton
+                spaceId={spaceId ?? ''}
+                onSuccess={() => navigate(SpaceRouter.Spaces)}
+                triggerComponent={onDelete => (
+                    <Typography.Text onClick={onDelete} className={styles.dangerMenuItem}>
+                        Удалить пространство
+                    </Typography.Text>)}
+            />,
+            danger: true,
+        },
+    ], [spaceId]);
+
+    if (!spaceId || !space) {
         return <Navigate to={SpaceRouter.Spaces} />;
     }
     if (location.pathname === SpaceRouter.Space(spaceId)) {
         return <Navigate to={SpaceRouter.SpaceTasks(spaceId)} replace />;
     }
-    if (location.pathname === SpaceRouter.SpaceTeams(spaceId) && !spaceSettings.isUseTeam) {
+    if (location.pathname === SpaceRouter.SpaceTeams(spaceId) && !spaceSettings?.isUseTeam) {
         return <Navigate to={SpaceRouter.SpaceTasks(spaceId)} replace />;
     }
     return (
@@ -102,7 +113,7 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
                     text="Участники"
                     icon={className => <UserOutlined className={className} /> }
                 />
-                {spaceSettings.isUseTeam
+                {spaceSettings?.isUseTeam
                     ? <SidebarItem
                         to={SpaceRouter.SpaceTeams(spaceId)}
                         text="Команды"

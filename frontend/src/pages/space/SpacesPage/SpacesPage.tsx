@@ -1,11 +1,11 @@
 import { EllipsisOutlined, UsergroupAddOutlined } from '@ant-design/icons';
 import { Button, Dropdown, Flex, MenuProps, Typography } from 'antd';
-import MenuItem from 'antd/lib/menu/MenuItem';
 import { FC, useCallback, useMemo } from 'react';
 
 import { UserPanel } from '@widgets/UserPanel';
 
 import { CreateSpaceModal } from '@features/space/create-space';
+import { DeleteSpaceButton } from '@features/space/delete-space';
 import { EnterSpaceByCodeModal } from '@features/space/enter-space-by-code';
 
 import { SpacesTable } from '@entities/space';
@@ -55,9 +55,14 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
             },
             {
                 key: '6',
-                label: 'Удалить пространство',
+                label: <DeleteSpaceButton
+                    spaceId={record.id}
+                    triggerComponent={onDelete => (
+                        <Typography.Text onClick={onDelete} className={styles.dangerMenuItem}>
+                            Удалить пространство
+                        </Typography.Text>)}
+                />,
                 danger: true,
-                disabled: true,
             },
         ];
 

@@ -6,3 +6,8 @@
 .root {
     padding: 20px;
 }
+
+.dangerMenuItem {
+    color: inherit;
+    font-size: inherit;
+}
