@@ -6,7 +6,7 @@ import {
     TeamOutlined,
     LeftOutlined,
 } from '@ant-design/icons';
-import { Avatar, Dropdown, Flex, MenuProps, Typography } from 'antd';
+import { Dropdown, Flex, MenuProps, Typography } from 'antd';
 import { FC } from 'react';
 import { Link, Navigate, Outlet, useLocation } from 'react-router-dom';
 
@@ -22,7 +22,7 @@ import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { Sidebar, SidebarItem } from '@shared/ui';
+import { Avatar, Sidebar, SidebarItem } from '@shared/ui';
 
 import styles from './SpacePage.module.css';
 
@@ -130,7 +130,9 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
 
                 <Flex gap={25} align="center">
                     <Flex gap={20} align="center">
-                        <Avatar shape="square" size={40} src={space.iconFileId} />
+                        <Avatar shape="square" size={40} fileId={space.iconFileId}
+                            apiType="estimate"
+                        />
 
                         <Typography.Text className={getModuleClasses(styles, 'title')}>
                             {space.name}
