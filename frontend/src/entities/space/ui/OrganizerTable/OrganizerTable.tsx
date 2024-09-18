@@ -1,9 +1,10 @@
-import { Avatar, Flex, Table, TableColumnProps, Typography } from 'antd';
+import { Table, TableColumnProps } from 'antd';
 import { FC, useMemo } from 'react';
 
 import { typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 
+import { NameCell } from './NameCell';
 import { GetOrganizerResponse } from '../../model/GetOrganizerResponse';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
@@ -20,14 +21,7 @@ export const OrganizerTable: FC<Props> = typedMemo(function OrganizerTable({
             title: 'ФИО',
             dataIndex: 'fullname',
             key: 'fullname',
-            render: (_, user) => (
-                <Flex gap="small" align="center">
-                    <Avatar size={32} src={''} shape="square" />
-                    <Typography.Text>
-                        {user.surname} {user.name} {user.patronymic}
-                    </Typography.Text>
-                </Flex>
-            ),
+            render: (_, user) => <NameCell user={user} />,
         },
         {
             title: 'Почта',
