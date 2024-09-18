@@ -10,6 +10,7 @@ import { EnterSpaceByCodeModal } from '@features/space/enter-space-by-code';
 
 import { SpacesTable } from '@entities/space';
 import { GetSpaceResponse } from '@entities/space/model/GetSpaceResponse';
+import { useGetUserIsOrganizer } from '@entities/user';
 
 import Logo from '@shared/assets/images/logo.svg';
 import { typedMemo } from '@shared/lib';
@@ -23,6 +24,8 @@ export type Props = ClassNameProps & TestProps & Readonly<{}>;
 export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
     className,
 }) {
+    const { data: isOrganizer } = useGetUserIsOrganizer();
+
     const renderActions = useCallback((_: string, record: GetSpaceResponse) => {
         const items: MenuProps['items'] = [
             {
@@ -68,6 +71,18 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
     }, []);
 
     const SpacesButton = useMemo(() => {
+        if (!isOrganizer) {
+            return (
+                <EnterSpaceByCodeModal
+                    triggerComponent={onOpen => (
+                        <Button type="default" icon={<UsergroupAddOutlined />} onClick={onOpen}>
+                            Присоединиться к пространству
+                        </Button>
+                    )}
+                />
+            );
+        }
+
         const items: MenuProps['items'] = [
             {
                 key: '1',
@@ -94,7 +109,7 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
                 </Button>
             </Dropdown>
         );
-    }, []);
+    }, [isOrganizer]);
 
     return (
         <Flex
@@ -109,7 +124,7 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
                 </Typography.Text>
             </Flex>
 
-           <Flex justify="space-between" gap="middle" align="center">
+            <Flex justify="space-between" gap="middle" align="center">
                 <Typography.Text>Filters</Typography.Text>
                 {SpacesButton}
             </Flex>

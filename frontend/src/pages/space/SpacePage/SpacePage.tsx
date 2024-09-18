@@ -75,10 +75,10 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
         return <Navigate to={SpaceRouter.Spaces} />;
     }
     if (location.pathname === SpaceRouter.Space(spaceId)) {
-        return <Navigate to={SpaceRouter.SpaceTasks(spaceId)} />;
+        return <Navigate to={SpaceRouter.SpaceTasks(spaceId)} replace />;
     }
     if (location.pathname === SpaceRouter.SpaceTeams(spaceId) && !spaceSettings.isUseTeam) {
-        return <Navigate to={SpaceRouter.SpaceTasks(spaceId)} />;
+        return <Navigate to={SpaceRouter.SpaceTasks(spaceId)} replace />;
     }
     return (
         <Flex
