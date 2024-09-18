@@ -6,6 +6,15 @@
     padding: 10px;
 }
 
+.imagePreview.type_circle {
+    padding: 0;
+    border-radius: 50%;
+}
+
+.imagePreview.type_circle .backdrop{
+    inset: 0;
+}
+
 .backdrop {
     position: absolute;
     inset: 10px;

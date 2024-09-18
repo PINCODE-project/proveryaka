@@ -4,6 +4,7 @@ import { UploadChangeParam } from 'antd/es/upload/interface';
 import { FC, useCallback, MouseEvent } from 'react';
 
 import { typedMemo } from '@shared/lib';
+import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { ClassNameProps, TestProps } from '@shared/types';
 
 import styles from './ImagePreview.module.css';
@@ -11,10 +12,12 @@ import { useFileInputContext } from '../FileInputContext';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     file: File | null;
+    type?: 'square' | 'circle';
 }>;
 
 export const ImagePreview: FC<Props> = typedMemo(function ImagePreview({
     file,
+    type = 'square',
 }) {
     const { onChange } = useFileInputContext();
 
@@ -24,7 +27,7 @@ export const ImagePreview: FC<Props> = typedMemo(function ImagePreview({
     }, [onChange]);
 
     return (
-        <div className={styles.imagePreview}>
+        <div className={getModuleClasses(styles, 'imagePreview', { type })}>
             <Flex align="center" justify="center" className={styles.backdrop}>
                 <Button onClick={onDelete} className={styles.deleteButton} type="text">
                     <DeleteOutlined className={styles.deleteButtonIcon} />

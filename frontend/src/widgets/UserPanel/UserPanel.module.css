@@ -1,3 +1,9 @@
 .info {
     cursor: pointer
 }
+
+.menuItem {
+    font-size: inherit;
+    color: inherit;
+    font-family: inherit;
+}

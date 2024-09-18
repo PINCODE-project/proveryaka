@@ -1,3 +1,4 @@
+import { Button } from 'antd';
 import { Navigate } from 'react-router-dom';
 
 import { authRouteConfig, AuthRouter } from '@pages/auth';
@@ -10,6 +11,7 @@ export const routeConfig: ConfigRouteProps[] = [
     ...spaceRouteConfig,
     {
         path: '*',
+        withAuthGuard: true,
         element: <Navigate to={AuthRouter.SignIn} />,
     },
 ];
