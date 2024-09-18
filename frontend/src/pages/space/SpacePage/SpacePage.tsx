@@ -14,7 +14,7 @@ import { SpaceRouter } from '@pages/space';
 
 import { UserPanel } from '@widgets/UserPanel';
 
-import { isOrganizer } from '@entities/space';
+import { isOrganizer, useGetSpaceSettings } from '@entities/space';
 import { useGetSpace } from '@entities/space/lib/useGetSpace';
 import { useGetSpaceRoles } from '@entities/space/lib/useGetSpaceRoles';
 
@@ -69,11 +69,15 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
     const spaceId = useSpaceId();
     const { data: roles } = useGetSpaceRoles(spaceId ?? '');
     const { data: space } = useGetSpace(spaceId ?? '');
+    const { data: spaceSettings } = useGetSpaceSettings(spaceId ?? '');
 
-    if (!spaceId || !space) {
+    if (!spaceId || !space || !spaceSettings) {
         return <Navigate to={SpaceRouter.Spaces} />;
     }
     if (location.pathname === SpaceRouter.Space(spaceId)) {
+        return <Navigate to={SpaceRouter.SpaceTasks(spaceId)} />;
+    }
+    if (location.pathname === SpaceRouter.SpaceTeams(spaceId) && !spaceSettings.isUseTeam) {
         return <Navigate to={SpaceRouter.SpaceTasks(spaceId)} />;
     }
     return (
@@ -98,11 +102,13 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
                     text="Участники"
                     icon={className => <UserOutlined className={className} /> }
                 />
-                <SidebarItem
-                    to={SpaceRouter.SpaceTeams(spaceId)}
-                    text="Команды"
-                    icon={className => <TeamOutlined className={className} /> }
-                />
+                {spaceSettings.isUseTeam
+                    ? <SidebarItem
+                        to={SpaceRouter.SpaceTeams(spaceId)}
+                        text="Команды"
+                        icon={className => <TeamOutlined className={className} />}
+                    />
+                    : null}
             </Sidebar>
 
             <Flex vertical gap={32} className={getModuleClasses(styles, 'content')}>

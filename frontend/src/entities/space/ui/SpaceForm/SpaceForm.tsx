@@ -8,18 +8,18 @@ import { ClassNameProps, TestProps } from '@shared/types';
 import { FileInput, ImagePreview } from '@shared/ui';
 
 import styles from './SpaceForm.module.css';
-import { SpaceSettings } from '../../model/SpaceSettings';
+import { Space } from '../../model/Space';
 
-type SpaceSettingsWithFile = SpaceSettings & {fileList?: UploadFile[]};
+type SpaceSettingsWithFile = Space & {fileList?: UploadFile[]};
 
-export type Props<TData extends SpaceSettings> = ClassNameProps & TestProps & Readonly<{
+export type Props<TData extends Space> = ClassNameProps & TestProps & Readonly<{
     submit: (data: TData, file: File | null) => void;
     additionalFormItems?: ReactNode;
     submitButton: ReactNode;
     initialValues?: TData & SpaceSettingsWithFile;
 }>;
 
-export const SpaceForm = typedMemo(function SpaceForm<TData extends SpaceSettings>({
+export const SpaceForm = typedMemo(function SpaceForm<TData extends Space>({
     submitButton,
     submit,
     initialValues,
