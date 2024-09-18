@@ -38,4 +38,9 @@ export type FullUserInfoResponse = {
      * Позиция
      */
     position: string | null;
+
+    /**
+     * ID аватара
+     */
+    avatar: string | null;
 };
