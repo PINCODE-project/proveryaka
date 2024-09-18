@@ -22,13 +22,13 @@ export const DeleteUserFromSpaceButton: FC<Props> = typedMemo(function DeleteUse
     userId,
 }) {
     const queryClient = useQueryClient();
-    const [api, contextHolder] = notification.useNotification();
+    const [notify, contextHolder] = notification.useNotification();
     const { mutate: deleteUser, isLoading } = useDeleteUserFromSpace({
         onSuccess: () => {
             queryClient.resetQueries(getSpaceStudentsQueryKey(spaceId));
             queryClient.resetQueries(getSpaceOrganizerQueryKey(spaceId));
             queryClient.resetQueries(getSpaceTeamsQueryKey(spaceId));
-            api.success({
+            notify.success({
                 message: 'Пользователь удаален из пространства',
             });
         },
