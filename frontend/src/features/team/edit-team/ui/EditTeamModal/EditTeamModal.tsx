@@ -60,6 +60,13 @@ export const EditTeamModal: FC<Props> = typedMemo(function EditTeamModal({
         setIsOpen(false);
     }, []);
 
+    const submit = useCallback((form: EditTeam) => {
+        edit({
+            ...form,
+            id: teamId,
+        });
+    }, [edit, teamId]);
+
     return (
         <>
             {contextHolder}
@@ -72,7 +79,7 @@ export const EditTeamModal: FC<Props> = typedMemo(function EditTeamModal({
                 onClose={onClose}
             >
                 <TeamForm<EditTeam>
-                    submit={edit}
+                    submit={submit}
                     initialValues={initialValues}
                     submitButton={
                         <Form.Item className={getModuleClasses(styles, 'submitButton')}>

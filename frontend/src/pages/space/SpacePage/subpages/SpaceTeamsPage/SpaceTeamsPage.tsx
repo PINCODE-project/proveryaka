@@ -6,6 +6,7 @@ import { Navigate } from 'react-router-dom';
 import { SpaceRouter } from '@pages/space';
 
 import { CreateTeamModal } from '@features/team/create-team';
+import { EditTeamModal } from '@features/team/edit-team';
 
 import { TeamsTable, GetTeam } from '@entities/team';
 
@@ -28,8 +29,15 @@ export const SpaceTeamsPage: FC<Props> = typedMemo(function SpaceTeamsPage({
         const items: MenuProps['items'] = [
             {
                 key: '1',
-                label: 'Изменить команду',
-                disabled: true,
+                label: <EditTeamModal
+                    spaceId={spaceId ?? ''}
+                    teamId={record.id}
+                    triggerComponent={onOpen => (
+                        <Typography.Text onClick={onOpen}>
+                                              Изменить команду
+                        </Typography.Text>
+                    )}
+                />,
             },
             {
                 key: '2',
