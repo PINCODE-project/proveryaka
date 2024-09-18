@@ -6,3 +6,9 @@
 .root {
     padding: 20px;
 }
+
+.menuItem {
+    font-size: inherit;
+    color: inherit;
+    font-family: inherit;
+}

@@ -73,7 +73,9 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
                 key: '1',
                 label: <CreateSpaceModal
                     triggerComponent={onOpen => (
-                        <Typography.Text onClick={onOpen}>Создать пространство</Typography.Text>
+                        <Typography.Text onClick={onOpen} className={styles.menuItem}>
+                            Создать пространство
+                        </Typography.Text>
                     )}
                 />,
             },
@@ -81,7 +83,9 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
                 key: '2',
                 label: <EnterSpaceByCodeModal
                     triggerComponent={onOpen => (
-                        <Typography.Text onClick={onOpen}>Присоединиться к пространству</Typography.Text>
+                        <Typography.Text onClick={onOpen} className={styles.menuItem}>
+                            Присоединиться к пространству
+                        </Typography.Text>
                     )}
                 />,
             },
@@ -109,7 +113,7 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
                 </Typography.Text>
             </Flex>
 
-           <Flex justify="space-between" gap="middle" align="center">
+            <Flex justify="space-between" gap="middle" align="center">
                 <Typography.Text>Filters</Typography.Text>
                 {SpacesButton}
             </Flex>

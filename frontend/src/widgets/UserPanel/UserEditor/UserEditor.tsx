@@ -4,7 +4,7 @@ import { FC, ReactNode, useCallback, useMemo, useState } from 'react';
 import { ChangePasswordForm } from '@features/user/change-password';
 import { EditUserForm } from '@features/user/edit-profile';
 
-import { getBemClasses, typedMemo } from '@shared/lib';
+import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { ClassNameProps, TestProps } from '@shared/types';
 

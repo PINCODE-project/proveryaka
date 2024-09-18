@@ -4,6 +4,8 @@ import { FC, useCallback } from 'react';
 import { useChangePassword } from '@features/user/change-password/lib/useChangePassword';
 import { ChangePassword } from '@features/user/change-password/model/ChangePassword';
 
+import { useGetCurrentUserInfo } from '@entities/user';
+
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { ClassNameProps, TestProps } from '@shared/types';
@@ -18,6 +20,8 @@ export const ChangePasswordForm: FC<Props> = typedMemo(function ChangePasswordFo
     className,
     onSuccess,
 }) {
+    const { data: user } = useGetCurrentUserInfo();
+
     const [api, contextHolder] = notification.useNotification();
     const { mutate: changePassword } = useChangePassword({
         onSuccess: () => {
@@ -30,11 +34,11 @@ export const ChangePasswordForm: FC<Props> = typedMemo(function ChangePasswordFo
 
     const onFinish = useCallback((form: ChangePassword) => {
         changePassword({
-            email: '',
+            email: user?.email ?? '',
             newPassword: form.newPassword,
             oldPassword: form.oldPassword,
         });
-    }, [changePassword]);
+    }, [changePassword, user]);
 
     return (
         <Form

@@ -1,15 +1,15 @@
 import { Button, Col, Flex, Form, Input, message, notification, Row } from 'antd';
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
 import { FullUserInfoResponse, useGetCurrentUserInfo } from '@entities/user';
 import { getCurrentUserQueryKey } from '@entities/user/lib/getCurrentUserQueryKey';
 
 import { createFile } from '@shared/api/file/createFile';
-import { typedMemo } from '@shared/lib';
+import { typedMemo, useGetEstimateFile } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { FileInput } from '@shared/ui';
+import { FileInput, ImagePreview } from '@shared/ui';
 import { FileType } from '@shared/ui/FileInput/FileInput';
 
 import styles from './EditUserForm.module.css';
@@ -22,9 +22,10 @@ export type Props = ClassNameProps & TestProps & Readonly<{
 export const EditUserForm: FC<Props> = typedMemo(function EditUserForm({
     onSuccess,
 }) {
-    const [file, setFile] = useState<File | null>(null);
-
     const { data: user } = useGetCurrentUserInfo();
+
+    const [file, setFile] = useState<File | null>(null);
+    const { data: oldFile } = useGetEstimateFile(user?.avatar ?? '', { enabled: Boolean(user?.avatar) });
 
     const queryClient = useQueryClient();
     const [api, contextHolder] = notification.useNotification();
@@ -39,6 +40,12 @@ export const EditUserForm: FC<Props> = typedMemo(function EditUserForm({
         },
     });
 
+    useEffect(() => {
+        if (oldFile) {
+            setFile(oldFile);
+        }
+    }, [oldFile]);
+
     const beforeUpload = useCallback((file: FileType) => {
         const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
         if (!isJpgOrPng) {
@@ -52,9 +59,16 @@ export const EditUserForm: FC<Props> = typedMemo(function EditUserForm({
     }, []);
 
     const onFinish = useCallback(async (data: FullUserInfoResponse & {password?: string}) => {
-        const avatarId = file ? await createFile(file) : undefined;
-        edit({ ...user, ...data });
-    }, [edit, user, file]);
+        let avatar = user?.avatar;
+
+        if (file !== oldFile) {
+            avatar = file
+                ? await createFile(file).then(({ id }) => id)
+                : undefined;
+        }
+
+        edit({ ...user, ...data, avatar });
+    }, [edit, user, file, oldFile]);
 
     return (
         <>
@@ -75,13 +89,7 @@ export const EditUserForm: FC<Props> = typedMemo(function EditUserForm({
                             showUploadList={false}
                             isEmpty={file === null}
                             accept="image/png, image/jpeg"
-                            filledComponent={
-                                <img
-                                    src={file ? URL.createObjectURL(file) : ''}
-                                    alt="avatar"
-                                    style={{ width: '100%' }}
-                                />
-                            }
+                            filledComponent={<ImagePreview file={file} type="circle" />}
                             emptyText="Аватар"
                             onChangeFile={setFile}
                         />

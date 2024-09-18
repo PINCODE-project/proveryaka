@@ -4,6 +4,8 @@ import { FC, useMemo, useState } from 'react';
 
 import { useAuthContext } from '@app/providers/AuthProvider';
 
+import { UserEditor } from '@widgets/UserPanel/UserEditor';
+
 import { useGetCurrentUserInfo } from '@entities/user';
 
 import { typedMemo } from '@shared/lib';
@@ -23,8 +25,13 @@ export const UserPanel: FC<Props> = typedMemo(function UserPanel() {
     const items = useMemo<MenuProps['items']>(() => [
         {
             key: '1',
-            label: 'Настройки профиля',
-            disabled: true,
+            label: <UserEditor
+                triggerComponent={onOpen => (
+                    <Typography.Text onClick={onOpen} className={styles.menuItem}>
+                        Настройки профиля
+                    </Typography.Text>
+                )}
+            />,
         },
         {
             key: '2',
