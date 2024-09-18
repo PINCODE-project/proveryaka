@@ -72,7 +72,6 @@ export const EditTeamModal: FC<Props> = typedMemo(function EditTeamModal({
                 onClose={onClose}
             >
                 <TeamForm<EditTeam>
-                    spaceId={spaceId}
                     submit={edit}
                     initialValues={initialValues}
                     submitButton={

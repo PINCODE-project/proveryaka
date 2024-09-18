@@ -1,9 +1,10 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Flex, Form, Modal, notification, Spin } from 'antd';
-import { FC, Suspense, useCallback, useState } from 'react';
+import { Button, Form, Modal, notification, Select } from 'antd';
+import { FC, useCallback, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
-import { TeamEditor, TeamForm } from '@entities/team';
+import { useGetSpaceStudents } from '@entities/space';
+import { TeamForm, TeamType } from '@entities/team';
 import { getSpaceTeamsQueryKey } from '@entities/team/lib/getSpaceTeamsQueryKey';
 import { getSpaceUserTeamsQueryKey } from '@entities/team/lib/getSpaceUserTeamsQueryKey';
 
@@ -13,6 +14,7 @@ import { ClassNameProps, TestProps } from '@shared/types';
 
 import styles from './CreateTeamModal.module.css';
 import { useCreateTeam } from '../../lib/useCreateTeam';
+import { CreateTeam } from '../../model/CreateTeam';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     spaceId: string;
@@ -24,6 +26,8 @@ export const CreateTeamModal: FC<Props> = typedMemo(function CreateTeamModal({
     const queryClient = useQueryClient();
     const [api, contextHolder] = notification.useNotification();
     const [isOpen, setIsOpen] = useState(false);
+
+    const { data: students } = useGetSpaceStudents(spaceId);
 
     const { mutate: create } = useCreateTeam({
         onSuccess: () => {
@@ -44,10 +48,11 @@ export const CreateTeamModal: FC<Props> = typedMemo(function CreateTeamModal({
         setIsOpen(false);
     }, []);
 
-    const submit = useCallback((form: TeamEditor) => {
+    const submit = useCallback((form: CreateTeam) => {
         create({
             ...form,
             entityId: spaceId,
+            teamType: TeamType.Space,
         });
     }, [create, spaceId]);
 
@@ -68,19 +73,31 @@ export const CreateTeamModal: FC<Props> = typedMemo(function CreateTeamModal({
                 onCancel={onClose}
                 onClose={onClose}
             >
-                <Suspense fallback={<Flex justify="center"><Spin /></Flex>}>
-                    <TeamForm
-                        spaceId={spaceId}
-                        submit={submit}
-                        submitButton={
-                            <Form.Item className={getModuleClasses(styles, 'submitButton')}>
-                                <Button type="primary" htmlType="submit">
+                <TeamForm
+                    submit={submit}
+                    submitButton={
+                        <Form.Item className={getModuleClasses(styles, 'submitButton')}>
+                            <Button type="primary" htmlType="submit">
                                 Создать
-                                </Button>
-                            </Form.Item>
-                        }
-                    />
-                </Suspense>
+                            </Button>
+                        </Form.Item>
+                    }
+                    additionalFormItems={(
+                        <Form.Item<CreateTeam>
+                            label="Участники"
+                            name="userProfileIdList"
+                            rules={[{ required: true, message: 'Выберите участников' }]}
+                        >
+                            <Select mode="multiple" placeholder="Не выбрано">
+                                {students?.studentInfoList?.map(student => (
+                                    <Select.Option value={student.id} key={student.id}>
+                                        {student.surname} {student.name} {student.patronymic}
+                                    </Select.Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                    )}
+                />
             </Modal>
         </>
     );

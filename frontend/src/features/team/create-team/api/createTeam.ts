@@ -1,7 +1,7 @@
-import { TeamEditor } from '@entities/team/model/TeamEditor';
-
 import { estimateHttp } from '@shared/config/axios';
 
-export function createTeam(data: TeamEditor): Promise<void> {
+import { CreateTeam } from '../model/CreateTeam';
+
+export function createTeam(data: CreateTeam): Promise<void> {
     return estimateHttp.post('team', data).then();
 }

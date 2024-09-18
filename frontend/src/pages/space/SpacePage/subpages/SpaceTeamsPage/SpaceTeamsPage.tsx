@@ -5,9 +5,9 @@ import { Navigate } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/space';
 
-import { GetSpaceResponse } from '@entities/space/model/GetSpaceResponse';
-import { TeamsTable } from '@entities/team';
-import { GetTeam } from '@entities/team/model/GetTeam';
+import { CreateTeamModal } from '@features/team/create-team';
+
+import { TeamsTable, GetTeam } from '@entities/team';
 
 import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { typedMemo } from '@shared/lib';
@@ -58,9 +58,13 @@ export const SpaceTeamsPage: FC<Props> = typedMemo(function SpaceTeamsPage({
     }
     return (
         <Flex gap={28} vertical className={ className}>
-            <Typography.Text>
-                Filters
-            </Typography.Text>
+            <Flex align="center" justify="space-between" gap={16}>
+                <Typography.Text>
+                    Filters
+                </Typography.Text>
+                <CreateTeamModal spaceId={spaceId} />
+            </Flex>
+
             <TeamsTable spaceId={spaceId} actionRender={renderActions} />
         </Flex>
     );

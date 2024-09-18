@@ -12,8 +12,9 @@ import { Link, Navigate, Outlet, useLocation } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/space';
 
-import { CreateTeamModal } from '@features/team/create-team';
 import { UserPanel } from '@widgets/UserPanel';
+
+import { CreateTeamModal } from '@features/team/create-team';
 
 import { isOrganizer } from '@entities/space';
 import { useGetSpace } from '@entities/space/lib/useGetSpace';
@@ -138,7 +139,6 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
                         </Dropdown>
                         : null}
                 </Flex>
-                <CreateTeamModal spaceId={spaceId} />
                 <Outlet />
             </Flex>
         </Flex>

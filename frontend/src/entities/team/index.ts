@@ -1,4 +1,6 @@
 export * from './model/TeamEditor';
+export * from './model/TeamType';
+export * from './model/GetTeam';
 
 export * from './ui/TeamForm';
 export * from './ui/TeamsTable';

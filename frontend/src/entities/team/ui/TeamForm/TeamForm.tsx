@@ -11,24 +11,19 @@ import styles from './TeamForm.module.css';
 import { TeamEditor } from '../../model/TeamEditor';
 
 export type Props<TTeam extends TeamEditor> = ClassNameProps & TestProps & Readonly<{
-    spaceId: string;
     submit: (data: TTeam) => void;
     submitButton: ReactNode;
     initialValues?: Partial<TTeam>;
+    additionalFormItems?: ReactNode;
 }>;
 
 export const TeamForm = typedMemo(function TeamForm<TTeam extends TeamEditor>({
-    spaceId,
     submit,
     submitButton,
     initialValues,
     className,
+    additionalFormItems,
 }: Props<TTeam>) {
-    const { data: students } = useGetSpaceStudents(spaceId);
-
-    if (!students) {
-        return;
-    }
     return (
         <Form
             className={getModuleClasses(styles, 'root', null, className)}
@@ -46,20 +41,7 @@ export const TeamForm = typedMemo(function TeamForm<TTeam extends TeamEditor>({
                 <Input placeholder="Введите название..." />
             </Form.Item>
 
-            <Form.Item<TeamEditor>
-                label="Участники"
-                // name="users"
-                rules={[{ required: true, message: 'Выберите участников' }]}
-            >
-                <Select mode="multiple" placeholder="Не выбрано">
-                    {students.studentInfoList?.map(student => (
-                        <Select.Option value={student.id} key={student.id}>
-                            {student.surname} {student.name} {student.patronymic}
-                        </Select.Option>
-                    ))}
-                </Select>
-            </Form.Item>
-
+            {additionalFormItems}
             {submitButton}
         </Form>
     );
