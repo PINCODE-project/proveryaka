@@ -16,6 +16,7 @@ import { UserPanel } from '@widgets/UserPanel';
 
 import { DeleteSpaceButton } from '@features/space/delete-space';
 import { ExitUserButton } from '@features/space/exit-user';
+import { CreateTeamModal } from '@features/team/create-team';
 
 import { isOrganizer, useGetSpaceSettings } from '@entities/space';
 import { useGetSpace } from '@entities/space/lib/useGetSpace';
@@ -164,7 +165,6 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
                         </Dropdown>
                         : null}
                 </Flex>
-
                 <Outlet />
             </Flex>
         </Flex>

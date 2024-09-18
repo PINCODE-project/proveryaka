@@ -5,9 +5,10 @@ import { Navigate } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/space';
 
-import { GetSpaceResponse } from '@entities/space/model/GetSpaceResponse';
-import { TeamsTable } from '@entities/team';
-import { GetTeam } from '@entities/team/model/GetTeam';
+import { CreateTeamModal } from '@features/team/create-team';
+import { EditTeamModal } from '@features/team/edit-team';
+
+import { TeamsTable, GetTeam } from '@entities/team';
 
 import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { typedMemo } from '@shared/lib';
@@ -28,8 +29,15 @@ export const SpaceTeamsPage: FC<Props> = typedMemo(function SpaceTeamsPage({
         const items: MenuProps['items'] = [
             {
                 key: '1',
-                label: 'Изменить команду',
-                disabled: true,
+                label: <EditTeamModal
+                    spaceId={spaceId ?? ''}
+                    teamId={record.id}
+                    triggerComponent={onOpen => (
+                        <Typography.Text onClick={onOpen}>
+                                              Изменить команду
+                        </Typography.Text>
+                    )}
+                />,
             },
             {
                 key: '2',
@@ -58,9 +66,13 @@ export const SpaceTeamsPage: FC<Props> = typedMemo(function SpaceTeamsPage({
     }
     return (
         <Flex gap={28} vertical className={ className}>
-            <Typography.Text>
-                Filters
-            </Typography.Text>
+            <Flex align="center" justify="space-between" gap={16}>
+                <Typography.Text>
+                    Filters
+                </Typography.Text>
+                <CreateTeamModal spaceId={spaceId} />
+            </Flex>
+
             <TeamsTable spaceId={spaceId} actionRender={renderActions} />
         </Flex>
     );
