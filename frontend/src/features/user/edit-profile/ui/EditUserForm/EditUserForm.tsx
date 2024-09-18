@@ -2,6 +2,7 @@ import { Button, Col, Flex, Form, Input, message, notification, Row } from 'antd
 import { FC, useCallback, useEffect, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
+import { getSpaceOrganizerQueryKey, getSpaceStudentsQueryKey } from '@entities/space';
 import { FullUserInfoResponse, useGetCurrentUserInfo } from '@entities/user';
 import { getCurrentUserQueryKey } from '@entities/user/lib/getCurrentUserQueryKey';
 
@@ -36,6 +37,8 @@ export const EditUserForm: FC<Props> = typedMemo(function EditUserForm({
                 message: 'Настройки профиля изменены',
             });
             queryClient.resetQueries(getCurrentUserQueryKey);
+            queryClient.resetQueries(getSpaceStudentsQueryKey());
+            queryClient.resetQueries(getSpaceOrganizerQueryKey());
             onSuccess();
         },
     });
