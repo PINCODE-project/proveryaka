@@ -1,5 +1,5 @@
 import { DownOutlined } from '@ant-design/icons';
-import { Avatar, Dropdown, Flex, MenuProps, Typography } from 'antd';
+import { Dropdown, Flex, MenuProps, Typography } from 'antd';
 import { FC, useMemo, useState } from 'react';
 
 import { useAuthContext } from '@app/providers/AuthProvider';
@@ -9,6 +9,7 @@ import { useGetCurrentUserInfo } from '@entities/user';
 import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { ClassNameProps, TestProps } from '@shared/types';
+import { Avatar } from '@shared/ui';
 
 import styles from './UserPanel.module.css';
 
@@ -41,7 +42,7 @@ export const UserPanel: FC<Props> = typedMemo(function UserPanel() {
 
             <Dropdown menu={{ items }} trigger={['click']} onOpenChange={setIsOpen}>
                 <Flex gap="small" align="center" className={getModuleClasses(styles, 'info')}>
-                    <Avatar size={32} src="" />
+                    <Avatar size={32} fileId={user.avatar} apiType="estimate" />
                     <Typography.Text>
                         {user.surname} {user.name}
                     </Typography.Text>

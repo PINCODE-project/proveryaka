@@ -22,7 +22,7 @@ export type GetSpaceResponse = {
     /**
      * Ссылка на иконку
      */
-    icon: string | null;
+    iconFileId: string | null;
 
     /**
      * Тип доступа
@@ -38,4 +38,9 @@ export type GetSpaceResponse = {
      * Идентификаторы организаторов
      */
     organizerIdList: string[] | null;
+
+    /**
+     * ID аватара автора
+     */
+    authorAvatar: string | null;
 };
