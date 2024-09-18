@@ -23,6 +23,7 @@ export function getTeamsAxiosMock(): AxiosMockOptions<GetTeamList>[] {
                                     status: '',
                                     email: 'test@test.test',
                                     academicGroup: '000000',
+                                    avatar: null,
                                 },
                             ],
                         },

@@ -1,0 +1,9 @@
+.settingsIcon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.deleteUser {
+    color: inherit;
+    font-size: inherit;
+}

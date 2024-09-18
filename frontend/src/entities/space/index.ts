@@ -20,6 +20,9 @@ export * from './lib/getSpaceStudentsQueryKey';
 export * from './lib/useGetSpaceStudents';
 export * from './lib/isOrganizer';
 export * from './lib/useGetSpaceSettings';
+export * from './lib/useGetSpaceRoles';
 
 export * from './ui/SpacesTable';
 export * from './ui/SpaceForm';
+export * from './ui/StudentTable';
+export * from './ui/OrganizerTable';

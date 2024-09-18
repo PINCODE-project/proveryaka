@@ -1,8 +1,8 @@
-import { SpacePage } from '@pages/space/SpacePage';
-
 import { ConfigRouteProps } from '@shared/types';
 
+import { SpacePage } from './SpacePage';
 import { SpaceTeamsPage } from './SpacePage/subpages/SpaceTeamsPage';
+import { SpaceUsersPage } from './SpacePage/subpages/SpaceUsersPage';
 import { SpacesPage } from './SpacesPage';
 
 export const SpaceRouter = {
@@ -37,7 +37,7 @@ export const spaceRouteConfig: ConfigRouteProps[] = [
             },
             {
                 path: SpaceRouter.SpaceUsers(':spaceId'),
-                element: null,
+                element: <SpaceUsersPage />,
                 withAuthGuard: true,
             },
             {
