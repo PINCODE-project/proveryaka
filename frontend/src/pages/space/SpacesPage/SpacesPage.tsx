@@ -2,11 +2,14 @@ import { EllipsisOutlined, UsergroupAddOutlined } from '@ant-design/icons';
 import { Button, Dropdown, Flex, MenuProps, Typography } from 'antd';
 import { FC, useCallback, useMemo } from 'react';
 
+import { SpaceRouter } from '@pages/space';
+
 import { UserPanel } from '@widgets/UserPanel';
 
 import { CreateSpaceModal } from '@features/space/create-space';
 import { DeleteSpaceButton } from '@features/space/delete-space';
 import { EnterSpaceByCodeModal } from '@features/space/enter-space-by-code';
+import { ExitUserButton } from '@features/space/exit-user';
 
 import { SpacesTable } from '@entities/space';
 import { GetSpaceResponse } from '@entities/space/model/GetSpaceResponse';
@@ -50,8 +53,14 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
             },
             {
                 key: '5',
-                label: 'Покинуть пространство',
-                disabled: true,
+                label: <ExitUserButton
+                    spaceId={record.id}
+                    triggerComponent={onExit => (
+                        <Typography.Text onClick={onExit}>
+                            Покинуть пространство
+                        </Typography.Text>
+                    )}
+                />,
             },
             {
                 key: '6',
