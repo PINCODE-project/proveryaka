@@ -22,13 +22,13 @@ export const DeleteSpaceButton: FC<Props> = typedMemo(function DeleteSpaceButton
     onSuccess,
 }) {
     const queryClient = useQueryClient();
-    const [api, contextHolder] = notification.useNotification();
+    const [notify, contextHolder] = notification.useNotification();
 
     const { mutate: deleteSpace, isLoading } = useDeleteSpace({
         onSuccess: () => {
             queryClient.resetQueries(getSpacesQueryKey);
             queryClient.resetQueries(getSpaceQueryKey(spaceId ?? ''));
-            api.success({
+            notify.success({
                 message: 'Пространство удалено',
             });
             onSuccess?.();

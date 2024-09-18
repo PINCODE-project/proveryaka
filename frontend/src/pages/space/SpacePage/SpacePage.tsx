@@ -66,8 +66,15 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
         },
         {
             key: '5',
-            label: 'Покинуть пространство',
-            disabled: true,
+            label: <ExitUserButton
+                spaceId={spaceId ?? ''}
+                onSuccess={() => navigate(SpaceRouter.Spaces)}
+                triggerComponent={onExit => (
+                    <Typography.Text onClick={onExit}>
+                Покинуть пространство
+                    </Typography.Text>
+                )}
+            />,
         },
         {
             key: '6',
@@ -80,46 +87,6 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
                     </Typography.Text>)}
             />,
             danger: true,
-        },
-    ], [spaceId]);
-
-    const items: MenuProps['items'] = useMemo(() => [
-        {
-            key: '1',
-            label: 'Изменить пространство',
-            disabled: true,
-        },
-        {
-            key: '2',
-            label: 'Добавить пользователей',
-            disabled: true,
-        },
-        {
-            key: '3',
-            label: 'Скопировать код',
-            disabled: true,
-        },
-        {
-            key: '4',
-            label: 'Перегенрировать код',
-            disabled: true,
-        },
-        {
-            key: '5',
-            label: <ExitUserButton
-                spaceId={spaceId ?? ''}
-                onSuccess={() => navigate(SpaceRouter.Spaces)}
-                triggerComponent={onExit => (
-                    <Typography.Text onClick={onExit}>
-                        Покинуть пространство
-                    </Typography.Text>
-                )}
-            />,
-        },
-        {
-            key: '6',
-            label: 'Удалить пространство',
-            disabled: true,
         },
     ], [spaceId]);
 

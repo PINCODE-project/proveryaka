@@ -22,12 +22,12 @@ export const ExitUserButton: FC<Props> = typedMemo(function ExitUserButton({
     onSuccess,
 }) {
     const queryClient = useQueryClient();
-    const [api, contextHolder] = notification.useNotification();
+    const [notify, contextHolder] = notification.useNotification();
     const { mutate: exit, isLoading } = useExitUser({
         onSuccess: () => {
             queryClient.resetQueries(getSpacesQueryKey);
             queryClient.resetQueries(getSpaceQueryKey(spaceId));
-            api.success({
+            notify.success({
                 message: 'Вы покинули пространство',
             });
             onSuccess?.();
@@ -41,6 +41,5 @@ export const ExitUserButton: FC<Props> = typedMemo(function ExitUserButton({
             {contextHolder}
             {triggerComponent(onExit)}
         </>
-
     );
 });

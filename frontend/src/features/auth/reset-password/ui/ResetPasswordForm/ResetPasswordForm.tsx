@@ -19,7 +19,7 @@ export const ResetPasswordForm: FC<Props> = typedMemo(function SignInForm({
 }) {
     const navigate = useNavigate();
     // TODO: использовать вызов уведомлений после сообщения Кости о возможных ошибках
-    const [api, contextHolder] = notification.useNotification();
+    const [notify, contextHolder] = notification.useNotification();
 
     const { mutate: resetPassword } = useResetPassword({
         onSuccess: () => {},
