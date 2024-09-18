@@ -27,7 +27,7 @@ export const TeamsTable: FC<Props> = typedMemo(function TeamsTable({
 }) {
     const { data: roles } = useGetSpaceRoles(spaceId ?? '');
 
-    const [filters] = useListFilters<GetTeamFilters>({ teamType: TeamType.None });
+    const [filters] = useListFilters<GetTeamFilters>({ teamType: TeamType.Space });
 
     const { data: studentTeams } = useGetSpaceUserTeams(spaceId, filters, {
         enabled: roles !== undefined && !isOrganizer(roles),
