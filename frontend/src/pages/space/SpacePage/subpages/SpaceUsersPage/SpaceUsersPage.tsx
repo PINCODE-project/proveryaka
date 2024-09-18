@@ -1,6 +1,8 @@
 import { EllipsisOutlined } from '@ant-design/icons';
-import { Dropdown, Flex, MenuProps } from 'antd';
+import { Dropdown, Flex, MenuProps, Typography } from 'antd';
 import { FC, useCallback } from 'react';
+
+import { DeleteUserFromSpaceButton } from '@features/space/delete-user-from-space';
 
 import {
     GetOrganizerResponse,
@@ -41,8 +43,15 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
             },
             {
                 key: '2',
-                label: 'Удалить из пространства',
-                disabled: true,
+                label: <DeleteUserFromSpaceButton
+                    triggerComponent={onDelete => (
+                        <Typography.Text onClick={onDelete} className={styles.deleteUser}>
+                            Удалить из пространства
+                        </Typography.Text>
+                    )}
+                    spaceId={spaceId ?? ''}
+                    userId={record.id}
+                />,
                 danger: true,
             },
         ];
