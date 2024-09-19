@@ -33,6 +33,11 @@ export type GetStudentResponse = {
      * Академическая группа студента
      */
     academicGroup: string | null;
+
+    /**
+     * ID аватарки
+     */
+    avatar: string | null;
 };
 
 export type GetStudentListResponse = {

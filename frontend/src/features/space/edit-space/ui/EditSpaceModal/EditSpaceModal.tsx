@@ -1,8 +1,8 @@
-import { Button, Form, Modal, notification, Switch, UploadFile } from 'antd';
-import { FC, ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
+import { Button, Form, Modal, notification, UploadFile } from 'antd';
+import { FC, ReactNode, useCallback, useEffect, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
-import { getSpacesQueryKey, SpaceForm, SpaceFormProps, SpaceSettings } from '@entities/space';
+import { getSpacesQueryKey, SpaceForm, SpaceFormProps } from '@entities/space';
 import { getSpaceQueryKey } from '@entities/space/lib/getSpaceQueryKey';
 import { useGetSpace } from '@entities/space/lib/useGetSpace';
 
@@ -13,6 +13,7 @@ import { ClassNameProps, TestProps } from '@shared/types';
 
 import styles from './EditSpaceModal.module.css';
 import { useEditSpace } from '../../lib/useEditSpace';
+import { EditSpaceRequest } from '../../model/EditSpaceRequest';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     triggerComponent: (onOpen: () => void) => ReactNode;
@@ -27,7 +28,7 @@ export const EditSpaceModal: FC<Props> = typedMemo(function EditSpaceModal({
     const queryClient = useQueryClient();
 
     const { data: space } = useGetSpace(spaceId);
-    const [initialValues, setInitialValues] = useState<SpaceFormProps<SpaceSettings>['initialValues'] | undefined>(undefined);
+    const [initialValues, setInitialValues] = useState<EditSpaceRequest | undefined>(undefined);
 
     const getInitialValues = useCallback(async () => {
         if (!space) {
@@ -69,7 +70,7 @@ export const EditSpaceModal: FC<Props> = typedMemo(function EditSpaceModal({
         },
     });
 
-    const onSubmit = useCallback(async (form: SpaceSettings, file: File | null) => {
+    const onSubmit = useCallback(async (form: EditSpaceRequest, file: File | null) => {
         let iconFileId = form.iconFileId;
         try {
             if (file) {

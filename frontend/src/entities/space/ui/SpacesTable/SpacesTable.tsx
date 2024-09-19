@@ -1,4 +1,4 @@
-import { Avatar, Flex, Table, TableColumnProps, Typography } from 'antd';
+import { Flex, Table, TableColumnProps, Typography } from 'antd';
 import { FC, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,6 +6,7 @@ import { SpaceRouter } from '@pages/space';
 
 import { typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
+import { Avatar } from '@shared/ui';
 
 import { useGetSpaces } from '../../lib/useGetSpaces';
 import { GetSpaceResponse } from '../../model/GetSpaceResponse';
@@ -27,8 +28,15 @@ export const SpacesTable: FC<Props> = typedMemo(function SpacesTable({
             key: 'name',
             render: (_, space) => (
                 <Flex gap="small" align="center">
-                    <Avatar size={32} src={space.icon} shape="square" />
-                    <Typography.Text>{space.name}</Typography.Text>
+                    <Avatar
+                        size={32}
+                        fileId={space.iconFileId}
+                        shape="square"
+                        apiType="estimate"
+                    />
+                    <Typography.Text style={{ flex: 1 }}>
+                        {space.name}
+                    </Typography.Text>
                 </Flex>
             ),
         },
@@ -41,10 +49,18 @@ export const SpacesTable: FC<Props> = typedMemo(function SpacesTable({
             title: 'Владелец',
             dataIndex: '',
             key: '',
+            width: 150,
             render: (_, space) => (
                 <Flex gap="small" align="center">
-                    <Avatar size={32} src={space.icon} />
-                    <Typography.Text>Name</Typography.Text>
+                    <Avatar
+                        size={32}
+                        fileId={space.authorAvatar}
+                        shape="square"
+                        apiType="estimate"
+                    />
+                    <Typography.Text style={{ flex: 1 }}>
+                        {space.authorName}
+                    </Typography.Text>
                 </Flex>
             ),
         },

@@ -1,6 +1,6 @@
-import { SpaceSettings } from '@entities/space';
+import { Space } from '@entities/space';
 
-export type CreateSpaceRequest = SpaceSettings & {
+export type CreateSpaceRequest = Space & {
     /**
      * Создать настройки пространтсва
      */

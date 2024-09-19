@@ -2,43 +2,48 @@ import { Table, TableColumnsType } from 'antd';
 import { ColumnType } from 'antd/lib/table';
 import { FC, useCallback, useMemo } from 'react';
 
-import { isOrganizer } from '@entities/space';
-import { useGetSpaceRoles } from '@entities/space/lib/useGetSpaceRoles';
-import { useGetSpaceTeams } from '@entities/team/lib/useGetSpaceTeams';
-import { GetTeamFilters } from '@entities/team/model/GetTeamFilters';
-import { TeamType } from '@entities/team/model/TeamType';
+// Сущность пространства много где зайдествуется
+// eslint-disable-next-line
+import {GetStudentResponse, isOrganizer, StudentTable} from '@entities/space';
+
+import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
 import { useListFilters } from '@shared/hooks';
 import { typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { EmptyTable } from '@shared/ui';
 
+import { useGetSpaceTeams } from '../../lib/useGetSpaceTeams';
 import { useGetSpaceUserTeams } from '../../lib/useGetSpaceUserTeams';
 import { GetTeam } from '../../model/GetTeam';
+import { GetTeamFilters } from '../../model/GetTeamFilters';
+import { TeamType } from '../../model/TeamType';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     spaceId: string;
     actionRender?: ColumnType<GetTeam>['render'];
+    renderStudentActions?: ColumnType<GetStudentResponse>['render'];
 }>;
 
 export const TeamsTable: FC<Props> = typedMemo(function TeamsTable({
     spaceId,
+    renderStudentActions,
     actionRender,
 }) {
-    const { data: roles } = useGetSpaceRoles(spaceId ?? '');
+    const { isStudent } = useRolesCheck();
 
-    const [filters] = useListFilters<GetTeamFilters>({ teamType: TeamType.None });
+    const [filters] = useListFilters<GetTeamFilters>({ teamType: TeamType.Space });
 
     const { data: studentTeams } = useGetSpaceUserTeams(spaceId, filters, {
-        enabled: roles !== undefined && !isOrganizer(roles),
+        enabled: isStudent,
     });
     const { data: organizerTeams } = useGetSpaceTeams(spaceId, filters, {
-        enabled: roles !== undefined && isOrganizer(roles),
+        enabled: !isStudent,
     });
     const teams = useMemo(() => {
-        const teams = isOrganizer(roles) ? organizerTeams?.teamList : studentTeams?.teamList;
+        const teams = isStudent ? studentTeams?.teamList : organizerTeams?.teamList;
         return teams ?? [];
-    }, [roles, studentTeams, organizerTeams]);
+    }, [isStudent, studentTeams, organizerTeams]);
 
     const columns = useMemo<TableColumnsType<GetTeam>>(() => [
         {
@@ -63,8 +68,7 @@ export const TeamsTable: FC<Props> = typedMemo(function TeamsTable({
     ], [actionRender]);
 
     const expandedRowRender = useCallback((record: GetTeam) => {
-        // TODO: возвращает StudentsTable (надо написать)
-        return null;
+        return <StudentTable students={record.studentInfoList ?? []} renderActions={renderStudentActions} />;
     }, []);
 
     if (teams.length === 0) {
