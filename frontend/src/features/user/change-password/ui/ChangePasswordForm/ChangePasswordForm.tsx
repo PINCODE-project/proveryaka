@@ -66,18 +66,19 @@ export const ChangePasswordForm: FC<Props> = typedMemo(function ChangePasswordFo
             </Row>
 
             <Row gutter={[20, 0]}>
-                <Col flex={1}>
+                <Col flex="50%">
                     <Form.Item<ChangePassword>
                         label="Новый пароль"
                         name="newPassword"
                         rules={[
                             { required: true, message: 'Введите пароль' },
+                            { min: 4, message: 'Минимальная длина пароля 4 символа' },
                         ]}
                     >
                         <Input.Password placeholder="password" />
                     </Form.Item>
                 </Col>
-                <Col flex={1}>
+                <Col flex="50%">
                     <Form.Item
                         name="confirm"
                         label="Повторите пароль"
@@ -87,7 +88,7 @@ export const ChangePasswordForm: FC<Props> = typedMemo(function ChangePasswordFo
                             ({ getFieldValue }) => ({
                                 validator(_, value) {
                                     const password = getFieldValue('newPassword');
-                                    if ((!value && !password) || password === value) {
+                                    if (!value || !password || password === value) {
                                         return Promise.resolve();
                                     }
                                     return Promise.reject(new Error('Пароли не совпадают'));
