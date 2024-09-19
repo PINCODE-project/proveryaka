@@ -29,7 +29,7 @@ export const StudentTable: FC<Props> = typedMemo(function StudentTable({
                         apiType="estimate"
                         shape="square"
                     />
-                    <Typography.Text>
+                    <Typography.Text style={{ flex: 1 }}>
                         {user.surname} {user.name} {user.patronymic}
                     </Typography.Text>
                 </Flex>

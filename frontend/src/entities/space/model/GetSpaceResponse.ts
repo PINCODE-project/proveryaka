@@ -40,7 +40,12 @@ export type GetSpaceResponse = {
     organizerIdList: string[] | null;
 
     /**
-     * ID аватара автора
+     * Имя владельца
+     */
+    authorName?: string;
+
+    /**
+     * Аватар владельца
      */
     authorAvatar: string | null;
 };

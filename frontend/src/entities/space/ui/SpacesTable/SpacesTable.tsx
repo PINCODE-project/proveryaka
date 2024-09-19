@@ -34,7 +34,9 @@ export const SpacesTable: FC<Props> = typedMemo(function SpacesTable({
                         shape="square"
                         apiType="estimate"
                     />
-                    <Typography.Text>{space.name}</Typography.Text>
+                    <Typography.Text style={{ flex: 1 }}>
+                        {space.name}
+                    </Typography.Text>
                 </Flex>
             ),
         },
@@ -56,7 +58,9 @@ export const SpacesTable: FC<Props> = typedMemo(function SpacesTable({
                         shape="square"
                         apiType="estimate"
                     />
-                    <Typography.Text>Name</Typography.Text>
+                    <Typography.Text style={{ flex: 1 }}>
+                        {space.authorName}
+                    </Typography.Text>
                 </Flex>
             ),
         },

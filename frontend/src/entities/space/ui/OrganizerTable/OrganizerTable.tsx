@@ -29,7 +29,7 @@ export const OrganizerTable: FC<Props> = typedMemo(function OrganizerTable({
                         apiType="estimate"
                         shape="square"
                     />
-                    <Typography.Text>
+                    <Typography.Text style={{ flex: 1 }}>
                         {user.surname} {user.name} {user.patronymic}
                     </Typography.Text>
                 </Flex>

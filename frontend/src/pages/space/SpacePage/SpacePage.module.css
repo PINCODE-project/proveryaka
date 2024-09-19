@@ -45,6 +45,7 @@
 .title {
     font-size: 18px;
     line-height: 22px;
+    flex: 1;
     font-weight: var(--font-weight-semibold);
 }
 
