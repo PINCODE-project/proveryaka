@@ -95,7 +95,7 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
                 content={users => (
                     <Suspense fallback={<Spin />}>
                         <OrganizerTable
-                            renderActions={renderActions}
+                            renderActions={renderActions(SpaceRoleType.Organizer)}
                             organizers={users}
                         />
                     </Suspense>
@@ -108,7 +108,7 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
                 content={users => (
                     <Suspense fallback={<Spin />}>
                         <OrganizerTable
-                            renderActions={renderActions}
+                            renderActions={renderActions(SpaceRoleType.Expert)}
                             organizers={users}
                         />
                     </Suspense>
@@ -121,7 +121,7 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
                 content={users => (
                     <Suspense fallback={<Spin />}>
                         <StudentTable
-                            renderActions={renderActions}
+                            renderActions={renderActions(SpaceRoleType.Student)}
                             students={users}
                         />
                     </Suspense>)}
