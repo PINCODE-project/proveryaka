@@ -8,7 +8,7 @@ import {
     GetOrganizerResponse,
     GetStudentResponse, isOrganizer,
     OrganizerTable,
-    StudentTable,
+    StudentTable, useGetSpaceExperts,
     useGetSpaceOrganizers, useGetSpaceRoles,
     useGetSpaceStudents,
 } from '@entities/space';
@@ -28,6 +28,7 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
     const { data: roles } = useGetSpaceRoles(spaceId ?? '');
 
     const { data: students } = useGetSpaceStudents(spaceId ?? '');
+    const { data: experts } = useGetSpaceExperts(spaceId ?? '');
     const { data: organizers } = useGetSpaceOrganizers(spaceId ?? '');
 
     const renderActions = useCallback((_: string, record: GetStudentResponse | GetOrganizerResponse) => {
@@ -75,6 +76,17 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
             <UsersCollapse
                 users={organizers?.organizerInfoList ?? []}
                 usersName="Организаторы"
+                content={users => (
+                    <OrganizerTable
+                        renderActions={renderActions}
+                        organizers={users}
+                    />
+                )}
+            />
+
+            <UsersCollapse
+                users={experts?.expertsInfoList ?? []}
+                usersName="Эксперты"
                 content={users => (
                     <OrganizerTable
                         renderActions={renderActions}
