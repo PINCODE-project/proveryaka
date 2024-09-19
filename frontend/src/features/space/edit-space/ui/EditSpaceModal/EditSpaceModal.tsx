@@ -2,7 +2,7 @@ import { Button, Form, Modal, notification, UploadFile } from 'antd';
 import { FC, ReactNode, useCallback, useEffect, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
-import { getSpacesQueryKey, SpaceForm, SpaceFormProps } from '@entities/space';
+import { getSpacesQueryKey, Space, SpaceForm } from '@entities/space';
 import { getSpaceQueryKey } from '@entities/space/lib/getSpaceQueryKey';
 import { useGetSpace } from '@entities/space/lib/useGetSpace';
 
@@ -28,7 +28,8 @@ export const EditSpaceModal: FC<Props> = typedMemo(function EditSpaceModal({
     const queryClient = useQueryClient();
 
     const { data: space } = useGetSpace(spaceId);
-    const [initialValues, setInitialValues] = useState<EditSpaceRequest | undefined>(undefined);
+    const [initialValues, setInitialValues] =
+        useState<EditSpaceRequest & {fileList: UploadFile[]} | undefined>(undefined);
 
     const getInitialValues = useCallback(async () => {
         if (!space) {
@@ -104,7 +105,7 @@ export const EditSpaceModal: FC<Props> = typedMemo(function EditSpaceModal({
             >
                 <SpaceForm
                     submit={onSubmit}
-                    initialValues={initialValues}
+                    initialValues={initialValues as any}
                     submitButton={(
                         <Form.Item className={styles.submitButton}>
                             <Button type="primary" htmlType="submit" block>
