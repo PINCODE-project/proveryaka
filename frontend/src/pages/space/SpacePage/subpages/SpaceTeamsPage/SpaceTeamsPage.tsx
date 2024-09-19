@@ -1,4 +1,4 @@
-import { EllipsisOutlined } from '@ant-design/icons';
+import { EllipsisOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Dropdown, Flex, MenuProps, Typography } from 'antd';
 import { FC, useCallback } from 'react';
 import { Navigate } from 'react-router-dom';
@@ -8,6 +8,7 @@ import { SpaceRouter } from '@pages/space';
 import { CreateTeamModal } from '@features/team/create-team';
 import { EditTeamModal } from '@features/team/edit-team';
 
+import { GetStudentResponse } from '@entities/space';
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 import { TeamsTable, GetTeam } from '@entities/team';
 
@@ -24,7 +25,7 @@ export const SpaceTeamsPage: FC<Props> = typedMemo(function SpaceTeamsPage({
     className,
 
 }) {
-    const { isStudent } = useRolesCheck();
+    const { isStudent, isOrganizer } = useRolesCheck();
     const spaceId = useSpaceId();
 
     const renderActions = useCallback((_: string, record: GetTeam) => {
@@ -61,6 +62,12 @@ export const SpaceTeamsPage: FC<Props> = typedMemo(function SpaceTeamsPage({
                 </Dropdown>
             </div>
         );
+    }, [spaceId]);
+
+    const renderStudentActions = useCallback((_: string, record: GetStudentResponse) => {
+        return (
+            <DeleteOutlined className={styles.deleteUserFromTeamIcon} />
+        );
     }, []);
 
     if (!spaceId) {
@@ -75,7 +82,11 @@ export const SpaceTeamsPage: FC<Props> = typedMemo(function SpaceTeamsPage({
                 {isStudent ? <CreateTeamModal spaceId={spaceId} /> : null}
             </Flex>
 
-            <TeamsTable spaceId={spaceId} actionRender={renderActions} />
+            <TeamsTable
+                spaceId={spaceId}
+                actionRender={renderActions}
+                renderStudentActions={isOrganizer ? renderStudentActions : undefined}
+            />
         </Flex>
     );
 });

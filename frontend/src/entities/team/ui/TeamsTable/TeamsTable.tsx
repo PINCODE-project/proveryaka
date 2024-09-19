@@ -4,7 +4,7 @@ import { FC, useCallback, useMemo } from 'react';
 
 // Сущность пространства много где зайдествуется
 // eslint-disable-next-line
-import { isOrganizer, StudentTable } from '@entities/space';
+import {GetStudentResponse, isOrganizer, StudentTable} from '@entities/space';
 
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
@@ -22,10 +22,12 @@ import { TeamType } from '../../model/TeamType';
 export type Props = ClassNameProps & TestProps & Readonly<{
     spaceId: string;
     actionRender?: ColumnType<GetTeam>['render'];
+    renderStudentActions?: ColumnType<GetStudentResponse>['render'];
 }>;
 
 export const TeamsTable: FC<Props> = typedMemo(function TeamsTable({
     spaceId,
+    renderStudentActions,
     actionRender,
 }) {
     const { isStudent } = useRolesCheck();
@@ -66,7 +68,7 @@ export const TeamsTable: FC<Props> = typedMemo(function TeamsTable({
     ], [actionRender]);
 
     const expandedRowRender = useCallback((record: GetTeam) => {
-        return <StudentTable students={record.studentInfoList ?? []} />;
+        return <StudentTable students={record.studentInfoList ?? []} renderActions={renderStudentActions} />;
     }, []);
 
     if (teams.length === 0) {

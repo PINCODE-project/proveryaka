@@ -10,3 +10,9 @@
     width: 100%;
     display: block;
 }
+
+.deleteUserFromTeamIcon svg{
+    width: 18px;
+    height: 18px;
+    fill: #FF4D4F;
+}

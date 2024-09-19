@@ -58,6 +58,7 @@ export const CreateTeamModal: FC<Props> = typedMemo(function CreateTeamModal({
             ...form,
             entityId: spaceId,
             teamType: TeamType.Space,
+            userProfileIdList: form.userProfileIdList ?? [],
         });
     }, [create, spaceId]);
 
@@ -91,7 +92,6 @@ export const CreateTeamModal: FC<Props> = typedMemo(function CreateTeamModal({
                         <Form.Item<CreateTeam>
                             label="Участники"
                             name="userProfileIdList"
-                            rules={[{ required: true, message: 'Выберите участников' }]}
                         >
                             <Select mode="multiple" placeholder="Не выбрано">
                                 {students.map(student => (
