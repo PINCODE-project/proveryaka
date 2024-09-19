@@ -8,6 +8,7 @@ import { SpaceRouter } from '@pages/space';
 import { CreateTeamModal } from '@features/team/create-team';
 import { EditTeamModal } from '@features/team/edit-team';
 
+import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 import { TeamsTable, GetTeam } from '@entities/team';
 
 import { useSpaceId } from '@shared/hooks/useSpaceId';
@@ -23,6 +24,7 @@ export const SpaceTeamsPage: FC<Props> = typedMemo(function SpaceTeamsPage({
     className,
 
 }) {
+    const { isStudent } = useRolesCheck();
     const spaceId = useSpaceId();
 
     const renderActions = useCallback((_: string, record: GetTeam) => {
@@ -70,7 +72,7 @@ export const SpaceTeamsPage: FC<Props> = typedMemo(function SpaceTeamsPage({
                 <Typography.Text>
                     Filters
                 </Typography.Text>
-                <CreateTeamModal spaceId={spaceId} />
+                {isStudent ? <CreateTeamModal spaceId={spaceId} /> : null}
             </Flex>
 
             <TeamsTable spaceId={spaceId} actionRender={renderActions} />

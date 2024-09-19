@@ -1,12 +1,13 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Form, Modal, notification, Select } from 'antd';
-import { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useMemo, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
 import { useGetSpaceStudents } from '@entities/space';
 import { TeamForm, TeamType } from '@entities/team';
 import { getSpaceTeamsQueryKey } from '@entities/team/lib/getSpaceTeamsQueryKey';
 import { getSpaceUserTeamsQueryKey } from '@entities/team/lib/getSpaceUserTeamsQueryKey';
+import { useGetCurrentUserInfo } from '@entities/user';
 
 import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
@@ -27,7 +28,11 @@ export const CreateTeamModal: FC<Props> = typedMemo(function CreateTeamModal({
     const [api, contextHolder] = notification.useNotification();
     const [isOpen, setIsOpen] = useState(false);
 
-    const { data: students } = useGetSpaceStudents(spaceId);
+    const { data: user } = useGetCurrentUserInfo();
+    const { data: rawStudents } = useGetSpaceStudents(spaceId);
+    const students = useMemo(() =>
+        rawStudents?.studentInfoList?.filter(({ id }) => id !== user?.id) ?? [],
+    [rawStudents, user]);
 
     const { mutate: create } = useCreateTeam({
         onSuccess: () => {
@@ -89,7 +94,7 @@ export const CreateTeamModal: FC<Props> = typedMemo(function CreateTeamModal({
                             rules={[{ required: true, message: 'Выберите участников' }]}
                         >
                             <Select mode="multiple" placeholder="Не выбрано">
-                                {students?.studentInfoList?.map(student => (
+                                {students.map(student => (
                                     <Select.Option value={student.id} key={student.id}>
                                         {student.surname} {student.name} {student.patronymic}
                                     </Select.Option>
