@@ -47,6 +47,7 @@ export const SpacesTable: FC<Props> = typedMemo(function SpacesTable({
             title: 'Владелец',
             dataIndex: '',
             key: '',
+            width: 150,
             render: (_, space) => (
                 <Flex gap="small" align="center">
                     <Avatar

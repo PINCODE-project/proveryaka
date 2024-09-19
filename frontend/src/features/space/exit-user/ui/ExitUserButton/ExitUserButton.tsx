@@ -7,11 +7,13 @@ import { getSpaceQueryKey } from '@entities/space/lib/getSpaceQueryKey';
 
 import { typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
+import { customConfirm } from '@shared/ui';
 
 import { useExitUser } from '../../lib/useExitUser';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     spaceId: string;
+    spaceName: string;
     onSuccess?: () => void;
     triggerComponent: (onExit: () => void) => ReactNode;
 }>;
@@ -19,6 +21,7 @@ export type Props = ClassNameProps & TestProps & Readonly<{
 export const ExitUserButton: FC<Props> = typedMemo(function ExitUserButton({
     triggerComponent,
     spaceId,
+    spaceName,
     onSuccess,
 }) {
     const queryClient = useQueryClient();
@@ -34,7 +37,22 @@ export const ExitUserButton: FC<Props> = typedMemo(function ExitUserButton({
         },
     });
 
-    const onExit = useCallback(() => !isLoading && exit(spaceId), [spaceId, exit, isLoading]);
+    const onExit = useCallback(async () => {
+        if (isLoading) {
+            return;
+        }
+
+        const canExit = await customConfirm({
+            title: 'Покинуть пространство',
+            text: <>Вы уверены, что хотите покинуть пространство <b>{spaceName}</b>?</>,
+        });
+
+        if (!canExit) {
+            return;
+        }
+
+        !isLoading && exit(spaceId);
+    }, [spaceId, exit, isLoading, spaceName]);
 
     return (
         <>

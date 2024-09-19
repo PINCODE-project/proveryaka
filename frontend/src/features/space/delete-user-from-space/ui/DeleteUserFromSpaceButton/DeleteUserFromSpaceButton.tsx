@@ -44,7 +44,7 @@ export const DeleteUserFromSpaceButton: FC<Props> = typedMemo(function DeleteUse
 
         const canDelete = await customConfirm({
             title: 'Удалить из пространства',
-            text: `Вы уверены, что хотите удалить ${userFullName} из пространства?  `,
+            text: <>Вы уверены, что хотите удалить <b>{userFullName}</b> из пространства?</>,
         });
 
         if (!canDelete) {

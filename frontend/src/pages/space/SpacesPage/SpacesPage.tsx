@@ -54,6 +54,7 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
             {
                 key: '5',
                 label: <ExitUserButton
+                    spaceName={record.name ?? ''}
                     spaceId={record.id}
                     triggerComponent={onExit => (
                         <Typography.Text onClick={onExit}>

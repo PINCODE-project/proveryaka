@@ -1,6 +1,6 @@
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import { Button, ConfigProvider, Flex, Typography } from 'antd';
-import { FC, useCallback, useEffect, useRef } from 'react';
+import { FC, ReactNode, useCallback, useEffect, useRef } from 'react';
 
 import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
@@ -17,7 +17,7 @@ export type Props = ClassNameProps & Readonly<{
     /**
      * Текстовое содержание окна.
      */
-    text?: string;
+    text?: string | ReactNode;
 
     /**
      * Текст кнопки "Отмена".
