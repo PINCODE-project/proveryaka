@@ -1,10 +1,10 @@
-import { Avatar, Flex, Table, TableColumnProps, Typography } from 'antd';
+import { Flex, Table, TableColumnProps, Typography } from 'antd';
 import { FC, useMemo } from 'react';
 
 import { typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
+import { Avatar } from '@shared/ui';
 
-import { useGetSpaceStudents } from '../../lib/useGetSpaceStudents';
 import { GetStudentResponse } from '../../model/GetStudentResponse';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
@@ -23,8 +23,13 @@ export const StudentTable: FC<Props> = typedMemo(function StudentTable({
             key: 'fullname',
             render: (_, user) => (
                 <Flex gap="small" align="center">
-                    <Avatar size={32} src={''} shape="square" />
-                    <Typography.Text>
+                    <Avatar
+                        size={32}
+                        fileId={user.avatar}
+                        apiType="estimate"
+                        shape="square"
+                    />
+                    <Typography.Text style={{ flex: 1 }}>
                         {user.surname} {user.name} {user.patronymic}
                     </Typography.Text>
                 </Flex>

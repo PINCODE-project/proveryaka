@@ -1,5 +1,5 @@
 export * from './model/TaskStatus';
-export * from './model/SpaceSettings';
+export * from './model/Space';
 export * from './model/GetExpertResponse';
 export * from './model/GetStudentResponse';
 export * from './model/GetOrganizerResponse';
@@ -19,6 +19,7 @@ export * from './lib/useGetSpaceExperts';
 export * from './lib/getSpaceStudentsQueryKey';
 export * from './lib/useGetSpaceStudents';
 export * from './lib/isOrganizer';
+export * from './lib/useGetSpaceSettings';
 export * from './lib/useGetSpaceRoles';
 
 export * from './ui/SpacesTable';

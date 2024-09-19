@@ -23,7 +23,7 @@ export type Props = ClassNameProps & TestProps & Readonly<{
 export const CreateSpaceModal: FC<Props> = typedMemo(function CreateSpaceModal({
     triggerComponent,
 }) {
-    const [api, contextHolder] = notification.useNotification();
+    const [notify, contextHolder] = notification.useNotification();
     const queryClient = useQueryClient();
 
     const { data: user } = useGetCurrentUserInfo();
@@ -32,7 +32,7 @@ export const CreateSpaceModal: FC<Props> = typedMemo(function CreateSpaceModal({
     const { mutate: create } = useCreateSpace({
         onSuccess: () => {
             queryClient.resetQueries(getSpacesQueryKey);
-            api.success({
+            notify.success({
                 message: 'Пространство создано',
             });
             setIsOpen(false);

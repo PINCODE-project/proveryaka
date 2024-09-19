@@ -1,12 +1,14 @@
 import { EllipsisOutlined } from '@ant-design/icons';
-import { Dropdown, Flex, MenuProps } from 'antd';
+import { Dropdown, Flex, MenuProps, Typography } from 'antd';
 import { FC, useCallback } from 'react';
+
+import { DeleteUserFromSpaceButton } from '@features/space/delete-user-from-space';
 
 import {
     GetOrganizerResponse,
     GetStudentResponse, isOrganizer,
     OrganizerTable,
-    StudentTable,
+    StudentTable, useGetSpaceExperts,
     useGetSpaceOrganizers, useGetSpaceRoles,
     useGetSpaceStudents,
 } from '@entities/space';
@@ -26,6 +28,7 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
     const { data: roles } = useGetSpaceRoles(spaceId ?? '');
 
     const { data: students } = useGetSpaceStudents(spaceId ?? '');
+    const { data: experts } = useGetSpaceExperts(spaceId ?? '');
     const { data: organizers } = useGetSpaceOrganizers(spaceId ?? '');
 
     const renderActions = useCallback((_: string, record: GetStudentResponse | GetOrganizerResponse) => {
@@ -41,8 +44,16 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
             },
             {
                 key: '2',
-                label: 'Удалить из пространства',
-                disabled: true,
+                label: <DeleteUserFromSpaceButton
+                    triggerComponent={onDelete => (
+                        <Typography.Text className={styles.menuItem} onClick={onDelete}>
+                            Удалить из пространства
+                        </Typography.Text>
+                    )}
+                    userFullName={`${record.surname} ${record.name} ${record.patronymic}`}
+                    spaceId={spaceId ?? ''}
+                    userId={record.id}
+                />,
                 danger: true,
             },
         ];
@@ -65,6 +76,17 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
             <UsersCollapse
                 users={organizers?.organizerInfoList ?? []}
                 usersName="Организаторы"
+                content={users => (
+                    <OrganizerTable
+                        renderActions={renderActions}
+                        organizers={users}
+                    />
+                )}
+            />
+
+            <UsersCollapse
+                users={experts?.expertsInfoList ?? []}
+                usersName="Эксперты"
                 content={users => (
                     <OrganizerTable
                         renderActions={renderActions}

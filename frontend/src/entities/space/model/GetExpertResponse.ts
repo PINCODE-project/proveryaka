@@ -33,6 +33,11 @@ export type GetExpertResponse = {
      * Позиция
      */
     position: string | null;
+
+    /**
+     * ID аватарки
+     */
+    avatar: string | null;
 };
 
 export type GetExpertsListResponse = {

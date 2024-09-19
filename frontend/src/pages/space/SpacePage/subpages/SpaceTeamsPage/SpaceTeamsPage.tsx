@@ -5,6 +5,10 @@ import { Navigate } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/space';
 
+import { CreateTeamModal } from '@features/team/create-team';
+import { EditTeamModal } from '@features/team/edit-team';
+
+import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 import { TeamsTable, GetTeam } from '@entities/team';
 
 import { useSpaceId } from '@shared/hooks/useSpaceId';
@@ -20,14 +24,22 @@ export const SpaceTeamsPage: FC<Props> = typedMemo(function SpaceTeamsPage({
     className,
 
 }) {
+    const { isStudent } = useRolesCheck();
     const spaceId = useSpaceId();
 
     const renderActions = useCallback((_: string, record: GetTeam) => {
         const items: MenuProps['items'] = [
             {
                 key: '1',
-                label: 'Изменить команду',
-                disabled: true,
+                label: <EditTeamModal
+                    spaceId={spaceId ?? ''}
+                    teamId={record.id}
+                    triggerComponent={onOpen => (
+                        <Typography.Text onClick={onOpen} className={styles.menuItem}>
+                                              Изменить команду
+                        </Typography.Text>
+                    )}
+                />,
             },
             {
                 key: '2',
@@ -56,9 +68,13 @@ export const SpaceTeamsPage: FC<Props> = typedMemo(function SpaceTeamsPage({
     }
     return (
         <Flex gap={28} vertical className={ className}>
-            <Typography.Text>
-                Filters
-            </Typography.Text>
+            <Flex align="center" justify="space-between" gap={16}>
+                <Typography.Text>
+                    Filters
+                </Typography.Text>
+                {isStudent ? <CreateTeamModal spaceId={spaceId} /> : null}
+            </Flex>
+
             <TeamsTable spaceId={spaceId} actionRender={renderActions} />
         </Flex>
     );

@@ -18,13 +18,13 @@ export type Props = ClassNameProps & TestProps & Readonly<{
 export const EnterSpaceByCodeModal: FC<Props> = typedMemo(function EnterSpaceByCodeModal({
     triggerComponent,
 }) {
-    const [api, contextHolder] = notification.useNotification();
+    const [notify, contextHolder] = notification.useNotification();
     const queryClient = useQueryClient();
     const [isOpen, setIsOpen] = useState(false);
     const { mutate: enter } = useEnterByCode({
         onSuccess: () => {
             queryClient.resetQueries(getSpacesQueryKey);
-            api.success({
+            notify.success({
                 message: 'Вы добавлены в пространство',
             });
             setIsOpen(false);

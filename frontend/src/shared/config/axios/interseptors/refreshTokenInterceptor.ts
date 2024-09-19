@@ -1,9 +1,9 @@
-import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import type { AxiosError } from 'axios';
 
 import { refreshToken } from '@features/auth/refresh-token';
 
 import { ssoHttp } from '@shared/config/axios';
-import { extractData, Token, TokenService } from '@shared/lib';
+import { TokenService } from '@shared/lib';
 
 /**
  * Интерсептор обновления токена

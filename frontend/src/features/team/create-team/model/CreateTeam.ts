@@ -1,11 +1,6 @@
-export type CreateTeam = {
-    /**
-     * Название команды
-     */
-    name: string | null;
+import { TeamEditor, TeamType } from '@entities/team';
 
-    /**
-     * Идентификатор пространтства
-     */
-    spaceId: string;
+export type CreateTeam = TeamEditor & {
+    teamType: TeamType;
+    userProfileIdList: string[];
 };

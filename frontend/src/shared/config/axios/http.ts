@@ -4,7 +4,7 @@ import { addTokenInterceptor } from '@shared/config/axios/interseptors/addTokenI
 import { notifyError } from '@shared/config/axios/interseptors/notifyError';
 import { refreshSecretInterceptor } from '@shared/config/axios/interseptors/refreshTokenInterceptor';
 
-const BASE_API_URL = 'https://dev.pincode-dev.ru/proverayka/';
+const BASE_API_URL = 'https://pincode-dev.ru/proverayka/';
 
 export const estimateHttp = axios.create({
     baseURL: `${BASE_API_URL}estimate-api/api/v1/public`,

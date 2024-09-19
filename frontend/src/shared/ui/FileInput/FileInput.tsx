@@ -5,7 +5,9 @@ import { FC, ReactNode, useCallback, useState } from 'react';
 
 import { typedMemo } from '@shared/lib';
 import { ClassNameProps } from '@shared/types';
-import { FileInputContextProvider } from '@shared/ui/FileInput/FileInputContext';
+
+import styles from './FileInput.module.css';
+import { FileInputContextProvider } from './FileInputContext';
 
 export type Props = ClassNameProps & UploadProps & {
     isEmpty?: boolean;
@@ -74,6 +76,7 @@ export const FileInput: FC<Props> = typedMemo(function FileInput({
             <Upload
                 onChange={handleChange}
                 customRequest={dummyRequest}
+                className={styles.upload}
                 {...uploadProps}
             >
                 {

@@ -1,5 +1,6 @@
 import { AddUserTeam } from '@features/team/add-user-team/model/AddUserTeam';
-import { CreateTeam } from '@features/team/create-team/model/CreateTeam';
+
+import { TeamEditor } from '@entities/team/model/TeamEditor';
 
 import { estimateHttp } from '@shared/config/axios';
 
