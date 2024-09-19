@@ -3,6 +3,7 @@ import { FC, useCallback, useEffect, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
 import { getSpaceOrganizerQueryKey, getSpaceStudentsQueryKey } from '@entities/space';
+import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 import { FullUserInfoResponse, useGetCurrentUserInfo } from '@entities/user';
 import { getCurrentUserQueryKey } from '@entities/user/lib/getCurrentUserQueryKey';
 
@@ -24,6 +25,7 @@ export const EditUserForm: FC<Props> = typedMemo(function EditUserForm({
     onSuccess,
 }) {
     const { data: user } = useGetCurrentUserInfo();
+    const { isStudent } = useRolesCheck();
 
     const [file, setFile] = useState<File | null>(null);
     const { data: oldFile } = useGetEstimateFile(user?.avatar ?? '', { enabled: Boolean(user?.avatar) });
@@ -148,13 +150,21 @@ export const EditUserForm: FC<Props> = typedMemo(function EditUserForm({
                             </Form.Item>
                         </Col>
                         <Col flex={1}>
-                            <Form.Item<FullUserInfoResponse>
-                                className={getModuleClasses(styles, 'formItem')}
-                                label="Группа"
-                                name="academicGroup"
-                            >
-                                <Input placeholder="РИ-100000" />
-                            </Form.Item>
+                            {isStudent
+                                ? <Form.Item<FullUserInfoResponse>
+                                    className={getModuleClasses(styles, 'formItem')}
+                                    label="Группа"
+                                    name="academicGroup"
+                                >
+                                    <Input placeholder="РИ-100000" />
+                                </Form.Item>
+                                : <Form.Item<FullUserInfoResponse>
+                                    className={getModuleClasses(styles, 'formItem')}
+                                    label="Должность"
+                                    name="position"
+                                >
+                                    <Input placeholder="Преподаватель" />
+                                </Form.Item>}
                         </Col>
                     </Row>
 
