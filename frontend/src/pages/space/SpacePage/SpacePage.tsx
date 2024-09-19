@@ -6,7 +6,7 @@ import {
     TeamOutlined,
     LeftOutlined,
 } from '@ant-design/icons';
-import { Dropdown, Flex, MenuProps, Typography } from 'antd';
+import { App, Dropdown, Flex, MenuProps, Typography } from 'antd';
 import { FC, useMemo } from 'react';
 import { Link, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
@@ -17,6 +17,7 @@ import { UserPanel } from '@widgets/UserPanel';
 import { AddUserInSpaceModal } from '@features/space/add-user-in-space';
 import { DeleteSpaceButton } from '@features/space/delete-space';
 import { ExitUserButton } from '@features/space/exit-user';
+import { useCopySpaceCode, useRegenerateSpaceCode } from '@features/space/get-space-code';
 
 import { isOrganizer, useGetSpaceSettings } from '@entities/space';
 import { useGetSpace } from '@entities/space/lib/useGetSpace';
@@ -36,6 +37,7 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
     className,
     'data-testid': dataTestId = 'SpacePage',
 }) {
+    const { notification } = App.useApp();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -43,6 +45,21 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
     const { data: roles } = useGetSpaceRoles(spaceId ?? '');
     const { data: space } = useGetSpace(spaceId ?? '');
     const { data: spaceSettings } = useGetSpaceSettings(spaceId ?? '');
+
+    const { mutate: copyCode } = useCopySpaceCode({
+        onSuccess: () => {
+            notification.success({
+                message: 'Пригласительный код скопирован',
+            });
+        },
+    });
+    const { mutate: regenerateCode } = useRegenerateSpaceCode({
+        onSuccess: () => {
+            notification.success({
+                message: 'Пригласительный код изменен',
+            });
+        },
+    });
 
     const items: MenuProps['items'] = useMemo(() => [
         {
@@ -64,12 +81,12 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
         {
             key: '3',
             label: 'Скопировать код',
-            disabled: true,
+            onClick: () => copyCode(spaceId ?? ''),
         },
         {
             key: '4',
-            label: 'Перегенрировать код',
-            disabled: true,
+            label: 'Перегенерировать код',
+            onClick: () => regenerateCode(spaceId ?? ''),
         },
         {
             key: '5',

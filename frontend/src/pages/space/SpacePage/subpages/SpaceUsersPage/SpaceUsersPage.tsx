@@ -8,7 +8,6 @@ import { DeleteUserFromSpaceButton } from '@features/space/delete-user-from-spac
 import {
     GetOrganizerResponse,
     GetStudentResponse,
-    isOrganizer,
     OrganizerTable,
     StudentTable,
     useGetSpaceExperts,
@@ -16,6 +15,7 @@ import {
     useGetSpaceRoles,
     useGetSpaceStudents,
 } from '@entities/space';
+import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 import { SpaceRoleType } from '@entities/space/model/SpaceRoleType';
 import { useGetCurrentUserInfo } from '@entities/user';
 
@@ -31,15 +31,15 @@ export type Props = ClassNameProps & TestProps & Readonly<{}>;
 
 export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
     const spaceId = useSpaceId();
-    const { data: user } = useGetCurrentUserInfo();
-    const { data: roles } = useGetSpaceRoles(spaceId ?? '');
-
+    const { isOrganizer } = useRolesCheck();
+ const { data: user } = useGetCurrentUserInfo();
+    
     const { data: students } = useGetSpaceStudents(spaceId ?? '');
     const { data: experts } = useGetSpaceExperts(spaceId ?? '');
     const { data: organizers } = useGetSpaceOrganizers(spaceId ?? '');
 
     const renderActions = useCallback((role: SpaceRoleType) => function renderActions(_: string, record: GetStudentResponse | GetOrganizerResponse) {
-        if (!isOrganizer(roles) || record.id === user?.id) {
+        if (!isOrganizer || record.id === user?.id) {
             return undefined;
         }
 
@@ -81,7 +81,7 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
                 </Dropdown>
             </div>
         );
-    }, [roles, user, spaceId]);
+    }, [isOrganizer, user, spaceId]);
 
     return (
         <Flex vertical gap={36}>

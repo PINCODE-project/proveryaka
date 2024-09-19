@@ -1,15 +1,16 @@
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 
 import { AuthContextProvider } from '@app/providers/AuthProvider';
 import { ErrorBoundary } from '@app/providers/ErrorBoundary';
 import { QueryProvider } from '@app/providers/QueryProvider';
+import { AppRouter } from '@app/providers/router/AppRouter';
 
-import App from './app/App';
+import '@shared/styles/index.css';
+import '@app/styles/index.css';
 
-import { ConfigProvider } from 'antd';
+import { App, ConfigProvider } from 'antd';
 
 const root = createRoot(document.getElementById('root')!);
 root.render(
@@ -24,8 +25,10 @@ root.render(
                             },
                         }}
                     >
-                        <App />
-                        <div id="confirm-portal" />
+                        <App>
+                            <AppRouter />
+                            <div id="confirm-portal" />
+                        </App>
                     </ConfigProvider>
                 </QueryProvider>
             </AuthContextProvider>

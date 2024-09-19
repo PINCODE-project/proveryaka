@@ -1,8 +1,6 @@
-import { Button, Form, Modal, notification, Switch } from 'antd';
+import { App, Button, Form, Modal, Switch } from 'antd';
 import { FC, ReactNode, useCallback, useState } from 'react';
 import { useQueryClient } from 'react-query';
-
-import { CreateSpaceRequest } from '@features/space/create-space/model/CreateSpaceRequest';
 
 import { getSpacesQueryKey, SpaceForm } from '@entities/space';
 import { SpaceAccessType } from '@entities/space/model/SpaceAccessType';
@@ -10,11 +8,11 @@ import { useGetCurrentUserInfo } from '@entities/user';
 
 import { createFile } from '@shared/api/file/createFile';
 import { typedMemo } from '@shared/lib';
-import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { ClassNameProps, TestProps } from '@shared/types';
 
 import styles from './CreateSpaceModal.module.css';
 import { useCreateSpace } from '../../lib/useCreateSpace';
+import { CreateSpaceRequest } from '../../model/CreateSpaceRequest';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     triggerComponent: (onOpen: () => void) => ReactNode;
@@ -23,7 +21,7 @@ export type Props = ClassNameProps & TestProps & Readonly<{
 export const CreateSpaceModal: FC<Props> = typedMemo(function CreateSpaceModal({
     triggerComponent,
 }) {
-    const [notify, contextHolder] = notification.useNotification();
+    const { notification } = App.useApp();
     const queryClient = useQueryClient();
 
     const { data: user } = useGetCurrentUserInfo();
@@ -32,7 +30,7 @@ export const CreateSpaceModal: FC<Props> = typedMemo(function CreateSpaceModal({
     const { mutate: create } = useCreateSpace({
         onSuccess: () => {
             queryClient.resetQueries(getSpacesQueryKey);
-            notify.success({
+            notification.success({
                 message: 'Пространство создано',
             });
             setIsOpen(false);
@@ -63,7 +61,6 @@ export const CreateSpaceModal: FC<Props> = typedMemo(function CreateSpaceModal({
 
     return (
         <>
-            {contextHolder}
             {triggerComponent(onOpen)}
             <Modal
                 title="Создание пространства"
