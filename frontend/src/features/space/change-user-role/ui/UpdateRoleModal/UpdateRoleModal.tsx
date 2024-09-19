@@ -101,9 +101,9 @@ export const UpdateRoleModal: FC<Props> = typedMemo(function UpdateRoleModal({
                             </Select>
                         </Form.Item>
 
-                        <Form.Item className={styles.formItem}>
-                            <Button type="primary" htmlType="submit" block>
-                                Сохнарить
+                        <Form.Item className={styles.submitButton}>
+                            <Button type="primary" htmlType="submit" >
+                                Сохранить
                             </Button>
                         </Form.Item>
                     </Flex>
