@@ -1,6 +1,6 @@
 import { EllipsisOutlined } from '@ant-design/icons';
-import { Dropdown, Flex, MenuProps, Typography } from 'antd';
-import { FC, useCallback } from 'react';
+import { Dropdown, Flex, MenuProps, Spin, Typography } from 'antd';
+import { FC, Suspense, useCallback } from 'react';
 
 import { DeleteUserFromSpaceButton } from '@features/space/delete-user-from-space';
 
@@ -65,7 +65,7 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
                 </Dropdown>
             </div>
         );
-    }, [roles]);
+    }, [roles, spaceId]);
 
     return (
         <Flex vertical gap={36}>
@@ -77,10 +77,12 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
                 users={organizers?.organizerInfoList ?? []}
                 usersName="Организаторы"
                 content={users => (
-                    <OrganizerTable
-                        renderActions={renderActions}
-                        organizers={users}
-                    />
+                    <Suspense fallback={<Spin />}>
+                        <OrganizerTable
+                            renderActions={renderActions}
+                            organizers={users}
+                        />
+                    </Suspense>
                 )}
             />
 
@@ -88,10 +90,12 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
                 users={experts?.expertsInfoList ?? []}
                 usersName="Эксперты"
                 content={users => (
-                    <OrganizerTable
-                        renderActions={renderActions}
-                        organizers={users}
-                    />
+                    <Suspense fallback={<Spin />}>
+                        <OrganizerTable
+                            renderActions={renderActions}
+                            organizers={users}
+                        />
+                    </Suspense>
                 )}
             />
 
@@ -99,10 +103,12 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
                 users={students?.studentInfoList ?? []}
                 usersName="Студенты"
                 content={users => (
-                    <StudentTable
-                        renderActions={renderActions}
-                        students={users}
-                    />)}
+                    <Suspense fallback={<Spin />}>
+                        <StudentTable
+                            renderActions={renderActions}
+                            students={users}
+                        />
+                    </Suspense>)}
             />
         </Flex>
     );
