@@ -7,6 +7,7 @@ import { getSpaceQueryKey } from '@entities/space/lib/getSpaceQueryKey';
 
 import { typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
+import { customConfirm } from '@shared/ui';
 
 import { useDeleteSpace } from '../../lib/useDeleteSpace';
 
@@ -14,11 +15,13 @@ export type Props = ClassNameProps & TestProps & Readonly<{
     triggerComponent: (onDelete: () => void) => ReactNode;
     onSuccess?: () => void;
     spaceId: string;
+    spaceName: string;
 }>;
 
 export const DeleteSpaceButton: FC<Props> = typedMemo(function DeleteSpaceButton({
     triggerComponent,
     spaceId,
+    spaceName,
     onSuccess,
 }) {
     const queryClient = useQueryClient();
@@ -35,8 +38,23 @@ export const DeleteSpaceButton: FC<Props> = typedMemo(function DeleteSpaceButton
         },
     });
 
-    const onDelete = useCallback(() => !isLoading && deleteSpace(spaceId),
-        [spaceId, deleteSpace, isLoading]);
+    const onDelete = useCallback(async () => {
+        if (isLoading) {
+            return;
+        }
+
+        const canDelete = await customConfirm({
+            title: 'Удалить пространство',
+            text: <>Вы уверены, что хотите удалить пространство <b>{spaceName}</b>?  </>,
+        });
+
+        if (!canDelete) {
+            return;
+        }
+
+        deleteSpace(spaceId);
+    },
+    [spaceId, deleteSpace, isLoading]);
 
     return (
         <>

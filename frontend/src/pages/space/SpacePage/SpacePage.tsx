@@ -80,6 +80,7 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
         {
             key: '6',
             label: <DeleteSpaceButton
+                spaceName={space?.name ?? ''}
                 spaceId={spaceId ?? ''}
                 onSuccess={() => navigate(SpaceRouter.Spaces)}
                 triggerComponent={onDelete => (

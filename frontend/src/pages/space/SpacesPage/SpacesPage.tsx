@@ -67,6 +67,7 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
                 key: '6',
                 label: <DeleteSpaceButton
                     spaceId={record.id}
+                    spaceName={record.name ?? ''}
                     triggerComponent={onDelete => (
                         <Typography.Text onClick={onDelete} className={styles.dangerMenuItem}>
                             Удалить пространство
