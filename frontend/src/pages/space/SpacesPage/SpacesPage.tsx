@@ -1,8 +1,6 @@
 import { EllipsisOutlined, UsergroupAddOutlined } from '@ant-design/icons';
-import { Button, Dropdown, Flex, MenuProps, Typography } from 'antd';
+import { Button, Dropdown, Flex, MenuProps, notification, Typography } from 'antd';
 import { FC, useCallback, useMemo } from 'react';
-
-import { SpaceRouter } from '@pages/space';
 
 import { UserPanel } from '@widgets/UserPanel';
 
@@ -10,6 +8,7 @@ import { CreateSpaceModal } from '@features/space/create-space';
 import { DeleteSpaceButton } from '@features/space/delete-space';
 import { EnterSpaceByCodeModal } from '@features/space/enter-space-by-code';
 import { ExitUserButton } from '@features/space/exit-user';
+import { useCopySpaceCode, useRegenerateSpaceCode } from '@features/space/get-space-code';
 
 import { SpacesTable } from '@entities/space';
 import { GetSpaceResponse } from '@entities/space/model/GetSpaceResponse';
@@ -27,7 +26,24 @@ export type Props = ClassNameProps & TestProps & Readonly<{}>;
 export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
     className,
 }) {
+    const [notify, contextHolder] = notification.useNotification();
+
     const { data: isOrganizer } = useGetUserIsOrganizer();
+
+    const { mutate: copyCode } = useCopySpaceCode({
+        onSuccess: () => {
+            notify.success({
+                message: 'Пригласительный код скопирован',
+            });
+        },
+    });
+    const { mutate: regenerateCode } = useRegenerateSpaceCode({
+        onSuccess: () => {
+            notify.success({
+                message: 'Пригласительный код изменен',
+            });
+        },
+    });
 
     const renderActions = useCallback((_: string, record: GetSpaceResponse) => {
         const items: MenuProps['items'] = [
@@ -44,12 +60,12 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
             {
                 key: '3',
                 label: 'Скопировать код',
-                disabled: true,
+                onClick: () => copyCode(record.id),
             },
             {
                 key: '4',
                 label: 'Перегенерировать код',
-                disabled: true,
+                onClick: () => regenerateCode(record.id),
             },
             {
                 key: '5',
@@ -137,6 +153,7 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
             gap="large"
             className={getModuleClasses(styles, 'root', null, className)}
         >
+            {contextHolder}
             <Flex justify="space-between" gap="middle">
                 <Logo />
                 <Typography.Text>
