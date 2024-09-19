@@ -1,4 +1,4 @@
-import { Button, Flex, Form, Input, notification, Typography } from 'antd';
+import { App, Button, Flex, Form, Input, Typography } from 'antd';
 import { FC, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -19,7 +19,7 @@ export const ResetPasswordForm: FC<Props> = typedMemo(function SignInForm({
 }) {
     const navigate = useNavigate();
     // TODO: использовать вызов уведомлений после сообщения Кости о возможных ошибках
-    const [notify, contextHolder] = notification.useNotification();
+    const { notification } = App.useApp();
 
     const { mutate: resetPassword } = useResetPassword({
         onSuccess: () => {},
@@ -38,8 +38,6 @@ export const ResetPasswordForm: FC<Props> = typedMemo(function SignInForm({
             <Typography.Text className={getModuleClasses(styles, 'title')}>
                Восстановление пароля
             </Typography.Text>
-
-            {contextHolder}
 
             <Flex vertical gap="large">
                 <Typography.Text>

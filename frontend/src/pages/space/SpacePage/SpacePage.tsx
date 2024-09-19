@@ -6,7 +6,7 @@ import {
     TeamOutlined,
     LeftOutlined,
 } from '@ant-design/icons';
-import { Dropdown, Flex, MenuProps, notification, Typography } from 'antd';
+import { App, Dropdown, Flex, MenuProps, Typography } from 'antd';
 import { FC, useMemo } from 'react';
 import { Link, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
@@ -36,7 +36,7 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
     className,
     'data-testid': dataTestId = 'SpacePage',
 }) {
-    const [notify, contextHolder] = notification.useNotification();
+    const { notification } = App.useApp();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -47,14 +47,14 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
 
     const { mutate: copyCode } = useCopySpaceCode({
         onSuccess: () => {
-            notify.success({
+            notification.success({
                 message: 'Пригласительный код скопирован',
             });
         },
     });
     const { mutate: regenerateCode } = useRegenerateSpaceCode({
         onSuccess: () => {
-            notify.success({
+            notification.success({
                 message: 'Пригласительный код изменен',
             });
         },
@@ -127,7 +127,6 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
             className={getModuleClasses(styles, 'root', null, className)}
             data-testid={dataTestId}
         >
-            {contextHolder}
             <Sidebar>
                 <SidebarItem
                     to={SpaceRouter.SpaceTasks(spaceId)}

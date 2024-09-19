@@ -1,4 +1,4 @@
-import { notification } from 'antd';
+import { App } from 'antd';
 import { FC, ReactNode, useCallback } from 'react';
 import { useQueryClient } from 'react-query';
 
@@ -25,12 +25,12 @@ export const ExitUserButton: FC<Props> = typedMemo(function ExitUserButton({
     onSuccess,
 }) {
     const queryClient = useQueryClient();
-    const [notify, contextHolder] = notification.useNotification();
+    const { notification } = App.useApp();
     const { mutate: exit, isLoading } = useExitUser({
         onSuccess: () => {
             queryClient.resetQueries(getSpacesQueryKey);
             queryClient.resetQueries(getSpaceQueryKey(spaceId));
-            notify.success({
+            notification.success({
                 message: 'Вы покинули пространство',
             });
             onSuccess?.();
@@ -54,10 +54,5 @@ export const ExitUserButton: FC<Props> = typedMemo(function ExitUserButton({
         !isLoading && exit(spaceId);
     }, [spaceId, exit, isLoading, spaceName]);
 
-    return (
-        <>
-            {contextHolder}
-            {triggerComponent(onExit)}
-        </>
-    );
+    return triggerComponent(onExit);
 });

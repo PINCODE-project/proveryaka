@@ -1,5 +1,5 @@
 import { EllipsisOutlined, UsergroupAddOutlined } from '@ant-design/icons';
-import { Button, Dropdown, Flex, MenuProps, notification, Typography } from 'antd';
+import { App, Button, Dropdown, Flex, MenuProps, Typography } from 'antd';
 import { FC, useCallback, useMemo } from 'react';
 
 import { UserPanel } from '@widgets/UserPanel';
@@ -26,20 +26,20 @@ export type Props = ClassNameProps & TestProps & Readonly<{}>;
 export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
     className,
 }) {
-    const [notify, contextHolder] = notification.useNotification();
+    const { notification } = App.useApp();
 
     const { data: isOrganizer } = useGetUserIsOrganizer();
 
     const { mutate: copyCode } = useCopySpaceCode({
         onSuccess: () => {
-            notify.success({
+            notification.success({
                 message: 'Пригласительный код скопирован',
             });
         },
     });
     const { mutate: regenerateCode } = useRegenerateSpaceCode({
         onSuccess: () => {
-            notify.success({
+            notification.success({
                 message: 'Пригласительный код изменен',
             });
         },
@@ -100,7 +100,7 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
                 </Dropdown>
             </div>
         );
-    }, []);
+    }, [copyCode, regenerateCode]);
 
     const SpacesButton = useMemo(() => {
         if (!isOrganizer) {
@@ -153,7 +153,6 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
             gap="large"
             className={getModuleClasses(styles, 'root', null, className)}
         >
-            {contextHolder}
             <Flex justify="space-between" gap="middle">
                 <Logo />
                 <Typography.Text>

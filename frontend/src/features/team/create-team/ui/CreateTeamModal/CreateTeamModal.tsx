@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Form, Modal, notification, Select } from 'antd';
+import { App, Button, Form, Modal, Select } from 'antd';
 import { FC, useCallback, useMemo, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
@@ -25,7 +25,7 @@ export const CreateTeamModal: FC<Props> = typedMemo(function CreateTeamModal({
     spaceId,
 }) {
     const queryClient = useQueryClient();
-    const [api, contextHolder] = notification.useNotification();
+    const { notification } = App.useApp();
     const [isOpen, setIsOpen] = useState(false);
 
     const { data: user } = useGetCurrentUserInfo();
@@ -36,7 +36,7 @@ export const CreateTeamModal: FC<Props> = typedMemo(function CreateTeamModal({
 
     const { mutate: create } = useCreateTeam({
         onSuccess: () => {
-            api.success({
+            notification.success({
                 message: 'Команда создана',
             });
             setIsOpen(false);
@@ -64,7 +64,6 @@ export const CreateTeamModal: FC<Props> = typedMemo(function CreateTeamModal({
 
     return (
         <>
-            {contextHolder}
             <Button
                 icon={<PlusOutlined />}
                 type="primary"
