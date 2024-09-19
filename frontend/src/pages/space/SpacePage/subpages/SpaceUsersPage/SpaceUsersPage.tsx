@@ -2,16 +2,22 @@ import { EllipsisOutlined } from '@ant-design/icons';
 import { Dropdown, Flex, MenuProps, Spin, Typography } from 'antd';
 import { FC, Suspense, useCallback } from 'react';
 
+import { UpdateRoleModal } from '@features/space/change-user-role';
 import { DeleteUserFromSpaceButton } from '@features/space/delete-user-from-space';
 
 import {
     GetOrganizerResponse,
-    GetStudentResponse, isOrganizer,
+    GetStudentResponse,
+    isOrganizer,
     OrganizerTable,
-    StudentTable, useGetSpaceExperts,
-    useGetSpaceOrganizers, useGetSpaceRoles,
+    StudentTable,
+    useGetSpaceExperts,
+    useGetSpaceOrganizers,
+    useGetSpaceRoles,
     useGetSpaceStudents,
 } from '@entities/space';
+import { SpaceRoleType } from '@entities/space/model/SpaceRoleType';
+import { useGetCurrentUserInfo } from '@entities/user';
 
 import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { typedMemo } from '@shared/lib';
@@ -25,22 +31,32 @@ export type Props = ClassNameProps & TestProps & Readonly<{}>;
 
 export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
     const spaceId = useSpaceId();
+    const { data: user } = useGetCurrentUserInfo();
     const { data: roles } = useGetSpaceRoles(spaceId ?? '');
 
     const { data: students } = useGetSpaceStudents(spaceId ?? '');
     const { data: experts } = useGetSpaceExperts(spaceId ?? '');
     const { data: organizers } = useGetSpaceOrganizers(spaceId ?? '');
 
-    const renderActions = useCallback((_: string, record: GetStudentResponse | GetOrganizerResponse) => {
-        if (!isOrganizer(roles)) {
+    const renderActions = useCallback((role: SpaceRoleType) => function renderActions(_: string, record: GetStudentResponse | GetOrganizerResponse) {
+        if (!isOrganizer(roles) || record.id === user?.id) {
             return undefined;
         }
 
         const items: MenuProps['items'] = [
             {
                 key: '1',
-                label: 'Изменить роль',
-                disabled: true,
+                label: <UpdateRoleModal
+                    triggerComponent={onOpen => (
+                        <Typography.Text className={styles.menuItem} onClick={onOpen}>
+                            Изменить роль
+                        </Typography.Text>
+                    )}
+                    userFullName={`${record.surname} ${record.name} ${record.patronymic}`}
+                    spaceId={spaceId ?? ''}
+                    userId={record.id}
+                    spaceRole={role}
+                />,
             },
             {
                 key: '2',
@@ -65,7 +81,7 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
                 </Dropdown>
             </div>
         );
-    }, [roles, spaceId]);
+    }, [roles, user, spaceId]);
 
     return (
         <Flex vertical gap={36}>
