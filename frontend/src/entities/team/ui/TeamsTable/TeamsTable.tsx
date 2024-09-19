@@ -4,7 +4,9 @@ import { FC, useCallback, useMemo } from 'react';
 
 // Сущность пространства много где зайдествуется
 // eslint-disable-next-line
-import { isOrganizer, StudentTable, useGetSpaceRoles } from '@entities/space';
+import { isOrganizer, StudentTable } from '@entities/space';
+
+import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
 import { useListFilters } from '@shared/hooks';
 import { typedMemo } from '@shared/lib';
@@ -26,20 +28,20 @@ export const TeamsTable: FC<Props> = typedMemo(function TeamsTable({
     spaceId,
     actionRender,
 }) {
-    const { data: roles } = useGetSpaceRoles(spaceId ?? '');
+    const { isStudent } = useRolesCheck();
 
     const [filters] = useListFilters<GetTeamFilters>({ teamType: TeamType.Space });
 
     const { data: studentTeams } = useGetSpaceUserTeams(spaceId, filters, {
-        enabled: roles !== undefined && !isOrganizer(roles),
+        enabled: isStudent,
     });
     const { data: organizerTeams } = useGetSpaceTeams(spaceId, filters, {
-        enabled: roles !== undefined && isOrganizer(roles),
+        enabled: !isStudent,
     });
     const teams = useMemo(() => {
-        const teams = isOrganizer(roles) ? organizerTeams?.teamList : studentTeams?.teamList;
+        const teams = isStudent ? studentTeams?.teamList : organizerTeams?.teamList;
         return teams ?? [];
-    }, [roles, studentTeams, organizerTeams]);
+    }, [isStudent, studentTeams, organizerTeams]);
 
     const columns = useMemo<TableColumnsType<GetTeam>>(() => [
         {
