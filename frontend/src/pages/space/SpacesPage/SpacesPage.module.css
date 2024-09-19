@@ -7,10 +7,11 @@
     padding: 20px;
 }
 
-.menuItem,
-.dangerMenuItem {
-    font-size: inherit;
+.menuItem {
     color: inherit;
+    font-size: inherit;
     font-family: inherit;
+    width: 100%;
+    display: block;
 }
 

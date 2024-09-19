@@ -3,7 +3,10 @@
     height: 24px;
 }
 
-.deleteUser {
+.menuItem {
     color: inherit;
     font-size: inherit;
+    font-family: inherit;
+    width: 100%;
+    display: block;
 }

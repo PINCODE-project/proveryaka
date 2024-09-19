@@ -1,8 +1,6 @@
 import { Flex, Form, Input, UploadFile } from 'antd';
 import { ReactNode, useCallback, useState } from 'react';
 
-import { CreateSpaceRequest } from '@features/space/create-space/model/CreateSpaceRequest';
-
 import { getFormItemUploadNotFileValue, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { FileInput, ImagePreview } from '@shared/ui';
@@ -66,7 +64,11 @@ export const SpaceForm = typedMemo(function SpaceForm<TData extends Space>({
                         { required: true, message: 'Введите название' },
                     ]}
                 >
-                    <Input placeholder="Введите название..." />
+                    <Input
+                        showCount
+                        placeholder="Введите название..."
+                        maxLength={64}
+                    />
                 </Form.Item>
             </Flex>
             <Form.Item<SpaceSettingsWithFile>
@@ -77,7 +79,12 @@ export const SpaceForm = typedMemo(function SpaceForm<TData extends Space>({
                     { required: true, message: 'Введите описание' },
                 ]}
             >
-                <Input.TextArea rows={3} placeholder="Введите описание..." />
+                <Input.TextArea
+                    maxLength={256}
+                    showCount
+                    rows={3}
+                    placeholder="Введите описание..."
+                />
             </Form.Item>
             {additionalFormItems}
             {submitButton}

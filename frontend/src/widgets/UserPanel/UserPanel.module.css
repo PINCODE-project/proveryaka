@@ -3,7 +3,9 @@
 }
 
 .menuItem {
-    font-size: inherit;
     color: inherit;
+    font-size: inherit;
     font-family: inherit;
+    width: 100%;
+    display: block;
 }

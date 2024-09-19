@@ -46,7 +46,7 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
                 key: '2',
                 label: <DeleteUserFromSpaceButton
                     triggerComponent={onDelete => (
-                        <Typography.Text className={styles.deleteUser} onClick={onDelete}>
+                        <Typography.Text className={styles.menuItem} onClick={onDelete}>
                             Удалить из пространства
                         </Typography.Text>
                     )}

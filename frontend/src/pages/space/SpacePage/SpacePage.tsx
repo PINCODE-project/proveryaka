@@ -71,7 +71,7 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
                 spaceId={spaceId ?? ''}
                 onSuccess={() => navigate(SpaceRouter.Spaces)}
                 triggerComponent={onExit => (
-                    <Typography.Text onClick={onExit}>
+                    <Typography.Text onClick={onExit} className={styles.menuItem}>
                 Покинуть пространство
                     </Typography.Text>
                 )}
@@ -82,9 +82,12 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
             label: <DeleteSpaceButton
                 spaceName={space?.name ?? ''}
                 spaceId={spaceId ?? ''}
-                onSuccess={() => navigate(SpaceRouter.Spaces)}
+                onSuccess={() => new Promise(resolve => {
+                    navigate(SpaceRouter.Spaces);
+                    setTimeout(resolve, 300);
+                })}
                 triggerComponent={onDelete => (
-                    <Typography.Text onClick={onDelete} className={styles.dangerMenuItem}>
+                    <Typography.Text onClick={onDelete} className={styles.menuItem}>
                         Удалить пространство
                     </Typography.Text>)}
             />,

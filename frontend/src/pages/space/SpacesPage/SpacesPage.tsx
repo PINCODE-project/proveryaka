@@ -57,7 +57,7 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
                     spaceName={record.name ?? ''}
                     spaceId={record.id}
                     triggerComponent={onExit => (
-                        <Typography.Text onClick={onExit}>
+                        <Typography.Text onClick={onExit} className={styles.menuItem}>
                             Покинуть пространство
                         </Typography.Text>
                     )}
@@ -69,7 +69,7 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
                     spaceId={record.id}
                     spaceName={record.name ?? ''}
                     triggerComponent={onDelete => (
-                        <Typography.Text onClick={onDelete} className={styles.dangerMenuItem}>
+                        <Typography.Text onClick={onDelete} className={styles.menuItem}>
                             Удалить пространство
                         </Typography.Text>)}
                 />,

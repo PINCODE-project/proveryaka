@@ -13,7 +13,7 @@ import { useDeleteSpace } from '../../lib/useDeleteSpace';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     triggerComponent: (onDelete: () => void) => ReactNode;
-    onSuccess?: () => void;
+    onSuccess?: () => Promise<void> | void;
     spaceId: string;
     spaceName: string;
 }>;
@@ -28,13 +28,14 @@ export const DeleteSpaceButton: FC<Props> = typedMemo(function DeleteSpaceButton
     const [notify, contextHolder] = notification.useNotification();
 
     const { mutate: deleteSpace, isLoading } = useDeleteSpace({
-        onSuccess: () => {
+        onSuccess: async () => {
+            await onSuccess?.();
+
             queryClient.resetQueries(getSpacesQueryKey);
             queryClient.resetQueries(getSpaceQueryKey(spaceId ?? ''));
             notify.success({
                 message: 'Пространство удалено',
             });
-            onSuccess?.();
         },
     });
 
