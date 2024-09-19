@@ -6,6 +6,7 @@ import { SpaceRouter } from '@pages/space';
 
 import { UserPanel } from '@widgets/UserPanel';
 
+import { AddUserInSpaceModal } from '@features/space/add-user-in-space';
 import { CreateSpaceModal } from '@features/space/create-space';
 import { DeleteSpaceButton } from '@features/space/delete-space';
 import { EnterSpaceByCodeModal } from '@features/space/enter-space-by-code';
@@ -38,8 +39,14 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
             },
             {
                 key: '2',
-                label: 'Добавить участников',
-                disabled: true,
+                label: <AddUserInSpaceModal
+                    spaceId={record.id}
+                    triggerComponent={onExit => (
+                        <Typography.Text onClick={onExit} className={styles.menuItem}>
+                            Добавить участников
+                        </Typography.Text>
+                    )}
+                />,
             },
             {
                 key: '3',

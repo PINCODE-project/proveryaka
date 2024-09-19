@@ -14,6 +14,7 @@ import { SpaceRouter } from '@pages/space';
 
 import { UserPanel } from '@widgets/UserPanel';
 
+import { AddUserInSpaceModal } from '@features/space/add-user-in-space';
 import { DeleteSpaceButton } from '@features/space/delete-space';
 import { ExitUserButton } from '@features/space/exit-user';
 
@@ -51,8 +52,14 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
         },
         {
             key: '2',
-            label: 'Добавить пользователей',
-            disabled: true,
+            label: <AddUserInSpaceModal
+                spaceId={spaceId ?? ''}
+                triggerComponent={onExit => (
+                    <Typography.Text onClick={onExit} className={styles.menuItem}>
+                        Добавить участников
+                    </Typography.Text>
+                )}
+            />,
         },
         {
             key: '3',
