@@ -6,12 +6,13 @@ import { DeleteUserFromSpaceButton } from '@features/space/delete-user-from-spac
 
 import {
     GetOrganizerResponse,
-    GetStudentResponse, isOrganizer,
+    GetStudentResponse,
     OrganizerTable,
     StudentTable, useGetSpaceExperts,
     useGetSpaceOrganizers, useGetSpaceRoles,
     useGetSpaceStudents,
 } from '@entities/space';
+import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
 import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { typedMemo } from '@shared/lib';
@@ -25,14 +26,14 @@ export type Props = ClassNameProps & TestProps & Readonly<{}>;
 
 export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
     const spaceId = useSpaceId();
-    const { data: roles } = useGetSpaceRoles(spaceId ?? '');
+    const { isOrganizer } = useRolesCheck();
 
     const { data: students } = useGetSpaceStudents(spaceId ?? '');
     const { data: experts } = useGetSpaceExperts(spaceId ?? '');
     const { data: organizers } = useGetSpaceOrganizers(spaceId ?? '');
-
+    console.log();
     const renderActions = useCallback((_: string, record: GetStudentResponse | GetOrganizerResponse) => {
-        if (!isOrganizer(roles)) {
+        if (!isOrganizer) {
             return undefined;
         }
 
@@ -65,7 +66,7 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
                 </Dropdown>
             </div>
         );
-    }, [roles]);
+    }, [isOrganizer]);
 
     return (
         <Flex vertical gap={36}>
