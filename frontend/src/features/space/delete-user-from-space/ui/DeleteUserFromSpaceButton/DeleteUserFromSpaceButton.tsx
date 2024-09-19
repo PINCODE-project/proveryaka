@@ -1,4 +1,4 @@
-import { notification } from 'antd';
+import { notification, Popconfirm } from 'antd';
 import { FC, ReactNode, useCallback } from 'react';
 import { useQueryClient } from 'react-query';
 
@@ -7,6 +7,7 @@ import { getSpaceTeamsQueryKey } from '@entities/team';
 
 import { typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
+import { customConfirm } from '@shared/ui';
 
 import { useDeleteUserFromSpace } from '../../lib/useDeleteUserFromSpace';
 
@@ -14,12 +15,14 @@ export type Props = ClassNameProps & TestProps & Readonly<{
     triggerComponent: (onDelete: () => void) => ReactNode;
     spaceId: string;
     userId: string;
+    userFullName: string;
 }>;
 
 export const DeleteUserFromSpaceButton: FC<Props> = typedMemo(function DeleteUserFromSpaceButton({
     triggerComponent,
     spaceId,
     userId,
+    userFullName,
 }) {
     const queryClient = useQueryClient();
     const [notify, contextHolder] = notification.useNotification();
@@ -29,18 +32,27 @@ export const DeleteUserFromSpaceButton: FC<Props> = typedMemo(function DeleteUse
             queryClient.resetQueries(getSpaceOrganizerQueryKey(spaceId));
             queryClient.resetQueries(getSpaceTeamsQueryKey(spaceId));
             notify.success({
-                message: 'Пользователь удаален из пространства',
+                message: 'Пользователь удален из пространства',
             });
         },
     });
 
-    const onDelete = useCallback(() => {
+    const onDelete = useCallback(async () => {
         if (isLoading) {
             return;
         }
 
+        const canDelete = await customConfirm({
+            title: 'Удалить из пространства',
+            text: `Вы уверены, что хотите удалить ${userFullName} из пространства?  `,
+        });
+
+        if (!canDelete) {
+            return;
+        }
+
         deleteUser({ spaceId, userId });
-    }, [spaceId, userId, deleteUser, isLoading]);
+    }, [spaceId, userId, deleteUser, isLoading, userFullName]);
 
     return (
         <>

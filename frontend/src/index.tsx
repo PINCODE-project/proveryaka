@@ -25,6 +25,7 @@ root.render(
                         }}
                     >
                         <App />
+                        <div id="confirm-portal" />
                     </ConfigProvider>
                 </QueryProvider>
             </AuthContextProvider>

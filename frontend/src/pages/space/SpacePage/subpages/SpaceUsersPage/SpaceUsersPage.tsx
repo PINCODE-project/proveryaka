@@ -45,10 +45,11 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
                 key: '2',
                 label: <DeleteUserFromSpaceButton
                     triggerComponent={onDelete => (
-                        <Typography.Text onClick={onDelete} className={styles.deleteUser}>
+                        <Typography.Text className={styles.deleteUser} onClick={onDelete}>
                             Удалить из пространства
                         </Typography.Text>
                     )}
+                    userFullName={`${record.surname} ${record.name} ${record.patronymic}`}
                     spaceId={spaceId ?? ''}
                     userId={record.id}
                 />,
