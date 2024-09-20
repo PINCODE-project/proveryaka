@@ -1,6 +1,7 @@
 import { ConfigRouteProps } from '@shared/types';
 
 import { SpacePage } from './SpacePage';
+import { SpaceDescription } from './SpacePage/subpages/SpaceDescription';
 import { SpaceTeamsPage } from './SpacePage/subpages/SpaceTeamsPage';
 import { SpaceUsersPage } from './SpacePage/subpages/SpaceUsersPage';
 import { SpacesPage } from './SpacesPage';
@@ -9,6 +10,7 @@ export const SpaceRouter = {
     Spaces: '/spaces',
     Space: (id: string) => `/spaces/${id}`,
     SpaceTasks: (id: string) => `/spaces/${id}/tasks`,
+    SpaceDescription: (id: string) => `/spaces/${id}/description`,
     SpaceSolutions: (id: string) => `/spaces/${id}/solutions`,
     SpaceUsers: (id: string) => `/spaces/${id}/users`,
     SpaceTeams: (id: string) => `/spaces/${id}/teams`,
@@ -25,6 +27,11 @@ export const spaceRouteConfig: ConfigRouteProps[] = [
         withAuthGuard: true,
         element: <SpacePage />,
         children: [
+            {
+                path: SpaceRouter.SpaceDescription(':spaceId'),
+                element: <SpaceDescription />,
+                withAuthGuard: true,
+            },
             {
                 path: SpaceRouter.SpaceTasks(':spaceId'),
                 element: null,

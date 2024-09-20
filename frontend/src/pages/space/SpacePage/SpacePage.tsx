@@ -5,6 +5,7 @@ import {
     EllipsisOutlined,
     TeamOutlined,
     LeftOutlined,
+    InfoCircleOutlined,
 } from '@ant-design/icons';
 import { App, Dropdown, Flex, MenuProps, Typography } from 'antd';
 import { FC, useMemo } from 'react';
@@ -145,6 +146,11 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
             data-testid={dataTestId}
         >
             <Sidebar>
+                <SidebarItem
+                    to={SpaceRouter.SpaceDescription(spaceId)}
+                    text="Описание"
+                    icon={className => <InfoCircleOutlined className={className} /> }
+                />
                 <SidebarItem
                     to={SpaceRouter.SpaceTasks(spaceId)}
                     text="Задания"
