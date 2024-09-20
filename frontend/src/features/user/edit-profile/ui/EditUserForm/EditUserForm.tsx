@@ -25,7 +25,6 @@ export const EditUserForm: FC<Props> = typedMemo(function EditUserForm({
     onSuccess,
 }) {
     const { data: user } = useGetCurrentUserInfo();
-    const { isStudent } = useRolesCheck();
 
     const [file, setFile] = useState<File | null>(null);
     const { data: oldFile } = useGetEstimateFile(user?.avatar ?? '', { enabled: Boolean(user?.avatar) });
@@ -72,7 +71,7 @@ export const EditUserForm: FC<Props> = typedMemo(function EditUserForm({
                 : undefined;
         }
 
-        edit({ ...user, ...data, avatar });
+        edit({ ...user, ...data, avatar, academicGroup: data.position });
     }, [edit, user, file, oldFile]);
 
     return (
@@ -148,21 +147,13 @@ export const EditUserForm: FC<Props> = typedMemo(function EditUserForm({
                         </Form.Item>
                     </Col>
                     <Col flex={1}>
-                        {isStudent
-                            ? <Form.Item<FullUserInfoResponse>
-                                className={getModuleClasses(styles, 'formItem')}
-                                label="Группа"
-                                name="academicGroup"
-                            >
-                                <Input placeholder="РИ-100000" />
-                            </Form.Item>
-                            : <Form.Item<FullUserInfoResponse>
-                                className={getModuleClasses(styles, 'formItem')}
-                                label="Должность"
-                                name="position"
-                            >
-                                <Input placeholder="Преподаватель" />
-                            </Form.Item>}
+                        <Form.Item<FullUserInfoResponse>
+                            className={getModuleClasses(styles, 'formItem')}
+                            label="Должность/группа"
+                            name="position"
+                        >
+                            <Input placeholder="Введите" />
+                        </Form.Item>
                     </Col>
                 </Row>
 
