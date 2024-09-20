@@ -1,7 +1,8 @@
-import { EllipsisOutlined } from '@ant-design/icons';
-import { Dropdown, Flex, MenuProps, Spin, Typography } from 'antd';
+import { EllipsisOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Dropdown, Flex, MenuProps, Spin, Typography } from 'antd';
 import { FC, Suspense, useCallback } from 'react';
 
+import { AddUserInSpaceModal } from '@features/space/add-user-in-space';
 import { UpdateRoleModal } from '@features/space/change-user-role';
 import { DeleteUserFromSpaceButton } from '@features/space/delete-user-from-space';
 
@@ -32,8 +33,8 @@ export type Props = ClassNameProps & TestProps & Readonly<{}>;
 export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
     const spaceId = useSpaceId();
     const { isOrganizer } = useRolesCheck();
- const { data: user } = useGetCurrentUserInfo();
-    
+    const { data: user } = useGetCurrentUserInfo();
+
     const { data: students } = useGetSpaceStudents(spaceId ?? '');
     const { data: experts } = useGetSpaceExperts(spaceId ?? '');
     const { data: organizers } = useGetSpaceOrganizers(spaceId ?? '');
@@ -87,6 +88,21 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
         <Flex vertical gap={36}>
             <Flex align="center" justify="space-between" gap={16}>
                 Filters
+
+                {isOrganizer
+                    ? <AddUserInSpaceModal
+                        spaceId={spaceId ?? ''}
+                        triggerComponent={onExit => (
+                            <Button
+                                icon={<PlusOutlined />}
+                                type="primary"
+                                onClick={onExit}
+                            >
+                            Добавить участников
+                            </Button>
+                        )}
+                    />
+                    : null}
             </Flex>
 
             <UsersCollapse
