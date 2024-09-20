@@ -10,7 +10,7 @@ import { EditTeamModal } from '@features/team/edit-team';
 
 import { GetStudentResponse } from '@entities/space';
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
-import { TeamsTable, GetTeam } from '@entities/team';
+import { TeamsTable, GetTeam, useGetSpaceUserTeams } from '@entities/team';
 
 import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { typedMemo } from '@shared/lib';
@@ -27,6 +27,10 @@ export const SpaceTeamsPage: FC<Props> = typedMemo(function SpaceTeamsPage({
 }) {
     const { isStudent, isOrganizer } = useRolesCheck();
     const spaceId = useSpaceId();
+
+    const { data: studentTeams } = useGetSpaceUserTeams(spaceId ?? '', undefined, {
+        enabled: isStudent,
+    });
 
     const renderActions = useCallback((_: string, record: GetTeam) => {
         const items: MenuProps['items'] = [
@@ -79,7 +83,7 @@ export const SpaceTeamsPage: FC<Props> = typedMemo(function SpaceTeamsPage({
                 <Typography.Text>
                     Filters
                 </Typography.Text>
-                {isStudent ? <CreateTeamModal spaceId={spaceId} /> : null}
+                {isStudent && studentTeams?.teamList.length === 0 ? <CreateTeamModal spaceId={spaceId} /> : null}
             </Flex>
 
             <TeamsTable
