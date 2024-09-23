@@ -4,6 +4,8 @@
  */
 export const trimAllObjectValues = (object: object) => {
     return Object.fromEntries(
-        Object.entries(object).map(([key, value]) => [key, value!.trim()]),
+        Object.entries(object).map(([key, value]) =>
+            [key, typeof value === 'string' ? value!.trim() : value],
+        ),
     );
 };
