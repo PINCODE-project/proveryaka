@@ -1,5 +1,4 @@
 export * from './model/GetIssueResponse';
-export * from './model/GetSolution';
 
 export * from './api/getSpaceIssues';
 
