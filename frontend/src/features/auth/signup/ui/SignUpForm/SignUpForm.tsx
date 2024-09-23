@@ -6,15 +6,18 @@ import { useAuthContext } from '@app/providers/AuthProvider';
 
 import { AuthRouter } from '@pages/auth';
 
+import { SignIn } from '@features/auth/signin/model/SignIn';
+
 import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
+import { trimAllObjectValues } from '@shared/lib/trimAllObjectValues';
 import { ClassNameProps, TestProps } from '@shared/types';
 
 import styles from './SignUpForm.module.css';
 import { useSignUp } from '../../lib/useSignUp';
 import { SignUp } from '../../model/SignUp';
 
-export type Props = ClassNameProps & TestProps & Readonly<{}>;
+export type Props = ClassNameProps & TestProps;
 
 export const SignUpForm: FC<Props> = typedMemo(function SignInForm({
     className,
@@ -26,12 +29,16 @@ export const SignUpForm: FC<Props> = typedMemo(function SignInForm({
         },
     });
 
+    const handleSignUp = (values: SignUp) => {
+        signUp(trimAllObjectValues(values) as SignUp);
+    };
+
     return (
         <Form
             className={getModuleClasses(styles, 'form', null, className)}
             name="SignUpForm"
             layout="vertical"
-            onFinish={signUp}
+            onFinish={handleSignUp}
         >
             <Flex
                 align="center"
@@ -124,7 +131,9 @@ export const SignUpForm: FC<Props> = typedMemo(function SignInForm({
 
             <Typography.Text className={getModuleClasses(styles, 'policyPrivacy')}>
                 Нажимая на кнопку регистрации вы соглашаетесь с принятой на сайте
-                <span className={getModuleClasses(styles, 'policyPrivacyLink')}> политикой обработки персональных данных</span>
+                <span
+                    className={getModuleClasses(styles, 'policyPrivacyLink')}
+                > политикой обработки персональных данных</span>
             </Typography.Text>
         </Form>
     );

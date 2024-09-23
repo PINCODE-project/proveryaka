@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 
 import { GetIssueResponse } from '@entities/issue';
 import { IssueStatus } from '@entities/issue/model/IssueStatus';
-import { GetSolution } from '@entities/solution/model/GetSolution';
+import { GetSolution } from '@entities/solution';
 
 export function getIssueStatus(issue: GetIssueResponse, hasSolution: boolean, isStudent: boolean): IssueStatus {
     const workDeadline = dayjs(issue.submitDeadlineDateUtc).toDate();
