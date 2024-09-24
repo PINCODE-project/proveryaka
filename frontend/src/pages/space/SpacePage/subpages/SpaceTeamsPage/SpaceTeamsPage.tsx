@@ -83,7 +83,7 @@ export const SpaceTeamsPage: FC<Props> = typedMemo(function SpaceTeamsPage({
                 <Typography.Text>
                     Filters
                 </Typography.Text>
-                {isStudent && studentTeams?.teamList.length === 0 ? <CreateTeamModal spaceId={spaceId} /> : null}
+                {isStudent && studentTeams?.entityList.length === 0 ? <CreateTeamModal spaceId={spaceId} /> : null}
             </Flex>
 
             <TeamsTable
