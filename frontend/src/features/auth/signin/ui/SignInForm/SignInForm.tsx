@@ -6,15 +6,19 @@ import { useAuthContext } from '@app/providers/AuthProvider';
 
 import { AuthRouter } from '@pages/auth';
 
+import { signUp } from '@features/auth/signup';
+import { SignUp } from '@features/auth/signup/model/SignUp';
+
 import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
+import { trimAllObjectValues } from '@shared/lib/trimAllObjectValues';
 import { ClassNameProps, TestProps } from '@shared/types';
 
 import styles from './SignInForm.module.css';
 import { useSignIn } from '../../lib/useSignIn';
 import { SignIn } from '../../model/SignIn';
 
-export type Props = ClassNameProps & TestProps & Readonly<{}>;
+export type Props = ClassNameProps & TestProps;
 
 export const SignInForm: FC<Props> = typedMemo(function SignInForm({
     className,
@@ -27,12 +31,16 @@ export const SignInForm: FC<Props> = typedMemo(function SignInForm({
         retry: false,
     });
 
+    const handleSignIn = (values: SignIn) => {
+        signIn(trimAllObjectValues(values) as SignIn);
+    };
+
     return (
         <Form
             className={getModuleClasses(styles, 'form', null, className)}
             name="SignInForm"
             layout="vertical"
-            onFinish={signIn}
+            onFinish={handleSignIn}
             requiredMark={false}
         >
             <Flex

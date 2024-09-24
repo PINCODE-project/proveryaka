@@ -23,7 +23,7 @@ export const useAuthContext = (): AuthContextProps => {
     return context;
 };
 
-export type AuthContextProviderProps = PropsWithChildren & {};
+export type AuthContextProviderProps = PropsWithChildren;
 
 export const AuthContextProvider: FC<AuthContextProviderProps> = typedMemo(function UserContextProvider({
     children,
