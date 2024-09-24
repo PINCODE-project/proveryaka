@@ -41,7 +41,7 @@ export const TeamsTable: FC<Props> = typedMemo(function TeamsTable({
         enabled: !isStudent,
     });
     const teams = useMemo(() => {
-        const teams = isStudent ? studentTeams?.teamList : organizerTeams?.teamList;
+        const teams = isStudent ? studentTeams?.entityList : organizerTeams?.entityList;
         return teams ?? [];
     }, [isStudent, studentTeams, organizerTeams]);
 
