@@ -29,18 +29,18 @@ export const EditSpaceModal: FC<Props> = typedMemo(function EditSpaceModal({
 
     const { data: space } = useGetSpace(spaceId);
     const [initialValues, setInitialValues] =
-        useState<EditSpaceRequest & {fileList: UploadFile[]} | undefined>(undefined);
+        useState<EditSpaceRequest & { defaultFileList: UploadFile[]} | undefined>(undefined);
 
     const getInitialValues = useCallback(async () => {
         if (!space) {
             return;
         }
         const file = space.iconFileId ? await getFile(space.iconFileId) : null;
-        const fileList: UploadFile[] = [];
+        const defaultFileList: UploadFile[] = [];
 
         if (file) {
-            fileList.push({
-                uid: '-1',
+            defaultFileList.push({
+                uid: '1',
                 name: file.name,
                 url: URL.createObjectURL(file),
                 status: 'done',
@@ -51,7 +51,7 @@ export const EditSpaceModal: FC<Props> = typedMemo(function EditSpaceModal({
             iconFileId: null,
             name: space.name,
             description: space.description,
-            fileList,
+            defaultFileList,
         });
     }, [space]);
 

@@ -8,7 +8,7 @@ import { FileInput, ImagePreview } from '@shared/ui';
 import styles from './SpaceForm.module.css';
 import { Space } from '../../model/Space';
 
-type SpaceSettingsWithFile = Space & {fileList?: UploadFile[]};
+type SpaceSettingsWithFile = Space & {fileList?: UploadFile[]; defaultFileList?: UploadFile[]};
 
 export type Props<TData extends Space> = ClassNameProps & TestProps & Readonly<{
     submit: (data: TData, file: File | null) => void;
@@ -29,7 +29,6 @@ export const SpaceForm = typedMemo(function SpaceForm<TData extends Space>({
         submit(form, file);
     }, [file, submit]);
 
-    console.log(initialValues);
     return (
         <Form
             className={styles.form}
@@ -47,6 +46,7 @@ export const SpaceForm = typedMemo(function SpaceForm<TData extends Space>({
                     valuePropName="fileList"
                 >
                     <FileInput
+                        defaultFileList={initialValues?.defaultFileList}
                         isEmpty={file === null}
                         multiple={false}
                         maxCount={1}
