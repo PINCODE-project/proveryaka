@@ -1,4 +1,4 @@
-import { Button, Form, Modal, notification, Switch } from 'antd';
+import { App, Button, Form, Modal, Switch } from 'antd';
 import { FC, ReactNode, useCallback, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
@@ -21,7 +21,7 @@ export type Props = ClassNameProps & TestProps & Readonly<{
 export const CreateSpaceModal: FC<Props> = typedMemo(function CreateSpaceModal({
     triggerComponent,
 }) {
-    const [notify, contextHolder] = notification.useNotification();
+    const { notification } = App.useApp();
     const queryClient = useQueryClient();
 
     const { data: user } = useGetCurrentUserInfo();
@@ -30,7 +30,7 @@ export const CreateSpaceModal: FC<Props> = typedMemo(function CreateSpaceModal({
     const { mutate: create } = useCreateSpace({
         onSuccess: () => {
             queryClient.resetQueries(getSpacesQueryKey);
-            notify.success({
+            notification.success({
                 message: 'Пространство создано',
             });
             setIsOpen(false);
@@ -61,7 +61,6 @@ export const CreateSpaceModal: FC<Props> = typedMemo(function CreateSpaceModal({
 
     return (
         <>
-            {contextHolder}
             {triggerComponent(onOpen)}
             <Modal
                 title="Создание пространства"

@@ -1,4 +1,4 @@
-import { notification } from 'antd';
+import { App } from 'antd';
 import { FC, ReactNode, useCallback } from 'react';
 import { useQueryClient } from 'react-query';
 
@@ -25,7 +25,7 @@ export const DeleteSpaceButton: FC<Props> = typedMemo(function DeleteSpaceButton
     onSuccess,
 }) {
     const queryClient = useQueryClient();
-    const [notify, contextHolder] = notification.useNotification();
+    const { notification } = App.useApp();
 
     const { mutate: deleteSpace, isLoading } = useDeleteSpace({
         onSuccess: async () => {
@@ -33,7 +33,7 @@ export const DeleteSpaceButton: FC<Props> = typedMemo(function DeleteSpaceButton
 
             queryClient.resetQueries(getSpacesQueryKey);
             queryClient.resetQueries(getSpaceQueryKey(spaceId ?? ''));
-            notify.success({
+            notification.success({
                 message: 'Пространство удалено',
             });
         },
@@ -55,12 +55,7 @@ export const DeleteSpaceButton: FC<Props> = typedMemo(function DeleteSpaceButton
 
         deleteSpace(spaceId);
     },
-    [spaceId, deleteSpace, isLoading]);
+    [spaceId, deleteSpace, isLoading, spaceName]);
 
-    return (
-        <>
-            {contextHolder}
-            {triggerComponent(onDelete)}
-        </>
-    );
+    return triggerComponent(onDelete);
 });

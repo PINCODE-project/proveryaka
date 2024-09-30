@@ -1,4 +1,4 @@
-import { notification, Popconfirm } from 'antd';
+import { App } from 'antd';
 import { FC, ReactNode, useCallback } from 'react';
 import { useQueryClient } from 'react-query';
 
@@ -25,13 +25,13 @@ export const DeleteUserFromSpaceButton: FC<Props> = typedMemo(function DeleteUse
     userFullName,
 }) {
     const queryClient = useQueryClient();
-    const [notify, contextHolder] = notification.useNotification();
+    const { notification } = App.useApp();
     const { mutate: deleteUser, isLoading } = useDeleteUserFromSpace({
         onSuccess: () => {
             queryClient.resetQueries(getSpaceStudentsQueryKey(spaceId));
             queryClient.resetQueries(getSpaceOrganizerQueryKey(spaceId));
             queryClient.resetQueries(getSpaceTeamsQueryKey(spaceId));
-            notify.success({
+            notification.success({
                 message: 'Пользователь удален из пространства',
             });
         },
@@ -54,10 +54,5 @@ export const DeleteUserFromSpaceButton: FC<Props> = typedMemo(function DeleteUse
         deleteUser({ spaceId, userId });
     }, [spaceId, userId, deleteUser, isLoading, userFullName]);
 
-    return (
-        <>
-            {contextHolder}
-            {triggerComponent(onDelete)}
-        </>
-    );
+    return triggerComponent(onDelete);
 });

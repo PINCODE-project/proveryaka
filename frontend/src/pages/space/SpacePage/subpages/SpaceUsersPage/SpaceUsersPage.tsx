@@ -1,17 +1,24 @@
-import { EllipsisOutlined } from '@ant-design/icons';
-import { Dropdown, Flex, MenuProps, Typography } from 'antd';
-import { FC, useCallback } from 'react';
+import { EllipsisOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Dropdown, Flex, MenuProps, Spin, Typography } from 'antd';
+import { FC, Suspense, useCallback } from 'react';
 
+import { AddUserInSpaceModal } from '@features/space/add-user-in-space';
+import { UpdateRoleModal } from '@features/space/change-user-role';
 import { DeleteUserFromSpaceButton } from '@features/space/delete-user-from-space';
 
 import {
     GetOrganizerResponse,
-    GetStudentResponse, isOrganizer,
+    GetStudentResponse,
     OrganizerTable,
-    StudentTable, useGetSpaceExperts,
-    useGetSpaceOrganizers, useGetSpaceRoles,
+    StudentTable,
+    useGetSpaceExperts,
+    useGetSpaceOrganizers,
+    useGetSpaceRoles,
     useGetSpaceStudents,
 } from '@entities/space';
+import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
+import { SpaceRoleType } from '@entities/space/model/SpaceRoleType';
+import { useGetCurrentUserInfo } from '@entities/user';
 
 import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { typedMemo } from '@shared/lib';
@@ -25,22 +32,32 @@ export type Props = ClassNameProps & TestProps & Readonly<{}>;
 
 export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
     const spaceId = useSpaceId();
-    const { data: roles } = useGetSpaceRoles(spaceId ?? '');
+    const { isOrganizer } = useRolesCheck();
+    const { data: user } = useGetCurrentUserInfo();
 
     const { data: students } = useGetSpaceStudents(spaceId ?? '');
     const { data: experts } = useGetSpaceExperts(spaceId ?? '');
     const { data: organizers } = useGetSpaceOrganizers(spaceId ?? '');
 
-    const renderActions = useCallback((_: string, record: GetStudentResponse | GetOrganizerResponse) => {
-        if (!isOrganizer(roles)) {
+    const renderActions = useCallback((role: SpaceRoleType) => function renderActions(_: string, record: GetStudentResponse | GetOrganizerResponse) {
+        if (!isOrganizer || record.id === user?.id) {
             return undefined;
         }
 
         const items: MenuProps['items'] = [
             {
                 key: '1',
-                label: 'Изменить роль',
-                disabled: true,
+                label: <UpdateRoleModal
+                    triggerComponent={onOpen => (
+                        <Typography.Text className={styles.menuItem} onClick={onOpen}>
+                            Изменить роль
+                        </Typography.Text>
+                    )}
+                    userFullName={`${record.surname} ${record.name} ${record.patronymic}`}
+                    spaceId={spaceId ?? ''}
+                    userId={record.id}
+                    spaceRole={role}
+                />,
             },
             {
                 key: '2',
@@ -65,22 +82,39 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
                 </Dropdown>
             </div>
         );
-    }, [roles]);
+    }, [isOrganizer, user, spaceId]);
 
     return (
         <Flex vertical gap={36}>
             <Flex align="center" justify="space-between" gap={16}>
                 Filters
+
+                {isOrganizer
+                    ? <AddUserInSpaceModal
+                        spaceId={spaceId ?? ''}
+                        triggerComponent={onExit => (
+                            <Button
+                                icon={<PlusOutlined />}
+                                type="primary"
+                                onClick={onExit}
+                            >
+                            Добавить участников
+                            </Button>
+                        )}
+                    />
+                    : null}
             </Flex>
 
             <UsersCollapse
                 users={organizers?.organizerInfoList ?? []}
                 usersName="Организаторы"
                 content={users => (
-                    <OrganizerTable
-                        renderActions={renderActions}
-                        organizers={users}
-                    />
+                    <Suspense fallback={<Spin />}>
+                        <OrganizerTable
+                            renderActions={renderActions(SpaceRoleType.Organizer)}
+                            organizers={users}
+                        />
+                    </Suspense>
                 )}
             />
 
@@ -88,10 +122,12 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
                 users={experts?.expertsInfoList ?? []}
                 usersName="Эксперты"
                 content={users => (
-                    <OrganizerTable
-                        renderActions={renderActions}
-                        organizers={users}
-                    />
+                    <Suspense fallback={<Spin />}>
+                        <OrganizerTable
+                            renderActions={renderActions(SpaceRoleType.Expert)}
+                            organizers={users}
+                        />
+                    </Suspense>
                 )}
             />
 
@@ -99,10 +135,12 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
                 users={students?.studentInfoList ?? []}
                 usersName="Студенты"
                 content={users => (
-                    <StudentTable
-                        renderActions={renderActions}
-                        students={users}
-                    />)}
+                    <Suspense fallback={<Spin />}>
+                        <StudentTable
+                            renderActions={renderActions(SpaceRoleType.Student)}
+                            students={users}
+                        />
+                    </Suspense>)}
             />
         </Flex>
     );

@@ -1,16 +1,24 @@
 import { EllipsisOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Dropdown, Flex, MenuProps, Typography } from 'antd';
 import { FC, useCallback } from 'react';
+import { useQueryClient } from 'react-query';
 import { Navigate } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/space';
 
 import { CreateTeamModal } from '@features/team/create-team';
 import { EditTeamModal } from '@features/team/edit-team';
+import { useRemoveTeamUser } from '@features/team/remove-team-user';
 
 import { GetStudentResponse } from '@entities/space';
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
-import { TeamsTable, GetTeam } from '@entities/team';
+import {
+    TeamsTable,
+    GetTeam,
+    useGetSpaceUserTeams,
+    getSpaceUserTeamsQueryKey,
+    getSpaceTeamsQueryKey, TeamType,
+} from '@entities/team';
 
 import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { typedMemo } from '@shared/lib';
@@ -25,10 +33,26 @@ export const SpaceTeamsPage: FC<Props> = typedMemo(function SpaceTeamsPage({
     className,
 
 }) {
+    const queryClient = useQueryClient();
     const { isStudent, isOrganizer } = useRolesCheck();
     const spaceId = useSpaceId();
 
+    const { data: studentTeams } = useGetSpaceUserTeams(spaceId ?? '', undefined, {
+        enabled: isStudent,
+    });
+
+    const { mutate: removeTeamUser } = useRemoveTeamUser({
+        onSuccess: () => {
+            queryClient.resetQueries(getSpaceUserTeamsQueryKey(spaceId ?? ''));
+            queryClient.resetQueries(getSpaceTeamsQueryKey(spaceId ?? ''));
+        },
+    });
+
     const renderActions = useCallback((_: string, record: GetTeam) => {
+        if (!isStudent && !isOrganizer) {
+            return undefined;
+        }
+
         const items: MenuProps['items'] = [
             {
                 key: '1',
@@ -42,18 +66,22 @@ export const SpaceTeamsPage: FC<Props> = typedMemo(function SpaceTeamsPage({
                     )}
                 />,
             },
-            {
+        ];
+
+        if (isStudent) {
+            items.push({
                 key: '2',
                 label: 'Покинуть команду',
                 disabled: true,
-            },
-            {
-                key: '3',
-                label: 'Удалить команду',
-                disabled: true,
-                danger: true,
-            },
-        ];
+            });
+        }
+
+        items.push({
+            key: '3',
+            label: 'Удалить команду',
+            disabled: true,
+            danger: true,
+        });
 
         return (
             <div onClick={event => event.stopPropagation()}>
@@ -62,13 +90,24 @@ export const SpaceTeamsPage: FC<Props> = typedMemo(function SpaceTeamsPage({
                 </Dropdown>
             </div>
         );
-    }, [spaceId]);
+    }, [spaceId, isStudent, isOrganizer]);
 
-    const renderStudentActions = useCallback((_: string, record: GetStudentResponse) => {
-        return (
-            <DeleteOutlined className={styles.deleteUserFromTeamIcon} />
-        );
-    }, []);
+    const renderStudentActions = useCallback((team: GetTeam) =>
+        function renderStudentActions(_: string, record: GetStudentResponse) {
+            return (
+                <DeleteOutlined
+                    className={styles.deleteUserFromTeamIcon}
+                    onClick={() => {
+                        removeTeamUser({
+                            teamId: team.id,
+                            entityId: spaceId ?? '',
+                            userId: record.id,
+                            teamType: TeamType.Space,
+                        });
+                    }}
+                />
+            );
+        }, [removeTeamUser, spaceId]);
 
     if (!spaceId) {
         return <Navigate to={SpaceRouter.Spaces} />;
@@ -79,7 +118,7 @@ export const SpaceTeamsPage: FC<Props> = typedMemo(function SpaceTeamsPage({
                 <Typography.Text>
                     Filters
                 </Typography.Text>
-                {isStudent ? <CreateTeamModal spaceId={spaceId} /> : null}
+                {isStudent && studentTeams?.entityList.length === 0 ? <CreateTeamModal spaceId={spaceId} /> : null}
             </Flex>
 
             <TeamsTable

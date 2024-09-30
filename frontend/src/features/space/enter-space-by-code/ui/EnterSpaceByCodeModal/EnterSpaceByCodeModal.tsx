@@ -1,4 +1,4 @@
-import { Button, Form, Input, Modal, notification } from 'antd';
+import { App, Button, Form, Input, Modal } from 'antd';
 import { FC, ReactNode, useCallback, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
@@ -18,13 +18,13 @@ export type Props = ClassNameProps & TestProps & Readonly<{
 export const EnterSpaceByCodeModal: FC<Props> = typedMemo(function EnterSpaceByCodeModal({
     triggerComponent,
 }) {
-    const [notify, contextHolder] = notification.useNotification();
+    const { notification } = App.useApp();
     const queryClient = useQueryClient();
     const [isOpen, setIsOpen] = useState(false);
     const { mutate: enter } = useEnterByCode({
         onSuccess: () => {
             queryClient.resetQueries(getSpacesQueryKey);
-            notify.success({
+            notification.success({
                 message: 'Вы добавлены в пространство',
             });
             setIsOpen(false);
@@ -37,7 +37,6 @@ export const EnterSpaceByCodeModal: FC<Props> = typedMemo(function EnterSpaceByC
 
     return (
         <>
-            {contextHolder}
             {triggerComponent(onOpen)}
             <Modal
                 title="Введите пригласительный код"

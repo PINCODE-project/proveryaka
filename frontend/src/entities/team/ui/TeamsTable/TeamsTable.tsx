@@ -4,7 +4,7 @@ import { FC, useCallback, useMemo } from 'react';
 
 // Сущность пространства много где зайдествуется
 // eslint-disable-next-line
-import {GetStudentResponse, isOrganizer, StudentTable} from '@entities/space';
+import {GetStudentResponse, StudentTable} from '@entities/space';
 
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
@@ -22,7 +22,7 @@ import { TeamType } from '../../model/TeamType';
 export type Props = ClassNameProps & TestProps & Readonly<{
     spaceId: string;
     actionRender?: ColumnType<GetTeam>['render'];
-    renderStudentActions?: ColumnType<GetStudentResponse>['render'];
+    renderStudentActions?: (team: GetTeam) => ColumnType<GetStudentResponse>['render'];
 }>;
 
 export const TeamsTable: FC<Props> = typedMemo(function TeamsTable({
@@ -41,7 +41,7 @@ export const TeamsTable: FC<Props> = typedMemo(function TeamsTable({
         enabled: !isStudent,
     });
     const teams = useMemo(() => {
-        const teams = isStudent ? studentTeams?.teamList : organizerTeams?.teamList;
+        const teams = isStudent ? studentTeams?.entityList : organizerTeams?.entityList;
         return teams ?? [];
     }, [isStudent, studentTeams, organizerTeams]);
 
@@ -68,8 +68,11 @@ export const TeamsTable: FC<Props> = typedMemo(function TeamsTable({
     ], [actionRender]);
 
     const expandedRowRender = useCallback((record: GetTeam) => {
-        return <StudentTable students={record.studentInfoList ?? []} renderActions={renderStudentActions} />;
-    }, []);
+        return (<StudentTable
+            students={record.studentInfoList ?? []}
+            renderActions={renderStudentActions?.(record)}
+        />);
+    }, [renderStudentActions]);
 
     if (teams.length === 0) {
         return <EmptyTable text="В вашем пространстве нет команд" />;

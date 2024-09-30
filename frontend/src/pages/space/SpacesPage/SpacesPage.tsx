@@ -1,16 +1,16 @@
 import { EllipsisOutlined, UsergroupAddOutlined } from '@ant-design/icons';
-import { Button, Dropdown, Flex, MenuProps, Typography } from 'antd';
+import { App, Button, Dropdown, Flex, MenuProps, Typography } from 'antd';
 import { FC, useCallback, useMemo } from 'react';
-
-import { SpaceRouter } from '@pages/space';
 
 import { UserPanel } from '@widgets/UserPanel';
 
+import { AddUserInSpaceModal } from '@features/space/add-user-in-space';
 import { CreateSpaceModal } from '@features/space/create-space';
 import { DeleteSpaceButton } from '@features/space/delete-space';
 import { EditSpaceModal } from '@features/space/edit-space';
 import { EnterSpaceByCodeModal } from '@features/space/enter-space-by-code';
 import { ExitUserButton } from '@features/space/exit-user';
+import { useCopySpaceCode, useRegenerateSpaceCode } from '@features/space/get-space-code';
 
 import { SpacesTable } from '@entities/space';
 import { GetSpaceResponse } from '@entities/space/model/GetSpaceResponse';
@@ -28,47 +28,76 @@ export type Props = ClassNameProps & TestProps & Readonly<{}>;
 export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
     className,
 }) {
+    const { notification } = App.useApp();
+
     const { data: isOrganizer } = useGetUserIsOrganizer();
 
+    const { mutate: copyCode } = useCopySpaceCode({
+        onSuccess: () => {
+            notification.success({
+                message: 'Пригласительный код скопирован',
+            });
+        },
+    });
+    const { mutate: regenerateCode } = useRegenerateSpaceCode({
+        onSuccess: () => {
+            notification.success({
+                message: 'Пригласительный код изменен',
+            });
+        },
+    });
+
     const renderActions = useCallback((_: string, record: GetSpaceResponse) => {
-        const items: MenuProps['items'] = [
-            {
-                key: '1',
-                label: <EditSpaceModal
-                    triggerComponent={
-                        onOpen => <Typography.Text onClick={onOpen}>Изменить пространство</Typography.Text>
-                    }
-                    spaceId={record.id}
-                />,
-            },
-            {
-                key: '2',
-                label: 'Добавить участников',
-                disabled: true,
-            },
-            {
-                key: '3',
-                label: 'Скопировать код',
-                disabled: true,
-            },
-            {
-                key: '4',
-                label: 'Перегенерировать код',
-                disabled: true,
-            },
-            {
-                key: '5',
-                label: <ExitUserButton
-                    spaceName={record.name ?? ''}
-                    spaceId={record.id}
-                    triggerComponent={onExit => (
-                        <Typography.Text onClick={onExit} className={styles.menuItem}>
+        let items: MenuProps['items'] = [];
+        if (isOrganizer) {
+            items = [
+                {
+                    key: '1',
+                     label: <EditSpaceModal
+			                    triggerComponent={
+			                        onOpen => <Typography.Text onClick={onOpen}>Изменить пространство</Typography.Text>
+			                    }
+			                    spaceId={record.id}
+			                />,
+                },
+                {
+                    key: '2',
+                    label: <AddUserInSpaceModal
+                        spaceId={record.id}
+                        triggerComponent={onExit => (
+                            <Typography.Text onClick={onExit} className={styles.menuItem}>
+                                    Добавить участников
+                            </Typography.Text>
+                        )}
+                    />,
+                },
+                {
+                    key: '3',
+                    label: 'Скопировать код',
+                    onClick: () => copyCode(record.id),
+                },
+                {
+                    key: '4',
+                    label: 'Перегенерировать код',
+                    onClick: () => regenerateCode(record.id),
+                },
+            ];
+        }
+        items.push({
+            key: '5',
+            label: <ExitUserButton
+                spaceName={record.name ?? ''}
+                spaceId={record.id}
+                triggerComponent={onExit => (
+                    <Typography.Text onClick={onExit} className={styles.menuItem}>
                             Покинуть пространство
-                        </Typography.Text>
-                    )}
-                />,
-            },
-            {
+                    </Typography.Text>
+                )}
+            />,
+        });
+
+        if (isOrganizer) {
+            items.push({
                 key: '6',
                 label: <DeleteSpaceButton
                     spaceId={record.id}
@@ -79,8 +108,8 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
                         </Typography.Text>)}
                 />,
                 danger: true,
-            },
-        ];
+            });
+        }
 
         return (
             <div onClick={event => event.stopPropagation()}>
@@ -89,7 +118,7 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
                 </Dropdown>
             </div>
         );
-    }, []);
+    }, [copyCode, regenerateCode, isOrganizer]);
 
     const SpacesButton = useMemo(() => {
         if (!isOrganizer) {

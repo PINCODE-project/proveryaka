@@ -1,4 +1,4 @@
-import { Button, Flex, Form, Input, notification, Typography } from 'antd';
+import { App, Button, Flex, Form, Input, Typography } from 'antd';
 import { FC, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,25 +6,32 @@ import { AuthRouter } from '@pages/auth';
 
 import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
+import { trimAllObjectValues } from '@shared/lib/trimAllObjectValues';
 import { ClassNameProps, TestProps } from '@shared/types';
 
 import styles from './ResetPasswordForm.module.css';
 import { useResetPassword } from '../../lib/useResetPassword';
 import { ResetPassword } from '../../model/ResetPassword';
 
-export type Props = ClassNameProps & TestProps & Readonly<{}>;
+export type Props = ClassNameProps & TestProps;
 
 export const ResetPasswordForm: FC<Props> = typedMemo(function SignInForm({
     className,
 }) {
     const navigate = useNavigate();
     // TODO: использовать вызов уведомлений после сообщения Кости о возможных ошибках
-    const [notify, contextHolder] = notification.useNotification();
+    const { notification } = App.useApp();
 
     const { mutate: resetPassword } = useResetPassword({
-        onSuccess: () => {},
-        onError: () => {},
+        onSuccess: () => {
+        },
+        onError: () => {
+        },
     });
+
+    const handleResetPassword = (values: ResetPassword) => {
+        resetPassword(trimAllObjectValues(values) as ResetPassword);
+    };
 
     const back = useCallback(() => navigate(AuthRouter.SignIn), [navigate]);
 
@@ -33,13 +40,11 @@ export const ResetPasswordForm: FC<Props> = typedMemo(function SignInForm({
             className={getModuleClasses(styles, 'form', null, className)}
             name="ResetPasswordForm"
             layout="vertical"
-            onFinish={resetPassword}
+            onFinish={handleResetPassword}
         >
             <Typography.Text className={getModuleClasses(styles, 'title')}>
-               Восстановление пароля
+                Восстановление пароля
             </Typography.Text>
-
-            {contextHolder}
 
             <Flex vertical gap="large">
                 <Typography.Text>

@@ -11,7 +11,7 @@ import { TokenService } from '@shared/lib';
  * @param refreshCallback Коллбек для повтора запроса
  */
 export function refreshSecretInterceptor(error: AxiosError)/*: RefreshResult */ {
-    if (error.response?.status === 401 || error.code === 'ERR_NETWORK') {
+    if (error.response?.status === 401) {
         return refreshSecretInner(error);
     }
 

@@ -10,7 +10,7 @@ export function getTeamsAxiosMock(): AxiosMockOptions<GetTeamList>[] {
             reply: {
                 statusOrCallback: 200,
                 data: {
-                    teamList: [
+                    entityList: [
                         {
                             id: '1',
                             name: 'Team 1',

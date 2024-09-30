@@ -1,4 +1,4 @@
-import { Button, Col, Flex, Form, Input, notification, Row } from 'antd';
+import { App, Button, Col, Flex, Form, Input, Row } from 'antd';
 import { FC, useCallback } from 'react';
 
 import { useChangePassword } from '@features/user/change-password/lib/useChangePassword';
@@ -22,10 +22,10 @@ export const ChangePasswordForm: FC<Props> = typedMemo(function ChangePasswordFo
 }) {
     const { data: user } = useGetCurrentUserInfo();
 
-    const [api, contextHolder] = notification.useNotification();
+    const { notification } = App.useApp();
     const { mutate: changePassword } = useChangePassword({
         onSuccess: () => {
-            api.success({
+            notification.success({
                 message: 'Настройки профиля изменены',
             });
             onSuccess();
@@ -48,8 +48,6 @@ export const ChangePasswordForm: FC<Props> = typedMemo(function ChangePasswordFo
             requiredMark={false}
             className={getBemClasses(styles, null, null, className)}
         >
-            {contextHolder}
-
             <Row gutter={[20, 0]}>
                 <Col flex="50%">
                     <Form.Item<ChangePassword>

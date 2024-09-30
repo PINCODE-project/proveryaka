@@ -1,4 +1,4 @@
-import { Button, Col, Flex, Form, Input, message, notification, Row } from 'antd';
+import { App, Button, Col, Flex, Form, Input, message, Row } from 'antd';
 import { FC, useCallback, useEffect, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
@@ -25,17 +25,16 @@ export const EditUserForm: FC<Props> = typedMemo(function EditUserForm({
     onSuccess,
 }) {
     const { data: user } = useGetCurrentUserInfo();
-    const { isStudent } = useRolesCheck();
 
     const [file, setFile] = useState<File | null>(null);
     const { data: oldFile } = useGetEstimateFile(user?.avatar ?? '', { enabled: Boolean(user?.avatar) });
 
     const queryClient = useQueryClient();
-    const [api, contextHolder] = notification.useNotification();
+    const { notification } = App.useApp();
 
     const { mutate: edit } = useEditUser({
         onSuccess: () => {
-            api.success({
+            notification.success({
                 message: 'Настройки профиля изменены',
             });
             queryClient.resetQueries(getCurrentUserQueryKey);
@@ -72,122 +71,111 @@ export const EditUserForm: FC<Props> = typedMemo(function EditUserForm({
                 : undefined;
         }
 
-        edit({ ...user, ...data, avatar });
+        edit({ ...user, ...data, avatar, academicGroup: data.position });
     }, [edit, user, file, oldFile]);
 
     return (
-        <>
-            {contextHolder}
-            <Form
-                name="EditUserForm"
-                layout="vertical"
-                onFinish={onFinish}
-                requiredMark={false}
-                initialValues={user}
-            >
-                <Flex vertical gap={20}>
-                    <Flex gap={20}>
-                        <FileInput
-                            name="avatar"
-                            beforeUpload={beforeUpload}
-                            listType="picture-circle"
-                            showUploadList={false}
-                            isEmpty={file === null}
-                            accept="image/png, image/jpeg"
-                            filledComponent={<ImagePreview file={file} type="circle" />}
-                            emptyText="Аватар"
-                            onChangeFile={setFile}
-                        />
-                        <Row gutter={[20, 14]} className={getModuleClasses(styles, 'main')}>
-                            <Col flex={1}>
-                                <Flex vertical gap={20}>
-                                    <Form.Item<FullUserInfoResponse>
-                                        className={getModuleClasses(styles, 'formItem')}
-                                        label="Имя"
-                                        name="name"
-                                        rules={[
-                                            { required: true, message: 'Введите имя' },
-                                        ]}
-                                    >
-                                        <Input placeholder="Иван" />
-                                    </Form.Item>
-                                    <Form.Item<FullUserInfoResponse>
-                                        className={getModuleClasses(styles, 'formItem')}
-                                        label="Отчество"
-                                        name="patronymic"
-                                    >
-                                        <Input placeholder="Иванович" />
-                                    </Form.Item>
-                                </Flex>
-                            </Col>
-                            <Col flex={1}>
+        <Form
+            name="EditUserForm"
+            layout="vertical"
+            onFinish={onFinish}
+            requiredMark={false}
+            initialValues={user}
+        >
+            <Flex vertical gap={20}>
+                <Flex gap={20}>
+                    <FileInput
+                        name="avatar"
+                        beforeUpload={beforeUpload}
+                        listType="picture-circle"
+                        showUploadList={false}
+                        isEmpty={file === null}
+                        accept="image/png, image/jpeg"
+                        filledComponent={<ImagePreview file={file} type="circle" />}
+                        emptyText="Аватар"
+                        onChangeFile={setFile}
+                    />
+                    <Row gutter={[20, 14]} className={getModuleClasses(styles, 'main')}>
+                        <Col flex={1}>
+                            <Flex vertical gap={20}>
                                 <Form.Item<FullUserInfoResponse>
                                     className={getModuleClasses(styles, 'formItem')}
-                                    label="Фамилия"
-                                    name="surname"
+                                    label="Имя"
+                                    name="name"
                                     rules={[
-                                        { required: true, message: 'Введите фамилию' },
+                                        { required: true, message: 'Введите имя' },
                                     ]}
                                 >
-                                    <Input placeholder="Иванов" />
+                                    <Input placeholder="Иван" />
                                 </Form.Item>
-                            </Col>
-                        </Row>
-                    </Flex>
-
-                    <Row gutter={[20, 0]}>
+                                <Form.Item<FullUserInfoResponse>
+                                    className={getModuleClasses(styles, 'formItem')}
+                                    label="Отчество"
+                                    name="patronymic"
+                                >
+                                    <Input placeholder="Иванович" />
+                                </Form.Item>
+                            </Flex>
+                        </Col>
                         <Col flex={1}>
                             <Form.Item<FullUserInfoResponse>
                                 className={getModuleClasses(styles, 'formItem')}
-                                label="Почта"
-                                name="email"
+                                label="Фамилия"
+                                name="surname"
                                 rules={[
-                                    { required: true, message: 'Введите почту' },
-                                    { type: 'email', message: 'Введите почту' },
+                                    { required: true, message: 'Введите фамилию' },
                                 ]}
                             >
-                                <Input placeholder="ivanivanov@yandex.ru" />
+                                <Input placeholder="Иванов" />
                             </Form.Item>
                         </Col>
-                        <Col flex={1}>
-                            {isStudent
-                                ? <Form.Item<FullUserInfoResponse>
-                                    className={getModuleClasses(styles, 'formItem')}
-                                    label="Группа"
-                                    name="academicGroup"
-                                >
-                                    <Input placeholder="РИ-100000" />
-                                </Form.Item>
-                                : <Form.Item<FullUserInfoResponse>
-                                    className={getModuleClasses(styles, 'formItem')}
-                                    label="Должность"
-                                    name="position"
-                                >
-                                    <Input placeholder="Преподаватель" />
-                                </Form.Item>}
-                        </Col>
                     </Row>
-
-                    <Form.Item<FullUserInfoResponse>
-                        label="Дополнительно"
-                        name="status"
-                        className={getModuleClasses(styles, 'formItem')}
-                    >
-                        <Input.TextArea
-                            rows={3}
-                            placeholder="Фронтенд-разработчик"
-                        />
-                    </Form.Item>
-
-                    <Flex justify="end">
-                        <Form.Item className={getModuleClasses(styles, 'submitButton')}>
-                            <Button type="primary" htmlType="submit" block>
-                                    Сохранить
-                            </Button>
-                        </Form.Item>
-                    </Flex>
                 </Flex>
-            </Form>
-        </>
+
+                <Row gutter={[20, 0]}>
+                    <Col flex={1}>
+                        <Form.Item<FullUserInfoResponse>
+                            className={getModuleClasses(styles, 'formItem')}
+                            label="Почта"
+                            name="email"
+                            rules={[
+                                { required: true, message: 'Введите почту' },
+                                { type: 'email', message: 'Введите почту' },
+                            ]}
+                        >
+                            <Input placeholder="ivanivanov@yandex.ru" />
+                        </Form.Item>
+                    </Col>
+                    <Col flex={1}>
+                        <Form.Item<FullUserInfoResponse>
+                            className={getModuleClasses(styles, 'formItem')}
+                            label="Должность/группа"
+                            name="position"
+                        >
+                            <Input placeholder="Введите" />
+                        </Form.Item>
+                    </Col>
+                </Row>
+
+                <Form.Item<FullUserInfoResponse>
+                    label="Дополнительно"
+                    name="status"
+                    className={getModuleClasses(styles, 'formItem')}
+                >
+                    <Input.TextArea
+                        rows={3}
+                        placeholder="Фронтенд-разработчик"
+                    />
+                </Form.Item>
+
+                <Flex justify="end">
+                    <Form.Item className={getModuleClasses(styles, 'submitButton')}>
+                        <Button type="primary" htmlType="submit" block>
+                                    Сохранить
+                        </Button>
+                    </Form.Item>
+                </Flex>
+            </Flex>
+        </Form>
     );
 });

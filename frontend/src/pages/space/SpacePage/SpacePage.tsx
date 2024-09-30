@@ -5,8 +5,9 @@ import {
     EllipsisOutlined,
     TeamOutlined,
     LeftOutlined,
+    InfoCircleOutlined,
 } from '@ant-design/icons';
-import { Dropdown, Flex, MenuProps, Typography } from 'antd';
+import { App, Dropdown, Flex, MenuProps, Typography } from 'antd';
 import { FC, useMemo } from 'react';
 import { Link, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
@@ -14,13 +15,16 @@ import { SpaceRouter } from '@pages/space';
 
 import { UserPanel } from '@widgets/UserPanel';
 
+import { AddUserInSpaceModal } from '@features/space/add-user-in-space';
 import { DeleteSpaceButton } from '@features/space/delete-space';
 import { EditSpaceModal } from '@features/space/edit-space';
 import { ExitUserButton } from '@features/space/exit-user';
+import { useCopySpaceCode, useRegenerateSpaceCode } from '@features/space/get-space-code';
 
 import { isOrganizer, useGetSpaceSettings } from '@entities/space';
 import { useGetSpace } from '@entities/space/lib/useGetSpace';
 import { useGetSpaceRoles } from '@entities/space/lib/useGetSpaceRoles';
+import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
 import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { typedMemo } from '@shared/lib';
@@ -36,40 +40,69 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
     className,
     'data-testid': dataTestId = 'SpacePage',
 }) {
+    const { notification } = App.useApp();
     const navigate = useNavigate();
     const location = useLocation();
 
     const spaceId = useSpaceId();
-    const { data: roles } = useGetSpaceRoles(spaceId ?? '');
+    const { isOrganizer } = useRolesCheck();
     const { data: space } = useGetSpace(spaceId ?? '');
     const { data: spaceSettings } = useGetSpaceSettings(spaceId ?? '');
 
-    const items: MenuProps['items'] = useMemo(() => [
-        {
-            key: '1',
-            label: <EditSpaceModal
-                triggerComponent={
-                    onOpen => <Typography.Text onClick={onOpen}>Изменить пространство</Typography.Text>
-                }
-                spaceId={spaceId ?? ''}
-            />,
+    const { mutate: copyCode } = useCopySpaceCode({
+        onSuccess: () => {
+            notification.success({
+                message: 'Пригласительный код скопирован',
+            });
         },
-        {
-            key: '2',
-            label: 'Добавить пользователей',
-            disabled: true,
+    });
+    const { mutate: regenerateCode } = useRegenerateSpaceCode({
+        onSuccess: () => {
+            notification.success({
+                message: 'Пригласительный код изменен',
+            });
         },
-        {
-            key: '3',
-            label: 'Скопировать код',
-            disabled: true,
-        },
-        {
-            key: '4',
-            label: 'Перегенрировать код',
-            disabled: true,
-        },
-        {
+    });
+
+    const items: MenuProps['items'] = useMemo(() => {
+        let items: MenuProps['items'] = [];
+
+        if (isOrganizer) {
+            items = [
+                {
+                    key: '1',
+                    label: <EditSpaceModal
+		                triggerComponent={
+		                    onOpen => <Typography.Text onClick={onOpen}>Изменить пространство</Typography.Text>
+		                }
+		                spaceId={spaceId ?? ''}
+		            />,
+                },
+                {
+                    key: '2',
+                    label: <AddUserInSpaceModal
+                        spaceId={spaceId ?? ''}
+                        triggerComponent={onExit => (
+                            <Typography.Text onClick={onExit} className={styles.menuItem}>
+                                Добавить участников
+                            </Typography.Text>
+                        )}
+                    />,
+                },
+                {
+                    key: '3',
+                    label: 'Скопировать код',
+                    onClick: () => copyCode(spaceId ?? ''),
+                },
+                {
+                    key: '4',
+                    label: 'Перегенерировать код',
+                    onClick: () => regenerateCode(spaceId ?? ''),
+                },
+            ];
+        }
+
+        items.push({
             key: '5',
             label: <ExitUserButton
                 spaceName={space?.name ?? ''}
@@ -77,28 +110,30 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
                 onSuccess={() => navigate(SpaceRouter.Spaces)}
                 triggerComponent={onExit => (
                     <Typography.Text onClick={onExit} className={styles.menuItem}>
-                Покинуть пространство
+                        Покинуть пространство
                     </Typography.Text>
                 )}
             />,
-        },
-        {
-            key: '6',
-            label: <DeleteSpaceButton
-                spaceName={space?.name ?? ''}
-                spaceId={spaceId ?? ''}
-                onSuccess={() => new Promise(resolve => {
-                    navigate(SpaceRouter.Spaces);
-                    setTimeout(resolve, 300);
-                })}
-                triggerComponent={onDelete => (
-                    <Typography.Text onClick={onDelete} className={styles.menuItem}>
-                        Удалить пространство
-                    </Typography.Text>)}
-            />,
-            danger: true,
-        },
-    ], [spaceId, navigate, space]);
+        });
+
+        if (isOrganizer) {
+            items.push({
+                key: '6',
+                label: <DeleteSpaceButton
+                    spaceId={spaceId ?? ''}
+                    spaceName={space?.name ?? ''}
+                    onSuccess={() => navigate(SpaceRouter.Spaces)}
+                    triggerComponent={onDelete => (
+                        <Typography.Text onClick={onDelete} className={styles.menuItem}>
+                            Удалить пространство
+                        </Typography.Text>)}
+                />,
+                danger: true,
+            });
+        }
+
+        return items;
+    }, [spaceId, space, isOrganizer, navigate, copyCode, regenerateCode]);
 
     if (!spaceId || !space) {
         return <Navigate to={SpaceRouter.Spaces} />;
@@ -116,6 +151,11 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
             data-testid={dataTestId}
         >
             <Sidebar>
+                <SidebarItem
+                    to={SpaceRouter.SpaceDescription(spaceId)}
+                    text="Описание"
+                    icon={className => <InfoCircleOutlined className={className} /> }
+                />
                 <SidebarItem
                     to={SpaceRouter.SpaceTasks(spaceId)}
                     text="Задания"
@@ -168,11 +208,9 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
                         </Typography.Text>
                     </Flex>
 
-                    {isOrganizer(roles!)
-                        ? <Dropdown menu={{ items }}>
-                            <EllipsisOutlined className={getModuleClasses(styles, 'settingsIcon')} />
-                        </Dropdown>
-                        : null}
+                    <Dropdown menu={{ items }}>
+                        <EllipsisOutlined className={getModuleClasses(styles, 'settingsIcon')} />
+                    </Dropdown>
                 </Flex>
                 <Outlet />
             </Flex>

@@ -1,4 +1,4 @@
-import { Button, Form, Modal, notification } from 'antd';
+import { App, Button, Form, Modal } from 'antd';
 import { FC, ReactNode, useCallback, useMemo, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
@@ -30,7 +30,7 @@ export const EditTeamModal: FC<Props> = typedMemo(function EditTeamModal({
     triggerComponent,
 }) {
     const queryClient = useQueryClient();
-    const [api, contextHolder] = notification.useNotification();
+    const { notification } = App.useApp();
     const [isOpen, setIsOpen] = useState(false);
 
     const { data: team } = useGetTeam(teamId);
@@ -42,7 +42,7 @@ export const EditTeamModal: FC<Props> = typedMemo(function EditTeamModal({
 
     const { mutate: edit } = useEditTeam({
         onSuccess: () => {
-            api.success({
+            notification.success({
                 message: 'Команда изменена',
             });
             setIsOpen(false);
@@ -69,7 +69,6 @@ export const EditTeamModal: FC<Props> = typedMemo(function EditTeamModal({
 
     return (
         <>
-            {contextHolder}
             {triggerComponent(onOpen)}
             <Modal
                 title="Изменение команды"
