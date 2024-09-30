@@ -1,10 +1,11 @@
-import { Button, Form, Modal, notification, UploadFile } from 'antd';
+import { Button, Form, Modal, notification } from 'antd';
 import { FC, ReactNode, useCallback, useEffect, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
 import { getSpacesQueryKey, Space, SpaceForm } from '@entities/space';
 import { getSpaceQueryKey } from '@entities/space/lib/getSpaceQueryKey';
 import { useGetSpace } from '@entities/space/lib/useGetSpace';
+import { SpaceAccessType } from '@entities/space/model/SpaceAccessType';
 
 import { getFile } from '@shared/api';
 import { createFile } from '@shared/api/file/createFile';
@@ -29,29 +30,21 @@ export const EditSpaceModal: FC<Props> = typedMemo(function EditSpaceModal({
 
     const { data: space } = useGetSpace(spaceId);
     const [initialValues, setInitialValues] =
-        useState<EditSpaceRequest & { defaultFileList: UploadFile[]} | undefined>(undefined);
+        useState<EditSpaceRequest | undefined>(undefined);
+    const [initialFile, setInitialFile] = useState<File | null>(null);
 
     const getInitialValues = useCallback(async () => {
         if (!space) {
             return;
         }
         const file = space.iconFileId ? await getFile(space.iconFileId) : null;
-        const defaultFileList: UploadFile[] = [];
-
-        if (file) {
-            defaultFileList.push({
-                uid: '1',
-                name: file.name,
-                url: URL.createObjectURL(file),
-                status: 'done',
-            });
-        }
+        setInitialFile(file);
 
         setInitialValues({
             iconFileId: null,
             name: space.name,
+            accessType: space.accessType,
             description: space.description,
-            defaultFileList,
         });
     }, [space]);
 
@@ -84,9 +77,10 @@ export const EditSpaceModal: FC<Props> = typedMemo(function EditSpaceModal({
         edit({
             ...form,
             id: spaceId,
+            accessType: space?.accessType ?? SpaceAccessType.Closed,
             iconFileId: iconFileId ?? null,
         });
-    }, [edit, spaceId]);
+    }, [edit, spaceId, space]);
 
     const onOpen = useCallback(() => setIsOpen(true), []);
 
@@ -105,7 +99,8 @@ export const EditSpaceModal: FC<Props> = typedMemo(function EditSpaceModal({
             >
                 <SpaceForm
                     submit={onSubmit}
-                    initialValues={initialValues as any}
+                    initialValues={initialValues as Space}
+                    initialFile={initialFile}
                     submitButton={(
                         <Form.Item className={styles.submitButton}>
                             <Button type="primary" htmlType="submit" block>
