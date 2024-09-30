@@ -1,13 +1,15 @@
 import { ConfigRouteProps } from '@shared/types';
 
 import { ResetPasswordPage } from './ResetPasswordPage';
+import { ResetPasswordSubmitPage } from './ResetPasswordSubmitPage';
 import { SignInPage } from './SignInPage';
 import { SignUpPage } from './SignUpPage';
 
 export const AuthRouter = {
     SignIn: '/signin',
     SignUp: '/signup',
-    ResetPassword: '/reset-password',
+    ResetPassword: '/reset',
+    ResetPasswordSubmit: (submitId: string) => `/reset/${submitId}`,
 };
 
 export const authRouteConfig: ConfigRouteProps[] = [
@@ -25,5 +27,10 @@ export const authRouteConfig: ConfigRouteProps[] = [
         path: AuthRouter.ResetPassword,
         withNoAuthGuard: true,
         element: <ResetPasswordPage />,
+    },
+    {
+        path: AuthRouter.ResetPasswordSubmit(':submitId'),
+        withNoAuthGuard: true,
+        element: <ResetPasswordSubmitPage />,
     },
 ];
