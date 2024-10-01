@@ -9,7 +9,7 @@ export const AuthRouter = {
     SignIn: '/signin',
     SignUp: '/signup',
     ResetPassword: '/reset',
-    ResetPasswordSubmit: (submitId: string) => `/reset/${submitId}`,
+    ResetPasswordSubmit: (token: string, userId: string) => `/reset/${token}/${userId}`,
 };
 
 export const authRouteConfig: ConfigRouteProps[] = [
@@ -29,7 +29,7 @@ export const authRouteConfig: ConfigRouteProps[] = [
         element: <ResetPasswordPage />,
     },
     {
-        path: AuthRouter.ResetPasswordSubmit(':submitId'),
+        path: AuthRouter.ResetPasswordSubmit(':token', ':userId'),
         withNoAuthGuard: true,
         element: <ResetPasswordSubmitPage />,
     },
