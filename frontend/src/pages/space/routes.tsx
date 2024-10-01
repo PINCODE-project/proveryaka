@@ -2,6 +2,7 @@ import { ConfigRouteProps } from '@shared/types';
 
 import { SpacePage } from './SpacePage';
 import { SpaceDescription } from './SpacePage/subpages/SpaceDescription';
+import { SpaceSolutionsPage } from './SpacePage/subpages/SpaceSolutionsPage';
 import { SpaceTeamsPage } from './SpacePage/subpages/SpaceTeamsPage';
 import { SpaceUsersPage } from './SpacePage/subpages/SpaceUsersPage';
 import { SpacesPage } from './SpacesPage';
@@ -39,7 +40,7 @@ export const spaceRouteConfig: ConfigRouteProps[] = [
             },
             {
                 path: SpaceRouter.SpaceSolutions(':spaceId'),
-                element: null,
+                element: <SpaceSolutionsPage />,
                 withAuthGuard: true,
             },
             {
