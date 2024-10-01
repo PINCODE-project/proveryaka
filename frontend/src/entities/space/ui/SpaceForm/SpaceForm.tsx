@@ -1,5 +1,5 @@
-import { Flex, Form, Input, UploadFile } from 'antd';
-import { ReactNode, useCallback, useState } from 'react';
+import { Flex, Form, Input } from 'antd';
+import { ReactNode, useCallback, useEffect, useState } from 'react';
 
 import { getFormItemUploadNotFileValue, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
@@ -8,13 +8,14 @@ import { FileInput, ImagePreview } from '@shared/ui';
 import styles from './SpaceForm.module.css';
 import { Space } from '../../model/Space';
 
-type SpaceSettingsWithFile = Space & {fileList?: UploadFile[]};
+type SpaceSettingsWithFile = Space;
 
 export type Props<TData extends Space> = ClassNameProps & TestProps & Readonly<{
     submit: (data: TData, file: File | null) => void;
     additionalFormItems?: ReactNode;
     submitButton: ReactNode;
     initialValues?: TData & SpaceSettingsWithFile;
+    initialFile?: File | null;
 }>;
 
 export const SpaceForm = typedMemo(function SpaceForm<TData extends Space>({
@@ -22,8 +23,15 @@ export const SpaceForm = typedMemo(function SpaceForm<TData extends Space>({
     submit,
     initialValues,
     additionalFormItems,
+    initialFile,
 }: Props<TData>) {
     const [file, setFile] = useState<File | null>(null);
+
+    useEffect(() => {
+        if (initialFile) {
+            setFile(initialFile);
+        }
+    }, [initialFile]);
 
     const onSubmit = useCallback((form: TData) => {
         submit(form, file);
@@ -42,8 +50,6 @@ export const SpaceForm = typedMemo(function SpaceForm<TData extends Space>({
                 <Form.Item<SpaceSettingsWithFile>
                     className={styles.formItem}
                     getValueFromEvent={getFormItemUploadNotFileValue}
-                    name="fileList"
-                    valuePropName="fileList"
                 >
                     <FileInput
                         isEmpty={file === null}

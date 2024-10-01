@@ -1,11 +1,10 @@
 import { useMutation } from 'react-query';
 
-import { Space } from '@entities/space';
-
 import { AxiosUseMutationOptions } from '@shared/types';
 
 import { editSpace } from '../api/editSpace';
+import { EditSpaceRequest } from '../model/EditSpaceRequest';
 
-export function useEditSpace(options?: AxiosUseMutationOptions<void, Space>) {
+export function useEditSpace(options?: AxiosUseMutationOptions<void, EditSpaceRequest>) {
     return useMutation(editSpace, options);
 }

@@ -7,6 +7,7 @@ import { UserPanel } from '@widgets/UserPanel';
 import { AddUserInSpaceModal } from '@features/space/add-user-in-space';
 import { CreateSpaceModal } from '@features/space/create-space';
 import { DeleteSpaceButton } from '@features/space/delete-space';
+import { EditSpaceModal } from '@features/space/edit-space';
 import { EnterSpaceByCodeModal } from '@features/space/enter-space-by-code';
 import { ExitUserButton } from '@features/space/exit-user';
 import { useCopySpaceCode, useRegenerateSpaceCode } from '@features/space/get-space-code';
@@ -52,8 +53,12 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
             items = [
                 {
                     key: '1',
-                    label: 'Изменить пространство',
-                    disabled: true,
+                     label: <EditSpaceModal
+			                    triggerComponent={
+			                        onOpen => <Typography.Text onClick={onOpen}>Изменить пространство</Typography.Text>
+			                    }
+			                    spaceId={record.id}
+			                />,
                 },
                 {
                     key: '2',
