@@ -23,7 +23,7 @@ export const ResetPasswordSubmitForm: FC<Props> = typedMemo(function ResetPasswo
 }) {
     const navigate = useNavigate();
     const { notification } = App.useApp();
-    const { submitId } = useParams<{submitId: string}>();
+    const { token, userId } = useParams<{token: string; userId: string}>();
 
     const { mutate: resetPasswordSubmit } = useResetPasswordSubmit({
         onSuccess: () => {
@@ -35,7 +35,10 @@ export const ResetPasswordSubmitForm: FC<Props> = typedMemo(function ResetPasswo
     });
 
     const handleResetPassword = (values: ResetPasswordSubmit) => {
-        resetPasswordSubmit({ token: submitId ?? '', body: trimAllObjectValues(values) as ResetPasswordSubmit });
+        resetPasswordSubmit({
+            token: token ?? '',
+            body: trimAllObjectValues({ ...values, userId }) as ResetPasswordSubmit,
+        });
     };
 
     const back = useCallback(() => navigate(AuthRouter.SignIn), [navigate]);
