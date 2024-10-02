@@ -8,8 +8,8 @@ import { SignUpPage } from './SignUpPage';
 export const AuthRouter = {
     SignIn: '/signin',
     SignUp: '/signup',
-    ResetPassword: '/reset',
-    ResetPasswordSubmit: (token: string, userId: string) => `/reset/${token}/${userId}`,
+    ResetPassword: '/password/reset',
+    ResetPasswordSubmit: (token: string, userId: string) => `/password/reset/${token}/${userId}`,
 };
 
 export const authRouteConfig: ConfigRouteProps[] = [
@@ -24,13 +24,13 @@ export const authRouteConfig: ConfigRouteProps[] = [
         element: <SignUpPage />,
     },
     {
-        path: AuthRouter.ResetPassword,
-        withNoAuthGuard: true,
-        element: <ResetPasswordPage />,
-    },
-    {
         path: AuthRouter.ResetPasswordSubmit(':token', ':userId'),
         withNoAuthGuard: true,
         element: <ResetPasswordSubmitPage />,
+    },
+    {
+        path: AuthRouter.ResetPassword,
+        withNoAuthGuard: true,
+        element: <ResetPasswordPage />,
     },
 ];

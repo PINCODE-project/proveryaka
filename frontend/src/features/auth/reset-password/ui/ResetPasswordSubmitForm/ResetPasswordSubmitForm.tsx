@@ -58,8 +58,8 @@ export const ResetPasswordSubmitForm: FC<Props> = typedMemo(function ResetPasswo
                 <Typography.Text>
                     Введите новый пароль
                 </Typography.Text>
-                <Form.Item<ResetPassword>
-                    name="email"
+                <Form.Item<ResetPasswordSubmit>
+                    name="password"
                     rules={[
                         { required: true, message: 'Введите пароль' },
                         { min: 4, message: 'Минимум 4 символа' },
