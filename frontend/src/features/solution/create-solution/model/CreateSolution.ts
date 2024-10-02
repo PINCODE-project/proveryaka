@@ -7,11 +7,6 @@ export type CreateSolution = {
     issueId: string;
 
     /**
-     * Команда
-     */
-    teamId: string;
-
-    /**
      * Список решений пользователя на форме
      */
     solutionValueList: Omit<GetSolutionValue, 'id'>[] | null;
