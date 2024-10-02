@@ -73,7 +73,9 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
                     key: '1',
                     label: <EditSpaceModal
 		                triggerComponent={
-		                    onOpen => <Typography.Text onClick={onOpen}>Изменить пространство</Typography.Text>
+		                    onOpen => (<Typography.Text onClick={onOpen} className={styles.menuItem}>
+                                Изменить пространство
+                            </Typography.Text>)
 		                }
 		                spaceId={spaceId ?? ''}
 		            />,
