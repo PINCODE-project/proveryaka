@@ -15,6 +15,10 @@ export const SpaceRouter = {
     SpaceSolutions: (id: string) => `/spaces/${id}/solutions`,
     SpaceUsers: (id: string) => `/spaces/${id}/users`,
     SpaceTeams: (id: string) => `/spaces/${id}/teams`,
+    SpaceSolution: (spaceId: string, solutionId: string) => `/spaces/${spaceId}/solutions/${solutionId}`,
+    SpaceSolutionCommon: (spaceId: string, solutionId: string) => `/spaces/${spaceId}/solutions/${solutionId}/common`,
+    SpaceSolutionMarks: (spaceId: string, solutionId: string) => `/spaces/${spaceId}/solutions/${solutionId}/mark`,
+    SpaceSolutionFeedback: (spaceId: string, solutionId: string) => `/spaces/${spaceId}/solutions/${solutionId}/feedback`,
 };
 
 export const spaceRouteConfig: ConfigRouteProps[] = [
@@ -55,6 +59,33 @@ export const spaceRouteConfig: ConfigRouteProps[] = [
             },
             {
                 path: SpaceRouter.Space(':spaceId'),
+                element: null,
+                withAuthGuard: true,
+            },
+        ],
+    },
+    {
+        path: SpaceRouter.SpaceSolution(':spaceId', ':solutionId'),
+        withAuthGuard: true,
+        element: null,
+        children: [
+            {
+                path: SpaceRouter.SpaceSolutionCommon(':spaceId', ':solutionId'),
+                element: null,
+                withAuthGuard: true,
+            },
+            {
+                path: SpaceRouter.SpaceSolutionMarks(':spaceId', ':solutionId'),
+                element: null,
+                withAuthGuard: true,
+            },
+            {
+                path: SpaceRouter.SpaceSolutionFeedback(':spaceId', ':solutionId'),
+                element: null,
+                withAuthGuard: true,
+            },
+            {
+                path: SpaceRouter.SpaceSolution(':spaceId', ':solutionId'),
                 element: null,
                 withAuthGuard: true,
             },
