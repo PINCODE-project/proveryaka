@@ -24,6 +24,7 @@ import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { ClassNameProps, TestProps } from '@shared/types';
+import { customConfirm } from '@shared/ui';
 
 import styles from './SpaceTeamsPage.module.css';
 
@@ -47,6 +48,24 @@ export const SpaceTeamsPage: FC<Props> = typedMemo(function SpaceTeamsPage({
             queryClient.resetQueries(getSpaceTeamsQueryKey(spaceId ?? ''));
         },
     });
+
+    const handleRemove = useCallback(async (team: GetTeam, user: GetStudentResponse) => {
+        const canDelete = await customConfirm({
+            title: 'Удалить из команды',
+            text: <>Вы уверен, что хотите удалить <b>{user.patronymic} {user.name} {user.surname}</b> из команды?</>,
+        });
+
+        if (!canDelete) {
+            return;
+        }
+
+        removeTeamUser({
+            teamId: team.id,
+            entityId: spaceId ?? '',
+            userId: user.id,
+            teamType: TeamType.Space,
+        });
+    }, [removeTeamUser, spaceId]);
 
     const renderActions = useCallback((_: string, record: GetTeam) => {
         if (!isStudent && !isOrganizer) {
@@ -97,14 +116,7 @@ export const SpaceTeamsPage: FC<Props> = typedMemo(function SpaceTeamsPage({
             return (
                 <DeleteOutlined
                     className={styles.deleteUserFromTeamIcon}
-                    onClick={() => {
-                        removeTeamUser({
-                            teamId: team.id,
-                            entityId: spaceId ?? '',
-                            userId: record.id,
-                            teamType: TeamType.Space,
-                        });
-                    }}
+                    onClick={() => handleRemove(team, record)}
                 />
             );
         }, [removeTeamUser, spaceId]);
