@@ -5,7 +5,7 @@ export type GetCriteriaReview = {
     id: string;
 
     /**
-     * Айди общего ревью
+     * ID общего ревью
      */
     reviewId: string;
 
