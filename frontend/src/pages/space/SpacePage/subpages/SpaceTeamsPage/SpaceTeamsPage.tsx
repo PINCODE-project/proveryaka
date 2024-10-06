@@ -85,18 +85,23 @@ export const SpaceTeamsPage: FC<Props> = typedMemo(function SpaceTeamsPage({
                     )}
                 />,
             },
+            {
+                key: '2',
+                label: 'Добавить участников',
+                disabled: true,
+            },
         ];
 
         if (isStudent) {
             items.push({
-                key: '2',
+                key: '3',
                 label: 'Покинуть команду',
                 disabled: true,
             });
         }
 
         items.push({
-            key: '3',
+            key: '4',
             label: 'Удалить команду',
             disabled: true,
             danger: true,
