@@ -6,6 +6,7 @@ import { Navigate } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/space';
 
+import { AddUserTeamModal } from '@features/team/add-user-team';
 import { CreateTeamModal } from '@features/team/create-team';
 import { EditTeamModal } from '@features/team/edit-team';
 import { useRemoveTeamUser } from '@features/team/remove-team-user';
@@ -87,8 +88,15 @@ export const SpaceTeamsPage: FC<Props> = typedMemo(function SpaceTeamsPage({
             },
             {
                 key: '2',
-                label: 'Добавить участников',
-                disabled: true,
+                label: <AddUserTeamModal
+                    entityId={spaceId ?? ''}
+                    teamId={record.id}
+                    triggerComponent={onOpen => (
+                        <Typography.Text onClick={onOpen} className={styles.menuItem}>
+                            Добавить участников
+                        </Typography.Text>
+                    )}
+                />,
             },
         ];
 

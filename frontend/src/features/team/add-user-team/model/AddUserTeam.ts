@@ -1,8 +1,13 @@
 export type AddUserTeam = {
     /**
-     * Id команды
+     * ID команды
      */
     teamId: string | null;
+
+    /**
+     * ID пространства или задания
+     */
+    entityId: string;
 
     /**
      * Добавленные участники

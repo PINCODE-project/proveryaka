@@ -111,7 +111,7 @@ export const AddUserInSpaceModal: FC<Props> = typedMemo(function AddUserInSpaceM
 
                         <Form.Item className={styles.submitButton}>
                             <Button type="primary" htmlType="submit" block>
-                                Создать
+                                Добавить
                             </Button>
                         </Form.Item>
                     </Flex>
