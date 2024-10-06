@@ -21,9 +21,8 @@ import { EditSpaceModal } from '@features/space/edit-space';
 import { ExitUserButton } from '@features/space/exit-user';
 import { useCopySpaceCode, useRegenerateSpaceCode } from '@features/space/get-space-code';
 
-import { isOrganizer, useGetSpaceSettings } from '@entities/space';
+import { useGetSpaceSettings } from '@entities/space';
 import { useGetSpace } from '@entities/space/lib/useGetSpace';
-import { useGetSpaceRoles } from '@entities/space/lib/useGetSpaceRoles';
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
 import { useSpaceId } from '@shared/hooks/useSpaceId';

@@ -14,11 +14,6 @@ export type GetSolutionForExpert = {
     issueId: string;
 
     /**
-     * Команда
-     */
-    teamId: string;
-
-    /**
      * Сами решения
      */
     solutionValueList: GetSolutionValue[];
@@ -51,4 +46,8 @@ export type GetSolutionForExpert = {
     assessmentDeadlineDateUtc: string;
 
     status?: SolutionStatus;
+
+    authorId: string;
+
+    authorName: string;
 };

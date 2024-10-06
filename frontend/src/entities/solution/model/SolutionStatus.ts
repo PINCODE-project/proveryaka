@@ -1,5 +1,14 @@
 export enum SolutionStatus {
-    InGrade,
-    OverdueGrade,
-    Done,
+    CloseSubmit,
+    OpenSubmit,
+    NotAllChecked,
+    ChecksExpired,
+    AllChecked,
+    SubmitExpired,
+    Submitted,
+    OnCheck,
+    CheckExpired,
+    Checked,
+    NeedCheck,
+    UnknownStatus,
 }
