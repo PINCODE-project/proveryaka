@@ -4,16 +4,17 @@ import { FC, useCallback, useMemo } from 'react';
 
 // Сущность пространства много где зайдествуется
 // eslint-disable-next-line
-import {GetSolutionForExpert} from "@entities/solution/model/GetSolutionForExpert";
-import { GetStudentResponse, StudentTable, useRolesCheck } from '@entities/space';
+import { useNavigate } from 'react-router-dom';
+import { SpaceRouter } from '@pages/space';
 
-import { useListFilters } from '@shared/hooks';
+import { useRolesCheck } from '@entities/space';
+
 import { getDateFromISO, getTimeFromISO, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { EmptyTable } from '@shared/ui';
 
 import { useGetSolutions } from '../../lib/useGetSolutions';
-import { GetSolution } from '../../model/GetSolution';
+import { GetSolutionForExpert } from '../../model/GetSolutionForExpert';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     spaceId: string;
@@ -24,6 +25,7 @@ export const SolutionsTable: FC<Props> = typedMemo(function SolutionsTable({
     spaceId,
     actionRender,
 }) {
+    const navigate = useNavigate();
     const { isOrganizer } = useRolesCheck();
 
     const { data: solutions } = useGetSolutions(spaceId);
@@ -75,11 +77,16 @@ export const SolutionsTable: FC<Props> = typedMemo(function SolutionsTable({
         },
     ], [actionRender, isOrganizer]);
 
+    const onRow = useCallback((record: GetSolutionForExpert) => ({
+        onClick: () => navigate(SpaceRouter.SpaceSolution(spaceId, record.id)),
+    }), [navigate, spaceId]);
+
     if (solutions?.length === 0) {
         return <EmptyTable text="Нет работ" />;
     }
     return (
         <Table
+            onRow={onRow}
             rowKey="id"
             columns={columns}
             dataSource={solutions}
