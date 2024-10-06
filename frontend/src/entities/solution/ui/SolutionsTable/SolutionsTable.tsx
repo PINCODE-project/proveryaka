@@ -1,4 +1,4 @@
-import { Table, TableColumnsType } from 'antd';
+import { Flex, Table, TableColumnsType } from 'antd';
 import { ColumnType } from 'antd/lib/table';
 import { FC, useCallback, useMemo } from 'react';
 
@@ -7,6 +7,7 @@ import { FC, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SpaceRouter } from '@pages/space';
 
+import { SolutionStatusBadge } from '@entities/solution/ui/SolutionStatusBadge';
 import { useRolesCheck } from '@entities/space';
 
 import { getDateFromISO, getTimeFromISO, typedMemo } from '@shared/lib';
@@ -57,9 +58,9 @@ export const SolutionsTable: FC<Props> = typedMemo(function SolutionsTable({
         },
         {
             title: 'Статус',
-            dataIndex: 'marks',
-            key: 'marks',
-            render: (_, record) => `${record.reviewCount}/${record.checksCountMax}`,
+            dataIndex: 'status',
+            key: 'status',
+            render: status => <Flex justify="center"><SolutionStatusBadge status={status} /></Flex>,
         },
         {
             title: 'Оценка',

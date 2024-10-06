@@ -15,7 +15,7 @@ import { SpaceRouter } from '@pages/space';
 
 import { UserPanel } from '@widgets/UserPanel';
 
-import { useGetSolution } from '@entities/solution';
+import { SolutionStatusBadge, useGetSolution } from '@entities/solution';
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
 import { useSolutionId } from '@shared/hooks/useSolutionId';
@@ -107,7 +107,7 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
                             </Typography.Text>
 
                             <Typography.Text>
-                            Статус
+                                <SolutionStatusBadge status={} />
                             </Typography.Text>
                         </Flex>
 
