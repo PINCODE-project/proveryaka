@@ -32,7 +32,7 @@ export const SolutionMarksTable: FC<Props> = typedMemo(function SolutionMarksTab
     actionRender,
     placeholder,
     defaultMarkType = MarkType.Common,
-    canChangeMarkType = false,
+    canChangeMarkType = true,
 }) {
     const { isOrganizer } = useRolesCheck();
 

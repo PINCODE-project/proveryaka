@@ -1,6 +1,7 @@
 import { FC, useCallback } from 'react';
 
 import { SolutionMarksTable, GetReviews } from '@entities/solution';
+import { useRolesCheck } from '@entities/space';
 
 import { useSolutionId } from '@shared/hooks/useSolutionId';
 import { typedMemo } from '@shared/lib';
@@ -10,6 +11,7 @@ export type Props = ClassNameProps & TestProps & Readonly<{}>;
 export const SpaceSolutionMarksPage: FC<Props> = typedMemo(function SpaceSolutionMarksPage({
 
 }) {
+    const { isOrganizer } = useRolesCheck();
     const solutionId = useSolutionId();
     const actionRender = useCallback((_: string, record: GetReviews) => 'Feedback', []);
 
@@ -18,6 +20,7 @@ export const SpaceSolutionMarksPage: FC<Props> = typedMemo(function SpaceSolutio
             solutionId={solutionId ?? ''}
             actionRender={actionRender}
             placeholder="Еще не оценили работу"
+            canChangeMarkType={isOrganizer}
         />
     );
 });
