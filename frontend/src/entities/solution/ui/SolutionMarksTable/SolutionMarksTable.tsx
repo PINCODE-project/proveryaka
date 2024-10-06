@@ -13,26 +13,31 @@ import styles from './SolutionMarksTable.module.css';
 import { useGetStudentSolutionReviews } from '../../lib/useGetStudentSolutionReviews';
 import { CriteriaReview } from '../../model/CriteriaReview';
 import { GetReviews } from '../../model/GetReviews';
-import { GetSolutionReviews } from '../../model/GetSolutionReviews';
 
-export type Props = ClassNameProps & TestProps & Readonly<{
-    solutionId: string;
-    actionRender?: ColumnType<GetReviews>['render'];
-}>;
-
-enum MarkType {
+export enum MarkType {
     Common,
     Criteria
 }
 
+export type Props = ClassNameProps & TestProps & Readonly<{
+    solutionId: string;
+    actionRender?: ColumnType<GetReviews>['render'];
+    placeholder: string;
+    defaultMarkType?: MarkType;
+    canChangeMarkType?: boolean;
+}>;
+
 export const SolutionMarksTable: FC<Props> = typedMemo(function SolutionMarksTable({
     solutionId,
     actionRender,
+    placeholder,
+    defaultMarkType = MarkType.Common,
+    canChangeMarkType = false,
 }) {
     const { isOrganizer } = useRolesCheck();
 
     const { data: solution } = useGetStudentSolutionReviews(solutionId);
-    const [markType, setMarkType] = useState(MarkType.Common);
+    const [markType, setMarkType] = useState(defaultMarkType);
 
     const criteriaMarks = useMemo((): CriteriaReview[] => {
         const criterias: Map<string, number> = new Map();
@@ -122,25 +127,27 @@ export const SolutionMarksTable: FC<Props> = typedMemo(function SolutionMarksTab
     ], []);
 
     if (solution?.reviews?.length === 0) {
-        return <EmptyTable text="Нет оценок" />;
+        return <EmptyTable text={placeholder} />;
     }
 
     return (
         <div>
-            <Flex gap={2}>
-                <div
-                    onClick={() => setMarkType(MarkType.Common)}
-                    className={getModuleClasses(styles, 'tab', { active: markType === MarkType.Common })}
-                >
+            {canChangeMarkType
+                ? <Flex gap={2}>
+                    <div
+                        onClick={() => setMarkType(MarkType.Common)}
+                        className={getModuleClasses(styles, 'tab', { active: markType === MarkType.Common })}
+                    >
                     Общие
-                </div>
-                <div
-                    onClick={() => setMarkType(MarkType.Criteria)}
-                    className={getModuleClasses(styles, 'tab', { active: markType === MarkType.Criteria })}
-                >
+                    </div>
+                    <div
+                        onClick={() => setMarkType(MarkType.Criteria)}
+                        className={getModuleClasses(styles, 'tab', { active: markType === MarkType.Criteria })}
+                    >
                     Критерии
-                </div>
-            </Flex>
+                    </div>
+                </Flex>
+                : null}
 
             {
                 markType === MarkType.Common
