@@ -53,12 +53,14 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
             items = [
                 {
                     key: '1',
-                     label: <EditSpaceModal
-			                    triggerComponent={
-			                        onOpen => <Typography.Text onClick={onOpen}>Изменить пространство</Typography.Text>
-			                    }
-			                    spaceId={record.id}
-			                />,
+                    label: <EditSpaceModal
+                        triggerComponent={
+                            onOpen => (<Typography.Text onClick={onOpen} className={styles.menuItem}>
+                                Изменить пространство
+                            </Typography.Text>)
+                        }
+                        spaceId={record.id}
+                    />,
                 },
                 {
                     key: '2',
@@ -66,7 +68,7 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
                         spaceId={record.id}
                         triggerComponent={onExit => (
                             <Typography.Text onClick={onExit} className={styles.menuItem}>
-                                    Добавить участников
+                                Добавить участников
                             </Typography.Text>
                         )}
                     />,
@@ -90,7 +92,7 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
                 spaceId={record.id}
                 triggerComponent={onExit => (
                     <Typography.Text onClick={onExit} className={styles.menuItem}>
-                            Покинуть пространство
+                        Покинуть пространство
                     </Typography.Text>
                 )}
             />,
