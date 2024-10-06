@@ -1,3 +1,5 @@
+import { SpaceSolutionPage } from '@pages/space/SpaceSolutionPage';
+
 import { ConfigRouteProps } from '@shared/types';
 
 import { SpacePage } from './SpacePage';
@@ -5,6 +7,7 @@ import { SpaceDescription } from './SpacePage/subpages/SpaceDescription';
 import { SpaceSolutionsPage } from './SpacePage/subpages/SpaceSolutionsPage';
 import { SpaceTeamsPage } from './SpacePage/subpages/SpaceTeamsPage';
 import { SpaceUsersPage } from './SpacePage/subpages/SpaceUsersPage';
+import { SpaceSolutionMarksPage } from './SpaceSolutionPage/subpages/SpaceSolutionMarksPage';
 import { SpacesPage } from './SpacesPage';
 
 export const SpaceRouter = {
@@ -67,7 +70,7 @@ export const spaceRouteConfig: ConfigRouteProps[] = [
     {
         path: SpaceRouter.SpaceSolution(':spaceId', ':solutionId'),
         withAuthGuard: true,
-        element: null,
+        element: <SpaceSolutionPage />,
         children: [
             {
                 path: SpaceRouter.SpaceSolutionCommon(':spaceId', ':solutionId'),
@@ -76,7 +79,7 @@ export const spaceRouteConfig: ConfigRouteProps[] = [
             },
             {
                 path: SpaceRouter.SpaceSolutionMarks(':spaceId', ':solutionId'),
-                element: null,
+                element: <SpaceSolutionMarksPage />,
                 withAuthGuard: true,
             },
             {
