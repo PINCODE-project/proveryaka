@@ -10,7 +10,7 @@ type Arguments = {
     body: ResetPasswordSubmit;
 };
 
-export function useResetPasswordSubmit(options?: AxiosUseMutationOptions<void, Arguments>) {
+export function useResetPasswordSubmit(options?: AxiosUseMutationOptions<number, Arguments>) {
     return useMutation(
         (args: Arguments) => resetPasswordSubmit(args.token, args.body),
         options);

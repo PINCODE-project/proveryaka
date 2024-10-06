@@ -26,11 +26,17 @@ export const ResetPasswordSubmitForm: FC<Props> = typedMemo(function ResetPasswo
     const { token, userId } = useParams<{token: string; userId: string}>();
 
     const { mutate: resetPasswordSubmit } = useResetPasswordSubmit({
-        onSuccess: () => {
-            notification.success({
-                message: 'Пароль изменен',
-            });
-            navigate(AuthRouter.SignIn);
+        onSuccess: status => {
+            if (status === 200) {
+                notification.success({
+                    message: 'Пароль изменен',
+                });
+                navigate(AuthRouter.SignIn);
+            } else {
+                notification.error({
+                    message: 'Пароль должен отличаться от предыдущего',
+                });
+            }
         },
     });
 
