@@ -90,6 +90,7 @@ export const SpaceTeamsPage: FC<Props> = typedMemo(function SpaceTeamsPage({
                 key: '2',
                 label: <AddUserTeamModal
                     entityId={spaceId ?? ''}
+                    spaceId={spaceId ?? ''}
                     teamId={record.id}
                     triggerComponent={onOpen => (
                         <Typography.Text onClick={onOpen} className={styles.menuItem}>

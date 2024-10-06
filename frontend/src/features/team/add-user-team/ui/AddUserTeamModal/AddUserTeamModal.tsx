@@ -2,6 +2,7 @@ import { Button, Flex, Form, Modal, notification, Select } from 'antd';
 import { FC, ReactNode, useCallback, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
+import { useGetSpaceStudents } from '@entities/space';
 import { getSpaceTeamsQueryKey } from '@entities/team';
 import { useGetUserAll } from '@entities/user';
 
@@ -16,17 +17,19 @@ export type Props = ClassNameProps & TestProps & Readonly<{
     triggerComponent: (onOpen: () => void) => ReactNode;
     entityId: string;
     teamId: string;
+    spaceId: string;
 }>;
 
 export const AddUserTeamModal: FC<Props> = typedMemo(function AddUserTeamModal({
     triggerComponent,
     teamId,
     entityId,
+    spaceId,
 }) {
     const [notify, contextHolder] = notification.useNotification();
     const queryClient = useQueryClient();
 
-    const { data: users } = useGetUserAll();
+    const { data: users } = useGetSpaceStudents(spaceId);
 
     const [isOpen, setIsOpen] = useState(false);
     const { mutate: add } = useAddUserTeam({
@@ -79,7 +82,7 @@ export const AddUserTeamModal: FC<Props> = typedMemo(function AddUserTeamModal({
                             ]}
                         >
                             <Select mode="multiple" placeholder="Не выбрано">
-                                {users?.userInfoList?.map(user => (
+                                {users?.studentInfoList?.map(user => (
                                     <Select.Option value={user.id} key={user.id}>
                                         {user.surname} {user.name} {user.patronymic}
                                     </Select.Option>
