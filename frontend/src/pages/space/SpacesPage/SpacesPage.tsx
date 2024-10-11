@@ -1,6 +1,9 @@
 import { EllipsisOutlined, UsergroupAddOutlined } from '@ant-design/icons';
 import { App, Button, Dropdown, Flex, MenuProps, Typography } from 'antd';
 import { FC, useCallback, useMemo } from 'react';
+import { Link } from 'react-router-dom';
+
+import { SpaceRouter } from '@pages/space';
 
 import { UserPanel } from '@widgets/UserPanel';
 
@@ -174,7 +177,9 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
             className={getModuleClasses(styles, 'root', null, className)}
         >
             <Flex justify="space-between" gap="middle">
-                <Logo />
+                <Link to={SpaceRouter.Spaces}>
+                    <Logo />
+                </Link>
                 <Typography.Text>
                     <UserPanel />
                 </Typography.Text>

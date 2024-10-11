@@ -1,12 +1,10 @@
-@import url("@shared/styles/normilize.css");
-@import url("@shared/styles/variables.css");
-@import url("@shared/styles/fonts.css");
+@import url("normilize.css");
+@import url("variables.css");
+@import url("fonts.css");
+@import url("antd.css");
 
 * {
-    font-family: 'Inter', sans-serif;
     box-sizing: border-box;
-    font-size: var(--body-font-size);
-    line-height: var(--body-line-height);
 }
 
 a {

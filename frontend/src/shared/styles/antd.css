@@ -1,0 +1,15 @@
+.ant-modal .ant-modal-header {
+    margin-bottom: 20px;
+}
+
+textarea.ant-input {
+    resize: none;
+}
+
+.ant-table-cell {
+    line-height: 18px;
+}
+
+.ant-notification-notice-icon {
+
+}
