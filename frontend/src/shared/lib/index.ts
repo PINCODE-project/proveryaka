@@ -4,6 +4,7 @@ export * from './typedMemo';
 export * from './TokenService';
 export * from './getFileUrl';
 export * from './getFormItemUploadNormFileValue';
+export * from './sortSelectOptionsByLabel';
 
 export * from './axios/replaceIfEmpty';
 export * from './axios/extractData';

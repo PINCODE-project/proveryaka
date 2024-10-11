@@ -9,7 +9,7 @@ import { getSpaceTeamsQueryKey } from '@entities/team/lib/getSpaceTeamsQueryKey'
 import { getSpaceUserTeamsQueryKey } from '@entities/team/lib/getSpaceUserTeamsQueryKey';
 import { useGetCurrentUserInfo } from '@entities/user';
 
-import { typedMemo } from '@shared/lib';
+import { sortSelectOptionsByLabel, typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { ClassNameProps, TestProps } from '@shared/types';
 
@@ -92,7 +92,7 @@ export const CreateTeamModal: FC<Props> = typedMemo(function CreateTeamModal({
                             label="Участники"
                             name="userProfileIdList"
                         >
-                            <Select mode="multiple" placeholder="Не выбрано">
+                            <Select mode="multiple" placeholder="Не выбрано" filterOption={sortSelectOptionsByLabel}>
                                 {students.map(student => (
                                     <Select.Option value={student.id} key={student.id}>
                                         {student.surname} {student.name} {student.patronymic}

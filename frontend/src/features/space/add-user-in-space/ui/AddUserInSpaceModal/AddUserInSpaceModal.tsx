@@ -11,7 +11,7 @@ import {
 import { SpaceRoleType } from '@entities/space/model/SpaceRoleType';
 import { useGetUserAll } from '@entities/user';
 
-import { typedMemo } from '@shared/lib';
+import { sortSelectOptionsByLabel, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 
 import styles from './AddUserInSpaceModal.module.css';
@@ -84,7 +84,11 @@ export const AddUserInSpaceModal: FC<Props> = typedMemo(function AddUserInSpaceM
                                     { required: true, message: 'Выберите пользователей' },
                                 ]}
                             >
-                                <Select mode="multiple" placeholder="Не выбрано">
+                                <Select
+                                    mode="multiple"
+                                    placeholder="Не выбрано"
+                                    filterOption={sortSelectOptionsByLabel}
+                                >
                                     {users?.userInfoList?.map(user => (
                                         <Select.Option value={user.id}>
                                             {user.surname} {user.name} {user.patronymic}
@@ -101,7 +105,7 @@ export const AddUserInSpaceModal: FC<Props> = typedMemo(function AddUserInSpaceM
                                     { required: true, message: 'Выберите роль' },
                                 ]}
                             >
-                                <Select placeholder="Не выбрано">
+                                <Select placeholder="Не выбрано" >
                                     <Select.Option value={SpaceRoleType.Student}>Студент</Select.Option>
                                     <Select.Option value={SpaceRoleType.Expert}>Эксперт</Select.Option>
                                     <Select.Option value={SpaceRoleType.Organizer}>Организатор</Select.Option>

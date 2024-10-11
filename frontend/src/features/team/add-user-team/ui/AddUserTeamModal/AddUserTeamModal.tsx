@@ -6,7 +6,7 @@ import { useGetSpaceStudents } from '@entities/space';
 import { getSpaceTeamsQueryKey } from '@entities/team';
 import { useGetUserAll } from '@entities/user';
 
-import { typedMemo } from '@shared/lib';
+import { sortSelectOptionsByLabel, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 
 import styles from './AddUserTeamModal.module.css';
@@ -81,7 +81,7 @@ export const AddUserTeamModal: FC<Props> = typedMemo(function AddUserTeamModal({
                                 { required: true, message: 'Выберите пользователей' },
                             ]}
                         >
-                            <Select mode="multiple" placeholder="Не выбрано">
+                            <Select mode="multiple" placeholder="Не выбрано" filterOption={sortSelectOptionsByLabel}>
                                 {users?.studentInfoList?.map(user => (
                                     <Select.Option value={user.id} key={user.id}>
                                         {user.surname} {user.name} {user.patronymic}
