@@ -107,7 +107,7 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
                             </Typography.Text>
 
                             <Typography.Text>
-                                <SolutionStatusBadge status={} />
+                                Статус
                             </Typography.Text>
                         </Flex>
 
