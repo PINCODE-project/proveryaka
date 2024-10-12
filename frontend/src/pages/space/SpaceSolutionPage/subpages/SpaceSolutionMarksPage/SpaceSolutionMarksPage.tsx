@@ -19,7 +19,7 @@ export const SpaceSolutionMarksPage: FC<Props> = typedMemo(function SpaceSolutio
         <SolutionMarksTable
             solutionId={solutionId ?? ''}
             actionRender={actionRender}
-            placeholder="Еще не оценили работу"
+            placeholder="Вы еще не оценили работу"
             canChangeMarkType={isOrganizer}
         />
     );
