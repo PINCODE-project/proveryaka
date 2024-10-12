@@ -1,0 +1,19 @@
+.comment {
+    white-space: pre-wrap;
+}
+
+.tab {
+    padding: 9px 16px;
+    font-size: 14px;
+    line-height: 22px;
+    color: rgba(0, 0, 0, 0.35);
+    background-color: rgba(0, 0, 0, 0.02);
+    border: 1px solid #F0F0F0;
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+}
+
+.tab.active {
+    color: #0D9E47;
+    font-weight: var(--font-weight-semibold);
+}
