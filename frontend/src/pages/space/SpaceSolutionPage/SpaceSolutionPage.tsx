@@ -16,6 +16,7 @@ import { SpaceRouter } from '@pages/space';
 import { UserPanel } from '@widgets/UserPanel';
 
 import { SolutionStatusBadge, useGetSolution } from '@entities/solution';
+import { useGetOrganizerSolution } from '@entities/solution/lib/useGetOrganizerSolution';
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
 import { useSolutionId } from '@shared/hooks/useSolutionId';
@@ -39,7 +40,9 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
     const solutionId = useSolutionId();
 
     const { isOrganizer } = useRolesCheck();
-    const { data: solution } = useGetSolution(solutionId ?? '');
+    const { data: reviewerSolution } = useGetSolution(solutionId ?? '', { enabled: !isOrganizer });
+    const { data: organizerSolution } = useGetOrganizerSolution(solutionId ?? '', { enabled: isOrganizer });
+    const solution = useMemo(() => isOrganizer ? organizerSolution : reviewerSolution, [isOrganizer, organizerSolution, reviewerSolution]);
 
     const items: MenuProps['items'] = useMemo(() => [
         {

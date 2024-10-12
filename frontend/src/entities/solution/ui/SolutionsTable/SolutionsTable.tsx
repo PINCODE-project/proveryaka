@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { SpaceRouter } from '@pages/space';
 
 import { SolutionStatusBadge } from '@entities/solution/ui/SolutionStatusBadge';
+import { useGetIssueSolutions } from '@entities/solution/lib/useGetIssueSolutions';
 import { useRolesCheck } from '@entities/space';
 
 import { getDateFromISO, getTimeFromISO, typedMemo } from '@shared/lib';
@@ -29,7 +30,9 @@ export const SolutionsTable: FC<Props> = typedMemo(function SolutionsTable({
     const navigate = useNavigate();
     const { isOrganizer } = useRolesCheck();
 
-    const { data: solutions } = useGetSolutions(spaceId);
+    const { data: organizationSolutions } = useGetIssueSolutions(spaceId, undefined, { enabled: isOrganizer });
+    const { data: reviewerSolutions } = useGetSolutions(spaceId, undefined, { enabled: !isOrganizer });
+    const solutions = useMemo(() => isOrganizer ? organizationSolutions : reviewerSolutions, [organizationSolutions, reviewerSolutions, isOrganizer]);
 
     const columns = useMemo<TableColumnsType<GetSolutionForExpert>>(() => [
         {
