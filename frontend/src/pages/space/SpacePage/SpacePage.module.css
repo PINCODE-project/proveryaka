@@ -1,7 +1,14 @@
 .root {
     width: 100%;
+    min-height: 100vh;
     height: 100%;
     flex: 1;
+}
+
+.sidebar {
+    position: sticky;
+    height: 100vh;
+    top: 0;
 }
 
 .menuItem {

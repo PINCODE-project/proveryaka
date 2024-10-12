@@ -73,7 +73,7 @@ export const Confirm: FC<Props> = typedMemo(function Confirm({
     }, [acceptButtonRef]);
 
     return (
-        <Flex className={styles.wrapper} align="center" justify="center">
+        <Flex className={styles.wrapper} justify="center" align="start">
             <Flex
                 className={getModuleClasses(styles, 'confirm', null, className)}
                 vertical

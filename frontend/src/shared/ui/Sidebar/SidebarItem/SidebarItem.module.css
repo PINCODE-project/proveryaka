@@ -24,4 +24,5 @@
 .navItem.isActive .navText,
 .navItem:hover .navText {
     color: var( --primary-color);
+    font-weight: var(--font-weight-medium);
 }

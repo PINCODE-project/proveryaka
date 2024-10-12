@@ -152,7 +152,7 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
             className={getModuleClasses(styles, 'root', null, className)}
             data-testid={dataTestId}
         >
-            <Sidebar>
+            <Sidebar className={styles.sidebar}>
                 <SidebarItem
                     to={SpaceRouter.SpaceDescription(spaceId)}
                     text="Описание"
