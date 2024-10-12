@@ -55,7 +55,7 @@ export const EnterSpaceByCodeModal: FC<Props> = typedMemo(function EnterSpaceByC
                         name="code"
                         rules={[{ required: true, message: 'Введите код' }]}
                     >
-                        <Input />
+                        <Input placeholder="XXXXXXXX" />
                     </Form.Item>
 
                     <Form.Item className={getModuleClasses(styles, 'formItem')}>
