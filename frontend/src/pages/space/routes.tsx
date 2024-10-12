@@ -1,3 +1,5 @@
+import { SpaceSolutionPage } from '@pages/space/SpaceSolutionPage';
+
 import { ConfigRouteProps } from '@shared/types';
 
 import { SpacePage } from './SpacePage';
@@ -67,7 +69,7 @@ export const spaceRouteConfig: ConfigRouteProps[] = [
     {
         path: SpaceRouter.SpaceSolution(':spaceId', ':solutionId'),
         withAuthGuard: true,
-        element: null,
+        element: <SpaceSolutionPage />,
         children: [
             {
                 path: SpaceRouter.SpaceSolutionCommon(':spaceId', ':solutionId'),
