@@ -80,7 +80,7 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
                 />
                 <SidebarItem
                     to={SpaceRouter.SpaceSolutionFeedback(spaceId, solutionId)}
-                    text="Работы"
+                    text="Обратная связь"
                     icon={className => <CommentOutlined className={className} />}
                 />
             </Sidebar>
