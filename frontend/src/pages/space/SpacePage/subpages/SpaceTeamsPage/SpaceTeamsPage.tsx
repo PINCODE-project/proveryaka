@@ -148,6 +148,7 @@ export const SpaceTeamsPage: FC<Props> = typedMemo(function SpaceTeamsPage({
             </Flex>
 
             <TeamsTable
+                placeholder={isOrganizer ? 'В пространстве нет команд' : 'Вы не состоите в команде'}
                 spaceId={spaceId}
                 actionRender={renderActions}
                 renderStudentActions={isOrganizer ? renderStudentActions : undefined}

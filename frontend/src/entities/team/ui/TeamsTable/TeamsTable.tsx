@@ -21,6 +21,7 @@ import { TeamType } from '../../model/TeamType';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     spaceId: string;
+    placeholder?: string;
     actionRender?: ColumnType<GetTeam>['render'];
     renderStudentActions?: (team: GetTeam) => ColumnType<GetStudentResponse>['render'];
 }>;
@@ -29,6 +30,7 @@ export const TeamsTable: FC<Props> = typedMemo(function TeamsTable({
     spaceId,
     renderStudentActions,
     actionRender,
+    placeholder = 'В пространстве нет команд',
 }) {
     const { isStudent } = useRolesCheck();
 
@@ -75,7 +77,7 @@ export const TeamsTable: FC<Props> = typedMemo(function TeamsTable({
     }, [renderStudentActions]);
 
     if (teams.length === 0) {
-        return <EmptyTable text="В вашем пространстве нет команд" />;
+        return <EmptyTable text={placeholder} />;
     }
     return (
         <Table
