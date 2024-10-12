@@ -152,10 +152,12 @@ export const SolutionMarksTable: FC<Props> = typedMemo(function SolutionMarksTab
             {
                 markType === MarkType.Common
                     ? <Table
+                        pagination={false}
                         columns={commonColumns}
                         dataSource={solution?.reviews}
                     />
                     : <Table
+                        pagination={false}
                         columns={criteriaColumns}
                         dataSource={criteriaMarks}
                     />

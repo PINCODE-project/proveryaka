@@ -7,6 +7,10 @@
     font-size: 14px;
     line-height: 22px;
     color: rgba(0, 0, 0, 0.35);
+    background-color: rgba(0, 0, 0, 0.02);
+    border: 1px solid #F0F0F0;
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
 }
 
 .tab.active {
