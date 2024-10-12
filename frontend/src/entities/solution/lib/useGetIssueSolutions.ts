@@ -1,11 +1,10 @@
 import { useQuery } from 'react-query';
 
-import { getAllIssueSolution } from '@entities/solution/api/getAllIssueSolution';
-import { getSolutions } from '@entities/solution/api/getSolutions';
-import { GetSolutionForExpert } from '@entities/solution/model/GetSolutionForExpert';
+import { AxiosUseQueryOptions, ListFilters } from '@shared/types';
 
-import { AxiosUseMutationOptions, AxiosUseQueryOptions, ListFilters } from '@shared/types';
+import { getAllIssueSolutions } from '../api/getAllIssueSolutions';
+import { GetSolutionForExpert } from '../model/GetSolutionForExpert';
 
-export function useGetIssueSolutions(issueId: string, filters?: ListFilters, options?: AxiosUseQueryOptions<GetSolutionForExpert[]>) {
-    return useQuery(['issue-solutions/get', filters], () => getAllIssueSolution(issueId, filters), options);
+export function useGetIssueSolutions(spaceId: string, filters?: ListFilters, options?: AxiosUseQueryOptions<GetSolutionForExpert[]>) {
+    return useQuery(['issue-solutions/get', filters], () => getAllIssueSolutions(spaceId, filters), options);
 }
