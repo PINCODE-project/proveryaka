@@ -1,0 +1,13 @@
+.text {
+    max-width: 600px;
+}
+
+.taskTitle {
+    font-weight: var(--font-weight-medium);
+}
+
+.taskIcon svg {
+    width: 18px;
+    height: 18px;
+    fill: #0D9E47;
+}

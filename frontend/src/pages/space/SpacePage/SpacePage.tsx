@@ -8,7 +8,7 @@ import {
     InfoCircleOutlined,
 } from '@ant-design/icons';
 import { App, Dropdown, Flex, MenuProps, Typography } from 'antd';
-import { FC, useMemo } from 'react';
+import { FC, Suspense, useMemo } from 'react';
 import { Link, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/space';
@@ -29,7 +29,7 @@ import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { Avatar, Sidebar, SidebarItem } from '@shared/ui';
+import { Avatar, Fallback, Sidebar, SidebarItem } from '@shared/ui';
 
 import styles from './SpacePage.module.css';
 
@@ -49,16 +49,18 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
     const { data: spaceSettings } = useGetSpaceSettings(spaceId ?? '');
 
     const { mutate: copyCode } = useCopySpaceCode({
-        onSuccess: () => {
+        onSuccess: (_, context) => {
             notification.success({
-                message: 'Пригласительный код скопирован',
+                message: 'Скопировать код',
+                description: <>Код пространства <b>{context.name}</b> скопирован</>,
             });
         },
     });
     const { mutate: regenerateCode } = useRegenerateSpaceCode({
-        onSuccess: () => {
+        onSuccess: (_, context) => {
             notification.success({
-                message: 'Пригласительный код изменен',
+                message: 'Перегенерировать код',
+                description: <>Код пространства <b>{context.name}</b> изменен</>,
             });
         },
     });
@@ -93,12 +95,12 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
                 {
                     key: '3',
                     label: 'Скопировать код',
-                    onClick: () => copyCode(spaceId ?? ''),
+                    onClick: () => copyCode({ id: spaceId ?? '', name: space?.name ?? '' }),
                 },
                 {
                     key: '4',
                     label: 'Перегенерировать код',
-                    onClick: () => regenerateCode(spaceId ?? ''),
+                    onClick: () => regenerateCode({ id: spaceId ?? '', name: space?.name ?? '' }),
                 },
             ];
         }
@@ -213,7 +215,10 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
                         <EllipsisOutlined className={getModuleClasses(styles, 'settingsIcon')} />
                     </Dropdown>
                 </Flex>
-                <Outlet />
+
+                <Suspense fallback={<Fallback />}>
+                    <Outlet />
+                </Suspense>
             </Flex>
         </Flex>
     );

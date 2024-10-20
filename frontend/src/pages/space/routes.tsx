@@ -1,5 +1,7 @@
 import { SpaceIssuePage } from '@pages/space/SpaceIssuePage';
+import { SpaceIssueDescription } from '@pages/space/SpaceIssuePage/subpages/SpaceIssueDescription';
 import { SpaceIssueMarks } from '@pages/space/SpaceIssuePage/subpages/SpaceIssueMarks';
+import { SpaceIssueCriteria } from '@pages/space/SpaceIssuePage/subpages/SpaceIssueCriteria';
 import { SpaceSolutionPage } from '@pages/space/SpaceSolutionPage';
 
 import { ConfigRouteProps } from '@shared/types';
@@ -109,7 +111,7 @@ export const spaceRouteConfig: ConfigRouteProps[] = [
         children: [
             {
                 path: SpaceRouter.SpaceIssueDescription(':spaceId', ':issueId'),
-                element: null,
+                element: <SpaceIssueDescription />,
                 withAuthGuard: true,
             },
             {
@@ -119,7 +121,7 @@ export const spaceRouteConfig: ConfigRouteProps[] = [
             },
             {
                 path: SpaceRouter.SpaceIssueCriteria(':spaceId', ':issueId'),
-                element: null,
+                element: <SpaceIssueCriteria />,
                 withAuthGuard: true,
             },
             {

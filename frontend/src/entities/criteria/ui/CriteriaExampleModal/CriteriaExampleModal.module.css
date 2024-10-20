@@ -1,0 +1,5 @@
+.title {
+    font-weight: var(--font-weight-semibold);
+    font-size: 15px;
+    line-height: 22px;
+}

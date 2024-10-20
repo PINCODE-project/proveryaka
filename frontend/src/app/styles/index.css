@@ -9,7 +9,6 @@ body {
 }
 
 #root {
-    max-width: 1180px;
     flex: 1;
     width: 100%;
     display: flex;
