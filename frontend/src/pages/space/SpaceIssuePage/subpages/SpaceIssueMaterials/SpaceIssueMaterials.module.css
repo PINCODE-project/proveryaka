@@ -1,0 +1,13 @@
+.root {
+    max-width: 600px;
+    padding-bottom: 40px;
+}
+
+.name {
+    font-weight: var(--font-weight-semibold);
+    font-size: 15px;
+}
+
+.text {
+    white-space: pre-wrap;
+}
