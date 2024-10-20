@@ -1,4 +1,5 @@
-import { Flex, Typography } from 'antd';
+import { SelectOutlined } from '@ant-design/icons';
+import { Button, Flex, Typography } from 'antd';
 import { FC } from 'react';
 
 import { useGetIssueMaterials, IssueMaterialType } from '@entities/issue';
@@ -24,16 +25,24 @@ export const SpaceIssueMaterials: FC<Props> = typedMemo(function SpaceIssueMater
                 >
                     <Flex vertical gap={12}>
                         <Typography className={styles.name}>{material.name}</Typography>
-                        <Typography className={styles.text}>{material.description}</Typography>
+                        <Typography className={styles.description}>{material.description}</Typography>
                     </Flex>
 
-                    {material.type === IssueMaterialType.Text
-                        ? <Typography className={styles.text}>{material.text}</Typography>
-                        : material.type === IssueMaterialType.File
-                            ? material.fileId && <MaterialFile fileId={material.fileId} />
-                            : <Typography.Link href={material.text ?? ''}>
-                                {material.text}
-                            </Typography.Link>}
+                    {material.type === IssueMaterialType.Text &&
+                        <Typography className={styles.text}>
+                            {material.text}
+                        </Typography>}
+
+                    {material.type === IssueMaterialType.File && material.fileId
+                        ? <MaterialFile fileId={material.fileId} />
+                        : null}
+
+                    {material.type === IssueMaterialType.Link &&
+                        <Typography.Link href={material.text ?? ''}>
+                            <Button type="default" icon={<SelectOutlined />}>
+                                Смотреть материал
+                            </Button>
+                        </Typography.Link> }
                 </Flex>
             ))}
         </Flex>
