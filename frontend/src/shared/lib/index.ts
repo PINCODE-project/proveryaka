@@ -6,6 +6,7 @@ export * from './getFileUrl';
 export * from './getFormItemUploadNormFileValue';
 export * from './sortSelectOptionsByLabel';
 export * from './getModuleClasses';
+export * from './downloadFileByUrl';
 
 export * from './axios/replaceIfEmpty';
 export * from './axios/extractData';

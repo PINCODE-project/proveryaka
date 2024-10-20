@@ -1,16 +1,16 @@
-import { SpaceIssuePage } from '@pages/space/SpaceIssuePage';
-import { SpaceIssueDescription } from '@pages/space/SpaceIssuePage/subpages/SpaceIssueDescription';
-import { SpaceIssueMarks } from '@pages/space/SpaceIssuePage/subpages/SpaceIssueMarks';
-import { SpaceIssueCriteria } from '@pages/space/SpaceIssuePage/subpages/SpaceIssueCriteria';
-import { SpaceSolutionPage } from '@pages/space/SpaceSolutionPage';
-
 import { ConfigRouteProps } from '@shared/types';
 
+import { SpaceIssuePage } from './SpaceIssuePage';
+import { SpaceIssueCriteria } from './SpaceIssuePage/subpages/SpaceIssueCriteria';
+import { SpaceIssueDescription } from './SpaceIssuePage/subpages/SpaceIssueDescription';
+import { SpaceIssueMarks } from './SpaceIssuePage/subpages/SpaceIssueMarks';
+import { SpaceIssueMaterials } from './SpaceIssuePage/subpages/SpaceIssueMaterials';
 import { SpacePage } from './SpacePage';
 import { SpaceDescription } from './SpacePage/subpages/SpaceDescription';
 import { SpaceSolutionsPage } from './SpacePage/subpages/SpaceSolutionsPage';
 import { SpaceTeamsPage } from './SpacePage/subpages/SpaceTeamsPage';
 import { SpaceUsersPage } from './SpacePage/subpages/SpaceUsersPage';
+import { SpaceSolutionPage } from './SpaceSolutionPage';
 import { SpaceSolutionMarksPage } from './SpaceSolutionPage/subpages/SpaceSolutionMarksPage';
 import { SpacesPage } from './SpacesPage';
 
@@ -116,7 +116,7 @@ export const spaceRouteConfig: ConfigRouteProps[] = [
             },
             {
                 path: SpaceRouter.SpaceIssueMaterials(':spaceId', ':issueId'),
-                element: null,
+                element: <SpaceIssueMaterials />,
                 withAuthGuard: true,
             },
             {
