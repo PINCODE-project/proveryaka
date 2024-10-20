@@ -1,5 +1,5 @@
 import { EllipsisOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Dropdown, Flex, MenuProps, Spin, Typography } from 'antd';
+import { Button, Dropdown, Flex, MenuProps, Typography } from 'antd';
 import { FC, Suspense, useCallback } from 'react';
 
 import { AddUserInSpaceModal } from '@features/space/add-user-in-space';
@@ -13,7 +13,6 @@ import {
     StudentTable,
     useGetSpaceExperts,
     useGetSpaceOrganizers,
-    useGetSpaceRoles,
     useGetSpaceStudents,
 } from '@entities/space';
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
@@ -24,6 +23,7 @@ import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { ClassNameProps, TestProps } from '@shared/types';
+import { Fallback } from '@shared/ui';
 
 import styles from './SpaceUsersPage.module.css';
 import { UsersCollapse } from './UsersCollapse';
@@ -109,7 +109,7 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
                 users={organizers?.organizerInfoList ?? []}
                 usersName="Организаторы"
                 content={users => (
-                    <Suspense fallback={<Spin />}>
+                    <Suspense fallback={<Fallback />}>
                         <OrganizerTable
                             renderActions={renderActions(SpaceRoleType.Organizer)}
                             organizers={users}
@@ -122,7 +122,7 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
                 users={experts?.expertsInfoList ?? []}
                 usersName="Эксперты"
                 content={users => (
-                    <Suspense fallback={<Spin />}>
+                    <Suspense fallback={<Fallback />}>
                         <OrganizerTable
                             renderActions={renderActions(SpaceRoleType.Expert)}
                             organizers={users}
@@ -135,7 +135,7 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
                 users={students?.studentInfoList ?? []}
                 usersName="Студенты"
                 content={users => (
-                    <Suspense fallback={<Spin />}>
+                    <Suspense fallback={<Fallback />}>
                         <StudentTable
                             renderActions={renderActions(SpaceRoleType.Student)}
                             students={users}

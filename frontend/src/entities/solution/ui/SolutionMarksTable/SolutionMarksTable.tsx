@@ -106,7 +106,7 @@ export const SolutionMarksTable: FC<Props> = typedMemo(function SolutionMarksTab
             dataIndex: 'name',
             key: 'name',
             onCell: record => ({
-                rowSpan: record.count,
+                rowSpan: record.count ?? 0,
             }),
         },
         {
