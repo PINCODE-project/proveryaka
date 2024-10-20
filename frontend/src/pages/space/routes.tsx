@@ -3,6 +3,7 @@ import { ConfigRouteProps } from '@shared/types';
 import { SpaceIssuePage } from './SpaceIssuePage';
 import { SpaceIssueCriteria } from './SpaceIssuePage/subpages/SpaceIssueCriteria';
 import { SpaceIssueDescription } from './SpaceIssuePage/subpages/SpaceIssueDescription';
+import { SpaceIssueMarks } from './SpaceIssuePage/subpages/SpaceIssueMarks';
 import { SpaceIssueMaterials } from './SpaceIssuePage/subpages/SpaceIssueMaterials';
 import { SpacePage } from './SpacePage';
 import { SpaceDescription } from './SpacePage/subpages/SpaceDescription';
