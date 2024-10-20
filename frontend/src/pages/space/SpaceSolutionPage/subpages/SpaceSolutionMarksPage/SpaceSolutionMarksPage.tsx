@@ -25,18 +25,16 @@ export const SpaceSolutionMarksPage: FC<Props> = typedMemo(function SpaceSolutio
     return (
         <Flex vertical gap={32}>
             {
-                isOrganizer
-                    ? null
-                    : <Flex vertical gap={24}>
-                        <Flex gap={4}>
-                            <Typography className={styles.title}>Итоговая оценка:</Typography>
-                            <Typography className={styles.mark}>{solution?.reviews[0]?.mark ?? '-'}/100</Typography>
-                        </Flex>
-                        <Flex vertical gap={8}>
-                            <Typography className={styles.title}>Общий комментарий:</Typography>
-                            <Typography>{solution?.reviews[0]?.comment ?? '-'}</Typography>
-                        </Flex>
+                !isOrganizer && <Flex vertical gap={24}>
+                    <Flex gap={4}>
+                        <Typography className={styles.title}>Итоговая оценка:</Typography>
+                        <Typography className={styles.mark}>{solution?.reviews[0]?.mark ?? '-'}/100</Typography>
                     </Flex>
+                    <Flex vertical gap={8}>
+                        <Typography className={styles.title}>Общий комментарий:</Typography>
+                        <Typography>{solution?.reviews[0]?.comment ?? '-'}</Typography>
+                    </Flex>
+                </Flex>
             }
             <SolutionMarksTable
                 solutionId={solutionId ?? ''}
