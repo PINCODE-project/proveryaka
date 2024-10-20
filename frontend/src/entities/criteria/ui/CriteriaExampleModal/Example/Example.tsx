@@ -19,11 +19,16 @@ export const Example: FC<Props> = typedMemo(function Example({
     const fileUrl = useMemo(() => file ? URL.createObjectURL(file) : null, [file]);
 
     return (
-        <Flex gap={24}>
+        <Flex gap={24} vertical>
             {fileUrl ? <img src={fileUrl} className={styles.image} alt={example.textValue ?? ''} /> : null}
             {example.textValue
                 ? <Typography>
                     {example.textValue}
+                </Typography>
+                : null}
+            {example.description
+                ? <Typography>
+                    {example.description}
                 </Typography>
                 : null}
         </Flex>
