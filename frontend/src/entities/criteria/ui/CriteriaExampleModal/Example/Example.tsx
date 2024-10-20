@@ -22,12 +22,12 @@ export const Example: FC<Props> = typedMemo(function Example({
         <Flex gap={24} vertical>
             {fileUrl ? <img src={fileUrl} className={styles.image} alt={example.textValue ?? ''} /> : null}
             {example.textValue
-                ? <Typography>
+                ? <Typography className={styles.text}>
                     {example.textValue}
                 </Typography>
                 : null}
             {example.description
-                ? <Typography>
+                ? <Typography className={styles.text}>
                     {example.description}
                 </Typography>
                 : null}
