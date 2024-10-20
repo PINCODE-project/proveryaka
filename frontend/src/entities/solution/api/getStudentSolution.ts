@@ -4,6 +4,6 @@ import { solutionHttp } from '@shared/config/axios';
 import { extractData } from '@shared/lib';
 
 export function getStudentSolution(solutionId: string): Promise<GetSolution> {
-    return solutionHttp.get<GetSolution>(`student/studentsolution/${solutionId}`)
+    return solutionHttp.get<GetSolution>(`student/solution/${solutionId}`)
         .then(extractData);
 }
