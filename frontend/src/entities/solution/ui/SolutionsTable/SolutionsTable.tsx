@@ -66,7 +66,7 @@ export const SolutionsTable: FC<Props> = typedMemo(function SolutionsTable({
             dataIndex: 'status',
             key: 'status',
             align: 'center',
-            render: status => <div className={styles.status}><StatusBadge status={status} /></div>,
+            render: status => <div className={styles.status}><StatusBadge status={status} type="solution" /></div>,
         },
         {
             title: 'Оценка',
