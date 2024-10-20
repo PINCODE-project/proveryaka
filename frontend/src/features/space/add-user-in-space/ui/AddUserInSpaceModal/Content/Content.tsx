@@ -1,4 +1,4 @@
-import { Button, Flex, Form, notification, Select } from 'antd';
+import { App, Button, Flex, Form, Select } from 'antd';
 import { FC, useCallback } from 'react';
 import { useQueryClient } from 'react-query';
 
@@ -23,7 +23,7 @@ export const Content: FC<Props> = typedMemo(function Content({
     spaceId,
     onClose,
 }) {
-    const [notify, contextHolder] = notification.useNotification();
+    const { notification } = App.useApp();
     const queryClient = useQueryClient();
 
     const { data: users } = useGetUserAll();
@@ -32,7 +32,7 @@ export const Content: FC<Props> = typedMemo(function Content({
             queryClient.resetQueries(getSpaceStudentsQueryKey(spaceId));
             queryClient.resetQueries(getSpaceExpertsQueryKey(spaceId));
             queryClient.resetQueries(getSpaceOrganizerQueryKey(spaceId));
-            notify.success({
+            notification.success({
                 message: 'Пользователи добавлены в пространство',
             });
             onClose();
