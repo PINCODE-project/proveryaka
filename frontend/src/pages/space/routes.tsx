@@ -1,4 +1,5 @@
 import { SpaceIssuePage } from '@pages/space/SpaceIssuePage';
+import { SpaceIssueCriteria } from '@pages/space/SpaceIssuePage/subpages/SpaceIssueCriteria';
 import { SpaceSolutionPage } from '@pages/space/SpaceSolutionPage';
 
 import { ConfigRouteProps } from '@shared/types';
@@ -117,7 +118,7 @@ export const spaceRouteConfig: ConfigRouteProps[] = [
             },
             {
                 path: SpaceRouter.SpaceIssueCriteria(':spaceId', ':issueId'),
-                element: null,
+                element: <SpaceIssueCriteria />,
                 withAuthGuard: true,
             },
             {
