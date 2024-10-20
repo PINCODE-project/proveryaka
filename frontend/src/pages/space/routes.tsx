@@ -1,3 +1,4 @@
+import { SpaceIssuePage } from '@pages/space/SpaceIssuePage';
 import { SpaceSolutionPage } from '@pages/space/SpaceSolutionPage';
 
 import { ConfigRouteProps } from '@shared/types';
@@ -22,6 +23,11 @@ export const SpaceRouter = {
     SpaceSolutionCommon: (spaceId: string, solutionId: string) => `/spaces/${spaceId}/solutions/${solutionId}/common`,
     SpaceSolutionMarks: (spaceId: string, solutionId: string) => `/spaces/${spaceId}/solutions/${solutionId}/mark`,
     SpaceSolutionFeedback: (spaceId: string, solutionId: string) => `/spaces/${spaceId}/solutions/${solutionId}/feedback`,
+    SpaceIssue: (spaceId: string, issueId: string) => `/spaces/${spaceId}/tasks/${issueId}`,
+    SpaceIssueDescription: (spaceId: string, issueId: string) => `/spaces/${spaceId}/tasks/${issueId}/description`,
+    SpaceIssueMaterials: (spaceId: string, issueId: string) => `/spaces/${spaceId}/tasks/${issueId}/materials`,
+    SpaceIssueCriteria: (spaceId: string, issueId: string) => `/spaces/${spaceId}/tasks/${issueId}/criteria`,
+    SpaceIssueForm: (spaceId: string, issueId: string) => `/spaces/${spaceId}/tasks/${issueId}/form`,
 };
 
 export const spaceRouteConfig: ConfigRouteProps[] = [
@@ -89,6 +95,38 @@ export const spaceRouteConfig: ConfigRouteProps[] = [
             },
             {
                 path: SpaceRouter.SpaceSolution(':spaceId', ':solutionId'),
+                element: null,
+                withAuthGuard: true,
+            },
+        ],
+    },
+    {
+        path: SpaceRouter.SpaceIssue(':spaceId', ':issueId'),
+        element: <SpaceIssuePage />,
+        withAuthGuard: true,
+        children: [
+            {
+                path: SpaceRouter.SpaceIssueDescription(':spaceId', ':issueId'),
+                element: null,
+                withAuthGuard: true,
+            },
+            {
+                path: SpaceRouter.SpaceIssueMaterials(':spaceId', ':issueId'),
+                element: null,
+                withAuthGuard: true,
+            },
+            {
+                path: SpaceRouter.SpaceIssueCriteria(':spaceId', ':issueId'),
+                element: null,
+                withAuthGuard: true,
+            },
+            {
+                path: SpaceRouter.SpaceIssueForm(':spaceId', ':issueId'),
+                element: null,
+                withAuthGuard: true,
+            },
+            {
+                path: SpaceRouter.SpaceIssue(':spaceId', ':issueId'),
                 element: null,
                 withAuthGuard: true,
             },
