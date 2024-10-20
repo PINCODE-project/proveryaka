@@ -1,9 +1,10 @@
 import {
-    FileTextOutlined,
-    FileDoneOutlined,
-    CommentOutlined,
+    InfoCircleOutlined,
+    ReadOutlined,
+    OrderedListOutlined,
     EllipsisOutlined,
     LeftOutlined,
+    FileAddOutlined,
     SettingOutlined,
 } from '@ant-design/icons';
 import { Dropdown, Flex, MenuProps, Typography } from 'antd';
@@ -78,22 +79,22 @@ export const SpaceIssuePage: FC<Props> = typedMemo(function SpaceSolutionPage({
                 <SidebarItem
                     to={SpaceRouter.SpaceIssueDescription(spaceId, issueId)}
                     text="Описание"
-                    icon={className => <FileTextOutlined className={className} />}
+                    icon={className => <InfoCircleOutlined className={className} />}
                 />
                 <SidebarItem
                     to={SpaceRouter.SpaceIssueMaterials(spaceId, issueId)}
                     text="Полезные материалы"
-                    icon={className => <FileDoneOutlined className={className} />}
+                    icon={className => <ReadOutlined className={className} />}
                 />
                 <SidebarItem
                     to={SpaceRouter.SpaceIssueCriteria(spaceId, issueId)}
                     text="Критерии"
-                    icon={className => <CommentOutlined className={className} />}
+                    icon={className => <OrderedListOutlined className={className} />}
                 />
                 <SidebarItem
                     to={SpaceRouter.SpaceIssueForm(spaceId, issueId)}
                     text="Форма сдачи"
-                    icon={className => <CommentOutlined className={className} />}
+                    icon={className => <FileAddOutlined className={className} />}
                 />
             </Sidebar>
 
@@ -104,7 +105,7 @@ export const SpaceIssuePage: FC<Props> = typedMemo(function SpaceSolutionPage({
                     gap="middle"
                     className={getModuleClasses(styles, 'header')}
                 >
-                    <Link to={SpaceRouter.SpaceSolutions(spaceId)} className={getModuleClasses(styles, 'backLink')}>
+                    <Link to={SpaceRouter.SpaceTasks(spaceId)} className={getModuleClasses(styles, 'backLink')}>
                         <LeftOutlined className={getModuleClasses(styles, 'backIcon')} />
                         <Typography.Text className={getModuleClasses(styles, 'backText')}>
                             Назад
