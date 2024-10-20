@@ -7,14 +7,15 @@ import { FC, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SpaceRouter } from '@pages/space';
 
-import { SolutionStatusBadge } from '@entities/solution/ui/SolutionStatusBadge';
 import { useGetIssueSolutions } from '@entities/solution/lib/useGetIssueSolutions';
+import { SolutionStatusBadge } from '@entities/solution/ui/SolutionStatusBadge';
 import { useRolesCheck } from '@entities/space';
 
 import { getDateFromISO, getTimeFromISO, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { EmptyTable } from '@shared/ui';
 
+import styles from './SolutionsTable.module.css';
 import { useGetSolutions } from '../../lib/useGetSolutions';
 import { GetSolutionForExpert } from '../../model/GetSolutionForExpert';
 
@@ -56,6 +57,7 @@ export const SolutionsTable: FC<Props> = typedMemo(function SolutionsTable({
             title: 'Оценок',
             dataIndex: 'marks',
             key: 'marks',
+            align: 'center',
             hidden: !isOrganizer,
             render: (_, record) => `${record.reviewCount}/${record.checksCountMax}`,
         },
@@ -63,7 +65,8 @@ export const SolutionsTable: FC<Props> = typedMemo(function SolutionsTable({
             title: 'Статус',
             dataIndex: 'status',
             key: 'status',
-            render: status => <Flex justify="center"><SolutionStatusBadge status={status} /></Flex>,
+            align: 'center',
+            render: status => <div className={styles.status}><SolutionStatusBadge status={status} /></div>,
         },
         {
             title: 'Оценка',
