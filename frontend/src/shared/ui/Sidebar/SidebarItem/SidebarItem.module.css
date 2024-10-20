@@ -18,7 +18,9 @@
 .navText {
     color: #000000;
     font-size: 11px;
-    line-height: 22px;
+    line-height: 15px;
+    text-align: center;
+    padding: 5px;
 }
 
 .navItem.isActive .navText,

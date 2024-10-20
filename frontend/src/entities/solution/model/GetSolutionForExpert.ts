@@ -1,4 +1,4 @@
-import { SolutionStatus } from '@entities/solution/model/SolutionStatus';
+import { Status } from '@entities/issue';
 
 import { GetSolutionValue } from './GetSolutionValue';
 
@@ -45,7 +45,7 @@ export type GetSolutionForExpert = {
 
     assessmentDeadlineDateUtc: string;
 
-    status?: SolutionStatus;
+    status?: Status;
 
     authorId: string;
 

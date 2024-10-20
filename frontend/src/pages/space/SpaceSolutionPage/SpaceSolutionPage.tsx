@@ -15,7 +15,7 @@ import { SpaceRouter } from '@pages/space';
 
 import { UserPanel } from '@widgets/UserPanel';
 
-import { SolutionStatusBadge, useGetSolution } from '@entities/solution';
+import { useGetSolution } from '@entities/solution';
 import { useGetOrganizerSolution } from '@entities/solution/lib/useGetOrganizerSolution';
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 

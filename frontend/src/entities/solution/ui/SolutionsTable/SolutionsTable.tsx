@@ -7,8 +7,8 @@ import { FC, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SpaceRouter } from '@pages/space';
 
+import { StatusBadge } from '@entities/issue';
 import { useGetIssueSolutions } from '@entities/solution/lib/useGetIssueSolutions';
-import { SolutionStatusBadge } from '@entities/solution/ui/SolutionStatusBadge';
 import { useRolesCheck } from '@entities/space';
 
 import { getDateFromISO, getTimeFromISO, typedMemo } from '@shared/lib';
@@ -66,7 +66,7 @@ export const SolutionsTable: FC<Props> = typedMemo(function SolutionsTable({
             dataIndex: 'status',
             key: 'status',
             align: 'center',
-            render: status => <div className={styles.status}><SolutionStatusBadge status={status} /></div>,
+            render: status => <div className={styles.status}><StatusBadge status={status} /></div>,
         },
         {
             title: 'Оценка',

@@ -1,5 +1,5 @@
-export enum SolutionStatus {
-    CloseSubmit,
+export enum Status {
+    ClosedSubmit,
     OpenSubmit,
     NotAllChecked,
     ChecksExpired,
