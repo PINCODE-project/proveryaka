@@ -1,6 +1,7 @@
 import {
     InfoCircleOutlined,
     ReadOutlined,
+    FileDoneOutlined,
     OrderedListOutlined,
     EllipsisOutlined,
     LeftOutlined,
@@ -38,7 +39,7 @@ export const SpaceIssuePage: FC<Props> = typedMemo(function SpaceSolutionPage({
     const spaceId = useSpaceId();
     const issueId = useIssueId();
 
-    const { isOrganizer } = useRolesCheck();
+    const { isOrganizer, isStudent } = useRolesCheck();
     const { data: issue } = useGetIssue(issueId ?? '');
 
     const items: MenuProps['items'] = useMemo(() => [
@@ -96,6 +97,13 @@ export const SpaceIssuePage: FC<Props> = typedMemo(function SpaceSolutionPage({
                     text="Форма сдачи"
                     icon={className => <FileAddOutlined className={className} />}
                 />
+                {isStudent
+                    ? <SidebarItem
+                        to={SpaceRouter.SpaceIssueMarks(spaceId, issueId)}
+                        text="Оценки"
+                        icon={className => <FileDoneOutlined className={className} />}
+                    />
+                    : null}
             </Sidebar>
 
             <Flex vertical gap={32} className={getModuleClasses(styles, 'content')}>

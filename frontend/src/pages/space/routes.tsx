@@ -1,4 +1,5 @@
 import { SpaceIssuePage } from '@pages/space/SpaceIssuePage';
+import { SpaceIssueMarks } from '@pages/space/SpaceIssuePage/subpages/SpaceIssueMarks';
 import { SpaceSolutionPage } from '@pages/space/SpaceSolutionPage';
 
 import { ConfigRouteProps } from '@shared/types';
@@ -28,6 +29,7 @@ export const SpaceRouter = {
     SpaceIssueMaterials: (spaceId: string, issueId: string) => `/spaces/${spaceId}/tasks/${issueId}/materials`,
     SpaceIssueCriteria: (spaceId: string, issueId: string) => `/spaces/${spaceId}/tasks/${issueId}/criteria`,
     SpaceIssueForm: (spaceId: string, issueId: string) => `/spaces/${spaceId}/tasks/${issueId}/form`,
+    SpaceIssueMarks: (spaceId: string, issueId: string) => `/spaces/${spaceId}/tasks/${issueId}/marks`,
 };
 
 export const spaceRouteConfig: ConfigRouteProps[] = [
@@ -123,6 +125,11 @@ export const spaceRouteConfig: ConfigRouteProps[] = [
             {
                 path: SpaceRouter.SpaceIssueForm(':spaceId', ':issueId'),
                 element: null,
+                withAuthGuard: true,
+            },
+            {
+                path: SpaceRouter.SpaceIssueMarks(':spaceId', ':issueId'),
+                element: <SpaceIssueMarks />,
                 withAuthGuard: true,
             },
             {
