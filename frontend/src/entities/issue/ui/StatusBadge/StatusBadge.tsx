@@ -1,29 +1,30 @@
 import { FC, useMemo } from 'react';
 
+import { Status } from '@entities/issue';
+
 import { typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 
 import styles from './SolutionStatusBadge.module.css';
-import { SolutionStatus } from '../../model/SolutionStatus';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
-    status: SolutionStatus;
+    status: Status;
 }>;
 
-export const SolutionStatusBadge: FC<Props> = typedMemo(function SolutionStatusBadge({
+export const StatusBadge: FC<Props> = typedMemo(function StatusBadge({
     status,
 }) {
     const text = useMemo(() => {
         switch (status) {
-            case SolutionStatus.Submitted:
+            case Status.Submitted:
                 return 'Сдано';
-            case SolutionStatus.OnCheck:
+            case Status.OnCheck:
                 return 'На проверке';
-            case SolutionStatus.NeedCheck:
+            case Status.NeedCheck:
                 return 'Ожидается проверка';
-            case SolutionStatus.Checked:
+            case Status.Checked:
                 return 'Проверено';
-            case SolutionStatus.CheckExpired:
+            case Status.CheckExpired:
                 return 'Просрочена проверка';
             default:
                 return null;

@@ -7,6 +7,7 @@ import {
     UserOutlined,
     TeamOutlined,
 } from '@ant-design/icons';
+import { StatusBadge } from '@entites/issue';
 import { Dropdown, Flex, MenuProps, Typography } from 'antd';
 import { FC, useMemo } from 'react';
 import { Link, Navigate, Outlet, useLocation } from 'react-router-dom';
@@ -15,7 +16,7 @@ import { SpaceRouter } from '@pages/space';
 
 import { UserPanel } from '@widgets/UserPanel';
 
-import { SolutionStatusBadge, useGetSolution } from '@entities/solution';
+import { useGetSolution } from '@entities/solution';
 import { useGetOrganizerSolution } from '@entities/solution/lib/useGetOrganizerSolution';
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 

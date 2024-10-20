@@ -15,7 +15,7 @@ import { SpaceRouter } from '@pages/space';
 
 import { UserPanel } from '@widgets/UserPanel';
 
-import { useGetIssue } from '@entities/issue';
+import { StatusBadge, useGetIssue } from '@entities/issue';
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
 import { useIssueId } from '@shared/hooks';
@@ -122,9 +122,7 @@ export const SpaceIssuePage: FC<Props> = typedMemo(function SpaceSolutionPage({
                                 {issue.name}
                             </Typography.Text>
 
-                            <Typography.Text>
-                                Статус
-                            </Typography.Text>
+                            {issue.status !== undefined && <StatusBadge status={issue.status} />}
                         </Flex>
 
                         {isOrganizer
