@@ -36,16 +36,18 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
     const { data: isOrganizer } = useGetUserIsOrganizer();
 
     const { mutate: copyCode } = useCopySpaceCode({
-        onSuccess: () => {
+        onSuccess: (_, context) => {
             notification.success({
-                message: 'Пригласительный код скопирован',
+                message: 'Скопировать код',
+                description: <>Код пространства <b>{context.name}</b> скопирован</>,
             });
         },
     });
     const { mutate: regenerateCode } = useRegenerateSpaceCode({
-        onSuccess: () => {
+        onSuccess: (_, context) => {
             notification.success({
-                message: 'Пригласительный код изменен',
+                message: 'Перегенерировать код',
+                description: <>Код пространства <b>{context.name}</b> изменен</>,
             });
         },
     });
@@ -79,12 +81,12 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
                 {
                     key: '3',
                     label: 'Скопировать код',
-                    onClick: () => copyCode(record.id),
+                    onClick: () => copyCode({ id: record.id, name: record.name ?? '' }),
                 },
                 {
                     key: '4',
                     label: 'Перегенерировать код',
-                    onClick: () => regenerateCode(record.id),
+                    onClick: () => regenerateCode({ id: record.id, name: record.name ?? '' }),
                 },
             ];
         }
