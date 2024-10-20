@@ -1,5 +1,5 @@
 export enum Status {
-    CloseSubmit,
+    ClosedSubmit,
     OpenSubmit,
     NotAllChecked,
     ChecksExpired,

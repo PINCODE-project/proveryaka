@@ -7,7 +7,6 @@ import {
     UserOutlined,
     TeamOutlined,
 } from '@ant-design/icons';
-import { StatusBadge } from '@entites/issue';
 import { Dropdown, Flex, MenuProps, Typography } from 'antd';
 import { FC, useMemo } from 'react';
 import { Link, Navigate, Outlet, useLocation } from 'react-router-dom';

@@ -5,23 +5,35 @@ import { Status } from '@entities/issue';
 import { typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 
-import styles from './SolutionStatusBadge.module.css';
+import styles from './StatusBadge.module.css';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     status: Status;
+    type: 'issue' | 'solution';
 }>;
 
 export const StatusBadge: FC<Props> = typedMemo(function StatusBadge({
     status,
+    type,
 }) {
     const text = useMemo(() => {
         switch (status) {
+            case Status.ClosedSubmit:
+                return type === 'issue' ? 'Не опубликовано' : null;
+            case Status.OpenSubmit:
+                return type === 'issue' ? 'Открыта сдача' : null;
+            case Status.NotAllChecked:
+                return type === 'issue' ? 'На проверке' : null;
+            case Status.AllChecked:
+                return type === 'issue' ? 'Проверено' : null;
+            case Status.SubmitExpired:
+                return type === 'issue' ? 'Просрочено' : null;
             case Status.Submitted:
                 return 'Сдано';
             case Status.OnCheck:
                 return 'На проверке';
             case Status.NeedCheck:
-                return 'Ожидается проверка';
+                return type === 'solution' ? 'Ожидается проверка' : null;
             case Status.Checked:
                 return 'Проверено';
             case Status.CheckExpired:
@@ -29,7 +41,7 @@ export const StatusBadge: FC<Props> = typedMemo(function StatusBadge({
             default:
                 return null;
         }
-    }, [status]);
+    }, [status, type]);
 
     if (!text) {
         return null;

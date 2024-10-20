@@ -117,16 +117,16 @@ export const SpaceIssuePage: FC<Props> = typedMemo(function SpaceSolutionPage({
 
                 <Flex vertical gap={10}>
                     <Flex gap={25} align="center" justify="space-between">
-                        <Flex gap={20} align="center">
+                        <Flex gap={40} align="center">
                             <Typography.Text className={getModuleClasses(styles, 'title')}>
                                 {issue.name}
                             </Typography.Text>
 
-                            {issue.status !== undefined && <StatusBadge status={issue.status} />}
+                            <StatusBadge status={issue.status ?? 0} type="issue" />
                         </Flex>
 
                         {isOrganizer
-                            ? <Flex align="center" gap="12">
+                            ? <Flex align="center" gap={12}>
                                 <SettingOutlined className={getModuleClasses(styles, 'settingsIcon')} />
                                 <Dropdown menu={{ items }}>
                                     <EllipsisOutlined className={getModuleClasses(styles, 'settingsIcon')} />
