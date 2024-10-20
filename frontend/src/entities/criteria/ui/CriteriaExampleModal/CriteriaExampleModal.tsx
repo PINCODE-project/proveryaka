@@ -1,5 +1,5 @@
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { Button, Col, Flex, Modal, Row, Spin } from 'antd';
+import { Button, Col, Flex, Modal, Row, Spin, Typography } from 'antd';
 import { Dispatch, FC, ReactNode, SetStateAction, Suspense, useCallback, useMemo, useState } from 'react';
 
 import { ExampleType } from '@entities/example/common';
@@ -56,18 +56,20 @@ export const CriteriaExampleModal: FC<Props> = typedMemo(function CriteriaExampl
                 <Row gutter={40}>
                     {examples.length > 0 && <Col flex={1}>
                         <Flex vertical gap={24}>
-                            <Flex gap={4}>
-                                <Button
+                            <Flex gap={4} align="center">
+                                {examples.length > 1 && <Button
                                     onClick={() => changeIndex(exampleIndex - 1, examples.length, setExampleIndex)}
                                     type="text"
                                     icon={<LeftOutlined />}
-                                />
-                                Эталон
-                                <Button
+                                />}
+                                <Typography className={styles.title}>
+                                    Эталон
+                                </Typography>
+                                {examples.length > 1 && <Button
                                     onClick={() => changeIndex(exampleIndex + 1, examples.length, setExampleIndex)}
                                     type="text"
                                     icon={<RightOutlined />}
-                                />
+                                />}
                             </Flex>
 
                             <Suspense fallback={<Flex align="center" justify="center"><Spin /></Flex>}>
@@ -78,17 +80,19 @@ export const CriteriaExampleModal: FC<Props> = typedMemo(function CriteriaExampl
                     {antiExamples.length > 0 && <Col flex={1}>
                         <Flex vertical gap={24}>
                             <Flex gap={4}>
-                                <Button
+                                {antiExamples.length > 1 && <Button
                                     onClick={() => changeIndex(antiExampleIndex - 1, antiExamples.length, setAntiExampleIndex)}
                                     type="text"
                                     icon={<LeftOutlined />}
-                                />
-                                Антрипример
-                                <Button
+                                />}
+                                <Typography className={styles.title}>
+                                    Антрипример
+                                </Typography>
+                                {antiExamples.length > 1 && <Button
                                     onClick={() => changeIndex(antiExampleIndex - 1, antiExamples.length, setAntiExampleIndex)}
                                     type="text"
                                     icon={<RightOutlined />}
-                                />
+                                />}
                             </Flex>
 
                             <Suspense fallback={<Flex align="center" justify="center"><Spin /></Flex>}>
