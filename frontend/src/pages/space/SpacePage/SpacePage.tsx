@@ -8,7 +8,7 @@ import {
     InfoCircleOutlined,
 } from '@ant-design/icons';
 import { App, Dropdown, Flex, MenuProps, Typography } from 'antd';
-import { FC, useMemo } from 'react';
+import { FC, Suspense, useMemo } from 'react';
 import { Link, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/space';
@@ -29,7 +29,7 @@ import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { Avatar, Sidebar, SidebarItem } from '@shared/ui';
+import { Avatar, Fallback, Sidebar, SidebarItem } from '@shared/ui';
 
 import styles from './SpacePage.module.css';
 
@@ -215,7 +215,10 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
                         <EllipsisOutlined className={getModuleClasses(styles, 'settingsIcon')} />
                     </Dropdown>
                 </Flex>
-                <Outlet />
+
+                <Suspense fallback={<Fallback />}>
+                    <Outlet />
+                </Suspense>
             </Flex>
         </Flex>
     );

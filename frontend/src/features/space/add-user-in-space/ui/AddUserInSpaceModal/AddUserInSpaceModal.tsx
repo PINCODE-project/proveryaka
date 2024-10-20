@@ -1,8 +1,9 @@
-import { Flex, Modal, Spin } from 'antd';
+import { Modal } from 'antd';
 import { FC, ReactNode, Suspense, useCallback, useState } from 'react';
 
 import { typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
+import { Fallback } from '@shared/ui';
 
 import { Content } from './Content';
 
@@ -30,7 +31,7 @@ export const AddUserInSpaceModal: FC<Props> = typedMemo(function AddUserInSpaceM
                 onClose={onClose}
                 onCancel={onClose}
             >
-                <Suspense fallback={<Flex align="center" justify="center"><Spin /></Flex>}>
+                <Suspense fallback={<Fallback />}>
                     <Content spaceId={spaceId} onClose={onClose} />
                 </Suspense>
             </Modal>
