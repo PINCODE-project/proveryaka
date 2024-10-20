@@ -1,4 +1,5 @@
 import { SpaceIssuePage } from '@pages/space/SpaceIssuePage';
+import { SpaceIssueDescription } from '@pages/space/SpaceIssuePage/subpages/SpaceIssueDescription';
 import { SpaceSolutionPage } from '@pages/space/SpaceSolutionPage';
 
 import { ConfigRouteProps } from '@shared/types';
@@ -107,7 +108,7 @@ export const spaceRouteConfig: ConfigRouteProps[] = [
         children: [
             {
                 path: SpaceRouter.SpaceIssueDescription(':spaceId', ':issueId'),
-                element: null,
+                element: <SpaceIssueDescription />,
                 withAuthGuard: true,
             },
             {
