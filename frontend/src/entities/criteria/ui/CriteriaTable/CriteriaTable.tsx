@@ -1,4 +1,4 @@
-import { Table, TableColumnsType } from 'antd';
+import { Button, Table, TableColumnsType } from 'antd';
 import { FC, useMemo } from 'react';
 
 import { typedMemo } from '@shared/lib';
@@ -7,6 +7,7 @@ import { ClassNameProps, TestProps } from '@shared/types';
 import styles from './CriteriaTable.module.css';
 import { useGetIssueCriteria } from '../../lib/useGetIssueCriteria';
 import { GetCriteriaResponse } from '../../model/GetCriteriaResponse';
+import { CriteriaExampleModal } from '../CriteriaExampleModal';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     issueId: string;
@@ -46,7 +47,10 @@ export const CriteriaTable: FC<Props> = typedMemo(function CriteriaTable({
             dataIndex: 'action',
             key: 'action',
             width: 180,
-            render: () => 'Пример выполнения',
+            render: (_, record) => (<CriteriaExampleModal
+                triggerComponent={open => <Button onClick={open} type="default">Примеры выполнения</Button>}
+                criteriaId={record.id}
+            />),
         },
     ], []);
 
