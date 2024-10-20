@@ -1,22 +1,11 @@
-import { App, Button, Form, Modal } from 'antd';
-import { FC, ReactNode, useCallback, useMemo, useState } from 'react';
-import { useQueryClient } from 'react-query';
-
-import {
-    TeamForm,
-    getSpaceTeamsQueryKey,
-    getSpaceUserTeamsQueryKey,
-    getTeamQueryKey,
-    useGetTeam,
-} from '@entities/team';
+import { Modal } from 'antd';
+import { FC, ReactNode, Suspense, useCallback, useState } from 'react';
 
 import { typedMemo } from '@shared/lib';
-import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { ClassNameProps, TestProps } from '@shared/types';
+import { Fallback } from '@shared/ui';
 
-import styles from './EditTeamModal.module.css';
-import { useEditTeam } from '../../lib/useEditTeam';
-import { EditTeam } from '../../model/EditTeam';
+import { Content } from './Content';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     spaceId: string;
@@ -29,43 +18,10 @@ export const EditTeamModal: FC<Props> = typedMemo(function EditTeamModal({
     teamId,
     triggerComponent,
 }) {
-    const queryClient = useQueryClient();
-    const { notification } = App.useApp();
     const [isOpen, setIsOpen] = useState(false);
 
-    const { data: team } = useGetTeam(teamId);
-    const initialValues = useMemo<EditTeam>(() => ({
-        id: teamId,
-        name: team?.name ?? '',
-        users: team?.studentInfoList?.map(({ id }) => id) ?? [],
-    }), [team, teamId]);
-
-    const { mutate: edit } = useEditTeam({
-        onSuccess: () => {
-            notification.success({
-                message: 'Команда изменена',
-            });
-            setIsOpen(false);
-            queryClient.resetQueries(getSpaceTeamsQueryKey(spaceId));
-            queryClient.resetQueries(getSpaceUserTeamsQueryKey(spaceId));
-            queryClient.resetQueries(getTeamQueryKey(spaceId));
-        },
-    });
-
-    const onOpen = useCallback(() => {
-        setIsOpen(true);
-    }, []);
-
-    const onClose = useCallback(() => {
-        setIsOpen(false);
-    }, []);
-
-    const submit = useCallback((form: EditTeam) => {
-        edit({
-            ...form,
-            id: teamId,
-        });
-    }, [edit, teamId]);
+    const onOpen = useCallback(() => setIsOpen(true), []);
+    const onClose = useCallback(() => setIsOpen(false), []);
 
     return (
         <>
@@ -77,17 +33,9 @@ export const EditTeamModal: FC<Props> = typedMemo(function EditTeamModal({
                 onCancel={onClose}
                 onClose={onClose}
             >
-                <TeamForm<EditTeam>
-                    submit={submit}
-                    initialValues={initialValues}
-                    submitButton={
-                        <Form.Item className={getModuleClasses(styles, 'submitButton')}>
-                            <Button type="primary" htmlType="submit" block>
-                                Сохранить
-                            </Button>
-                        </Form.Item>
-                    }
-                />
+                <Suspense fallback={<Fallback />}>
+                    <Content spaceId={spaceId} teamId={teamId} onClose={onClose} />
+                </Suspense>
             </Modal>
         </>
     );

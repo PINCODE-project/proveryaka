@@ -8,7 +8,7 @@ import {
     TeamOutlined,
 } from '@ant-design/icons';
 import { Dropdown, Flex, MenuProps, Typography } from 'antd';
-import { FC, useMemo } from 'react';
+import { FC, Suspense, useMemo } from 'react';
 import { Link, Navigate, Outlet, useLocation } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/space';
@@ -24,7 +24,7 @@ import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { Sidebar, SidebarItem } from '@shared/ui';
+import { Fallback, Sidebar, SidebarItem } from '@shared/ui';
 
 import styles from './SpaceSolutionPage.module.css';
 
@@ -128,7 +128,9 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
                         {solution.authorName}
                     </Flex>
                 </Flex>
-                <Outlet />
+                <Suspense fallback={<Fallback />}>
+                    <Outlet />
+                </Suspense>
             </Flex>
         </Flex>
     );

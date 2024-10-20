@@ -1,17 +1,11 @@
-import { Button, Flex, Form, Modal, notification, Select } from 'antd';
-import { FC, ReactNode, useCallback, useState } from 'react';
-import { useQueryClient } from 'react-query';
+import { Modal } from 'antd';
+import { FC, ReactNode, Suspense, useCallback, useState } from 'react';
 
-import { useGetSpaceStudents } from '@entities/space';
-import { getSpaceTeamsQueryKey } from '@entities/team';
-import { useGetUserAll } from '@entities/user';
-
-import { sortSelectOptionsByLabel, typedMemo } from '@shared/lib';
+import { typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
+import { Fallback } from '@shared/ui';
 
-import styles from './AddUserTeamModal.module.css';
-import { useAddUserTeam } from '../../lib/useAddUserTeam';
-import { AddUserTeam } from '../../model/AddUserTeam';
+import { Content } from './Content';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     triggerComponent: (onOpen: () => void) => ReactNode;
@@ -26,37 +20,13 @@ export const AddUserTeamModal: FC<Props> = typedMemo(function AddUserTeamModal({
     entityId,
     spaceId,
 }) {
-    const [notify, contextHolder] = notification.useNotification();
-    const queryClient = useQueryClient();
-
-    const { data: users } = useGetSpaceStudents(spaceId);
-
     const [isOpen, setIsOpen] = useState(false);
-    const { mutate: add } = useAddUserTeam({
-        onSuccess: () => {
-            queryClient.resetQueries(getSpaceTeamsQueryKey(entityId));
-            notify.success({
-                message: 'Пользователи добавлены в команду',
-            });
-            setIsOpen(false);
-        },
-    });
-
-    const onSubmit = useCallback((form: AddUserTeam) => {
-        add({
-            ...form,
-            entityId,
-            teamId,
-        });
-    }, [entityId, add, teamId]);
 
     const onOpen = useCallback(() => setIsOpen(true), []);
-
     const onClose = useCallback(() => setIsOpen(false), []);
 
     return (
         <>
-            {contextHolder}
             {triggerComponent(onOpen)}
             <Modal
                 title="Добавление участников"
@@ -65,38 +35,14 @@ export const AddUserTeamModal: FC<Props> = typedMemo(function AddUserTeamModal({
                 onClose={onClose}
                 onCancel={onClose}
             >
-                <Form
-                    className={styles.form}
-                    name="SpaceForm"
-                    layout="vertical"
-                    onFinish={onSubmit}
-                    requiredMark={false}
-                >
-                    <Flex gap={12} vertical>
-                        <Form.Item<AddUserTeam>
-                            className={styles.formItem}
-                            label="Пользователи"
-                            name="userProfileIdList"
-                            rules={[
-                                { required: true, message: 'Выберите пользователей' },
-                            ]}
-                        >
-                            <Select mode="multiple" placeholder="Не выбрано" filterOption={sortSelectOptionsByLabel}>
-                                {users?.studentInfoList?.map(user => (
-                                    <Select.Option value={user.id} key={user.id}>
-                                        {user.surname} {user.name} {user.patronymic}
-                                    </Select.Option>
-                                ))}
-                            </Select>
-                        </Form.Item>
-
-                        <Form.Item className={styles.submitButton}>
-                            <Button type="primary" htmlType="submit" block>
-                                Добавить
-                            </Button>
-                        </Form.Item>
-                    </Flex>
-                </Form>
+                <Suspense fallback={<Fallback />}>
+                    <Content
+                        entityId={entityId}
+                        teamId={teamId}
+                        spaceId={spaceId}
+                        onClose={onClose}
+                    />
+                </Suspense>
             </Modal>
         </>
     );

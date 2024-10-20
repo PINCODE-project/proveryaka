@@ -1,6 +1,6 @@
 import { Table, TableColumnsType } from 'antd';
 import { ColumnType } from 'antd/lib/table';
-import { FC, useCallback, useMemo } from 'react';
+import { FC, Suspense, useCallback, useMemo } from 'react';
 
 // Сущность пространства много где зайдествуется
 // eslint-disable-next-line
@@ -11,7 +11,7 @@ import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 import { useListFilters } from '@shared/hooks';
 import { typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { EmptyTable } from '@shared/ui';
+import { EmptyTable, Fallback } from '@shared/ui';
 
 import { useGetSpaceTeams } from '../../lib/useGetSpaceTeams';
 import { useGetSpaceUserTeams } from '../../lib/useGetSpaceUserTeams';
@@ -70,10 +70,14 @@ export const TeamsTable: FC<Props> = typedMemo(function TeamsTable({
     ], [actionRender]);
 
     const expandedRowRender = useCallback((record: GetTeam) => {
-        return (<StudentTable
-            students={record.studentInfoList ?? []}
-            renderActions={renderStudentActions?.(record)}
-        />);
+        return (
+            <Suspense fallback={<Fallback />}>
+                <StudentTable
+                    students={record.studentInfoList ?? []}
+                    renderActions={renderStudentActions?.(record)}
+                />
+            </Suspense>
+        );
     }, [renderStudentActions]);
 
     if (teams.length === 0) {

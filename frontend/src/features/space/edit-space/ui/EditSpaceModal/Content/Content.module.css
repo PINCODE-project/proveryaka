@@ -1,0 +1,9 @@
+.formItem {
+    margin-bottom: 0;
+}
+
+.submitButton {
+    margin-bottom: 0;
+    display: flex;
+    justify-content: end;
+}

@@ -1,23 +1,18 @@
-import { Button, Flex, Form, Modal, notification, Select, Switch } from 'antd';
+import { App, Button, Flex, Form, Modal, Select } from 'antd';
 import { FC, ReactNode, useCallback, useMemo, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
 import { useUpdateRole } from '@features/space/change-user-role/lib/useUpdateRole';
 import { UpdateRoleToUserInSpace } from '@features/space/change-user-role/model/UpdateRoleToUserInSpace';
-import { CreateSpaceRequest } from '@features/space/create-space/model/CreateSpaceRequest';
 
 import {
     getSpaceExpertsQueryKey,
     getSpaceOrganizerQueryKey,
-    getSpacesQueryKey,
-    getSpaceStudentsQueryKey, SpaceForm,
+    getSpaceStudentsQueryKey,
 } from '@entities/space';
-import { SpaceAccessType } from '@entities/space/model/SpaceAccessType';
 import { SpaceRoleType } from '@entities/space/model/SpaceRoleType';
-import { useGetCurrentUserInfo } from '@entities/user';
 
-import { createFile } from '@shared/api/file/createFile';
-import { getBemClasses, typedMemo } from '@shared/lib';
+import { typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 
 import styles from './UpdateRoleModal.module.css';
@@ -37,7 +32,7 @@ export const UpdateRoleModal: FC<Props> = typedMemo(function UpdateRoleModal({
     userId,
     spaceRole,
 }) {
-    const [api, contextHolder] = notification.useNotification();
+    const { notification } = App.useApp();
     const queryClient = useQueryClient();
 
     const [isOpen, setIsOpen] = useState(false);
@@ -51,7 +46,7 @@ export const UpdateRoleModal: FC<Props> = typedMemo(function UpdateRoleModal({
             queryClient.resetQueries(getSpaceStudentsQueryKey(spaceId));
             queryClient.resetQueries(getSpaceExpertsQueryKey(spaceId));
             queryClient.resetQueries(getSpaceOrganizerQueryKey(spaceId));
-            api.success({
+            notification.success({
                 message: 'Роль изменена',
             });
             setIsOpen(false);
@@ -72,7 +67,6 @@ export const UpdateRoleModal: FC<Props> = typedMemo(function UpdateRoleModal({
 
     return (
         <>
-            {contextHolder}
             {triggerComponent(onOpen)}
             <Modal
                 title={`Изменение роли ${userFullName}`}
