@@ -1,5 +1,4 @@
 import * as H from 'history';
-import React from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 /**

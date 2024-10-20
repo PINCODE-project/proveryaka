@@ -1,7 +1,5 @@
-import { Form, Input, Select } from 'antd';
+import { Form, Input } from 'antd';
 import { ReactNode } from 'react';
-
-import { useGetSpaceStudents } from '@entities/space';
 
 import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';

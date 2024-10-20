@@ -1,4 +1,4 @@
-import { FormSolutionType } from '@entities/issue/model/FormSolutionType';
+import { FormSolutionType } from './FormSolutionType';
 
 export type GetIssueFormResponse = {
     /**

@@ -23,10 +23,15 @@ export async function notifyError(error: AxiosError) {
         description = errorData.message;
     }
 
-    notification.error({
-        message,
-        description,
-    });
+    if (
+        'NotNotify' in Object.keys(error.response?.config.headers || {}) &&
+        error.response?.config.headers.NotNotify !== 'true'
+    ) {
+        notification.error({
+            message,
+            description,
+        });
+    }
 }
 
 async function parseErrorData(error: AxiosError): Promise<unknown> {

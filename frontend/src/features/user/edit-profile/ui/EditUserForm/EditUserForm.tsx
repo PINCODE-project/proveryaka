@@ -3,7 +3,6 @@ import { FC, useCallback, useEffect, useState } from 'react';
 import { useQueryClient } from 'react-query';
 
 import { getSpaceOrganizerQueryKey, getSpaceStudentsQueryKey } from '@entities/space';
-import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 import { FullUserInfoResponse, useGetCurrentUserInfo } from '@entities/user';
 import { getCurrentUserQueryKey } from '@entities/user/lib/getCurrentUserQueryKey';
 
@@ -94,6 +93,7 @@ export const EditUserForm: FC<Props> = typedMemo(function EditUserForm({
                         filledComponent={<ImagePreview file={file} type="circle" />}
                         emptyText="Аватар"
                         onChangeFile={setFile}
+                        isButton={false}
                     />
                     <Row gutter={[20, 14]} className={getModuleClasses(styles, 'main')}>
                         <Col flex={1}>
@@ -171,7 +171,7 @@ export const EditUserForm: FC<Props> = typedMemo(function EditUserForm({
                 <Flex justify="end">
                     <Form.Item className={getModuleClasses(styles, 'submitButton')}>
                         <Button type="primary" htmlType="submit" block>
-                                    Сохранить
+                            Сохранить
                         </Button>
                     </Form.Item>
                 </Flex>

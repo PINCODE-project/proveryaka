@@ -1,4 +1,4 @@
-import { getFile } from '@shared/api';
+import { getFile } from '../api';
 
 export async function getFileUrl(fileId: string | null): Promise<string | null> {
     if (!fileId) {

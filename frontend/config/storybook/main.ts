@@ -41,7 +41,7 @@ const config: StorybookConfig = {
             }
         </style>
     `,
-    webpackFinal: async config => {
+    webpackFinal: config => {
         config.resolve!.alias = {
             ...config.resolve!.alias,
             '@shared': path.resolve(__dirname, '../../src/shared'),

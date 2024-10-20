@@ -28,7 +28,7 @@ import { Fallback } from '@shared/ui';
 import styles from './SpaceUsersPage.module.css';
 import { UsersCollapse } from './UsersCollapse';
 
-export type Props = ClassNameProps & TestProps & Readonly<{}>;
+export type Props = ClassNameProps & TestProps;
 
 export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
     const spaceId = useSpaceId();
@@ -39,50 +39,52 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
     const { data: experts } = useGetSpaceExperts(spaceId ?? '');
     const { data: organizers } = useGetSpaceOrganizers(spaceId ?? '');
 
-    const renderActions = useCallback((role: SpaceRoleType) => function renderActions(_: string, record: GetStudentResponse | GetOrganizerResponse) {
-        if (!isOrganizer || record.id === user?.id) {
-            return undefined;
-        }
+    const renderActions = useCallback(
+        (role: SpaceRoleType) => function renderActions(_: string, record: GetStudentResponse | GetOrganizerResponse) {
+            if (!isOrganizer || record.id === user?.id) {
+                return undefined;
+            }
 
-        const items: MenuProps['items'] = [
-            {
-                key: '1',
-                label: <UpdateRoleModal
-                    triggerComponent={onOpen => (
-                        <Typography.Text className={styles.menuItem} onClick={onOpen}>
-                            Изменить роль
-                        </Typography.Text>
-                    )}
-                    userFullName={`${record.surname} ${record.name} ${record.patronymic}`}
-                    spaceId={spaceId ?? ''}
-                    userId={record.id}
-                    spaceRole={role}
-                />,
-            },
-            {
-                key: '2',
-                label: <DeleteUserFromSpaceButton
-                    triggerComponent={onDelete => (
-                        <Typography.Text className={styles.menuItem} onClick={onDelete}>
-                            Удалить из пространства
-                        </Typography.Text>
-                    )}
-                    userFullName={`${record.surname} ${record.name} ${record.patronymic}`}
-                    spaceId={spaceId ?? ''}
-                    userId={record.id}
-                />,
-                danger: true,
-            },
-        ];
+            const items: MenuProps['items'] = [
+                {
+                    key: '1',
+                    label: <UpdateRoleModal
+                        triggerComponent={onOpen => (
+                            <Typography.Text className={styles.menuItem} onClick={onOpen}>
+                                Изменить роль
+                            </Typography.Text>
+                        )}
+                        userFullName={`${record.surname} ${record.name} ${record.patronymic}`}
+                        spaceId={spaceId ?? ''}
+                        userId={record.id}
+                        spaceRole={role}
+                    />,
+                },
+                {
+                    key: '2',
+                    label: <DeleteUserFromSpaceButton
+                        triggerComponent={onDelete => (
+                            <Typography.Text className={styles.menuItem} onClick={onDelete}>
+                                Удалить из пространства
+                            </Typography.Text>
+                        )}
+                        userFullName={`${record.surname} ${record.name} ${record.patronymic}`}
+                        spaceId={spaceId ?? ''}
+                        userId={record.id}
+                    />,
+                    danger: true,
+                },
+            ];
 
-        return (
-            <div onClick={event => event.stopPropagation()}>
-                <Dropdown menu={{ items }}>
-                    <EllipsisOutlined className={getModuleClasses(styles, 'settingsIcon')} />
-                </Dropdown>
-            </div>
-        );
-    }, [isOrganizer, user, spaceId]);
+            return (
+                <div onClick={event => event.stopPropagation()}>
+                    <Dropdown menu={{ items }}>
+                        <EllipsisOutlined className={getModuleClasses(styles, 'settingsIcon')} />
+                    </Dropdown>
+                </div>
+            );
+        }, [isOrganizer, user, spaceId],
+    );
 
     return (
         <Flex vertical gap={36}>
@@ -98,7 +100,7 @@ export const SpaceUsersPage: FC<Props> = typedMemo(function SpaceUsersPage() {
                                 type="primary"
                                 onClick={onExit}
                             >
-                            Добавить участников
+                                Добавить участников
                             </Button>
                         )}
                     />
