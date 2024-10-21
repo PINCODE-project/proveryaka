@@ -26,7 +26,7 @@ import { ClassNameProps, TestProps } from '@shared/types';
 
 import styles from './SpacesPage.module.css';
 
-export type Props = ClassNameProps & TestProps & Readonly<{}>;
+export type Props = ClassNameProps & TestProps;
 
 export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
     className,

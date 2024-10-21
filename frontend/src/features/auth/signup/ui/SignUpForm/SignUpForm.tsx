@@ -130,10 +130,10 @@ export const SignUpForm: FC<Props> = typedMemo(function SignInForm({
             </Form.Item>
 
             <Typography.Text className={getModuleClasses(styles, 'policyPrivacy')}>
-                Нажимая на кнопку регистрации вы соглашаетесь с принятой на сайте
-                <span
-                    className={getModuleClasses(styles, 'policyPrivacyLink')}
-                > политикой обработки персональных данных</span>
+                Нажимая на кнопку регистрации вы соглашаетесь с принятой на сайте{' '}
+                <span className={getModuleClasses(styles, 'policyPrivacyLink')}>
+                    политикой обработки персональных данных
+                </span>
             </Typography.Text>
         </Form>
     );

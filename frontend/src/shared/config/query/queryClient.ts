@@ -2,7 +2,6 @@ import { isAxiosError } from 'axios';
 import { QueryClient, QueryCache, MutationCache } from 'react-query';
 import { NavigateFunction } from 'react-router-dom';
 
-// @ts-ignore
 export const getQueryClient = (logout: () => void, navigate: NavigateFunction) => new QueryClient({
     queryCache: new QueryCache({
         onError: error => {

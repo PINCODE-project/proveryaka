@@ -1,0 +1,22 @@
+.submitButton {
+    margin-bottom: 0;
+}
+
+.formItem {
+    margin-bottom: 0;
+    font-weight: var(--font-weight-medium);
+}
+
+.formItemTitle {
+    font: var(--font-default);
+    font-weight: var(--font-weight-medium);
+    font-size: var(--body-font-size);
+}
+
+.icon svg {
+    font-size: 20px;
+}
+
+.main {
+    width: 100%;
+}

@@ -1,5 +1,3 @@
-import block from 'bem-css-modules';
-
 import { mixClasses } from './mixClasses';
 import { BemModificator, CssModule } from '../types';
 

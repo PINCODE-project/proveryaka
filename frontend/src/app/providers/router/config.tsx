@@ -1,4 +1,3 @@
-import { Button } from 'antd';
 import { Navigate } from 'react-router-dom';
 
 import { authRouteConfig, AuthRouter } from '@pages/auth';

@@ -11,7 +11,7 @@ import { ClassNameProps, TestProps } from '@shared/types';
 
 import styles from './Sidebar.module.css';
 
-export type Props = ClassNameProps & TestProps & PropsWithChildren & Readonly<{}>;
+export type Props = ClassNameProps & TestProps & PropsWithChildren;
 
 export const Sidebar: FC<Props> = typedMemo(function Sidebar({
     children,

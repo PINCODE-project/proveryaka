@@ -29,11 +29,10 @@ import { customConfirm } from '@shared/ui';
 
 import styles from './SpaceTeamsPage.module.css';
 
-export type Props = ClassNameProps & TestProps & Readonly<{}>;
+export type Props = ClassNameProps & TestProps;
 
 export const SpaceTeamsPage: FC<Props> = typedMemo(function SpaceTeamsPage({
     className,
-
 }) {
     const queryClient = useQueryClient();
     const { isStudent, isOrganizer } = useRolesCheck();

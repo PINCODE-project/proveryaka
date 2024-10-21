@@ -1,3 +1,6 @@
+import { SpaceCreateIssuePage } from '@pages/space/SpaceCreateIssuePage';
+import { SpaceIssuesPage } from '@pages/space/SpacePage/subpages/SpaceIssuesPage';
+
 import { ConfigRouteProps } from '@shared/types';
 
 import { SpaceIssuePage } from './SpaceIssuePage';
@@ -17,7 +20,8 @@ import { SpacesPage } from './SpacesPage';
 export const SpaceRouter = {
     Spaces: '/spaces',
     Space: (id: string) => `/spaces/${id}`,
-    SpaceTasks: (id: string) => `/spaces/${id}/tasks`,
+    SpaceIssues: (id: string) => `/spaces/${id}/issues`,
+    SpaceCreateIssue: (spaceId: string) => `/spaces/${spaceId}/issue/create/`,
     SpaceDescription: (id: string) => `/spaces/${id}/description`,
     SpaceSolutions: (id: string) => `/spaces/${id}/solutions`,
     SpaceUsers: (id: string) => `/spaces/${id}/users`,
@@ -41,6 +45,11 @@ export const spaceRouteConfig: ConfigRouteProps[] = [
         element: <SpacesPage />,
     },
     {
+        path: SpaceRouter.SpaceCreateIssue(':spaceId'),
+        withAuthGuard: true,
+        element: <SpaceCreateIssuePage />,
+    },
+    {
         path: SpaceRouter.Space(':spaceId'),
         withAuthGuard: true,
         element: <SpacePage />,
@@ -51,8 +60,8 @@ export const spaceRouteConfig: ConfigRouteProps[] = [
                 withAuthGuard: true,
             },
             {
-                path: SpaceRouter.SpaceTasks(':spaceId'),
-                element: null,
+                path: SpaceRouter.SpaceIssues(':spaceId'),
+                element: <SpaceIssuesPage />,
                 withAuthGuard: true,
             },
             {

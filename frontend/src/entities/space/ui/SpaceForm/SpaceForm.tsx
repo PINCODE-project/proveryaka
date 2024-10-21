@@ -1,12 +1,13 @@
 import { Flex, Form, Input } from 'antd';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
 
+import { Space } from '@entities/space';
+
 import { getFormItemUploadNotFileValue, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { FileInput, ImagePreview } from '@shared/ui';
 
 import styles from './SpaceForm.module.css';
-import { Space } from '../../model/Space';
 
 type SpaceSettingsWithFile = Space;
 
@@ -60,6 +61,7 @@ export const SpaceForm = typedMemo(function SpaceForm<TData extends Space>({
                         listType="picture-card"
                         emptyText="Иконка"
                         onChangeFile={setFile}
+                        isButton={false}
                     />
                 </Form.Item>
                 <Form.Item<SpaceSettingsWithFile>

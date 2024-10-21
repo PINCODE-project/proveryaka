@@ -1,4 +1,4 @@
-import { ExampleType } from '@entities/example/common/model/ExampleType';
+import { ExampleType } from './ExampleType';
 
 export type ExampleResponse = {
     /**

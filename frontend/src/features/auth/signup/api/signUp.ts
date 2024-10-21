@@ -1,7 +1,7 @@
 import { signIn } from '@features/auth/signin';
 
 import { estimateHttp } from '@shared/config/axios';
-import { extractData, Token } from '@shared/lib';
+import { Token } from '@shared/lib';
 
 import { SignUp } from '../model/SignUp';
 

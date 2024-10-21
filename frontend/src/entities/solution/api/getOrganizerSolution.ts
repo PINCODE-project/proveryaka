@@ -1,4 +1,3 @@
-import { GetSolution } from '@entities/solution/model/GetSolution';
 import { GetSolutionForExpert } from '@entities/solution/model/GetSolutionForExpert';
 
 import { solutionHttp } from '@shared/config/axios';

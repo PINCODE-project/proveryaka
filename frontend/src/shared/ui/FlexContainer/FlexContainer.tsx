@@ -1,4 +1,4 @@
-import {createElement, CSSProperties, FC, forwardRef, MouseEventHandler, PropsWithChildren} from 'react';
+import { createElement, CSSProperties, FC, forwardRef, MouseEventHandler, PropsWithChildren } from 'react';
 
 import { getBemClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
@@ -78,13 +78,13 @@ export type Props = PropsWithChildren &
          */
         style?: CSSProperties;
 
-        onClick?: MouseEventHandler
+        onClick?: MouseEventHandler;
     }>;
 
 export const FlexContainer: FC<Props> = typedMemo(forwardRef(function FlexContainer({
     direction = 'row',
     gap,
-                                                                                        onClick,
+    onClick,
     justifyContent = 'start',
     alignItems = 'start',
     enableResize = false,

@@ -5,4 +5,4 @@ import { GetTeam } from '../model/GetTeam';
 
 export function getTeam(id: string): Promise<GetTeam> {
     return estimateHttp.get<GetTeam>(`/team/${id}`).then(extractData);
-};
+}

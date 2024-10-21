@@ -1,5 +1,3 @@
-import { GetCriteriaExample } from '@entities/example/criteria-example';
-
 export type GetCriteriaResponse = {
     /**
      * Идентификатор сущности

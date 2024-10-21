@@ -10,7 +10,7 @@ import { FlexContainer } from '@shared/ui';
 
 import styles from './SignInPage.module.css';
 
-export type Props = ClassNameProps & TestProps & Readonly<{}>;
+export type Props = ClassNameProps & TestProps;
 
 export const SignInPage: FC<Props> = typedMemo(function SignInPage({
     className,

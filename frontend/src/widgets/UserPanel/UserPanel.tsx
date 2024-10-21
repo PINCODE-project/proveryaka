@@ -1,10 +1,12 @@
 import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, Flex, MenuProps, Typography } from 'antd';
-import { FC, useMemo, useState } from 'react';
+import { FC, useCallback, useMemo, useState } from 'react';
+import { useQueryClient } from 'react-query';
+import { useNavigate } from 'react-router-dom';
 
 import { useAuthContext } from '@app/providers/AuthProvider';
 
-import { UserEditor } from '@widgets/UserPanel/UserEditor';
+import { AuthRouter } from '@pages/auth';
 
 import { useGetCurrentUserInfo } from '@entities/user';
 
@@ -13,14 +15,24 @@ import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { Avatar } from '@shared/ui';
 
+import { UserEditor } from './UserEditor';
 import styles from './UserPanel.module.css';
 
-export type Props = ClassNameProps & TestProps & Readonly<{}>;
+export type Props = ClassNameProps & TestProps;
 
 export const UserPanel: FC<Props> = typedMemo(function UserPanel() {
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const { logout } = useAuthContext();
     const [isOpen, setIsOpen] = useState(false);
     const { data: user } = useGetCurrentUserInfo();
+
+    const handleLogout = useCallback(() => {
+        queryClient.invalidateQueries().then(() => {
+            logout();
+            navigate(AuthRouter.SignIn);
+        });
+    }, [navigate, queryClient, logout]);
 
     const items = useMemo<MenuProps['items']>(() => [
         {
@@ -36,9 +48,9 @@ export const UserPanel: FC<Props> = typedMemo(function UserPanel() {
         {
             key: '2',
             label: 'Выйти из аккаунта',
-            onClick: logout,
+            onClick: handleLogout,
         },
-    ], [logout]);
+    ], [handleLogout]);
 
     if (!user) {
         return null;
