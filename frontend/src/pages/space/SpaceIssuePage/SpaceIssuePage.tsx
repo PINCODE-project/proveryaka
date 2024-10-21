@@ -1,22 +1,26 @@
 import {
-    InfoCircleOutlined,
-    ReadOutlined,
-    FileDoneOutlined,
-    OrderedListOutlined,
     EllipsisOutlined,
-    LeftOutlined,
     FileAddOutlined,
+    FileDoneOutlined,
+    InfoCircleOutlined,
+    LeftOutlined,
+    OrderedListOutlined,
+    ReadOutlined,
     SettingOutlined,
 } from '@ant-design/icons';
-import { Dropdown, Flex, MenuProps, Typography } from 'antd';
-import { FC, Suspense, useMemo } from 'react';
-import { Link, Navigate, Outlet, useLocation } from 'react-router-dom';
+import { Dropdown, Flex, notification, Typography } from 'antd';
+import { FC, Suspense, useCallback, useMemo } from 'react';
+import { useQueryClient } from 'react-query';
+import { Link, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/space';
 
 import { UserPanel } from '@widgets/UserPanel';
 
-import { StatusBadge, useGetIssue } from '@entities/issue';
+import { DeleteIssueButton } from '@features/issue/delete-issue';
+import { PublishIssueArguments, usePublishIssue } from '@features/issue/publish-issue/lib/usePublishIssue';
+
+import { getIssueQueryKey, getSpaceIssueQueryKey, StatusBadge, useGetIssue } from '@entities/issue';
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
 import { useIssueId } from '@shared/hooks';
@@ -28,13 +32,15 @@ import { Fallback, Sidebar, SidebarItem } from '@shared/ui';
 
 import styles from './SpaceIssuePage.module.css';
 
-export type Props = ClassNameProps & TestProps & Readonly<{}>;
+export type Props = ClassNameProps & TestProps;
 
 export const SpaceIssuePage: FC<Props> = typedMemo(function SpaceSolutionPage({
     className,
     'data-testid': dataTestId = 'SpacePage',
 }) {
     const location = useLocation();
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
     const spaceId = useSpaceId();
     const issueId = useIssueId();
@@ -42,34 +48,72 @@ export const SpaceIssuePage: FC<Props> = typedMemo(function SpaceSolutionPage({
     const { isOrganizer, isStudent } = useRolesCheck();
     const { data: issue } = useGetIssue(issueId ?? '');
 
-    const items: MenuProps['items'] = useMemo(() => [
-        {
-            key: '0',
-            label: 'Открыть для сдачи',
-            disabled: true,
-        },
-        {
-            key: '1',
-            label: 'Назначить проверяющих',
-            disabled: true,
-        },
-        {
-            key: '2',
-            label: 'Удалить',
-            danger: true,
-            disabled: true,
-        },
-    ], []);
+    const onSuccessPublishIssue = useCallback((_: boolean, variables: PublishIssueArguments) => {
+        notification.success({
+            message: 'Открытие сдачи',
+            description: (
+                <Typography.Text>
+                    Задание {<Typography.Text strong>{variables.name}</Typography.Text>} открыто для сдачи
+                </Typography.Text>
+            ),
+        });
+        queryClient.invalidateQueries(getSpaceIssueQueryKey(spaceId!));
+        queryClient.invalidateQueries(getIssueQueryKey(issueId!));
+    }, [queryClient, spaceId, issueId]);
+
+    const { mutate: publishIssue } = usePublishIssue({
+        onSuccess: onSuccessPublishIssue,
+        retry: false,
+    });
+
+    const items = useMemo(() => {
+        if (!issue) return [];
+
+        const items = [];
+
+        if (issue.status === 0) {
+            items.push(
+                {
+                    label: 'Открыть для сдачи',
+                    onClick: () => publishIssue({ id: issue.id!, name: issue.name! }),
+                },
+            );
+        }
+
+        items.push(
+            {
+                label: 'Назначить проверяющих',
+                disabled: true,
+            },
+            {
+                label: <DeleteIssueButton
+                    issueId={issue.id!}
+                    issueName={issue.name!}
+                    filters={undefined}
+                    spaceId={spaceId!}
+                    onSuccess={() => navigate(SpaceRouter.SpaceIssues(spaceId!))}
+                    triggerComponent={onDelete => (
+                        <Typography.Text onClick={onDelete} className={styles.menuItem}>
+                            Удалить задание
+                        </Typography.Text>
+                    )}
+                />,
+                danger: true,
+            },
+        );
+        return items.map((item, index) => ({ ...item, key: index }));
+    }, [issue, spaceId, publishIssue, navigate]);
 
     if (!spaceId) {
         return <Navigate to={SpaceRouter.Spaces} />;
     }
     if (!issueId || !issue) {
-        return <Navigate to={SpaceRouter.SpaceTasks(spaceId)} />;
+        return <Navigate to={SpaceRouter.SpaceIssues(spaceId)} />;
     }
     if (location.pathname === SpaceRouter.SpaceIssue(spaceId, issueId)) {
         return <Navigate to={SpaceRouter.SpaceIssueDescription(spaceId, issueId)} />;
     }
+
     return (
         <Flex
             gap={40}
@@ -113,7 +157,7 @@ export const SpaceIssuePage: FC<Props> = typedMemo(function SpaceSolutionPage({
                     gap="middle"
                     className={getModuleClasses(styles, 'header')}
                 >
-                    <Link to={SpaceRouter.SpaceTasks(spaceId)} className={getModuleClasses(styles, 'backLink')}>
+                    <Link to={SpaceRouter.SpaceIssues(spaceId)} className={getModuleClasses(styles, 'backLink')}>
                         <LeftOutlined className={getModuleClasses(styles, 'backIcon')} />
                         <Typography.Text className={getModuleClasses(styles, 'backText')}>
                             Назад

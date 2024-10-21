@@ -1,9 +1,12 @@
 import { Table, TableColumnsType, TablePaginationConfig, Tag } from 'antd';
 import { ColumnType } from 'antd/lib/table';
-import { FC, useMemo } from 'react';
+import { FC, useCallback, useMemo } from 'react';
 
 // eslint-disable-next-line
-import { GetIssueResponse, useGetSpaceIssue } from "@entities/issue";
+import { useNavigate } from "react-router-dom";
+import { SpaceRouter } from '@pages/space';
+
+import { GetIssueResponse, useGetSpaceIssue } from '@entities/issue';
 import { useRolesCheck } from '@entities/space';
 
 import { typedMemo } from '@shared/lib';
@@ -27,6 +30,7 @@ export const IssuesTable: FC<Props> = typedMemo(function TeamsTable({
     filters,
     changeFilters,
 }) {
+    const navigate = useNavigate();
     const { isOrganizer, isStudent } = useRolesCheck();
 
     const { data: issues } = useGetSpaceIssue(spaceId, filters);
@@ -118,12 +122,17 @@ export const IssuesTable: FC<Props> = typedMemo(function TeamsTable({
         return result;
     }, [actionRender, isStudent, isOrganizer]);
 
+    const onRow = useCallback((record: GetIssueResponse) => ({
+        onClick: () => navigate(SpaceRouter.SpaceIssue(record.spaceId, record.id)),
+    }), [navigate]);
+
     if (issues?.entityList?.length === 0) {
         return <EmptyTable text="Список заданий пуст" />;
     }
 
     return (
         <Table
+            onRow={onRow}
             rowKey="id"
             columns={columns}
             // expandable={{ expandedRowRender }}

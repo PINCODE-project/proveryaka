@@ -27,7 +27,7 @@ export const CreateIssueFormForm: FC<Props> = typedMemo(function CreateIssueForm
                 id: uuid(),
                 name: '',
                 isRequired: false,
-                formSolutionType: 0,
+                formSolutionType: 1,
                 description: '',
             },
         ]);
@@ -118,7 +118,6 @@ export const CreateIssueFormForm: FC<Props> = typedMemo(function CreateIssueForm
                         >
                             <Select
                                 options={[
-                                    { value: 0, label: 'Не выбран' },
                                     { value: 1, label: 'Текст' },
                                     { value: 2, label: 'Файл' },
                                     { value: 3, label: 'Текст или файлы' },
@@ -145,13 +144,10 @@ export const CreateIssueFormForm: FC<Props> = typedMemo(function CreateIssueForm
                         name="name"
                         rules={[
                             { required: true, message: 'Введите название' },
-                            { max: 64, message: 'Не больше 64 символов' },
                         ]}
                     >
                         <Input
                             placeholder="Введите название..."
-                            showCount
-                            maxLength={64}
                             onChange={event => {
                                 handleChangeIssueForm(form.id, 'name', event.target.value);
                             }}
@@ -162,14 +158,9 @@ export const CreateIssueFormForm: FC<Props> = typedMemo(function CreateIssueForm
                         className={getModuleClasses(styles, 'formItem')}
                         label="Описание"
                         name="description"
-                        rules={[
-                            { max: 2047, message: 'Не больше 2047 символов' },
-                        ]}
                     >
                         <Input.TextArea
                             placeholder="Введите текст..."
-                            maxLength={2047}
-                            showCount
                         />
                     </Form.Item>
                 </Flex>

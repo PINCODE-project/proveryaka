@@ -17,7 +17,7 @@ export type Props = ClassNameProps & TestProps & Readonly<{
     issueId: string;
     spaceId: string;
     issueName: string;
-    filters: GetIssueFilters;
+    filters: GetIssueFilters | undefined;
 }>;
 
 export const DeleteIssueButton: FC<Props> = typedMemo(function DeleteSpaceButton({
