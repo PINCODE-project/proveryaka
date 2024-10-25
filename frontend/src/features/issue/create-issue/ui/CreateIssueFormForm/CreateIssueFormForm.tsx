@@ -1,9 +1,7 @@
 import { DeleteOutlined, DownOutlined, PlusCircleOutlined, UpOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Collapse, Flex, Form, Input, Select, Typography } from 'antd';
+import { Button, Checkbox, Collapse, Flex, Form, FormInstance, Input, Select, Typography } from 'antd';
 import { Dispatch, FC, SetStateAction, useCallback } from 'react';
 import { v4 as uuid } from 'uuid';
-
-import { GetIssueFormDraftResponse } from '@entities/issue-draft/model/GetIssueFormDraftResponse';
 
 import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
@@ -13,183 +11,205 @@ import styles from './CreateIssueFormForm.module.css';
 import { CreateIssueFormRequest } from '../../model/CreateIssueFormRequest';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
+    form: FormInstance;
     forms: CreateIssueFormRequest[];
     setForms: Dispatch<SetStateAction<CreateIssueFormRequest[]>>;
 }>;
 
 export const CreateIssueFormForm: FC<Props> = typedMemo(function CreateIssueFormForm({
+    form,
     forms,
     setForms,
 }) {
-    const handleAddNewIssueForm = useCallback(() => {
-        setForms([...forms,
-            {
-                id: uuid(),
-                name: '',
-                isRequired: false,
-                formSolutionType: 1,
-                description: '',
-            },
-        ]);
+    const handleAddNewIssueForm = useCallback((add: any) => {
+        const initForm = {
+            id: uuid(),
+            name: '',
+            isRequired: false,
+            formSolutionType: 1,
+            description: '',
+        };
+        add(initForm);
+        setForms([...forms, initForm]);
     }, [forms, setForms]);
 
-    const handleChangeIssueForm = (id: string, field: string, value: any) => {
-        setForms(forms.map(
-            form => form.id === id
-                ? { ...forms.find(form => form.id === id), [field]: value }
-                : form,
-        ) as CreateIssueFormRequest[]);
-    };
+    const handleChangeIssueForm = useCallback(
+        (id: string, field: string, value: any) => {
+            setForms(prevForm => prevForm.map(
+                form => form.id === id
+                    ? { ...form, [field]: value }
+                    : form,
+            ));
+        },
+        [setForms],
+    );
 
-    const getIssueFormButtons = (index: number) => {
-        const handleDeleteIssueForm = () => {
-            const newForms = [...forms];
-            newForms.splice(index, 1);
-            setForms(newForms);
-        };
-
-        const handleMoveIssueForms = (oldIndex: number, newIndex: number) => {
+    const getIssueFormButtons = (
+        remove: (index: number) => void,
+        move: (from: number, to: number) => void,
+        index: number,
+        length: number,
+    ) => {
+        const handleMoveIssueForms = (move: (from: number, to: number) => void, oldIndex: number, newIndex: number) => {
             const newForms = [...forms];
             [newForms[oldIndex], [newForms[newIndex]]] = [newForms[newIndex], [newForms[oldIndex]]];
             setForms(newForms);
+            move(oldIndex, newIndex);
+        };
+
+        const handleRemoveIssueForm = () => {
+            const newForms = [...forms];
+            newForms.splice(index, 1);
+            setForms(newForms);
+            remove(index);
         };
 
         return (
-            <Flex gap="middle">
-                <Flex>
-                    {
-                        index !== forms.length - 1 &&
-                        <Button
-                            icon={<DownOutlined />}
-                            type="text"
-                            onClick={e => {
-                                e.stopPropagation();
-                                handleMoveIssueForms(index, index + 1);
-                            }}
-                        />
-                    }
-                    {
-                        index !== 0 &&
-                        <Button
-                            icon={<UpOutlined />}
-                            type="text"
-                            onClick={e => {
-                                e.stopPropagation();
-                                handleMoveIssueForms(index, index - 1);
-                            }}
-                        />
-                    }
-                </Flex>
+            <div>
+                {index !== length - 1 && (
+                    <Button
+                        icon={<DownOutlined />}
+                        type="text"
+                        onClick={e => {
+                            e.stopPropagation();
+                            handleMoveIssueForms(move, index, index + 1);
+                        }}
+                    />
+                )}
+                {index !== 0 && (
+                    <Button
+                        icon={<UpOutlined />}
+                        type="text"
+                        onClick={e => {
+                            e.stopPropagation();
+                            handleMoveIssueForms(move, index, index - 1);
+                        }}
+                    />
+                )}
                 <Button
-                    icon={
-                        <DeleteOutlined
-                            className={getModuleClasses(styles, 'icon')}
-                            style={{ color: '#FF4D4F' }}
-                        />
-                    }
+                    icon={<DeleteOutlined style={{ color: '#FF4D4F' }} />}
                     type="text"
-                    color="danger"
-                    onClick={handleDeleteIssueForm}
+                    onClick={() => handleRemoveIssueForm()}
                 />
+            </div>
+        );
+    };
+
+    const getIssueFormForm = (
+        index: number,
+        restField: any,
+    ) => {
+        const form = { ...forms[index] };
+
+        return (
+            <Flex vertical gap={32}>
+                <Flex gap="large" align="end">
+                    <Form.Item<CreateIssueFormRequest>
+                        {...restField}
+                        className={getModuleClasses(styles, 'formItem')}
+                        label="Тип формы сдачи"
+                        name={[index, 'formSolutionType']}
+                    >
+                        <Select
+                            options={[
+                                { value: 1, label: 'Текст' },
+                                { value: 2, label: 'Файл' },
+                                { value: 3, label: 'Текст или файлы' },
+                            ]}
+                            onChange={value => {
+                                handleChangeIssueForm(form.id, 'formSolutionType', value);
+                            }}
+                        />
+                    </Form.Item>
+
+                    <Form.Item<CreateIssueFormRequest>
+                        {...restField}
+                        className={getModuleClasses(styles, 'formItem')}
+                        layout="horizontal"
+                        name={[index, 'isRequired']}
+                        valuePropName="checked"
+                    >
+                        <Checkbox>Обязательное поле</Checkbox>
+                    </Form.Item>
+                </Flex>
+
+                <Form.Item<CreateIssueFormRequest>
+                    {...restField}
+                    className={getModuleClasses(styles, 'formItem')}
+                    style={{ maxWidth: 580, width: '100%' }}
+                    label="Название"
+                    name={[index, 'name']}
+                    rules={[
+                        { required: true, message: 'Введите название' },
+                    ]}
+                >
+                    <Input
+                        placeholder="Введите название..."
+                        onChange={event => {
+                            handleChangeIssueForm(form.id, 'name', event.target.value);
+                        }}
+                    />
+                </Form.Item>
+
+                <Form.Item<CreateIssueFormRequest>
+                    {...restField}
+                    className={getModuleClasses(styles, 'formItem')}
+                    style={{ maxWidth: 580, width: '100%' }}
+                    label="Описание"
+                    name={[index, 'description']}
+                >
+                    <Input.TextArea
+                        placeholder="Введите текст..."
+                    />
+                </Form.Item>
             </Flex>
         );
     };
 
-    const getIssueFormForm = (form: GetIssueFormDraftResponse) => {
-        return (
-            <Form
-                className={styles.form}
-                name={`CreateIssueForm${form.id}`}
-                layout="vertical"
-                requiredMark={false}
-                initialValues={{
-                    name: form.name,
-                    description: form.description || '',
-                    formSolutionType: form.formSolutionType,
-                    isRequired: form.isRequired,
-                }}
-            >
-                <Flex vertical gap={32}>
-                    <Flex gap="large" align="end">
-                        <Form.Item<CreateIssueFormRequest>
-                            className={getModuleClasses(styles, 'formItem')}
-                            label="Тип формы сдачи"
-                            name="formSolutionType"
-                        >
-                            <Select
-                                options={[
-                                    { value: 1, label: 'Текст' },
-                                    { value: 2, label: 'Файл' },
-                                    { value: 3, label: 'Текст или файлы' },
-                                ]}
-                                onChange={value => {
-                                    handleChangeIssueForm(form.id, 'formSolutionType', value);
-                                }}
-                            />
-                        </Form.Item>
-
-                        <Form.Item<CreateIssueFormRequest>
-                            className={getModuleClasses(styles, 'formItem')}
-                            layout="horizontal"
-                            name="isRequired"
-                            valuePropName="checked"
-                        >
-                            <Checkbox>Обязательное поле</Checkbox>
-                        </Form.Item>
-                    </Flex>
-
-                    <Form.Item<CreateIssueFormRequest>
-                        className={getModuleClasses(styles, 'formItem')}
-                        label="Название"
-                        name="name"
-                        rules={[
-                            { required: true, message: 'Введите название' },
-                        ]}
-                    >
-                        <Input
-                            placeholder="Введите название..."
-                            onChange={event => {
-                                handleChangeIssueForm(form.id, 'name', event.target.value);
-                            }}
-                        />
-                    </Form.Item>
-
-                    <Form.Item<CreateIssueFormRequest>
-                        className={getModuleClasses(styles, 'formItem')}
-                        label="Описание"
-                        name="description"
-                    >
-                        <Input.TextArea
-                            placeholder="Введите текст..."
-                        />
-                    </Form.Item>
-                </Flex>
-            </Form>
-        );
-    };
-
-    const formsToItems = (forms: GetIssueFormDraftResponse[]) => {
-        return forms.map((form, index) => ({
-            key: `form${form.id}`,
-            children: getIssueFormForm(form),
-            extra: getIssueFormButtons(index),
-            label: (
-                <Typography.Title level={5} style={{ margin: 0 }}>
-                    Форма сдачи {index + 1} {form.id}
-                </Typography.Title>
-            ),
-        }));
-    };
-
     return (
-        <Flex vertical gap="large">
-            {
-                forms.length > 0 &&
-                <Collapse defaultActiveKey={['1']} items={formsToItems(forms)} />
-            }
-            <Button icon={<PlusCircleOutlined />} type="primary" onClick={handleAddNewIssueForm}>
-                Добавить критерий
-            </Button>
-        </Flex>
-    );
+        <Form
+            form={form}
+            name="issue_form_form"
+            layout="vertical"
+            requiredMark={false}
+            initialValues={{ forms }}
+        >
+            <Form.List name="forms">
+                {(fields, { add, remove, move }) => (
+                    <Flex vertical gap={32}>
+                        {
+                            fields.length
+                                ? <Collapse
+                                    items={fields.map(({ key, name, ...restField }, index) => {
+                                        return (
+                                            {
+                                                key: `form${key}`,
+                                                label: <Typography.Title level={5} style={{ margin: 0 }}>
+                                                    Форма сдачи {index + 1}
+                                                </Typography.Title>,
+                                                classNames: { header: styles.collapseHeader },
+                                                extra: getIssueFormButtons(remove, move, index, fields.length),
+                                                children: getIssueFormForm(name, restField),
+                                                forceRender: true,
+                                            }
+                                        );
+                                    })}
+                                />
+                                : null
+                        }
+
+                        <Button
+                            type="primary"
+                            icon={<PlusCircleOutlined />}
+                            style={{ width: '200px' }}
+                            onClick={() => handleAddNewIssueForm(add)}
+                        >
+                            Добавить форму сдачи
+                        </Button>
+                    </Flex>
+                )}
+            </Form.List>
+        </Form>
+    )
+    ;
 });

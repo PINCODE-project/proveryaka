@@ -4,6 +4,10 @@
 
 .formItem {
     margin-bottom: 0;
+}
+
+.formItem label {
+    font: var(--font-default);
     font-weight: var(--font-weight-medium);
 }
 

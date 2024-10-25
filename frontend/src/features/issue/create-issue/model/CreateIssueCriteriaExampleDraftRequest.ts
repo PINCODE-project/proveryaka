@@ -18,4 +18,9 @@ export type CreateIssueCriteriaExampleDraftRequest = {
      * ID примера критерия (НА ФРОНТЕ)
      */
     id: string;
+
+    /**
+     * Файл (НА ФРОНТЕ)
+     */
+    file: any;
 };

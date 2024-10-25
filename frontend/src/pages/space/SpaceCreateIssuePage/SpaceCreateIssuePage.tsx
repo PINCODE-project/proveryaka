@@ -1,4 +1,4 @@
-import { Button, Flex, Form, Steps, Typography } from 'antd';
+import { Button, Flex, Form, FormInstance, Steps, Typography } from 'antd';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { FC, useCallback, useMemo, useState } from 'react';
@@ -82,6 +82,8 @@ export const SpaceCreateIssuePage: FC<Props> = typedMemo(function SpacesPage({
 
     const [generalForm] = Form.useForm();
     const [materialsForm] = Form.useForm();
+    const [criteriaForm] = Form.useForm();
+    const [formsForm] = Form.useForm();
     const [materials, setMaterials] = useState<CreateIssueMaterialDraftRequest[]>([]);
     const [criteria, setCriteria] = useState<CreateIssueCriteriaDraftRequest[]>([]);
     const [forms, setForms] = useState<CreateIssueFormRequest[]>([]);
@@ -93,20 +95,16 @@ export const SpaceCreateIssuePage: FC<Props> = typedMemo(function SpacesPage({
                     setIsOpenRestoreModal(true);
 
                     setMaterials(draft.materials!.map(material => ({
-                        ...material,
-                        id: uuid(),
-                        file: null,
-                    })) as CreateIssueMaterialDraftRequest[]);
-
-                    setMaterials(draft.materials!.map(material => ({
                         ...material, id: uuid(), file: null,
                     })) as CreateIssueMaterialDraftRequest[]);
+
                     setCriteria(draft.criteria!.map(crit => ({
                         ...crit,
                         id: uuid(),
                         examples: crit.examples.map(example => ({
                             ...example,
                             id: uuid(),
+                            file: null,
                         })) as CreateIssueCriteriaExampleDraftRequest[],
                     })) as CreateIssueCriteriaDraftRequest[]);
                     setForms(draft.forms!.map(form => ({ ...form, id: uuid() })) as CreateIssueFormRequest[]);
@@ -130,14 +128,15 @@ export const SpaceCreateIssuePage: FC<Props> = typedMemo(function SpacesPage({
         retry: false,
     });
 
-    const handleChangeStep = useCallback(async (step: number) => {
-        if (currentStep === 0 && !(await generalForm.validateFields().then(() => true).catch(() => false))) {
-            return;
-        }
+    const formIsInvalidate = useCallback(async (index: number, form: FormInstance) => {
+        return currentStep === index && !(await form.validateFields().then(() => true).catch(() => false));
+    }, [currentStep]);
 
-        if (currentStep === 1 && !(await materialsForm.validateFields().then(() => true).catch(() => false))) {
-            return;
-        }
+    const handleChangeStep = useCallback(async (step: number) => {
+        if (await formIsInvalidate(0, generalForm)) { return; }
+        if (await formIsInvalidate(1, materialsForm)) { return; }
+        if (await formIsInvalidate(2, criteriaForm)) { return; }
+        if (await formIsInvalidate(3, formsForm)) { return; }
 
         if (currentStep === 0 && isNewDraft) {
             const generalFormValues = generalForm.getFieldsValue();
@@ -178,7 +177,26 @@ export const SpaceCreateIssuePage: FC<Props> = typedMemo(function SpacesPage({
             createIssueMaterialDraft({ spaceId: spaceId!, data });
         }
         if (currentStep === 2) {
-            createIssueCriteriaDraft({ spaceId: spaceId!, data: criteria });
+            const data = await Promise.all(
+                criteria.map(async crit => {
+                    const resExamples = await Promise.all(
+                        crit.examples.map(async example => {
+                            let fileId = example.fileIdValue;
+                            try {
+                                if (example.file) {
+                                    fileId = (await createFile(example.file)).id;
+                                }
+                            } catch (error) {
+                            }
+                            return { ...example, fileIdValue: fileId, file: undefined };
+                        }),
+                    );
+
+                    return { ...crit, examples: resExamples };
+                }),
+            );
+
+            createIssueCriteriaDraft({ spaceId: spaceId!, data });
         }
         if (currentStep === 3) {
             createIssueFormDraft({ spaceId: spaceId!, data: forms as CreateIssueFormRequest[] });
@@ -188,9 +206,9 @@ export const SpaceCreateIssuePage: FC<Props> = typedMemo(function SpacesPage({
         }
 
         setCurrentStep(step);
-    }, [currentStep, generalForm, materialsForm, isNewDraft, createIssueDraft, spaceId, updateMyDraft,
-        createIssueMaterialDraft, materials, createIssueCriteriaDraft, criteria, createIssueFormDraft,
-        forms, saveMyDraft]);
+    }, [formIsInvalidate, generalForm, materialsForm, criteriaForm, formsForm, currentStep, isNewDraft,
+        createIssueDraft, spaceId, updateMyDraft, materials, createIssueMaterialDraft, criteria,
+        createIssueCriteriaDraft, createIssueFormDraft, forms, saveMyDraft]);
 
     const CreateIssueButtons = useMemo(() => {
         const toIssuesPage = () => navigate(SpaceRouter.SpaceIssues(spaceId || ''));
@@ -245,6 +263,7 @@ export const SpaceCreateIssuePage: FC<Props> = typedMemo(function SpacesPage({
         if (currentStep === 2) {
             return (
                 <CreateIssueCriteriaForm
+                    form={criteriaForm}
                     criteria={criteria}
                     setCriteria={setCriteria}
                 />
@@ -254,13 +273,14 @@ export const SpaceCreateIssuePage: FC<Props> = typedMemo(function SpacesPage({
         if (currentStep === 3) {
             return (
                 <CreateIssueFormForm
+                    form={formsForm}
                     forms={forms}
                     setForms={setForms}
                 />
             );
         }
-    }, [currentStep, isBlockForm, generalForm, spaceSettings?.isUseTeam, myIssueDraft, materialsForm,
-        materials, criteria, forms]);
+    }, [currentStep, isBlockForm, generalForm, spaceSettings?.isUseTeam, myIssueDraft, materialsForm, materials,
+        criteriaForm, criteria, formsForm, forms]);
 
     const handleRestoreDraft = useCallback(() => {
         setIsBlockForm(false);

@@ -11,7 +11,13 @@ import { GetIssueResponse } from '../model/GetIssueResponse';
 export function useGetSpaceIssue(
     spaceId: string,
     filters?: GetIssueFilters,
+    orderBy?: number,
+    isDesc?: boolean,
     options?: AxiosUseQueryOptions<GetListResponse<GetIssueResponse>>,
 ) {
-    return useQuery(getSpaceIssueQueryKey(spaceId, filters), () => getSpaceIssues(spaceId, filters), options);
+    return useQuery(
+        getSpaceIssueQueryKey(spaceId, filters, orderBy, isDesc),
+        () => getSpaceIssues(spaceId, filters, orderBy, isDesc),
+        options,
+    );
 }
