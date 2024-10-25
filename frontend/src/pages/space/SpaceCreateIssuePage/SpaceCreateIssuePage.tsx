@@ -165,12 +165,17 @@ export const SpaceCreateIssuePage: FC<Props> = typedMemo(function SpacesPage({
                 materials.map(async material => {
                     let fileId = material.fileId;
                     try {
-                        if (material.file) {
+                        if (!material.fileId && material.file) {
                             fileId = (await createFile(material.file)).id;
                         }
                     } catch (error) {
                     }
-                    return { ...material, fileId, file: undefined };
+                    return {
+                        ...material,
+                        fileId: material.type === 2 ? fileId : null,
+                        text: material.type !== 2 ? material.text : null,
+                        file: undefined,
+                    };
                 }),
             );
 

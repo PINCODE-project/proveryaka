@@ -24,7 +24,6 @@ export const CreateIssueMaterialsForm: FC<Props> = typedMemo(function CreateIssu
     materials,
     setMaterials,
 }) {
-    console.log('materials', materials);
     const handleAddNewMaterial = useCallback(
         (add: FormListOperation['add']) => {
             const initMaterial = {
@@ -127,13 +126,7 @@ export const CreateIssueMaterialsForm: FC<Props> = typedMemo(function CreateIssu
                                 { value: 1, label: 'Ссылка' },
                                 { value: 2, label: 'Файл' },
                             ]}
-                            onChange={value => {
-                                handleChangeMaterial(material.id, 'type', value);
-                                if (value !== 2) {
-                                    handleChangeMaterial(material.id, 'file', null);
-                                    handleChangeMaterial(material.id, 'fileId', null);
-                                }
-                            }}
+                            onChange={value => handleChangeMaterial(material.id, 'type', value)}
                         />
                     </Form.Item>
                     {
