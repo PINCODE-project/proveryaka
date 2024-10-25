@@ -54,7 +54,7 @@ export const DeleteIssueButton: FC<Props> = typedMemo(function DeleteSpaceButton
         }
 
         const canDelete = await customConfirm({
-            title: 'Удалить пространство',
+            title: 'Удалить задание',
             text: <>Вы уверены, что хотите удалить задание <b>{issueName}</b>? </>,
         });
 

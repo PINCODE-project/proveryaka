@@ -114,7 +114,7 @@ export const CreateIssueFormForm: FC<Props> = typedMemo(function CreateIssueForm
                             options={[
                                 { value: 1, label: 'Текст' },
                                 { value: 2, label: 'Файл' },
-                                { value: 3, label: 'Текст или файлы' },
+                                { value: 3, label: 'Текст и/или файл' },
                             ]}
                             onChange={value => {
                                 handleChangeIssueForm(form.id, 'formSolutionType', value);
