@@ -166,7 +166,7 @@ export const IssuesTable: FC<Props> = typedMemo(function TeamsTable({
             dataSource={issues?.entityList || []}
             onChange={handleChange}
             pagination={{
-                hideOnSinglePage: true,
+                hideOnSinglePage: false,
                 current: filters.page! + 1,
                 pageSize: filters.count,
                 total: issueCount?.count || 0,
