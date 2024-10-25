@@ -30,7 +30,7 @@ export const SpaceIssuesPage: FC<Props> = typedMemo(function SpaceTeamsPage({
 }) {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
-    const { isOrganizer } = useRolesCheck();
+    const { isOrganizer, isStudent } = useRolesCheck();
     const spaceId = useSpaceId();
 
     const [filters, changeFilters] = useListFilters<GetIssueFilters>({
@@ -125,6 +125,33 @@ export const SpaceIssuesPage: FC<Props> = typedMemo(function SpaceTeamsPage({
         }
     }, [spaceId, isOrganizer, navigate]);
 
+    const getStatusFilter = useCallback(() => {
+        const result: {value: number | null; label: string}[] = [
+            { value: null, label: 'Все статусы' },
+        ];
+
+        if (isOrganizer) {
+            result.push({ value: 0, label: 'Не опубликовано' });
+        }
+
+        result.push(
+            { value: 1, label: 'Открыта сдача' },
+            { value: 5, label: 'Сдача просрочена' },
+        );
+
+        if (isStudent) {
+            result.push({ value: 6, label: 'Сдано' });
+        }
+
+        result.push(
+            { value: 2, label: 'На проверке' },
+            { value: 8, label: 'Проверка просрочена' },
+            { value: 9, label: 'Проверено' },
+        );
+
+        return result;
+    }, [isStudent, isOrganizer]);
+
     if (!spaceId) {
         return <Navigate to={SpaceRouter.Spaces} />;
     }
@@ -149,15 +176,7 @@ export const SpaceIssuesPage: FC<Props> = typedMemo(function SpaceTeamsPage({
                             changeFilters('status', value);
                             changeFilters('page', 0);
                         }}
-                        options={[
-                            { value: null, label: 'Все статусы' },
-                            { value: 0, label: 'Не опубликовано' },
-                            { value: 1, label: 'Открыта сдача' },
-                            { value: 5, label: 'Сдача просрочена' },
-                            { value: 2, label: 'На проверке' },
-                            { value: 8, label: 'Проверка просрочена' },
-                            { value: 9, label: 'Проверено' },
-                        ]}
+                        options={getStatusFilter()}
                     />
                 </Flex>
 

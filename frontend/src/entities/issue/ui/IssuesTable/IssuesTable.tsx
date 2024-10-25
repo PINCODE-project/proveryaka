@@ -53,7 +53,6 @@ export const IssuesTable: FC<Props> = typedMemo(function TeamsTable({
     const { data: issueCount } = useGetSpaceIssueCount(spaceId, filters);
 
     const handleChange: OnChange = (pagination: TablePaginationConfig, filters, sorter) => {
-        console.log('Various parameters', pagination, filters, sorter);
         setSortedInfo(sorter as Sorts);
         changeFilters('page', pagination.current! - 1 || 0);
         changeFilters('count', pagination.pageSize || 10);
@@ -148,7 +147,7 @@ export const IssuesTable: FC<Props> = typedMemo(function TeamsTable({
         }
 
         return result;
-    }, [actionRender, isStudent, isOrganizer]);
+    }, [sortedInfo.columnKey, sortedInfo.order, isStudent, isOrganizer, actionRender]);
 
     const onRow = useCallback((record: GetIssueResponse) => ({
         onClick: () => navigate(SpaceRouter.SpaceIssueDescription(record.spaceId, record.id)),
