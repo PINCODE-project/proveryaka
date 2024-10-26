@@ -17,7 +17,7 @@ export type Props = ClassNameProps & TestProps & Readonly<{
     setMaterials: Dispatch<SetStateAction<CreateIssueMaterialDraftRequest[]>>;
 }>;
 
-const linkExpression = /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi;
+const linkExpression = /[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/gi;
 
 export const CreateIssueMaterialsForm: FC<Props> = typedMemo(function CreateIssueMaterialsForm({
     form,
@@ -228,6 +228,7 @@ export const CreateIssueMaterialsForm: FC<Props> = typedMemo(function CreateIssu
                     >
                         <Input.TextArea
                             placeholder="Введите текст..."
+                            style={{ resize: 'vertical' }}
                             onChange={e => handleChangeMaterial(material.id, 'text', e.target.value)}
                         />
                     </Form.Item>
@@ -258,6 +259,7 @@ export const CreateIssueMaterialsForm: FC<Props> = typedMemo(function CreateIssu
                 >
                     <Input.TextArea
                         placeholder="Введите текст..."
+                        style={{ resize: 'vertical' }}
                         onChange={value => handleChangeMaterial(material.id, 'description', value.target.value)}
                     />
                 </Form.Item>
@@ -281,7 +283,6 @@ export const CreateIssueMaterialsForm: FC<Props> = typedMemo(function CreateIssu
                             fields.length
                                 ? <Collapse
                                     items={fields.map(({ key, name, ...restField }, index) => {
-                                        console.log(fields);
                                         return (
                                             {
                                                 key: `material${key}`,

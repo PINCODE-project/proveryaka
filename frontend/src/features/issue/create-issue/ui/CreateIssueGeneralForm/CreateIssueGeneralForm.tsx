@@ -1,7 +1,7 @@
-import { DatePicker, Flex, Form, FormInstance, Input, InputNumber, Switch } from 'antd';
+import { DatePicker, Flex, Form, FormInstance, Input, InputNumber, Switch, Typography } from 'antd';
 import { Store } from 'antd/es/form/interface';
 import dayjs from 'dayjs';
-import { FC, useLayoutEffect } from 'react';
+import { FC, useEffect, useLayoutEffect, useState } from 'react';
 
 import { CreateIssueDraftRequest } from '@features/issue/create-issue/model/CreateIssueDraftRequest';
 
@@ -11,6 +11,37 @@ import { ClassNameProps, TestProps } from '@shared/types';
 import { HelpInfo } from '@shared/ui/HelpInfo';
 
 import styles from './CreateIssueGeneralForm.module.css';
+
+type DeadlineProps = {
+    title: string;
+    deadlineDate: Date;
+};
+const Deadline: FC<DeadlineProps> = ({ title, deadlineDate }) => {
+    const [timeLeft, setTimeLeft] = useState('');
+
+    useEffect(() => {
+        const updateCountdown = (deadlineDate: Date) => {
+            const now = new Date();
+            const diff = deadlineDate.getTime() - now.getTime();
+            if (diff <= 0) {
+                setTimeLeft('Дедлайн прошел 💀');
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+            setTimeLeft(`${title} через ${days ? `${days} дн.` : ''} ${hours ? `${hours} ч.` : ''} ${!days && !hours ? '<1 час' : ''}`);
+        };
+
+        updateCountdown(deadlineDate);
+        const intervalId = setInterval(() => updateCountdown(deadlineDate), 1000);
+
+        return () => clearInterval(intervalId);
+    }, [deadlineDate, title]);
+
+    return <Typography.Text style={{ fontSize: '12px' }}>{timeLeft}</Typography.Text>;
+};
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     form: FormInstance;
@@ -32,6 +63,9 @@ export const CreateIssueGeneralForm: FC<Props> = typedMemo(function CreateIssueG
             submitDeadlineDateUtc: dayjs(initialValue.submitDeadlineDateUtc),
         });
     }, [form, initialValue]);
+
+    const assessmentDeadlineDateUtc = Form.useWatch('assessmentDeadlineDateUtc', form);
+    const submitDeadlineDateUtc = Form.useWatch('submitDeadlineDateUtc', form);
 
     return (
         <Form
@@ -72,6 +106,7 @@ export const CreateIssueGeneralForm: FC<Props> = typedMemo(function CreateIssueG
                         placeholder="Введите текст..."
                         maxLength={2047}
                         showCount
+                        style={{ resize: 'vertical' }}
                     />
                 </Form.Item>
 
@@ -120,7 +155,22 @@ export const CreateIssueGeneralForm: FC<Props> = typedMemo(function CreateIssueG
                             layout="horizontal"
                             label="Максимальное количество проверяющих"
                             name="checksCountMax"
-                            rules={[{ required: true, message: 'Введите количество' }]}
+                            dependencies={['checksCountMin']}
+                            rules={[
+                                { required: true, message: 'Введите количество' },
+                                ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                        if (value === null ||
+                                            getFieldValue('checksCountMin') <= value
+                                        ) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject(new Error(
+                                            'Макс. количество >= минимальное!',
+                                        ));
+                                    },
+                                }),
+                            ]}
                         >
                             <InputNumber min={1} placeholder="0" />
                         </Form.Item>
@@ -133,25 +183,74 @@ export const CreateIssueGeneralForm: FC<Props> = typedMemo(function CreateIssueG
                 </Flex>
 
                 <Flex vertical gap={16}>
-                    <Form.Item<CreateIssueDraftRequest>
-                        className={getModuleClasses(styles, 'formItem')}
-                        layout="horizontal"
-                        label="Дедлайн сдачи"
-                        name="submitDeadlineDateUtc"
-                        rules={[{ required: true, message: 'Выберите дату и время' }]}
-                    >
-                        <DatePicker showTime placeholder="Выберите дату и время" showNow={false} />
-                    </Form.Item>
+                    <Flex gap={20} align="center">
+                        <Form.Item<CreateIssueDraftRequest>
+                            className={getModuleClasses(styles, 'formItem')}
+                            layout="horizontal"
+                            label="Дедлайн сдачи"
+                            name="submitDeadlineDateUtc"
+                            rules={[
+                                { required: true, message: 'Выберите дату и время' },
+                                () => ({
+                                    validator(_, value) {
+                                        if (value === null ||
+                                            value.isAfter(new Date())
+                                        ) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject(new Error(
+                                            'Дедлайн сдачи должен быть позже!',
+                                        ));
+                                    },
+                                }),
+                            ]}
+                        >
+                            <DatePicker showTime placeholder="Выберите дату и время" showNow={false} />
+                        </Form.Item>
+                        {
+                            submitDeadlineDateUtc
+                                ? <Deadline deadlineDate={submitDeadlineDateUtc?.toDate()} title="Дедлайн сдачи" />
+                                : null
+                        }
+                    </Flex>
 
-                    <Form.Item<CreateIssueDraftRequest>
-                        className={getModuleClasses(styles, 'formItem')}
-                        layout="horizontal"
-                        label="Дедлайн проверки"
-                        name="assessmentDeadlineDateUtc"
-                        rules={[{ required: true, message: 'Выберите дату и время' }]}
-                    >
-                        <DatePicker showTime placeholder="Выберите дату и время" showNow={false} />
-                    </Form.Item>
+                    <Flex gap={20} align="center">
+                        <Form.Item<CreateIssueDraftRequest>
+                            className={getModuleClasses(styles, 'formItem')}
+                            layout="horizontal"
+                            label="Дедлайн проверки"
+                            name="assessmentDeadlineDateUtc"
+                            dependencies={['submitDeadlineDateUtc']}
+                            rules={[
+                                { required: true, message: 'Выберите дату и время' },
+                                ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                        if (value === null ||
+                                            getFieldValue('submitDeadlineDateUtc').isBefore(value?.toDate())
+                                        ) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject(new Error(
+                                            'Дедлайн проверки должен быть позже, чем дедлайн сдачи!',
+                                        ));
+                                    },
+                                }),
+                            ]}
+                        >
+                            <DatePicker showTime placeholder="Выберите дату и время" showNow={false} />
+                        </Form.Item>
+
+                        {
+                            assessmentDeadlineDateUtc
+                                ? (
+                                    <Deadline
+                                        deadlineDate={assessmentDeadlineDateUtc?.toDate()}
+                                        title="Дедлайн проверки"
+                                    />
+                                )
+                                : null
+                        }
+                    </Flex>
                 </Flex>
             </Flex>
         </Form>

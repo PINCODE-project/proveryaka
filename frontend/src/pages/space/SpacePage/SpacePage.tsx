@@ -73,13 +73,13 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
                 {
                     key: '1',
                     label: <EditSpaceModal
-		                triggerComponent={
-		                    onOpen => (<Typography.Text onClick={onOpen} className={styles.menuItem}>
+                        triggerComponent={
+                            onOpen => (<Typography.Text onClick={onOpen} className={styles.menuItem}>
                                 Изменить пространство
                             </Typography.Text>)
-		                }
-		                spaceId={spaceId ?? ''}
-		            />,
+                        }
+                        spaceId={spaceId ?? ''}
+                    />,
                 },
                 {
                     key: '2',

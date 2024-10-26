@@ -75,7 +75,7 @@ export const SpacesTable: FC<Props> = typedMemo(function SpacesTable({
     ], [renderActions]);
 
     const onRow = useCallback((record: GetSpaceResponse) => ({
-        onClick: () => navigate(SpaceRouter.Space(record.id)),
+        onClick: () => navigate(SpaceRouter.SpaceIssues(record.id)),
     }), [navigate]);
 
     return (

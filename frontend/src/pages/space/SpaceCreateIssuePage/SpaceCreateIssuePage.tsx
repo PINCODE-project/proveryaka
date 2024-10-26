@@ -1,7 +1,7 @@
 import { Button, Flex, Form, FormInstance, Steps, Typography } from 'antd';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { FC, useCallback, useMemo, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { useQueryClient } from 'react-query';
 import { Link, useNavigate } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
@@ -28,7 +28,7 @@ import { CreateIssueMaterialsForm } from '@features/issue/create-issue/ui/Create
 import { RestoreDraftModal } from '@features/issue/create-issue/ui/RestoreDraftModal';
 
 import { getMyIssueDraftQueryKey, useGetMyIssueDraft } from '@entities/issue-draft';
-import { useGetSpaceSettings } from '@entities/space';
+import { useGetSpaceSettings, useRolesCheck } from '@entities/space';
 
 import { createFile } from '@shared/api/file/createFile';
 import Logo from '@shared/assets/images/logo.svg';
@@ -51,6 +51,12 @@ export const SpaceCreateIssuePage: FC<Props> = typedMemo(function SpacesPage({
     const queryClient = useQueryClient();
 
     const spaceId = useSpaceId();
+
+    const { isOrganizer } = useRolesCheck();
+
+    useEffect(() => {
+        if (!isOrganizer) { navigate(SpaceRouter.SpaceIssues(spaceId!)); }
+    }, [isOrganizer, navigate, spaceId]);
 
     const [currentStep, setCurrentStep] = useState(0);
     const [isOpenRestoreModal, setIsOpenRestoreModal] = useState(false);
@@ -76,7 +82,7 @@ export const SpaceCreateIssuePage: FC<Props> = typedMemo(function SpacesPage({
         retry: false,
         onSuccess: () => {
             queryClient.invalidateQueries(getMyIssueDraftQueryKey(spaceId!));
-            navigate(SpaceRouter.Space(spaceId!));
+            navigate(SpaceRouter.SpaceIssues(spaceId!));
         },
     });
 
@@ -101,6 +107,7 @@ export const SpaceCreateIssuePage: FC<Props> = typedMemo(function SpacesPage({
                     setCriteria(draft.criteria!.map(crit => ({
                         ...crit,
                         id: uuid(),
+                        weight: crit.weight * 100,
                         examples: crit.examples.map(example => ({
                             ...example,
                             id: uuid(),
@@ -133,10 +140,18 @@ export const SpaceCreateIssuePage: FC<Props> = typedMemo(function SpacesPage({
     }, [currentStep]);
 
     const handleChangeStep = useCallback(async (step: number) => {
-        if (await formIsInvalidate(0, generalForm)) { return; }
-        if (await formIsInvalidate(1, materialsForm)) { return; }
-        if (await formIsInvalidate(2, criteriaForm)) { return; }
-        if (await formIsInvalidate(3, formsForm)) { return; }
+        if (await formIsInvalidate(0, generalForm)) {
+            return;
+        }
+        if (await formIsInvalidate(1, materialsForm)) {
+            return;
+        }
+        if (await formIsInvalidate(2, criteriaForm)) {
+            return;
+        }
+        if (await formIsInvalidate(3, formsForm)) {
+            return;
+        }
 
         if (currentStep === 0 && isNewDraft) {
             const generalFormValues = generalForm.getFieldsValue();
@@ -165,7 +180,7 @@ export const SpaceCreateIssuePage: FC<Props> = typedMemo(function SpacesPage({
                 materials.map(async material => {
                     let fileId = material.fileId;
                     try {
-                        if (!material.fileId && material.file) {
+                        if (material.type === 2 && !material.fileId && material.file) {
                             fileId = (await createFile(material.file)).id;
                         }
                     } catch (error) {
@@ -197,7 +212,7 @@ export const SpaceCreateIssuePage: FC<Props> = typedMemo(function SpacesPage({
                         }),
                     );
 
-                    return { ...crit, examples: resExamples };
+                    return { ...crit, weight: crit.weight / 100, examples: resExamples };
                 }),
             );
 

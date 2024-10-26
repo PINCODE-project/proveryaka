@@ -1,6 +1,6 @@
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, GetProp, Upload, UploadProps } from 'antd';
-import { UploadChangeParam, UploadListType } from 'antd/es/upload/interface';
+import { UploadChangeParam } from 'antd/es/upload/interface';
 import { FC, ReactNode, useCallback, useState } from 'react';
 
 import { typedMemo } from '@shared/lib';

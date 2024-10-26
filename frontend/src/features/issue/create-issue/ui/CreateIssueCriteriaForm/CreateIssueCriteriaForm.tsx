@@ -23,7 +23,6 @@ import { HelpInfo } from '@shared/ui/HelpInfo';
 import styles from './CreateIssueCriteriaForm.module.css';
 import { CreateIssueCriteriaDraftRequest } from '../../model/CreateIssueCriteriaDraftRequest';
 import { CreateIssueCriteriaExampleDraftRequest } from '../../model/CreateIssueCriteriaExampleDraftRequest';
-import { CreateIssueMaterialDraftRequest } from '../../model/CreateIssueMaterialDraftRequest';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     form: FormInstance;
@@ -36,7 +35,6 @@ export const CreateIssueCriteriaForm: FC<Props> = typedMemo(function CreateIssue
     criteria,
     setCriteria,
 }) {
-    console.log('criteria', criteria);
     const handleAddNewCriteria = useCallback((add: FormListOperation['add']) => {
         const initCriteria = {
             id: uuid(),
@@ -176,10 +174,9 @@ export const CreateIssueCriteriaForm: FC<Props> = typedMemo(function CreateIssue
     const getCriteriaExampleForm = (
         critIndex: number,
         exampleIndex: number,
-        restField: any,
+        restField: {fieldKey?: number | undefined},
         remove: (index: number) => void,
     ) => {
-        console.log('getCriteriaExampleForm', critIndex, exampleIndex, criteria);
         const crit = { ...criteria[critIndex] } as CreateIssueCriteriaDraftRequest;
         const example = { ...crit.examples[exampleIndex] } as CreateIssueCriteriaExampleDraftRequest;
 
@@ -205,7 +202,7 @@ export const CreateIssueCriteriaForm: FC<Props> = typedMemo(function CreateIssue
                     </Flex>
 
                     <Flex gap={32}>
-                        <Form.Item<CreateIssueCriteriaExampleDraftRequest>
+                        <Form.Item
                             {...restField}
                             className={getModuleClasses(styles, 'formItem')}
                             name={[exampleIndex, 'exampleType']}
@@ -283,7 +280,7 @@ export const CreateIssueCriteriaForm: FC<Props> = typedMemo(function CreateIssue
                         </Form.Item>
                     </Flex>
                 </Flex>
-                <Form.Item<CreateIssueCriteriaExampleDraftRequest>
+                <Form.Item
                     {...restField}
                     className={getModuleClasses(styles, 'formItem')}
                     style={{ maxWidth: 580, width: '100%' }}
@@ -297,6 +294,7 @@ export const CreateIssueCriteriaForm: FC<Props> = typedMemo(function CreateIssue
                         placeholder="Введите текст..."
                         maxLength={2047}
                         showCount
+                        style={{ resize: 'vertical' }}
                         onChange={event => {
                             handleChangeCriteriaExample(crit.id, example.id, 'description', event.target.value);
                         }}
@@ -306,14 +304,14 @@ export const CreateIssueCriteriaForm: FC<Props> = typedMemo(function CreateIssue
         );
     };
 
-    const getCriteriaForm = (index: number, restField: any) => {
+    const getCriteriaForm = (index: number, restField: {fieldKey?: number | undefined}) => {
         const crit = { ...criteria[index] };
 
         return (
             <Flex vertical gap={32}>
                 <Flex vertical gap={28}>
                     <Flex gap={75}>
-                        <Form.Item<CreateIssueCriteriaDraftRequest>
+                        <Form.Item
                             {...restField}
                             style={{ maxWidth: 580, width: '100%' }}
                             className={getModuleClasses(styles, 'formItem')}
@@ -357,6 +355,7 @@ export const CreateIssueCriteriaForm: FC<Props> = typedMemo(function CreateIssue
                                 <InputNumber
                                     min={0}
                                     placeholder="0"
+                                    suffix="%"
                                     onChange={value => {
                                         handleChangeCriteria(crit.id, 'weight', value);
                                     }}
@@ -377,7 +376,7 @@ export const CreateIssueCriteriaForm: FC<Props> = typedMemo(function CreateIssue
                                 />
                             </Flex>
 
-                            <Form.Item<CreateIssueMaterialDraftRequest>
+                            <Form.Item
                                 {...restField}
                                 className={getModuleClasses(styles, 'formItem')}
                                 name={[index, 'description']}
@@ -389,6 +388,7 @@ export const CreateIssueCriteriaForm: FC<Props> = typedMemo(function CreateIssue
                                     placeholder="Введите текст..."
                                     maxLength={2047}
                                     showCount
+                                    style={{ resize: 'vertical' }}
                                     onChange={event => {
                                         handleChangeCriteria(crit.id, 'description', event.target.value);
                                     }}
@@ -409,9 +409,9 @@ export const CreateIssueCriteriaForm: FC<Props> = typedMemo(function CreateIssue
                                     }
                                 />
                             </Flex>
-                            <Flex gap={10} align="center">
-                                От
-                                <Form.Item<CreateIssueCriteriaDraftRequest>
+                            <Flex gap={10}>
+                                <Typography style={{ lineHeight: '32px' }}>От</Typography>
+                                <Form.Item
                                     {...restField}
                                     className={getModuleClasses(styles, 'formItem')}
                                     name={[index, 'minScore']}
@@ -424,12 +424,27 @@ export const CreateIssueCriteriaForm: FC<Props> = typedMemo(function CreateIssue
                                         }}
                                     />
                                 </Form.Item>
-                                до
-                                <Form.Item<CreateIssueCriteriaDraftRequest>
+                                <Typography style={{ lineHeight: '32px' }}>до</Typography>
+                                <Form.Item
                                     {...restField}
                                     className={getModuleClasses(styles, 'formItem')}
                                     name={[index, 'maxScore']}
-                                    rules={[{ required: true, message: 'Введите максимальную оценку' }]}
+                                    dependencies={[['criteria', index, 'minScore']]}
+                                    rules={[
+                                        { required: true, message: 'Введите максимальную оценку' },
+                                        ({ getFieldValue }) => ({
+                                            validator(_, value) {
+                                                if (value === null ||
+                                                    getFieldValue(['criteria', index, 'minScore']) < value
+                                                ) {
+                                                    return Promise.resolve();
+                                                }
+                                                return Promise.reject(new Error(
+                                                    'Макс. оценка > минимальная!',
+                                                ));
+                                            },
+                                        }),
+                                    ]}
                                 >
                                     <InputNumber
                                         placeholder="0"
@@ -448,7 +463,7 @@ export const CreateIssueCriteriaForm: FC<Props> = typedMemo(function CreateIssue
                         {(fields, { add, remove }) => (
                             <Flex vertical gap={32}>
                                 {
-                                    fields.map(({ key, name, ...restField }, exampleIndex) => {
+                                    fields.map(({ name, ...restField }) => {
                                         return (
                                             getCriteriaExampleForm(index, name, restField, remove)
                                         );
@@ -484,18 +499,16 @@ export const CreateIssueCriteriaForm: FC<Props> = typedMemo(function CreateIssue
                             fields.length
                                 ? <Collapse
                                     items={fields.map(({ key, name, ...restField }, index) => {
-                                        return (
-                                            {
-                                                key: `criteria${key}`,
-                                                label: <Typography.Title level={5} style={{ margin: 0 }}>
+                                        return ({
+                                            key: `criteria${key}`,
+                                            label: <Typography.Title level={5} style={{ margin: 0 }}>
                                                     Критерий {index + 1}
-                                                </Typography.Title>,
-                                                classNames: { header: styles.collapseHeader },
-                                                extra: getCriteriaButtons(remove, move, index, fields.length),
-                                                children: getCriteriaForm(name, restField),
-                                                forceRender: true,
-                                            }
-                                        );
+                                            </Typography.Title>,
+                                            classNames: { header: styles.collapseHeader },
+                                            extra: getCriteriaButtons(remove, move, index, fields.length),
+                                            children: getCriteriaForm(name, restField),
+                                            forceRender: true,
+                                        });
                                     })}
                                 />
                                 : null

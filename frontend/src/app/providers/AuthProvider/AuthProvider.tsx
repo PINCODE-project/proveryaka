@@ -1,8 +1,5 @@
 import { Flex, Spin } from 'antd';
 import { createContext, FC, PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-
-import { AuthRouter } from '@pages/auth';
 
 import { refreshToken } from '@features/auth/refresh-token';
 

@@ -10,7 +10,7 @@ import { FlexContainer } from '@shared/ui';
 
 import styles from './ResetPasswordSubmitPage.module.css';
 
-export type Props = ClassNameProps & TestProps & Readonly<{}>;
+export type Props = ClassNameProps & TestProps;
 
 export const ResetPasswordSubmitPage: FC<Props> = typedMemo(function ResetPasswordSubmitPage({
     className,

@@ -6,7 +6,7 @@ import { useIssueId } from '@shared/hooks';
 import { typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 
-export type Props = ClassNameProps & TestProps & Readonly<{}>;
+export type Props = ClassNameProps & TestProps;
 
 export const SpaceIssueCriteria: FC<Props> = typedMemo(function SpaceIssueCriteria() {
     const issueId = useIssueId();

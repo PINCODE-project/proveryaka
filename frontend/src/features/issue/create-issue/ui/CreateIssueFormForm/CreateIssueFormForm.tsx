@@ -129,7 +129,11 @@ export const CreateIssueFormForm: FC<Props> = typedMemo(function CreateIssueForm
                         name={[index, 'isRequired']}
                         valuePropName="checked"
                     >
-                        <Checkbox>Обязательное поле</Checkbox>
+                        <Checkbox
+                            onChange={e => {
+                                handleChangeIssueForm(form.id, 'isRequired', e.target.checked);
+                            }}
+                        >Обязательное поле</Checkbox>
                     </Form.Item>
                 </Flex>
 
@@ -159,7 +163,11 @@ export const CreateIssueFormForm: FC<Props> = typedMemo(function CreateIssueForm
                     name={[index, 'description']}
                 >
                     <Input.TextArea
+                        style={{ resize: 'vertical' }}
                         placeholder="Введите текст..."
+                        onChange={event => {
+                            handleChangeIssueForm(form.id, 'description', event.target.value);
+                        }}
                     />
                 </Form.Item>
             </Flex>

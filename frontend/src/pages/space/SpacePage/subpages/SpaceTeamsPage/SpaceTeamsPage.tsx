@@ -132,7 +132,7 @@ export const SpaceTeamsPage: FC<Props> = typedMemo(function SpaceTeamsPage({
                     onClick={() => handleRemove(team, record)}
                 />
             );
-        }, [removeTeamUser, spaceId]);
+        }, [removeTeamUser, spaceId, handleRemove]);
 
     if (!spaceId) {
         return <Navigate to={SpaceRouter.Spaces} />;
