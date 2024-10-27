@@ -3,7 +3,7 @@ import { extractData } from '@shared/lib';
 
 import { GetIssueDraftResponse } from '../model/GetIssueDraftResponse';
 
-export function getMyIssueDraft(spaceId: string): Promise<GetIssueDraftResponse | void> {
+export function getMyIssueDraft(spaceId: string): Promise<GetIssueDraftResponse> {
     return estimateHttp.get<GetIssueDraftResponse>(`issue-draft/my/${spaceId}`, {
         headers: {
             NotNotify: true,

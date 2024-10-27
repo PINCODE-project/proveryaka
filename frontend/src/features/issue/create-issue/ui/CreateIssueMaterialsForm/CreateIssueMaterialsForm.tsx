@@ -1,7 +1,9 @@
-import { DeleteOutlined, DownOutlined, PlusCircleOutlined, UpOutlined } from '@ant-design/icons';
+import { PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Collapse, Flex, Form, FormInstance, FormListOperation, Input, Select, Typography } from 'antd';
 import { Dispatch, FC, SetStateAction, useCallback } from 'react';
 import { v4 as uuid } from 'uuid';
+
+import { MaterialButtons } from '@features/issue/create-issue/ui/CreateIssueMaterialsForm/MaterialsButtons';
 
 import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
@@ -41,17 +43,6 @@ export const CreateIssueMaterialsForm: FC<Props> = typedMemo(function CreateIssu
         [materials, setMaterials],
     );
 
-    const handleMoveMaterial = (
-        move: (from: number, to: number) => void,
-        oldIndex: number,
-        newIndex: number,
-    ) => {
-        move(oldIndex, newIndex);
-        const newMaterials = [...materials];
-        [newMaterials[oldIndex], [newMaterials[newIndex]]] = [newMaterials[newIndex], [newMaterials[oldIndex]]];
-        setMaterials(newMaterials);
-    };
-
     const handleChangeMaterial = useCallback(
         (id: string, field: string, value: any) => {
             setMaterials(prevMaterials => prevMaterials.map(
@@ -62,50 +53,6 @@ export const CreateIssueMaterialsForm: FC<Props> = typedMemo(function CreateIssu
         },
         [setMaterials],
     );
-
-    const getMaterialButtons = (
-        remove: (index: number) => void,
-        move: (from: number, to: number) => void,
-        index: number,
-        length: number,
-    ) => {
-        const handleRemoveMaterial = () => {
-            const newMaterials = [...materials];
-            newMaterials.splice(index, 1);
-            setMaterials(newMaterials);
-            remove(index);
-        };
-
-        return (
-            <div>
-                {index !== length - 1 && (
-                    <Button
-                        icon={<DownOutlined />}
-                        type="text"
-                        onClick={e => {
-                            e.stopPropagation();
-                            handleMoveMaterial(move, index, index + 1);
-                        }}
-                    />
-                )}
-                {index !== 0 && (
-                    <Button
-                        icon={<UpOutlined />}
-                        type="text"
-                        onClick={e => {
-                            e.stopPropagation();
-                            handleMoveMaterial(move, index, index - 1);
-                        }}
-                    />
-                )}
-                <Button
-                    icon={<DeleteOutlined style={{ color: '#FF4D4F' }} />}
-                    type="text"
-                    onClick={() => handleRemoveMaterial()}
-                />
-            </div>
-        );
-    };
 
     const getMaterialForm = (index: number, restField: {fieldKey?: number | undefined}) => {
         const material = { ...materials[index] };
@@ -293,7 +240,16 @@ export const CreateIssueMaterialsForm: FC<Props> = typedMemo(function CreateIssu
                                                     </Typography.Title>
                                                 ),
                                                 classNames: { header: styles.collapseHeader },
-                                                extra: getMaterialButtons(remove, move, index, fields.length),
+                                                extra: (
+                                                    <MaterialButtons
+                                                        remove={remove}
+                                                        move={move}
+                                                        index={index}
+                                                        length={fields.length}
+                                                        materials={materials}
+                                                        setMaterials={setMaterials}
+                                                    />
+                                                ),
                                                 children: getMaterialForm(name, restField),
                                                 forceRender: true,
                                             }

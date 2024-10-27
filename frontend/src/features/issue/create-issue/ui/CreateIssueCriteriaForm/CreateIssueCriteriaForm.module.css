@@ -7,13 +7,11 @@
 }
 
 .formItem label {
-    font: var(--font-default);
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-semibold);
 }
 
 .formItemTitle {
-    font: var(--font-default);
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-semibold);
     font-size: var(--body-font-size);
 }
 

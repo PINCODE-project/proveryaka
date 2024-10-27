@@ -1,10 +1,13 @@
-import { Button, Flex, Form, FormInstance, Steps, Typography } from 'antd';
+import { Flex, Form, FormInstance, Steps, Typography } from 'antd';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 import { useQueryClient } from 'react-query';
 import { Link, useNavigate } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
+
+import { CreateIssueButtons } from '@pages/space/SpaceCreateIssuePage/CreateIssueButtons';
+import { CreateIssueForm } from '@pages/space/SpaceCreateIssuePage/CreateIssueForm';
 
 import { UserPanel } from '@widgets/UserPanel';
 
@@ -21,10 +24,6 @@ import {
 } from '@features/issue/create-issue/model/CreateIssueCriteriaExampleDraftRequest';
 import { CreateIssueFormRequest } from '@features/issue/create-issue/model/CreateIssueFormRequest';
 import { CreateIssueMaterialDraftRequest } from '@features/issue/create-issue/model/CreateIssueMaterialDraftRequest';
-import { CreateIssueCriteriaForm } from '@features/issue/create-issue/ui/CreateIssueCriteriaForm';
-import { CreateIssueFormForm } from '@features/issue/create-issue/ui/CreateIssueFormForm';
-import { CreateIssueGeneralForm } from '@features/issue/create-issue/ui/CreateIssueGeneralForm';
-import { CreateIssueMaterialsForm } from '@features/issue/create-issue/ui/CreateIssueMaterialsForm';
 import { RestoreDraftModal } from '@features/issue/create-issue/ui/RestoreDraftModal';
 
 import { getMyIssueDraftQueryKey, useGetMyIssueDraft } from '@entities/issue-draft';
@@ -55,7 +54,9 @@ export const SpaceCreateIssuePage: FC<Props> = typedMemo(function SpacesPage({
     const { isOrganizer } = useRolesCheck();
 
     useEffect(() => {
-        if (!isOrganizer) { navigate(SpaceRouter.SpaceIssues(spaceId!)); }
+        if (!isOrganizer) {
+            navigate(SpaceRouter.SpaceIssues(spaceId!));
+        }
     }, [isOrganizer, navigate, spaceId]);
 
     const [currentStep, setCurrentStep] = useState(0);
@@ -139,168 +140,108 @@ export const SpaceCreateIssuePage: FC<Props> = typedMemo(function SpacesPage({
         return currentStep === index && !(await form.validateFields().then(() => true).catch(() => false));
     }, [currentStep]);
 
-    const handleChangeStep = useCallback(async (step: number) => {
-        if (await formIsInvalidate(0, generalForm)) {
-            return;
-        }
-        if (await formIsInvalidate(1, materialsForm)) {
-            return;
-        }
-        if (await formIsInvalidate(2, criteriaForm)) {
-            return;
-        }
-        if (await formIsInvalidate(3, formsForm)) {
-            return;
-        }
+    const validateForms = useCallback(async () => {
+        return (
+            await formIsInvalidate(0, generalForm) ||
+            await formIsInvalidate(1, materialsForm) ||
+            await formIsInvalidate(2, criteriaForm) ||
+            await formIsInvalidate(3, formsForm)
+        );
+    }, [formIsInvalidate, generalForm, materialsForm, criteriaForm, formsForm]);
 
-        if (currentStep === 0 && isNewDraft) {
-            const generalFormValues = generalForm.getFieldsValue();
-            createIssueDraft({
-                data: {
-                    ...generalFormValues,
-                    assessmentDeadlineDateUtc: generalFormValues.assessmentDeadlineDateUtc.utc().format(),
-                    submitDeadlineDateUtc: generalFormValues.submitDeadlineDateUtc.utc().format(),
-                },
-                spaceId: spaceId!,
-            });
+    const handleGeneralFormDraft = useCallback(() => {
+        const generalFormValues = generalForm.getFieldsValue();
+        const data = {
+            ...generalFormValues,
+            assessmentDeadlineDateUtc: generalFormValues.assessmentDeadlineDateUtc.utc().format(),
+            submitDeadlineDateUtc: generalFormValues.submitDeadlineDateUtc.utc().format(),
+        };
+
+        if (isNewDraft) {
+            createIssueDraft({ data, spaceId: spaceId! });
+        } else {
+            updateMyDraft({ data, spaceId: spaceId! });
         }
-        if (currentStep === 0 && !isNewDraft) {
-            const generalFormValues = generalForm.getFieldsValue();
-            updateMyDraft({
-                data: {
-                    ...generalFormValues,
-                    assessmentDeadlineDateUtc: generalFormValues.assessmentDeadlineDateUtc.utc().format(),
-                    submitDeadlineDateUtc: generalFormValues.submitDeadlineDateUtc.utc().format(),
-                },
-                spaceId: spaceId!,
-            });
-        }
-        if (currentStep === 1) {
-            const data = await Promise.all(
-                materials.map(async material => {
-                    let fileId = material.fileId;
-                    try {
-                        if (material.type === 2 && !material.fileId && material.file) {
-                            fileId = (await createFile(material.file)).id;
-                        }
-                    } catch (error) {
+    }, [generalForm, isNewDraft, createIssueDraft, updateMyDraft, spaceId]);
+
+    const handleMaterialDraft = useCallback(async () => {
+        const data = await Promise.all(
+            materials.map(async material => {
+                let fileId = material.fileId;
+                try {
+                    if (material.type === 2 && !material.fileId && material.file) {
+                        fileId = (await createFile(material.file)).id;
                     }
-                    return {
-                        ...material,
-                        fileId: material.type === 2 ? fileId : null,
-                        text: material.type !== 2 ? material.text : null,
-                        file: undefined,
-                    };
-                }),
-            );
+                } catch (error) {
+                }
 
-            createIssueMaterialDraft({ spaceId: spaceId!, data });
-        }
-        if (currentStep === 2) {
-            const data = await Promise.all(
-                criteria.map(async crit => {
-                    const resExamples = await Promise.all(
-                        crit.examples.map(async example => {
-                            let fileId = example.fileIdValue;
-                            try {
-                                if (example.file) {
-                                    fileId = (await createFile(example.file)).id;
-                                }
-                            } catch (error) {
+                return {
+                    ...material,
+                    fileId: material.type === 2 ? fileId : null,
+                    text: material.type !== 2 ? material.text : null,
+                    file: undefined,
+                };
+            }),
+        );
+
+        createIssueMaterialDraft({ spaceId: spaceId!, data });
+    }, [materials, createIssueMaterialDraft, spaceId]);
+
+    const handleCriteriaDraft = useCallback(async () => {
+        const data = await Promise.all(
+            criteria.map(async crit => {
+                const resExamples = await Promise.all(
+                    crit.examples.map(async example => {
+                        let fileId = example.fileIdValue;
+                        try {
+                            if (example.file) {
+                                fileId = (await createFile(example.file)).id;
                             }
-                            return { ...example, fileIdValue: fileId, file: undefined };
-                        }),
-                    );
+                        } catch (error) {
+                        }
+                        return { ...example, fileIdValue: fileId, file: undefined };
+                    }),
+                );
 
-                    return { ...crit, weight: crit.weight / 100, examples: resExamples };
-                }),
-            );
+                return { ...crit, weight: crit.weight / 100, examples: resExamples };
+            }),
+        );
 
-            createIssueCriteriaDraft({ spaceId: spaceId!, data });
-        }
-        if (currentStep === 3) {
-            createIssueFormDraft({ spaceId: spaceId!, data: forms as CreateIssueFormRequest[] });
-            if (step === 4) {
-                saveMyDraft({ spaceId: spaceId! });
-            }
+        createIssueCriteriaDraft({ spaceId: spaceId!, data });
+    }, [criteria, createIssueCriteriaDraft, spaceId]);
+
+    const handleFormsDraft = useCallback(() => {
+        createIssueFormDraft({ spaceId: spaceId!, data: forms as CreateIssueFormRequest[] });
+    }, [createIssueFormDraft, spaceId, forms]);
+
+    const handleChangeStep = useCallback(async (step: number) => {
+        if (await validateForms()) return;
+
+        switch (currentStep) {
+            case 0:
+                handleGeneralFormDraft();
+                break;
+            case 1:
+                await handleMaterialDraft();
+                break;
+            case 2:
+                await handleCriteriaDraft();
+                break;
+            case 3:
+                handleFormsDraft();
+                if (step === 4) {
+                    saveMyDraft({ spaceId: spaceId! });
+                }
+                break;
+            default:
+                break;
         }
 
         setCurrentStep(step);
-    }, [formIsInvalidate, generalForm, materialsForm, criteriaForm, formsForm, currentStep, isNewDraft,
-        createIssueDraft, spaceId, updateMyDraft, materials, createIssueMaterialDraft, criteria,
-        createIssueCriteriaDraft, createIssueFormDraft, forms, saveMyDraft]);
-
-    const CreateIssueButtons = useMemo(() => {
-        const toIssuesPage = () => navigate(SpaceRouter.SpaceIssues(spaceId || ''));
-        const toNextStep = () => {
-            handleChangeStep(currentStep + 1);
-        };
-
-        return (
-            <Flex gap="middle">
-                <Button onClick={toIssuesPage}>
-                    Выйти
-                </Button>
-                <Button onClick={toNextStep} type="primary">
-                    {currentStep === 3 ? 'Создать' : 'Далее'}
-                </Button>
-            </Flex>
-
-        );
-    }, [currentStep, spaceId, navigate, handleChangeStep]);
-
-    const CreateIssueForm = useMemo(() => {
-        if (currentStep === 0) {
-            return (
-                <CreateIssueGeneralForm
-                    disabled={isBlockForm}
-                    form={generalForm}
-                    isUseTeam={spaceSettings?.isUseTeam || false}
-                    initialValue={!isBlockForm && myIssueDraft
-                        ? {
-                            name: myIssueDraft.name,
-                            description: myIssueDraft.description,
-                            isUseTeam: myIssueDraft.isUseTeam,
-                            checksCountMin: myIssueDraft.checksCountMin,
-                            checksCountMax: myIssueDraft.checksCountMax,
-                            submitDeadlineDateUtc: myIssueDraft.submitDeadlineDateUtc,
-                            assessmentDeadlineDateUtc: myIssueDraft.assessmentDeadlineDateUtc,
-                        }
-                        : {}}
-                />
-            );
-        }
-        if (currentStep === 1) {
-            return (
-                <CreateIssueMaterialsForm
-                    form={materialsForm}
-                    materials={materials}
-                    setMaterials={setMaterials}
-                />
-            );
-        }
-
-        if (currentStep === 2) {
-            return (
-                <CreateIssueCriteriaForm
-                    form={criteriaForm}
-                    criteria={criteria}
-                    setCriteria={setCriteria}
-                />
-            );
-        }
-
-        if (currentStep === 3) {
-            return (
-                <CreateIssueFormForm
-                    form={formsForm}
-                    forms={forms}
-                    setForms={setForms}
-                />
-            );
-        }
-    }, [currentStep, isBlockForm, generalForm, spaceSettings?.isUseTeam, myIssueDraft, materialsForm, materials,
-        criteriaForm, criteria, formsForm, forms]);
+    }, [
+        validateForms, handleGeneralFormDraft, handleMaterialDraft, handleCriteriaDraft, handleFormsDraft,
+        setCurrentStep, spaceId, saveMyDraft, currentStep,
+    ]);
 
     const handleRestoreDraft = useCallback(() => {
         setIsBlockForm(false);
@@ -334,24 +275,35 @@ export const SpaceCreateIssuePage: FC<Props> = typedMemo(function SpacesPage({
                         onChange={handleChangeStep}
                         labelPlacement="vertical"
                         items={[
-                            {
-                                title: 'Общее',
-                            },
-                            {
-                                title: 'Материалы',
-                            },
-                            {
-                                title: 'Критерии',
-                            },
-                            {
-                                title: 'Форма сдачи',
-                            },
+                            { title: 'Общее' },
+                            { title: 'Материалы' },
+                            { title: 'Критерии' },
+                            { title: 'Форма сдачи' },
                         ]}
                     />
-                    {CreateIssueButtons}
+                    <CreateIssueButtons
+                        currentStep={currentStep}
+                        spaceId={spaceId}
+                        handleChangeStep={handleChangeStep}
+                    />
                 </Flex>
 
-                {CreateIssueForm}
+                <CreateIssueForm
+                    currentStep={currentStep}
+                    isBlockForm={isBlockForm}
+                    generalForm={generalForm}
+                    spaceSettings={spaceSettings}
+                    myIssueDraft={myIssueDraft}
+                    materialsForm={materialsForm}
+                    materials={materials}
+                    setMaterials={setMaterials}
+                    criteriaForm={criteriaForm}
+                    criteria={criteria}
+                    setCriteria={setCriteria}
+                    formsForm={formsForm}
+                    forms={forms}
+                    setForms={setForms}
+                />
             </Flex>
 
             <RestoreDraftModal

@@ -1,2 +1,2 @@
 export { SpaceIssuesPage } from './SpaceIssuesPage';
-export type { Props as SpaceTeamsPageProps } from './SpaceIssuesPage';
+export type { Props as SpaceIssuesPageProps } from './SpaceIssuesPage';

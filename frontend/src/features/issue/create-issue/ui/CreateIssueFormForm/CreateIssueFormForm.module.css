@@ -1,7 +1,8 @@
 .form {
     max-width: 600px;
-    padding-bottom: 20px !important;
+    padding-bottom: 20px;
 }
+
 .submitButton {
     margin-bottom: 0;
 }
@@ -11,8 +12,7 @@
 }
 
 .formItem label {
-    font: var(--font-default);
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-semibold);
 }
 
 .icon svg {

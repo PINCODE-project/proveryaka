@@ -8,7 +8,7 @@ import {
     ReadOutlined,
     SettingOutlined,
 } from '@ant-design/icons';
-import { Dropdown, Flex, notification, Typography } from 'antd';
+import { Dropdown, Flex, MenuProps, notification, Typography } from 'antd';
 import { FC, Suspense, useCallback, useMemo } from 'react';
 import { useQueryClient } from 'react-query';
 import { Link, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
@@ -66,26 +66,27 @@ export const SpaceIssuePage: FC<Props> = typedMemo(function SpaceSolutionPage({
         retry: false,
     });
 
-    const items = useMemo(() => {
+    const items: MenuProps['items'] = useMemo(() => {
         if (!issue) return [];
 
-        const items = [];
+        const result: MenuProps['items'] = [];
 
         if (issue.status === 0) {
-            items.push(
-                {
-                    label: 'Открыть для сдачи',
-                    onClick: () => publishIssue({ id: issue.id!, name: issue.name! }),
-                },
-            );
+            result.push({
+                key: '0',
+                label: 'Открыть для сдачи',
+                onClick: () => publishIssue({ id: issue.id!, name: issue.name! }),
+            });
         }
 
-        items.push(
+        result.push(
             {
+                key: 1,
                 label: 'Назначить проверяющих',
                 disabled: true,
             },
             {
+                key: 2,
                 label: <DeleteIssueButton
                     issueId={issue.id!}
                     issueName={issue.name!}
@@ -99,9 +100,9 @@ export const SpaceIssuePage: FC<Props> = typedMemo(function SpaceSolutionPage({
                     )}
                 />,
                 danger: true,
-            },
-        );
-        return items.map((item, index) => ({ ...item, key: index }));
+            });
+
+        return result;
     }, [issue, spaceId, publishIssue, navigate]);
 
     if (!spaceId) {

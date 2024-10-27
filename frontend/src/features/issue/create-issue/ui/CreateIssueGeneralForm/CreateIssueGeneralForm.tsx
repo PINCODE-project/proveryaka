@@ -16,6 +16,7 @@ type DeadlineProps = {
     title: string;
     deadlineDate: Date;
 };
+
 const Deadline: FC<DeadlineProps> = ({ title, deadlineDate }) => {
     const [timeLeft, setTimeLeft] = useState('');
 

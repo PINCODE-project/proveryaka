@@ -1,28 +1,20 @@
-import { DeleteOutlined, DownOutlined, PlusCircleOutlined, PlusOutlined, UpOutlined } from '@ant-design/icons';
-import {
-    Button,
-    Collapse,
-    Flex,
-    Form,
-    FormInstance,
-    FormListOperation,
-    Input,
-    InputNumber,
-    Select,
-    Typography,
-} from 'antd';
+import { PlusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Collapse, Flex, Form, FormInstance, FormListOperation, Input, InputNumber, Typography } from 'antd';
 import { Dispatch, FC, SetStateAction, useCallback } from 'react';
 import { v4 as uuid } from 'uuid';
+
+import {
+    CriteriaExampleForm,
+} from '@features/issue/create-issue/ui/CreateIssueCriteriaForm/CreateIssueCriteriaExampleForm';
+import { CriteriaButtons } from '@features/issue/create-issue/ui/CreateIssueCriteriaForm/CriteriaButtons';
 
 import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { FileInput } from '@shared/ui';
 import { HelpInfo } from '@shared/ui/HelpInfo';
 
 import styles from './CreateIssueCriteriaForm.module.css';
 import { CreateIssueCriteriaDraftRequest } from '../../model/CreateIssueCriteriaDraftRequest';
-import { CreateIssueCriteriaExampleDraftRequest } from '../../model/CreateIssueCriteriaExampleDraftRequest';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     form: FormInstance;
@@ -79,230 +71,6 @@ export const CreateIssueCriteriaForm: FC<Props> = typedMemo(function CreateIssue
         },
         [setCriteria],
     );
-
-    const handleChangeCriteriaExample = useCallback(
-        (criteriaId: string, exampleId: string, field: string, value: any) => {
-            setCriteria(prevCriteria => prevCriteria.map(
-                crit => (crit.id === criteriaId
-                    ? {
-                        ...crit,
-                        examples: crit.examples.map(
-                            (critExample: CreateIssueCriteriaExampleDraftRequest) => critExample.id === exampleId
-                                ? {
-                                    ...critExample,
-                                    [field]: value,
-                                }
-                                : critExample),
-                    }
-                    : crit) as CreateIssueCriteriaDraftRequest,
-            ));
-        },
-        [setCriteria],
-    );
-
-    const handleMoveCriteria = (move: (from: number, to: number) => void, oldIndex: number, newIndex: number) => {
-        move(oldIndex, newIndex);
-        const newCriteria = [...criteria];
-        [newCriteria[oldIndex], [newCriteria[newIndex]]] = [newCriteria[newIndex], [newCriteria[oldIndex]]];
-        setCriteria(newCriteria);
-    };
-
-    const handleRemoveCriteriaExample = (criteriaIndex: number, exampleIndex: number, remove: (index: number) => void) => {
-        const newCriteria = [...criteria];
-        newCriteria[criteriaIndex].examples.splice(exampleIndex, 1);
-        setCriteria(newCriteria);
-        remove(exampleIndex);
-    };
-
-    const getCriteriaButtons = (
-        remove: (index: number) => void,
-        move: (from: number, to: number) => void,
-        index: number,
-        length: number,
-    ) => {
-        const handleRemoveCriteria = () => {
-            const newCriteria = [...criteria];
-            newCriteria.splice(index, 1);
-            setCriteria(newCriteria);
-            remove(index);
-        };
-
-        return (
-            <Flex gap="middle">
-                <Flex>
-                    {
-                        index !== length - 1 &&
-                        <Button
-                            icon={<DownOutlined />}
-                            type="text"
-                            onClick={e => {
-                                e.stopPropagation();
-                                handleMoveCriteria(move, index, index + 1);
-                            }}
-                        />
-                    }
-                    {
-                        index !== 0 &&
-                        <Button
-                            icon={<UpOutlined />}
-                            type="text"
-                            onClick={e => {
-                                e.stopPropagation();
-                                handleMoveCriteria(move, index, index - 1);
-                            }}
-                        />
-                    }
-                </Flex>
-                <Button
-                    icon={
-                        <DeleteOutlined
-                            className={getModuleClasses(styles, 'icon')}
-                            style={{ color: '#FF4D4F' }}
-                        />
-                    }
-                    type="text"
-                    color="danger"
-                    onClick={e => {
-                        e.stopPropagation();
-                        handleRemoveCriteria();
-                    }}
-                />
-            </Flex>
-        );
-    };
-
-    const getCriteriaExampleForm = (
-        critIndex: number,
-        exampleIndex: number,
-        restField: {fieldKey?: number | undefined},
-        remove: (index: number) => void,
-    ) => {
-        const crit = { ...criteria[critIndex] } as CreateIssueCriteriaDraftRequest;
-        const example = { ...crit.examples[exampleIndex] } as CreateIssueCriteriaExampleDraftRequest;
-
-        return (
-            <Flex vertical gap={28}>
-                <Flex vertical gap={8}>
-                    <Flex align="center" justify="space-between">
-                        <Typography className={getModuleClasses(styles, 'formItemTitle')}>
-                            Пример {exampleIndex + 1}
-                        </Typography>
-
-                        <Button
-                            icon={
-                                <DeleteOutlined
-                                    className={getModuleClasses(styles, 'icon')}
-                                    style={{ color: '#FF4D4F' }}
-                                />
-                            }
-                            type="text"
-                            color="danger"
-                            onClick={() => handleRemoveCriteriaExample(critIndex, exampleIndex, remove)}
-                        />
-                    </Flex>
-
-                    <Flex gap={32}>
-                        <Form.Item
-                            {...restField}
-                            className={getModuleClasses(styles, 'formItem')}
-                            name={[exampleIndex, 'exampleType']}
-                        >
-                            <Select
-                                style={{ width: '200px !important' }}
-                                placeholder="Тип примера"
-                                options={[
-                                    { value: 1, label: 'Эталон' },
-                                    { value: 2, label: 'Антипример' },
-                                ]}
-                                onChange={value => {
-                                    handleChangeCriteriaExample(crit.id, example.id, 'exampleType', value);
-                                }}
-                            />
-                        </Form.Item>
-
-                        <Form.Item
-                            {...restField}
-                            style={{
-                                marginTop: example.file === null && example.fileIdValue === null ? '0px' : '-3px',
-                            }}
-                            className={getModuleClasses(styles, 'formItem')}
-                            name={[exampleIndex, 'fileIdValue']}
-                            rules={[
-                                {
-                                    validator: () => {
-                                        if (example.fileIdValue || example.file) {
-                                            return Promise.resolve();
-                                        }
-                                        return Promise.reject(new Error('Загрузите файл'));
-                                    },
-                                },
-                            ]}
-                        >
-                            <FileInput
-                                isEmpty={example.file === null && example.fileIdValue === null}
-                                multiple={false}
-                                maxCount={1}
-                                defaultFileList={example.file
-                                    ? [{
-                                        uid: example.file.uid,
-                                        name: example.file.name,
-                                        status: 'done',
-                                    }]
-                                    : (
-                                        example.fileIdValue
-                                            ? [{
-                                                uid: 'exampleFile',
-                                                name: 'Файл с сервера',
-                                                status: 'done',
-                                            }]
-                                            : undefined
-                                    )
-                                }
-                                listType="text"
-                                emptyText="Загрузить файл"
-                                onChange={value => {
-                                    handleChangeCriteriaExample(
-                                        crit.id,
-                                        example.id,
-                                        'file',
-                                        value.file.status !== 'removed' ? value.file.originFileObj : null,
-                                    );
-                                    if (!value.fileList.length) {
-                                        handleChangeCriteriaExample(crit.id, example.id, 'fileIdValue', null);
-                                    }
-                                }}
-                                onRemove={() => {
-                                    handleChangeCriteriaExample(crit.id, example.id, 'file', null);
-                                    handleChangeCriteriaExample(crit.id, example.id, 'fileIdValue', null);
-                                }}
-                                isButton={true}
-                            />
-                        </Form.Item>
-                    </Flex>
-                </Flex>
-                <Form.Item
-                    {...restField}
-                    className={getModuleClasses(styles, 'formItem')}
-                    style={{ maxWidth: 580, width: '100%' }}
-                    label="Описание"
-                    name={[exampleIndex, 'description']}
-                    rules={[
-                        { max: 2047, message: 'Не больше 256 символов' },
-                    ]}
-                >
-                    <Input.TextArea
-                        placeholder="Введите текст..."
-                        maxLength={2047}
-                        showCount
-                        style={{ resize: 'vertical' }}
-                        onChange={event => {
-                            handleChangeCriteriaExample(crit.id, example.id, 'description', event.target.value);
-                        }}
-                    />
-                </Form.Item>
-            </Flex>
-        );
-    };
 
     const getCriteriaForm = (index: number, restField: {fieldKey?: number | undefined}) => {
         const crit = { ...criteria[index] };
@@ -465,7 +233,15 @@ export const CreateIssueCriteriaForm: FC<Props> = typedMemo(function CreateIssue
                                 {
                                     fields.map(({ name, ...restField }) => {
                                         return (
-                                            getCriteriaExampleForm(index, name, restField, remove)
+                                            <CriteriaExampleForm
+                                                key={`exampleFormC${index}E${name}`}
+                                                critIndex={index}
+                                                exampleIndex={name}
+                                                criteria={criteria}
+                                                setCriteria={setCriteria}
+                                                remove={remove}
+                                                restField={restField}
+                                            />
                                         );
                                     })
                                 }
@@ -502,10 +278,19 @@ export const CreateIssueCriteriaForm: FC<Props> = typedMemo(function CreateIssue
                                         return ({
                                             key: `criteria${key}`,
                                             label: <Typography.Title level={5} style={{ margin: 0 }}>
-                                                    Критерий {index + 1}
+                                                Критерий {index + 1}
                                             </Typography.Title>,
                                             classNames: { header: styles.collapseHeader },
-                                            extra: getCriteriaButtons(remove, move, index, fields.length),
+                                            extra: (
+                                                <CriteriaButtons
+                                                    remove={remove}
+                                                    move={move}
+                                                    index={index}
+                                                    length={fields.length}
+                                                    criteria={criteria}
+                                                    setCriteria={setCriteria}
+                                                />
+                                            ),
                                             children: getCriteriaForm(name, restField),
                                             forceRender: true,
                                         });

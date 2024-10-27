@@ -1,7 +1,9 @@
-import { DeleteOutlined, DownOutlined, PlusCircleOutlined, UpOutlined } from '@ant-design/icons';
+import { PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Collapse, Flex, Form, FormInstance, Input, Select, Typography } from 'antd';
 import { Dispatch, FC, SetStateAction, useCallback } from 'react';
 import { v4 as uuid } from 'uuid';
+
+import { CreateIssueFormButtons } from '@features/issue/create-issue/ui/CreateIssueFormForm/FormButtons';
 
 import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
@@ -44,67 +46,16 @@ export const CreateIssueFormForm: FC<Props> = typedMemo(function CreateIssueForm
         [setForms],
     );
 
-    const getIssueFormButtons = (
-        remove: (index: number) => void,
-        move: (from: number, to: number) => void,
-        index: number,
-        length: number,
-    ) => {
-        const handleMoveIssueForms = (move: (from: number, to: number) => void, oldIndex: number, newIndex: number) => {
-            const newForms = [...forms];
-            [newForms[oldIndex], [newForms[newIndex]]] = [newForms[newIndex], [newForms[oldIndex]]];
-            setForms(newForms);
-            move(oldIndex, newIndex);
-        };
-
-        const handleRemoveIssueForm = () => {
-            const newForms = [...forms];
-            newForms.splice(index, 1);
-            setForms(newForms);
-            remove(index);
-        };
-
-        return (
-            <div>
-                {index !== length - 1 && (
-                    <Button
-                        icon={<DownOutlined />}
-                        type="text"
-                        onClick={e => {
-                            e.stopPropagation();
-                            handleMoveIssueForms(move, index, index + 1);
-                        }}
-                    />
-                )}
-                {index !== 0 && (
-                    <Button
-                        icon={<UpOutlined />}
-                        type="text"
-                        onClick={e => {
-                            e.stopPropagation();
-                            handleMoveIssueForms(move, index, index - 1);
-                        }}
-                    />
-                )}
-                <Button
-                    icon={<DeleteOutlined style={{ color: '#FF4D4F' }} />}
-                    type="text"
-                    onClick={() => handleRemoveIssueForm()}
-                />
-            </div>
-        );
-    };
-
     const getIssueFormForm = (
         index: number,
-        restField: any,
+        restField: {fieldKey?: number | undefined},
     ) => {
         const form = { ...forms[index] };
 
         return (
             <Flex vertical gap={32}>
                 <Flex gap="large" align="end">
-                    <Form.Item<CreateIssueFormRequest>
+                    <Form.Item
                         {...restField}
                         className={getModuleClasses(styles, 'formItem')}
                         label="Тип формы сдачи"
@@ -122,7 +73,7 @@ export const CreateIssueFormForm: FC<Props> = typedMemo(function CreateIssueForm
                         />
                     </Form.Item>
 
-                    <Form.Item<CreateIssueFormRequest>
+                    <Form.Item
                         {...restField}
                         className={getModuleClasses(styles, 'formItem')}
                         layout="horizontal"
@@ -137,7 +88,7 @@ export const CreateIssueFormForm: FC<Props> = typedMemo(function CreateIssueForm
                     </Form.Item>
                 </Flex>
 
-                <Form.Item<CreateIssueFormRequest>
+                <Form.Item
                     {...restField}
                     className={getModuleClasses(styles, 'formItem')}
                     style={{ maxWidth: 580, width: '100%' }}
@@ -155,7 +106,7 @@ export const CreateIssueFormForm: FC<Props> = typedMemo(function CreateIssueForm
                     />
                 </Form.Item>
 
-                <Form.Item<CreateIssueFormRequest>
+                <Form.Item
                     {...restField}
                     className={getModuleClasses(styles, 'formItem')}
                     style={{ maxWidth: 580, width: '100%' }}
@@ -192,11 +143,22 @@ export const CreateIssueFormForm: FC<Props> = typedMemo(function CreateIssueForm
                                         return (
                                             {
                                                 key: `form${key}`,
-                                                label: <Typography.Title level={5} style={{ margin: 0 }}>
-                                                    Форма сдачи {index + 1}
-                                                </Typography.Title>,
+                                                label: (
+                                                    <Typography.Title level={5} style={{ margin: 0 }}>
+                                                        Форма сдачи {index + 1}
+                                                    </Typography.Title>
+                                                ),
                                                 classNames: { header: styles.collapseHeader },
-                                                extra: getIssueFormButtons(remove, move, index, fields.length),
+                                                extra: (
+                                                    <CreateIssueFormButtons
+                                                        forms={forms}
+                                                        setForms={setForms}
+                                                        remove={remove}
+                                                        move={move}
+                                                        index={index}
+                                                        length={fields.length}
+                                                    />
+                                                ),
                                                 children: getIssueFormForm(name, restField),
                                                 forceRender: true,
                                             }

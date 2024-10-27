@@ -1,7 +1,6 @@
 import { Table, TableColumnsType, TablePaginationConfig, TableProps, Tag } from 'antd';
 import { ColumnType } from 'antd/lib/table';
 import { FC, useCallback, useMemo, useState } from 'react';
-
 // eslint-disable-next-line
 import { useNavigate } from "react-router-dom";
 import { SpaceRouter } from '@pages/space';
@@ -9,7 +8,7 @@ import { SpaceRouter } from '@pages/space';
 import { GetIssueResponse, useGetSpaceIssue } from '@entities/issue';
 import { useRolesCheck } from '@entities/space';
 
-import { typedMemo } from '@shared/lib';
+import { getDateFromISO, getTimeFromISO, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { EmptyTable } from '@shared/ui';
 
@@ -25,7 +24,7 @@ export type Props = ClassNameProps & TestProps & Readonly<{
     spaceId: string;
     actionRender?: ColumnType<GetIssueResponse>['render'];
     filters: GetIssueFilters;
-    changeFilters: (key: ('page' | 'count' | 'isDistributed'), name: (number | undefined)) => void;
+    changeFilters: (key: keyof GetIssueFilters, value: number | undefined) => void;
 }>;
 
 const keyToOrderBy: Record<string, number> = {
@@ -47,8 +46,10 @@ export const IssuesTable: FC<Props> = typedMemo(function TeamsTable({
     const { data: issues } = useGetSpaceIssue(
         spaceId,
         filters,
-        keyToOrderBy[sortedInfo.field as string] ?? 2,
-        sortedInfo.order === 'descend',
+        {
+            orderBy: keyToOrderBy[sortedInfo.field as string] ?? 2,
+            isDesc: sortedInfo.order === 'descend',
+        },
     );
     const { data: issueCount } = useGetSpaceIssueCount(spaceId, filters);
 
@@ -59,7 +60,7 @@ export const IssuesTable: FC<Props> = typedMemo(function TeamsTable({
     };
 
     const columns = useMemo<TableColumnsType<GetIssueResponse>>(() => {
-        const result: TableColumnsType<GetIssueResponse> = [
+        return [
             {
                 title: 'Название',
                 dataIndex: 'name',
@@ -69,13 +70,7 @@ export const IssuesTable: FC<Props> = typedMemo(function TeamsTable({
                 title: 'Дедлайн сдачи',
                 dataIndex: 'submitDeadlineDateUtc',
                 key: 'submitDeadlineDateUtc',
-                render: (value: string) => new Date(value).toLocaleString('ru-RU', {
-                    year: 'numeric',
-                    month: 'numeric',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                }),
+                render: (value: string) => `${getDateFromISO(value)} ${getTimeFromISO(value)}`,
                 sorter: () => 0,
                 sortOrder: sortedInfo.columnKey === 'submitDeadlineDateUtc' ? sortedInfo.order : null,
             },
@@ -83,70 +78,53 @@ export const IssuesTable: FC<Props> = typedMemo(function TeamsTable({
                 title: 'Дедлайн проверки',
                 dataIndex: 'assessmentDeadlineDateUtc',
                 key: 'assessmentDeadlineDateUtc',
-                render: (value: string) => new Date(value).toLocaleString('ru-RU', {
-                    year: 'numeric',
-                    month: 'numeric',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                }),
+                render: (value: string) => `${getDateFromISO(value)} ${getTimeFromISO(value)}`,
                 sorter: () => 0,
                 sortOrder: sortedInfo.columnKey === 'assessmentDeadlineDateUtc' ? sortedInfo.order : null,
             },
-        ];
-
-        if (isStudent) {
-            result.push(
-                {
-                    title: 'Оценка',
-                    dataIndex: 'status',
-                    key: 'status',
-                    // TODO PROV-311 blocked
-                    render: () => `${0}/100`,
-                    // sorter: () => 0,
-                    // sortOrder: sortedInfo.columnKey === 'reviewedSolutionCount' ? sortedInfo.order : null,
-                },
-            );
-        } else {
-            result.push(
-                {
-                    title: 'Сдано',
-                    dataIndex: 'allSolutionCount',
-                    key: 'allSolutionCount',
-                    render: (value: number, record) => `${value}/${record.allTeamCountInSpace}`,
-                    // sorter: () => 0,
-                    // sortOrder: sortedInfo.columnKey === 'allSolutionCount' ? sortedInfo.order : null,
-                },
-                {
-                    title: 'Проверено',
-                    dataIndex: 'reviewedSolutionCount',
-                    key: 'reviewedSolutionCount',
-                    render: (value: number, record) => `${value}/${record.allSolutionCount}`,
-                    // sorter: () => 0,
-                    // sortOrder: sortedInfo.columnKey === 'reviewedSolutionCount' ? sortedInfo.order : null,
-                },
-            );
-        }
-
-        result.push({
-            title: 'Статус',
-            dataIndex: 'status',
-            key: 'status',
-            render: (value: number) => <Tag>{IssueStringStatus[IssueStatus[value]]}</Tag>,
-        });
-
-        if (isOrganizer) {
-            result.push({
+            {
+                title: 'Оценка',
+                dataIndex: 'status',
+                key: 'status',
+                hidden: !isStudent,
+                // TODO PROV-311 blocked
+                render: () => `${0}/100`,
+                // sorter: () => 0,
+                // sortOrder: sortedInfo.columnKey === 'reviewedSolutionCount' ? sortedInfo.order : null,
+            },
+            {
+                title: 'Сдано',
+                dataIndex: 'allSolutionCount',
+                key: 'allSolutionCount',
+                hidden: isStudent,
+                render: (value: number, record) => `${value}/${record.allTeamCountInSpace}`,
+                // sorter: () => 0,
+                // sortOrder: sortedInfo.columnKey === 'allSolutionCount' ? sortedInfo.order : null,
+            },
+            {
+                title: 'Проверено',
+                dataIndex: 'reviewedSolutionCount',
+                key: 'reviewedSolutionCount',
+                hidden: isStudent,
+                render: (value: number, record) => `${value}/${record.allSolutionCount}`,
+                // sorter: () => 0,
+                // sortOrder: sortedInfo.columnKey === 'reviewedSolutionCount' ? sortedInfo.order : null,
+            },
+            {
+                title: 'Статус',
+                dataIndex: 'status',
+                key: 'status',
+                render: (value: number) => <Tag>{IssueStringStatus[IssueStatus[value]]}</Tag>,
+            },
+            {
                 title: false,
                 dataIndex: 'action',
                 key: 'action',
                 width: 24,
                 render: actionRender,
-                hidden: actionRender === undefined,
-            });
-        }
-
-        return result;
+                hidden: actionRender === undefined || !isOrganizer,
+            },
+        ];
     }, [sortedInfo.columnKey, sortedInfo.order, isStudent, isOrganizer, actionRender]);
 
     const onRow = useCallback((record: GetIssueResponse) => ({

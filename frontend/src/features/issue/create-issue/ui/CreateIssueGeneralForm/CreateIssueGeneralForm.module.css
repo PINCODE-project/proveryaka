@@ -7,8 +7,7 @@
 }
 
 .formItem label {
-    font: var(--font-default);
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-semibold);
 }
 
 .main {

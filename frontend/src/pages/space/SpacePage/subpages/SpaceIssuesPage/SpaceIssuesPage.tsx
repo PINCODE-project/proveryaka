@@ -1,10 +1,11 @@
-import { EllipsisOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Dropdown, Flex, Input, MenuProps, notification, Select, Typography } from 'antd';
-import { FC, useCallback, useMemo } from 'react';
+import { EllipsisOutlined } from '@ant-design/icons';
+import { Dropdown, Flex, Input, MenuProps, notification, Select, Typography } from 'antd';
+import { FC, useCallback } from 'react';
 import { useQueryClient } from 'react-query';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/space';
+import { SpaceIssuesButton } from '@pages/space/SpacePage/subpages/SpaceIssuesPage/SpaceIssuesButton';
 
 import { DeleteIssueButton } from '@features/issue/delete-issue/ui/DeleteIssueButton';
 import { PublishIssueArguments, usePublishIssue } from '@features/issue/publish-issue/lib/usePublishIssue';
@@ -28,7 +29,6 @@ export type Props = ClassNameProps & TestProps;
 export const SpaceIssuesPage: FC<Props> = typedMemo(function SpaceTeamsPage({
     className,
 }) {
-    const navigate = useNavigate();
     const queryClient = useQueryClient();
     const { isOrganizer, isStudent } = useRolesCheck();
     const spaceId = useSpaceId();
@@ -113,18 +113,6 @@ export const SpaceIssuesPage: FC<Props> = typedMemo(function SpaceTeamsPage({
         );
     }, [filters, publishIssue, spaceId]);
 
-    const SpaceIssuesButton = useMemo(() => {
-        const toCreateIssue = () => navigate(SpaceRouter.SpaceCreateIssue(spaceId || ''));
-
-        if (isOrganizer) {
-            return (
-                <Button icon={<PlusOutlined />} onClick={toCreateIssue} type="primary">
-                    Создать задание
-                </Button>
-            );
-        }
-    }, [spaceId, isOrganizer, navigate]);
-
     const getStatusFilter = useCallback(() => {
         const result: {value: number | null; label: string}[] = [
             { value: null, label: 'Все статусы' },
@@ -180,7 +168,7 @@ export const SpaceIssuesPage: FC<Props> = typedMemo(function SpaceTeamsPage({
                     />
                 </Flex>
 
-                {SpaceIssuesButton}
+                <SpaceIssuesButton spaceId={spaceId} />
             </Flex>
 
             <IssuesTable

@@ -1,10 +1,15 @@
 import { ListFilters } from '@shared/types';
+import { ListSorting } from '@shared/types/ListSorting';
 
 export function getSpaceIssueQueryKey(
     spaceId: string,
     filters?: ListFilters,
-    orderBy?: number,
-    isDesc?: boolean,
-): (string | ListFilters)[] {
-    return ['space-issue/get', spaceId, filters, orderBy, isDesc].filter(Boolean) as (string | ListFilters)[];
+    sorting?: ListSorting,
+): (string | ListFilters | ListSorting)[] {
+    return [
+        'space-issue/get',
+        spaceId,
+        filters,
+        sorting,
+    ].filter(Boolean) as (string | ListFilters | ListSorting)[];
 }
