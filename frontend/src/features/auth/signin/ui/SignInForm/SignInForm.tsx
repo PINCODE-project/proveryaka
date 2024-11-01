@@ -6,9 +6,6 @@ import { useAuthContext } from '@app/providers/AuthProvider';
 
 import { AuthRouter } from '@pages/auth';
 
-import { signUp } from '@features/auth/signup';
-import { SignUp } from '@features/auth/signup/model/SignUp';
-
 import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { trimAllObjectValues } from '@shared/lib/trimAllObjectValues';

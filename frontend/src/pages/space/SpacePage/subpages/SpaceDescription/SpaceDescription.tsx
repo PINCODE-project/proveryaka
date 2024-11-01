@@ -14,10 +14,9 @@ import { ClassNameProps, TestProps } from '@shared/types';
 
 import styles from './SpaceDescription.module.css';
 
-export type Props = ClassNameProps & TestProps & Readonly<{}>;
+export type Props = ClassNameProps & TestProps;
 
-export const SpaceDescription: FC<Props> = typedMemo(function SpaceDescription({
-}) {
+export const SpaceDescription: FC<Props> = typedMemo(function SpaceDescription() {
     const spaceId = useSpaceId();
     const { data: space } = useGetSpace(spaceId ?? '');
     const { data: spaceSettings } = useGetSpaceSettings(spaceId ?? '');

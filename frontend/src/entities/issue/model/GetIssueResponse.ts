@@ -1,4 +1,4 @@
-import { Status } from './Status';
+import { IssueStatus } from './IssueStatus';
 
 export type GetIssueResponse = {
     /**
@@ -66,5 +66,5 @@ export type GetIssueResponse = {
     /**
      * ПОЛЕ ФРОНТА: Статус задания
      */
-    status?: Status;
+    status?: IssueStatus;
 };

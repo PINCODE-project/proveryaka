@@ -10,7 +10,7 @@ export namespace TokenService {
     export function getToken(): Token | null {
         const tokenJson = localStorage.getItem(tokenKey);
         return tokenJson && JSON.parse(tokenJson);
-    };
+    }
 
     export function setToken(token: Token) {
         localStorage.setItem(tokenKey, JSON.stringify(token));

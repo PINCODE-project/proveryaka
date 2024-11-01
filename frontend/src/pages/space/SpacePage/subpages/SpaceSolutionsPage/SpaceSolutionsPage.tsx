@@ -15,7 +15,7 @@ import { ClassNameProps, TestProps } from '@shared/types';
 
 import styles from './SpaceSolutionsPage.module.css';
 
-export type Props = ClassNameProps & TestProps & Readonly<{}>;
+export type Props = ClassNameProps & TestProps;
 
 export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPage({
     className,
@@ -24,7 +24,7 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
     const { isOrganizer } = useRolesCheck();
     const spaceId = useSpaceId();
 
-    const renderActions = useCallback((_: string, record: GetSolutionForExpert) => {
+    const renderActions = useCallback(() => {
         if (!isOrganizer) {
             return undefined;
         }

@@ -11,7 +11,7 @@ import { ClassNameProps, TestProps } from '@shared/types';
 import { MaterialFile } from './MaterialFile';
 import styles from './SpaceIssueMaterials.module.css';
 
-export type Props = ClassNameProps & TestProps & Readonly<{}>;
+export type Props = ClassNameProps & TestProps;
 
 export const SpaceIssueMaterials: FC<Props> = typedMemo(function SpaceIssueMaterials() {
     const issueId = useIssueId();

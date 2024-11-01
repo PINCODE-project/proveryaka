@@ -24,7 +24,7 @@ export function useSearchParamState(name: string): QueryParamState {
         if (value !== param) {
             setValue(param ?? null);
         }
-    }, [searchParams]);
+    }, [name, searchParams, value]);
 
     return [value, updateValue];
 }

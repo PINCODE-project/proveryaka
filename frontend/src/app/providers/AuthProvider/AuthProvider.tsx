@@ -64,7 +64,7 @@ export const AuthContextProvider: FC<AuthContextProviderProps> = typedMemo(funct
 
     useEffect(() => {
         setInitialAuth();
-    }, []);
+    }, [setInitialAuth]);
 
     if (isLoading) {
         return (

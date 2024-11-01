@@ -6,8 +6,6 @@ import { useAuthContext } from '@app/providers/AuthProvider';
 
 import { AuthRouter } from '@pages/auth';
 
-import { SignIn } from '@features/auth/signin/model/SignIn';
-
 import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { trimAllObjectValues } from '@shared/lib/trimAllObjectValues';
@@ -130,10 +128,10 @@ export const SignUpForm: FC<Props> = typedMemo(function SignInForm({
             </Form.Item>
 
             <Typography.Text className={getModuleClasses(styles, 'policyPrivacy')}>
-                Нажимая на кнопку регистрации вы соглашаетесь с принятой на сайте
-                <span
-                    className={getModuleClasses(styles, 'policyPrivacyLink')}
-                > политикой обработки персональных данных</span>
+                Нажимая на кнопку регистрации вы соглашаетесь с принятой на сайте{' '}
+                <span className={getModuleClasses(styles, 'policyPrivacyLink')}>
+                    политикой обработки персональных данных
+                </span>
             </Typography.Text>
         </Form>
     );

@@ -1,4 +1,4 @@
-import { Flex, Table, TableColumnsType } from 'antd';
+import { Table, TableColumnsType } from 'antd';
 import { ColumnType } from 'antd/lib/table';
 import { FC, useCallback, useMemo } from 'react';
 
@@ -33,7 +33,12 @@ export const SolutionsTable: FC<Props> = typedMemo(function SolutionsTable({
 
     const { data: organizationSolutions } = useGetIssueSolutions(spaceId, undefined, { enabled: isOrganizer });
     const { data: reviewerSolutions } = useGetSolutions(spaceId, undefined, { enabled: !isOrganizer });
-    const solutions = useMemo(() => isOrganizer ? organizationSolutions : reviewerSolutions, [organizationSolutions, reviewerSolutions, isOrganizer]);
+    const solutions = useMemo(
+        () => isOrganizer
+            ? organizationSolutions
+            : reviewerSolutions,
+        [organizationSolutions, reviewerSolutions, isOrganizer],
+    );
 
     const columns = useMemo<TableColumnsType<GetSolutionForExpert>>(() => [
         {

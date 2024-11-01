@@ -28,7 +28,7 @@ import { Fallback, Sidebar, SidebarItem } from '@shared/ui';
 
 import styles from './SpaceSolutionPage.module.css';
 
-export type Props = ClassNameProps & TestProps & Readonly<{}>;
+export type Props = ClassNameProps & TestProps;
 
 export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage({
     className,

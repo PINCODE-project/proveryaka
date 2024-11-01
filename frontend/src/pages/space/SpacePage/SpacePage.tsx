@@ -1,11 +1,11 @@
 import {
-    FolderOpenOutlined,
-    FileDoneOutlined,
-    UserOutlined,
     EllipsisOutlined,
-    TeamOutlined,
-    LeftOutlined,
+    FileDoneOutlined,
+    FolderOpenOutlined,
     InfoCircleOutlined,
+    LeftOutlined,
+    TeamOutlined,
+    UserOutlined,
 } from '@ant-design/icons';
 import { App, Dropdown, Flex, MenuProps, Typography } from 'antd';
 import { FC, Suspense, useMemo } from 'react';
@@ -33,7 +33,7 @@ import { Avatar, Fallback, Sidebar, SidebarItem } from '@shared/ui';
 
 import styles from './SpacePage.module.css';
 
-export type Props = ClassNameProps & TestProps & Readonly<{}>;
+export type Props = ClassNameProps & TestProps;
 
 export const SpacePage: FC<Props> = typedMemo(function SpacePage({
     className,
@@ -73,13 +73,13 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
                 {
                     key: '1',
                     label: <EditSpaceModal
-		                triggerComponent={
-		                    onOpen => (<Typography.Text onClick={onOpen} className={styles.menuItem}>
+                        triggerComponent={
+                            onOpen => (<Typography.Text onClick={onOpen} className={styles.menuItem}>
                                 Изменить пространство
                             </Typography.Text>)
-		                }
-		                spaceId={spaceId ?? ''}
-		            />,
+                        }
+                        spaceId={spaceId ?? ''}
+                    />,
                 },
                 {
                     key: '2',
@@ -142,10 +142,10 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
         return <Navigate to={SpaceRouter.Spaces} />;
     }
     if (location.pathname === SpaceRouter.Space(spaceId)) {
-        return <Navigate to={SpaceRouter.SpaceTasks(spaceId)} replace />;
+        return <Navigate to={SpaceRouter.SpaceIssues(spaceId)} replace />;
     }
     if (location.pathname === SpaceRouter.SpaceTeams(spaceId) && !spaceSettings?.isUseTeam) {
-        return <Navigate to={SpaceRouter.SpaceTasks(spaceId)} replace />;
+        return <Navigate to={SpaceRouter.SpaceIssues(spaceId)} replace />;
     }
     return (
         <Flex
@@ -157,22 +157,22 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
                 <SidebarItem
                     to={SpaceRouter.SpaceDescription(spaceId)}
                     text="Описание"
-                    icon={className => <InfoCircleOutlined className={className} /> }
+                    icon={className => <InfoCircleOutlined className={className} />}
                 />
                 <SidebarItem
-                    to={SpaceRouter.SpaceTasks(spaceId)}
+                    to={SpaceRouter.SpaceIssues(spaceId)}
                     text="Задания"
-                    icon={className => <FolderOpenOutlined className={className} /> }
+                    icon={className => <FolderOpenOutlined className={className} />}
                 />
                 <SidebarItem
                     to={SpaceRouter.SpaceSolutions(spaceId)}
                     text="Работы"
-                    icon={className => <FileDoneOutlined className={className} /> }
+                    icon={className => <FileDoneOutlined className={className} />}
                 />
                 <SidebarItem
                     to={SpaceRouter.SpaceUsers(spaceId)}
                     text="Участники"
-                    icon={className => <UserOutlined className={className} /> }
+                    icon={className => <UserOutlined className={className} />}
                 />
                 {spaceSettings?.isUseTeam
                     ? <SidebarItem

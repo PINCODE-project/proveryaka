@@ -5,7 +5,13 @@ import { useQueryClient } from 'react-query';
 import { useEditTeam } from '@features/team/edit-team/lib/useEditTeam';
 import { EditTeam } from '@features/team/edit-team/model/EditTeam';
 
-import { getSpaceTeamsQueryKey, getSpaceUserTeamsQueryKey, getTeamQueryKey, TeamForm, useGetTeam } from '@entities/team';
+import {
+    getSpaceTeamsQueryKey,
+    getSpaceUserTeamsQueryKey,
+    getTeamQueryKey,
+    TeamForm,
+    useGetTeam,
+} from '@entities/team';
 
 import { getModuleClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';

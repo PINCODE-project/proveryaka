@@ -1,5 +1,5 @@
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-import { GetProp, Upload, UploadProps } from 'antd';
+import { Button, GetProp, Upload, UploadProps } from 'antd';
 import { UploadChangeParam } from 'antd/es/upload/interface';
 import { FC, ReactNode, useCallback, useState } from 'react';
 
@@ -14,11 +14,13 @@ export type Props = ClassNameProps & UploadProps & {
     filledComponent?: ReactNode;
     emptyText?: string;
     onChangeFile?: (file: File | null) => void;
+    isButton: boolean;
 };
 
 export type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
 export const FileInput: FC<Props> = typedMemo(function FileInput({
+    isButton,
     isEmpty,
     emptyText,
     onChangeFile,
@@ -74,17 +76,21 @@ export const FileInput: FC<Props> = typedMemo(function FileInput({
     return (
         <FileInputContextProvider onChange={handleChange}>
             <Upload
+                {...uploadProps}
                 onChange={handleChange}
                 customRequest={dummyRequest}
                 className={styles.upload}
-                {...uploadProps}
             >
                 {
                     isEmpty
-                        ? <button style={{ border: 0, background: 'none' }} type="button">
-                            {loading ? <LoadingOutlined /> : <PlusOutlined />}
-                            <div style={{ marginTop: 8 }}>{emptyText}</div>
-                        </button>
+                        ? (isButton
+                            ? <Button icon={loading ? <LoadingOutlined /> : <PlusOutlined />}>
+                                {emptyText}
+                            </Button>
+                            : <button style={{ border: 0, background: 'none' }} type="button">
+                                {loading ? <LoadingOutlined /> : <PlusOutlined />}
+                                <div style={{ marginTop: 8 }}>{emptyText}</div>
+                            </button>)
                         : filledComponent
                 }
             </Upload>

@@ -5,11 +5,7 @@ import { useQueryClient } from 'react-query';
 import { useUpdateRole } from '@features/space/change-user-role/lib/useUpdateRole';
 import { UpdateRoleToUserInSpace } from '@features/space/change-user-role/model/UpdateRoleToUserInSpace';
 
-import {
-    getSpaceExpertsQueryKey,
-    getSpaceOrganizerQueryKey,
-    getSpaceStudentsQueryKey,
-} from '@entities/space';
+import { getSpaceExpertsQueryKey, getSpaceOrganizerQueryKey, getSpaceStudentsQueryKey } from '@entities/space';
 import { SpaceRoleType } from '@entities/space/model/SpaceRoleType';
 
 import { typedMemo } from '@shared/lib';
@@ -96,7 +92,7 @@ export const UpdateRoleModal: FC<Props> = typedMemo(function UpdateRoleModal({
                         </Form.Item>
 
                         <Form.Item className={styles.submitButton}>
-                            <Button type="primary" htmlType="submit" >
+                            <Button type="primary" htmlType="submit">
                                 Сохранить
                             </Button>
                         </Form.Item>

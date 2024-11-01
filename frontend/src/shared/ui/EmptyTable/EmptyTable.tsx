@@ -1,11 +1,10 @@
 import { Flex, Typography } from 'antd';
 import { FC } from 'react';
 
-import { getBemClasses, typedMemo } from '@shared/lib';
-import { getModuleClasses } from '@shared/lib/getModuleClasses';
-import { ClassNameProps, TestProps } from '@shared/types';
-
 import styles from './EmptyTable.module.css';
+import { typedMemo } from '../../lib';
+import { getModuleClasses } from '../../lib/getModuleClasses';
+import { ClassNameProps, TestProps } from '../../types';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     text: string;

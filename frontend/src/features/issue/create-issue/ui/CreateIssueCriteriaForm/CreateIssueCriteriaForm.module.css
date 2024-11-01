@@ -1,0 +1,29 @@
+.submitButton {
+    margin-bottom: 0;
+}
+
+.formItem {
+    margin-bottom: 0;
+}
+
+.formItem label {
+    font-weight: var(--font-weight-semibold);
+}
+
+.formItemTitle {
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--body-font-size);
+}
+
+.icon svg {
+    font-size: 20px;
+}
+
+.main {
+    width: 100%;
+}
+
+.collapseHeader {
+    display: flex;
+    align-items: center !important;
+}

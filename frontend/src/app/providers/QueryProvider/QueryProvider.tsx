@@ -12,7 +12,7 @@ export type Props = PropsWithChildren;
 export const QueryProvider: FC<Props> = typedMemo(function QueryProvider({ children }) {
     const navigate = useNavigate();
     const { logout } = useAuthContext();
-    const queryClient = useMemo(() => getQueryClient(logout, navigate), [logout]);
+    const queryClient = useMemo(() => getQueryClient(logout, navigate), [logout, navigate]);
 
     return (
         <QueryClientProvider client={queryClient}>

@@ -39,7 +39,7 @@ export const Content: FC<Props> = typedMemo(function Content({
         },
     });
 
-    const onSubmit = useCallback(async (form: AddUserToSpaceRequest) => {
+    const onSubmit = useCallback((form: AddUserToSpaceRequest) => {
         add({
             ...form,
             spaceId,
@@ -70,7 +70,7 @@ export const Content: FC<Props> = typedMemo(function Content({
                             filterOption={sortSelectOptionsByLabel}
                         >
                             {users?.userInfoList?.map(user => (
-                                <Select.Option value={user.id}>
+                                <Select.Option value={user.id} key={`userSelect${user.id}`}>
                                     {user.surname} {user.name} {user.patronymic}
                                 </Select.Option>
                             ))}
@@ -85,7 +85,7 @@ export const Content: FC<Props> = typedMemo(function Content({
                             { required: true, message: 'Выберите роль' },
                         ]}
                     >
-                        <Select placeholder="Не выбрано" >
+                        <Select placeholder="Не выбрано">
                             <Select.Option value={SpaceRoleType.Student}>Студент</Select.Option>
                             <Select.Option value={SpaceRoleType.Expert}>Эксперт</Select.Option>
                             <Select.Option value={SpaceRoleType.Organizer}>Организатор</Select.Option>

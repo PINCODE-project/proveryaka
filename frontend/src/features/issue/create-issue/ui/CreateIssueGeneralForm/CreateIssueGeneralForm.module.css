@@ -1,0 +1,15 @@
+.submitButton {
+    margin-bottom: 0;
+}
+
+.formItem {
+    margin-bottom: 0;
+}
+
+.formItem label {
+    font-weight: var(--font-weight-semibold);
+}
+
+.main {
+    width: 100%;
+}

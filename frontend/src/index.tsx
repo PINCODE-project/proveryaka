@@ -1,3 +1,5 @@
+import { App, ConfigProvider } from 'antd';
+import locale from 'antd/locale/ru_RU';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.min.css';
@@ -10,8 +12,6 @@ import { AppRouter } from '@app/providers/router/AppRouter';
 import '@shared/styles/index.css';
 import '@app/styles/index.css';
 
-import { App, ConfigProvider } from 'antd';
-
 const root = createRoot(document.getElementById('root')!);
 root.render(
     <ErrorBoundary>
@@ -19,6 +19,7 @@ root.render(
             <AuthContextProvider>
                 <QueryProvider>
                     <ConfigProvider
+                        locale={locale}
                         theme={{
                             token: {
                                 colorPrimary: '#0D9E47',

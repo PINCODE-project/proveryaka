@@ -1,5 +1,5 @@
-import { TeamOutlined, UserOutlined, ClockCircleOutlined, CalendarOutlined } from '@ant-design/icons';
-import { Col, Flex, Grid, Row, Typography } from 'antd';
+import { CalendarOutlined, ClockCircleOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
+import { Col, Flex, Row, Typography } from 'antd';
 import { FC } from 'react';
 import { Navigate } from 'react-router-dom';
 
@@ -15,10 +15,9 @@ import { ClassNameProps, TestProps } from '@shared/types';
 
 import styles from './SpaceIssueDescription.module.css';
 
-export type Props = ClassNameProps & TestProps & Readonly<{}>;
+export type Props = ClassNameProps & TestProps;
 
-export const SpaceIssueDescription: FC<Props> = typedMemo(function SpaceIssueDescription({
-}) {
+export const SpaceIssueDescription: FC<Props> = typedMemo(function SpaceIssueDescription() {
     const spaceId = useSpaceId();
     const issueId = useIssueId();
 
@@ -45,13 +44,13 @@ export const SpaceIssueDescription: FC<Props> = typedMemo(function SpaceIssueDes
                             ? <>
                                 <TeamOutlined className={styles.taskIcon} />
                                 <Typography.Text>
-                            Командный
+                                    Командный
                                 </Typography.Text>
                             </>
                             : <>
                                 <UserOutlined className={styles.taskIcon} />
                                 <Typography.Text>
-                                Индивидуальный
+                                    Индивидуальный
                                 </Typography.Text>
                             </>
                         }
@@ -62,7 +61,7 @@ export const SpaceIssueDescription: FC<Props> = typedMemo(function SpaceIssueDes
                     <Row gutter={[40, 0]}>
                         <Col flex="200px">
                             <Typography.Text className={styles.taskTitle}>
-                               Сдача доступна до
+                                Сдача доступна до
                             </Typography.Text>
                         </Col>
                         <Col>

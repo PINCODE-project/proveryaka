@@ -13,8 +13,6 @@ import { trimAllObjectValues } from '@shared/lib/trimAllObjectValues';
 import { ClassNameProps, TestProps } from '@shared/types';
 
 import styles from './ResetPasswordSubmitForm.module.css';
-import { useResetPassword } from '../../lib/useResetPassword';
-import { ResetPassword } from '../../model/ResetPassword';
 
 export type Props = ClassNameProps & TestProps;
 

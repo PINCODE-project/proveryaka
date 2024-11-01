@@ -12,9 +12,7 @@ import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 
-import styles from './SpaceIssueMarks.module.css';
-
-export type Props = ClassNameProps & TestProps & Readonly<{}>;
+export type Props = ClassNameProps & TestProps;
 
 export const SpaceIssueMarks: FC<Props> = typedMemo(function SpaceIssueMarks() {
     const { isStudent } = useRolesCheck();
