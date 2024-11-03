@@ -1,5 +1,6 @@
 import { SpaceCreateIssuePage } from '@pages/space/SpaceCreateIssuePage';
 import { SpaceIssuesPage } from '@pages/space/SpacePage/subpages/SpaceIssuesPage';
+import { SpaceSolutionCommonPage } from '@pages/space/SpaceSolutionPage/subpages/SpaceSolutionCommonPage';
 
 import { ConfigRouteProps } from '@shared/types';
 
