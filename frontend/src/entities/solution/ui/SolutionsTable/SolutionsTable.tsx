@@ -15,7 +15,6 @@ import { getDateFromISO, getTimeFromISO, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { EmptyTable } from '@shared/ui';
 
-import styles from './SolutionsTable.module.css';
 import { useGetSolutions } from '../../lib/useGetSolutions';
 import { GetSolutionForExpert } from '../../model/GetSolutionForExpert';
 
@@ -53,7 +52,7 @@ export const SolutionsTable: FC<Props> = typedMemo(function SolutionsTable({
             hidden: !isOrganizer,
         },
         {
-            title: 'Дедлайн оценки',
+            title: 'Дедлайн проверки',
             dataIndex: 'assessmentDeadlineDateUtc',
             key: 'assessmentDeadlineDateUtc',
             render: deadline => `${getDateFromISO(deadline)} ${getTimeFromISO(deadline)}`,
@@ -62,7 +61,6 @@ export const SolutionsTable: FC<Props> = typedMemo(function SolutionsTable({
             title: 'Оценок',
             dataIndex: 'marks',
             key: 'marks',
-            align: 'center',
             hidden: !isOrganizer,
             render: (_, record) => `${record.reviewCount}/${record.checksCountMax}`,
         },
@@ -70,8 +68,7 @@ export const SolutionsTable: FC<Props> = typedMemo(function SolutionsTable({
             title: 'Статус',
             dataIndex: 'status',
             key: 'status',
-            align: 'center',
-            render: status => <div className={styles.status}><StatusBadge status={status} type="solution" /></div>,
+            render: status => <StatusBadge status={status} />,
         },
         {
             title: 'Оценка',

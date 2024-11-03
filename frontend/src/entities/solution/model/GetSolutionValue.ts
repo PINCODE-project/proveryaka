@@ -20,4 +20,21 @@ export type GetSolutionValue = {
      * Идентификатор формы задания
      */
     issueFormId: string;
+
+    /**
+     * Навзание
+     */
+    name: string;
+
+    /**
+     * Описание
+     */
+    description: string;
+
+    /**
+     * Обязательно ли поле
+     */
+    isRequired: boolean;
+
+    formSolutionType: number;
 };

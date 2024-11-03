@@ -24,7 +24,7 @@ export async function notifyError(error: AxiosError) {
     }
 
     if (
-        'NotNotify' in Object.keys(error.response?.config.headers || {}) &&
+        !('NotNotify' in Object.keys(error.response?.config.headers || {})) ||
         error.response?.config.headers.NotNotify !== 'true'
     ) {
         notification.error({

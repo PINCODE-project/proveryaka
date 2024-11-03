@@ -68,7 +68,7 @@ export const CreateIssueFormForm: FC<Props> = typedMemo(function CreateIssueForm
                                 { value: 3, label: 'Текст и/или файл' },
                             ]}
                             onChange={value => {
-                                handleChangeIssueForm(form.id, 'formSolutionType', value);
+                                handleChangeIssueForm(form.id!, 'formSolutionType', value);
                             }}
                         />
                     </Form.Item>
@@ -82,7 +82,7 @@ export const CreateIssueFormForm: FC<Props> = typedMemo(function CreateIssueForm
                     >
                         <Checkbox
                             onChange={e => {
-                                handleChangeIssueForm(form.id, 'isRequired', e.target.checked);
+                                handleChangeIssueForm(form.id!, 'isRequired', e.target.checked);
                             }}
                         >Обязательное поле</Checkbox>
                     </Form.Item>
@@ -101,7 +101,7 @@ export const CreateIssueFormForm: FC<Props> = typedMemo(function CreateIssueForm
                     <Input
                         placeholder="Введите название..."
                         onChange={event => {
-                            handleChangeIssueForm(form.id, 'name', event.target.value);
+                            handleChangeIssueForm(form.id!, 'name', event.target.value);
                         }}
                     />
                 </Form.Item>
@@ -117,7 +117,7 @@ export const CreateIssueFormForm: FC<Props> = typedMemo(function CreateIssueForm
                         style={{ resize: 'vertical' }}
                         placeholder="Введите текст..."
                         onChange={event => {
-                            handleChangeIssueForm(form.id, 'description', event.target.value);
+                            handleChangeIssueForm(form.id!, 'description', event.target.value);
                         }}
                     />
                 </Form.Item>

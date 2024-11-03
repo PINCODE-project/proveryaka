@@ -5,7 +5,7 @@ import { FC, useCallback, useMemo, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { SpaceRouter } from '@pages/space';
 
-import { GetIssueResponse, useGetSpaceIssue } from '@entities/issue';
+import { GetIssueResponse, StatusBadge, useGetSpaceIssue } from '@entities/issue';
 import { useRolesCheck } from '@entities/space';
 
 import { getDateFromISO, getTimeFromISO, typedMemo } from '@shared/lib';
@@ -14,7 +14,7 @@ import { EmptyTable } from '@shared/ui';
 
 import { useGetSpaceIssueCount } from '../../lib/useGetSpaceIssueCount';
 import { GetIssueFilters } from '../../model/GetIssueFilters';
-import { IssueStatus, IssueStringStatus } from '../../model/IssueStatus';
+import { Status, IssueStringStatus } from '../../model/Status';
 
 type OnChange = NonNullable<TableProps<GetIssueResponse>['onChange']>;
 type GetSingle<T> = T extends (infer U)[] ? U : never;
@@ -114,7 +114,7 @@ export const IssuesTable: FC<Props> = typedMemo(function TeamsTable({
                 title: 'Статус',
                 dataIndex: 'status',
                 key: 'status',
-                render: (value: number) => <Tag>{IssueStringStatus[IssueStatus[value]]}</Tag>,
+                render: (value: number) => <StatusBadge status={value} />,
             },
             {
                 title: false,

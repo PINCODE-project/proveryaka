@@ -1,15 +1,13 @@
+import { Tag } from 'antd';
 import { FC } from 'react';
 
-import { IssueStatus, IssueStringStatus } from '@entities/issue/model/IssueStatus';
+import { IssueStringStatus, Status } from '@entities/issue/model/Status';
 
 import { typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 
-import styles from './StatusBadge.module.css';
-
 export type Props = ClassNameProps & TestProps & Readonly<{
-    status: IssueStatus;
-    type: 'issue' | 'solution';
+    status: Status;
 }>;
 
 export const StatusBadge: FC<Props> = typedMemo(function StatusBadge({ status }) {
@@ -19,8 +17,8 @@ export const StatusBadge: FC<Props> = typedMemo(function StatusBadge({ status })
         return null;
     }
     return (
-        <div className={styles.badge}>
+        <Tag>
             {text}
-        </div>
+        </Tag>
     );
 });

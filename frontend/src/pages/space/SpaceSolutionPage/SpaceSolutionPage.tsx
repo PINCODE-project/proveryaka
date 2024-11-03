@@ -1,21 +1,22 @@
 import {
-    FileTextOutlined,
-    FileDoneOutlined,
     CommentOutlined,
     EllipsisOutlined,
+    EyeOutlined,
+    FileDoneOutlined,
+    FileTextOutlined,
     LeftOutlined,
-    UserOutlined,
     TeamOutlined,
+    UserOutlined,
 } from '@ant-design/icons';
-import { Dropdown, Flex, MenuProps, Typography } from 'antd';
-import { FC, Suspense, useMemo } from 'react';
-import { Link, Navigate, Outlet, useLocation } from 'react-router-dom';
+import { Button, Dropdown, Flex, MenuProps, Typography } from 'antd';
+import { FC, Suspense, useCallback, useMemo } from 'react';
+import { Link, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/space';
 
 import { UserPanel } from '@widgets/UserPanel';
 
-import { useGetSolution } from '@entities/solution';
+import { Status, StatusBadge, useGetSolution } from '@entities/solution';
 import { useGetOrganizerSolution } from '@entities/solution/lib/useGetOrganizerSolution';
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
@@ -32,9 +33,10 @@ export type Props = ClassNameProps & TestProps;
 
 export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage({
     className,
-    'data-testid': dataTestId = 'SpacePage',
+    'data-testid': dataTestId = 'SpaceSolutionPage',
 }) {
     const location = useLocation();
+    const navigate = useNavigate();
 
     const spaceId = useSpaceId();
     const solutionId = useSolutionId();
@@ -42,7 +44,10 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
     const { isOrganizer } = useRolesCheck();
     const { data: reviewerSolution } = useGetSolution(solutionId ?? '', { enabled: !isOrganizer });
     const { data: organizerSolution } = useGetOrganizerSolution(solutionId ?? '', { enabled: isOrganizer });
-    const solution = useMemo(() => isOrganizer ? organizerSolution : reviewerSolution, [isOrganizer, organizerSolution, reviewerSolution]);
+    const solution = useMemo(
+        () => isOrganizer ? organizerSolution : reviewerSolution,
+        [isOrganizer, organizerSolution, reviewerSolution],
+    );
 
     const items: MenuProps['items'] = useMemo(() => [
         {
@@ -61,6 +66,7 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
     if (location.pathname === SpaceRouter.SpaceSolution(spaceId, solutionId)) {
         return <Navigate to={SpaceRouter.SpaceSolutionCommon(spaceId, solutionId)} replace />;
     }
+
     return (
         <Flex
             gap={40}
@@ -110,7 +116,7 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
                             </Typography.Text>
 
                             <Typography.Text>
-                                Статус
+                                <StatusBadge status={solution.status!} />
                             </Typography.Text>
                         </Flex>
 

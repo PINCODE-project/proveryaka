@@ -1,17 +1,4 @@
-.settingsIcon svg{
-    width: 24px;
-    height: 24px;
-}
-
 .root {
     padding: 20px;
+    height: 100dvh;
 }
-
-.menuItem {
-    color: inherit;
-    font-size: inherit;
-    font-family: inherit;
-    width: 100%;
-    display: block;
-}
-

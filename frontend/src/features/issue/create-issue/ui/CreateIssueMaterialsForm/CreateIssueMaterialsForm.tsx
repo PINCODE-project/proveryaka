@@ -222,7 +222,6 @@ export const CreateIssueMaterialsForm: FC<Props> = typedMemo(function CreateIssu
             requiredMark={false}
             initialValues={{ materials }}
         >
-
             <Form.List name="materials">
                 {(fields, { add, remove, move }) => (
                     <Flex vertical gap={32}>
