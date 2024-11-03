@@ -5,7 +5,7 @@ import { Dispatch, FC, ReactNode, SetStateAction, Suspense, useCallback, useMemo
 import { ExampleType } from '@entities/example/common';
 import { useGetCriteriaExamples } from '@entities/example/criteria-example';
 
-import { typedMemo } from '@shared/lib';
+import { getModuleClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 
 import styles from './CriteriaExampleModal.module.css';
@@ -52,11 +52,12 @@ export const CriteriaExampleModal: FC<Props> = typedMemo(function CriteriaExampl
                 open={isOpen}
                 onClose={onClose}
                 onCancel={onClose}
+                className={getModuleClasses(styles, 'modal', { full: examples.length > 0 && antiExamples.length > 0 })}
             >
-                <Row gutter={40}>
-                    {examples.length > 0 && <Col flex={1}>
-                        <Flex vertical gap={24}>
-                            <Flex gap={4} align="center">
+                <Flex wrap="nowrap" gap={40}>
+                    {examples.length > 0 &&
+                        <Flex vertical gap={24} className={styles.column}>
+                            <Flex gap={4} align="center" >
                                 {examples.length > 1 && <Button
                                     onClick={() => changeIndex(exampleIndex - 1, examples.length, setExampleIndex)}
                                     type="text"
@@ -75,10 +76,9 @@ export const CriteriaExampleModal: FC<Props> = typedMemo(function CriteriaExampl
                             <Suspense fallback={<Flex align="center" justify="center"><Spin /></Flex>}>
                                 <Example example={examples[exampleIndex]} />
                             </Suspense>
-                        </Flex>
-                    </Col>}
-                    {antiExamples.length > 0 && <Col flex={1}>
-                        <Flex vertical gap={24}>
+                        </Flex>}
+                    {antiExamples.length > 0 &&
+                        <Flex vertical gap={24} className={styles.column}>
                             <Flex gap={4}>
                                 {antiExamples.length > 1 && <Button
                                     onClick={() => changeIndex(antiExampleIndex - 1, antiExamples.length, setAntiExampleIndex)}
@@ -99,8 +99,8 @@ export const CriteriaExampleModal: FC<Props> = typedMemo(function CriteriaExampl
                                 <Example example={antiExamples[antiExampleIndex]} />
                             </Suspense>
                         </Flex>
-                    </Col>}
-                </Row>
+                    }
+                </Flex>
             </Modal>
         </>
     );

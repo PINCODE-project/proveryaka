@@ -3,3 +3,17 @@
     font-size: 15px;
     line-height: 22px;
 }
+
+.column {
+    flex: 1;
+}
+
+.modal {
+    max-width: 520px;
+    width: 520px !important;
+}
+
+.modal.full {
+    max-width: 1040px;
+    width: 1040px !important;
+}
