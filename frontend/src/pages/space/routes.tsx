@@ -93,7 +93,7 @@ export const spaceRouteConfig: ConfigRouteProps[] = [
         children: [
             {
                 path: SpaceRouter.SpaceSolutionCommon(':spaceId', ':solutionId'),
-                element: null,
+                element: <SpaceSolutionCommonPage />,
                 withAuthGuard: true,
             },
             {
