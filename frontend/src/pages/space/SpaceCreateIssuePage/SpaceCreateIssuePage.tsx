@@ -211,7 +211,11 @@ export const SpaceCreateIssuePage: FC<Props> = typedMemo(function SpacesPage({
     }, [criteria, createIssueCriteriaDraft, spaceId]);
 
     const handleFormsDraft = useCallback(() => {
-        createIssueFormDraft({ spaceId: spaceId!, data: forms as CreateIssueFormRequest[] });
+        const data = forms.map(form => ({
+            ...form,
+            id: undefined,
+        }));
+        createIssueFormDraft({ spaceId: spaceId!, data: data as CreateIssueFormRequest[] });
     }, [createIssueFormDraft, spaceId, forms]);
 
     const handleChangeStep = useCallback(async (step: number) => {
@@ -230,7 +234,7 @@ export const SpaceCreateIssuePage: FC<Props> = typedMemo(function SpacesPage({
             case 3:
                 handleFormsDraft();
                 if (step === 4) {
-                    saveMyDraft({ spaceId: spaceId! });
+                    setTimeout(() => saveMyDraft({ spaceId: spaceId! }), 2000);
                 }
                 break;
             default:

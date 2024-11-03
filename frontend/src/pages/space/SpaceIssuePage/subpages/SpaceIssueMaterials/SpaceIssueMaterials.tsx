@@ -7,8 +7,8 @@ import { useGetIssueMaterials, IssueMaterialType } from '@entities/issue';
 import { useIssueId } from '@shared/hooks';
 import { typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
+import { DownloadFileButton } from '@shared/ui/DownloadFileButton';
 
-import { MaterialFile } from './MaterialFile';
 import styles from './SpaceIssueMaterials.module.css';
 
 export type Props = ClassNameProps & TestProps;
@@ -34,7 +34,7 @@ export const SpaceIssueMaterials: FC<Props> = typedMemo(function SpaceIssueMater
                         </Typography>}
 
                     {material.type === IssueMaterialType.File && material.fileId
-                        ? <MaterialFile fileId={material.fileId} />
+                        ? <DownloadFileButton fileId={material.fileId} microservice='estimate' />
                         : null}
 
                     {material.type === IssueMaterialType.Link &&

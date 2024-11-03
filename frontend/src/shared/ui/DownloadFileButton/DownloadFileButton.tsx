@@ -2,19 +2,27 @@ import { DownloadOutlined } from '@ant-design/icons';
 import { Button, Typography } from 'antd';
 import { FC, useMemo } from 'react';
 
-import { downloadFileByUrl, typedMemo, useGetEstimateFile } from '@shared/lib';
+import { downloadFileByUrl, typedMemo, useGetEstimateFile, useGetSolutionFile } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 
-import styles from './MaterialFile.module.css';
+import styles from './DownloadFileButton.module.css';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     fileId: string;
+    microservice: 'estimate' | 'solution';
 }>;
 
-export const MaterialFile: FC<Props> = typedMemo(function MaterialFile({
+export const DownloadFileButton: FC<Props> = typedMemo(function DownloadFileButton({
     fileId,
+    microservice,
 }) {
-    const { data: file } = useGetEstimateFile(fileId);
+    const { data: estimateFile } = useGetEstimateFile(fileId, {
+        enabled: microservice === 'estimate',
+    });
+    const { data: solutionFile } = useGetSolutionFile(fileId, {
+        enabled: microservice === 'solution',
+    });
+    const file = estimateFile || solutionFile;
     const fileUrl = useMemo(() => file ? URL.createObjectURL(file) : null, [file]);
     const imageRegex = /.*\.(png|jpg|webp|jpeg)$/;
 

@@ -22,5 +22,5 @@ export type CreateIssueFormRequest = {
     /**
      * ID формы (НА ФРОНТЕ)
      */
-    id: string;
+    id?: string;
 };

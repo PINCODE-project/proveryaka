@@ -14,10 +14,33 @@ export type GetSolutionValue = {
      */
     fileIdList: string[] | null;
 
+    /**
+     * Файл (Для фронта)
+     */
     file?: File | null;
 
     /**
      * Идентификатор формы задания
      */
     issueFormId: string;
+
+    /**
+     * Навзание
+     */
+    name: string;
+
+    /**
+     * Описание
+     */
+    description: string;
+
+    /**
+     * Обязательно ли поле
+     */
+    isRequired: boolean;
+
+    /**
+     * Тип сданной формы
+     */
+    formSolutionType: number;
 };

@@ -20,7 +20,7 @@ import { UserPanel } from '@widgets/UserPanel';
 import { DeleteIssueButton } from '@features/issue/delete-issue';
 import { PublishIssueArguments, usePublishIssue } from '@features/issue/publish-issue/lib/usePublishIssue';
 
-import { getIssueQueryKey, getSpaceIssueQueryKey, StatusBadge, useGetIssue } from '@entities/issue';
+import { getIssueQueryKey, getSpaceIssueQueryKey, Status, StatusBadge, useGetIssue } from '@entities/issue';
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
 import { useIssueId } from '@shared/hooks';
@@ -175,7 +175,7 @@ export const SpaceIssuePage: FC<Props> = typedMemo(function SpaceSolutionPage({
                                 {issue.name}
                             </Typography.Text>
 
-                            <StatusBadge status={issue.status ?? 0} type="issue" />
+                            <StatusBadge status={issue.status ?? Status.UnknownStatus} />
                         </Flex>
 
                         {isOrganizer
