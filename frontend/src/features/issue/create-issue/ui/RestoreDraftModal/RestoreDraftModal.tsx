@@ -30,7 +30,7 @@ export const RestoreDraftModal: FC<Props> = typedMemo(function CreateTeamModal({
                 <Flex gap="middle" justify="center">
                     <Button
                         color="danger"
-                        variant="outlined"
+                        type="default"
                         onClick={onDeleteDraft}
                     >
                         Отменить

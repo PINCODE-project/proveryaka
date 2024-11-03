@@ -35,4 +35,14 @@ export type GetReviews = {
      * Оценки по критериям
      */
     reviews: GetCriteriaReview[];
+
+    /**
+     * Аватарка пользователя
+     */
+    avatar?: string | null;
+
+    /**
+     * ФИО пользователя
+     */
+    fio?: string | null;
 };

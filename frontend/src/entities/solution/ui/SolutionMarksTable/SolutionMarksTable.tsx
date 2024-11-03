@@ -2,12 +2,13 @@ import { Flex, Table, TableColumnsType, Typography } from 'antd';
 import { ColumnType } from 'antd/lib/table';
 import { FC, useMemo, useState } from 'react';
 
+import { useGetSolutionReviews } from '@entities/solution';
 import { useRolesCheck } from '@entities/space';
 
 import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { ClassNameProps, TestProps } from '@shared/types';
-import { EmptyTable } from '@shared/ui';
+import { Avatar, EmptyTable } from '@shared/ui';
 
 import styles from './SolutionMarksTable.module.css';
 import { useGetStudentSolutionReviews } from '../../lib/useGetStudentSolutionReviews';
@@ -36,7 +37,10 @@ export const SolutionMarksTable: FC<Props> = typedMemo(function SolutionMarksTab
 }) {
     const { isOrganizer } = useRolesCheck();
 
-    const { data: solution } = useGetStudentSolutionReviews(solutionId);
+    const { data: studentSolution } = useGetStudentSolutionReviews(solutionId, { enabled: !isOrganizer });
+    const { data: organizerSolution } = useGetSolutionReviews(solutionId, { enabled: isOrganizer });
+    const solution = useMemo(() => isOrganizer ? organizerSolution : studentSolution, [studentSolution, organizerSolution, isOrganizer]);
+
     const [markType, setMarkType] = useState(defaultMarkType);
 
     const criteriaMarks = useMemo((): CriteriaReview[] => {
@@ -72,10 +76,15 @@ export const SolutionMarksTable: FC<Props> = typedMemo(function SolutionMarksTab
     const commonColumns = useMemo<TableColumnsType<GetReviews>>(() => [
         {
             title: 'Эксперт',
-            dataIndex: 'userId',
-            key: 'userId',
+            dataIndex: 'fio',
+            key: 'fio',
             hidden: !isOrganizer,
-            render: (_, record) => 'surname name patronymic',
+            render: (_, record) => (
+                <Flex gap={4} align="center">
+                    <Avatar fileId={record.avatar ?? ''} apiType="solution" />
+                    {record.fio}
+                </Flex>
+            ),
         },
         {
             title: 'Оценка',

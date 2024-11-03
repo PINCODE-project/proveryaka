@@ -8,3 +8,4 @@ export * from './model/GetReviews';
 export * from '../issue/model/Status';
 
 export * from './lib/useGetSolution';
+export * from './lib/useGetSolutionReviews';
