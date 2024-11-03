@@ -14,6 +14,9 @@ export type GetSolutionValue = {
      */
     fileIdList: string[] | null;
 
+    /**
+     * Файл (Для фронта)
+     */
     file?: File | null;
 
     /**
@@ -36,5 +39,8 @@ export type GetSolutionValue = {
      */
     isRequired: boolean;
 
+    /**
+     * Тип сданной формы
+     */
     formSolutionType: number;
 };
