@@ -38,7 +38,7 @@ export const SpaceIssueMaterials: FC<Props> = typedMemo(function SpaceIssueMater
                         : null}
 
                     {material.type === IssueMaterialType.Link &&
-                        <Typography.Link href={material.text ?? ''}>
+                        <Typography.Link href={material.text ?? ''} target="_blank">
                             <Button type="default" icon={<SelectOutlined />}>
                                 Смотреть материал
                             </Button>
