@@ -4,6 +4,7 @@ import { FC, useMemo, useState } from 'react';
 
 import { useGetSolutionReviews } from '@entities/solution';
 import { useRolesCheck } from '@entities/space';
+import { useGetCurrentUserInfo } from '@entities/user';
 
 import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
@@ -35,11 +36,15 @@ export const SolutionMarksTable: FC<Props> = typedMemo(function SolutionMarksTab
     defaultMarkType = MarkType.Common,
     canChangeMarkType = true,
 }) {
+    const { data: info } = useGetCurrentUserInfo();
     const { isOrganizer } = useRolesCheck();
 
     const { data: studentSolution } = useGetStudentSolutionReviews(solutionId, { enabled: !isOrganizer });
     const { data: organizerSolution } = useGetSolutionReviews(solutionId, { enabled: isOrganizer });
-    const solution = useMemo(() => isOrganizer ? organizerSolution : studentSolution, [studentSolution, organizerSolution, isOrganizer]);
+    const solution = useMemo(() => isOrganizer
+        ? organizerSolution
+        : { ...studentSolution, reviews: studentSolution?.reviews?.filter(({ userId }) => userId === info?.id) ?? [] }
+    , [studentSolution, organizerSolution, isOrganizer, info]);
 
     const [markType, setMarkType] = useState(defaultMarkType);
 
