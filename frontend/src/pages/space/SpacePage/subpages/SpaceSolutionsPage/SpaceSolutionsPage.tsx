@@ -5,6 +5,8 @@ import { Navigate } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/space';
 
+import { DistributeModal, useDistributeExpertToSolution } from '@features/solution/distribute-experts';
+
 import { SolutionsTable, GetSolutionForExpert } from '@entities/solution';
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
@@ -24,7 +26,9 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
     const { isOrganizer } = useRolesCheck();
     const spaceId = useSpaceId();
 
-    const renderActions = useCallback(() => {
+    const { mutate: distribute } = useDistributeExpertToSolution();
+
+    const renderActions = useCallback((_: string, record: GetSolutionForExpert) => {
         if (!isOrganizer) {
             return undefined;
         }
@@ -32,8 +36,16 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
         const items: MenuProps['items'] = [
             {
                 key: '1',
-                label: 'Назначить проверяющих',
-                disabled: true,
+                label: <DistributeModal
+                    onSubmit={(onClose, expertIdList) => distribute({ expertIdList, solutionId: record.id }, { onSuccess: onClose })}
+                    triggerComponent={
+                        open => (
+                            <Typography onClick={open} className={styles.menuItem}>
+                                Назначить проверяющих
+                            </Typography>
+                        )
+                    }
+                />,
             },
         ];
 
