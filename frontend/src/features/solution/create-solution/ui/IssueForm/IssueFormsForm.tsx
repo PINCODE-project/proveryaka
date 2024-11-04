@@ -68,7 +68,7 @@ export const IssueFormsForm: FC<Props> = typedMemo(function IssueFormsForm({
         const data: CreateSolution = {
             issueId,
             solutionValueList: form.solutionValueList?.map(item => ({
-                fileIdList: null,
+                fileIdList: [],
                 textValue: item.textValue,
                 name: item.name,
                 description: item.name,
