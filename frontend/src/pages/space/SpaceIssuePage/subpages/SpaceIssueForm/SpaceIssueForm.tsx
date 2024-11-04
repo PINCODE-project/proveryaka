@@ -8,6 +8,7 @@ import { IssueFormsForm } from '@features/solution/create-solution';
 import { useGetIssue } from '@entities/issue';
 import { useGetSolution } from '@entities/solution';
 import { useGetStudentIssueSolution } from '@entities/solution/lib/useGetStudentIssueSolution';
+import { useGetStudentSolution } from '@entities/solution/lib/useGetStudentSolution';
 import { GetSolutionValue } from '@entities/solution/model/GetSolutionValue';
 import { useRolesCheck } from '@entities/space';
 
@@ -28,7 +29,7 @@ export const SpaceIssueForm: FC<Props> = typedMemo(function SpaceIssueForm() {
         : false, [issue]);
 
     const { data: studentSolution } = useGetStudentIssueSolution(issueId ?? '');
-    const { data: solution } = useGetSolution(studentSolution?.id ?? '', { enabled: Boolean(studentSolution) });
+    const { data: solution } = useGetStudentSolution(studentSolution?.id ?? '', { enabled: Boolean(studentSolution) });
     const [initialData, setInitialData] = useState<GetSolutionValue[] | undefined>(undefined);
 
     useEffect(() => {
@@ -38,17 +39,19 @@ export const SpaceIssueForm: FC<Props> = typedMemo(function SpaceIssueForm() {
 
         (async function() {
             const promises: Promise<void>[] = [];
-            solution.solutionValueList.forEach((item, index) => {
+            solution.solutionValueList?.forEach((item, index) => {
                 if (item.fileIdList?.[0]) {
                     promises.push(getFile(item.fileIdList[0]).then(file => {
-                        solution.solutionValueList[index].file = file;
+                        if (solution.solutionValueList) {
+                            solution.solutionValueList[index].file = file;
+                        }
                     }));
                 }
             });
 
             await Promise.all(promises);
 
-            setInitialData(solution.solutionValueList);
+            setInitialData(solution?.solutionValueList ?? []);
         })();
     }, [solution]);
 

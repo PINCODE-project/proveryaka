@@ -14,18 +14,16 @@ import { FileType } from '@shared/ui/FileInput/FileInput';
 import styles from './IssueFormForm.module.css';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
-    item: Omit<GetSolutionValue, 'id'>;
     order: number;
     disabled?: boolean;
 }>;
 
 export const IssueFormForm: FC<Props> = typedMemo(function IssueFormForm({
-    item,
     order,
     disabled,
 }) {
     const form = Form.useFormInstance();
-    const file: File | undefined = Form.useWatch(['solutionValueList', order, 'file'], form);
+    const item: GetSolutionValue | undefined = Form.useWatch(['solutionValueList', order], form);
 
     const onChangeFile = useCallback((file: File | null) => {
         form.setFieldValue(['solutionValueList', order, 'file'], file);
@@ -51,29 +49,28 @@ export const IssueFormForm: FC<Props> = typedMemo(function IssueFormForm({
             disabled={disabled}
             beforeUpload={beforeUpload}
             showUploadList={false}
-            isEmpty={!file}
+            isEmpty={!item?.file}
             filledComponent={
                 <Flex gap={12} align="center">
-                    <DownloadFileButton file={file} enableImageShow={false} />
-                    <Button
+                    <DownloadFileButton file={item?.file ?? undefined} enableImageShow={false} />
+                    {!disabled && <Button
                         icon={<DeleteOutlined />}
                         onClick={event => {
                             event.stopPropagation();
                             !disabled && onChangeFile(null);
                         }}
                         variant="text"
-
-                    />
+                    />}
                 </Flex>
             }
             onChangeFile={onChangeFile}
             emptyText="Загрузите файл"
             isButton
         />
-    ), [beforeUpload, file, onChangeFile, disabled]);
+    ), [beforeUpload, item?.file, onChangeFile, disabled]);
 
     const input = useMemo(() => {
-        if (item.formSolutionType === FormSolutionType.Text) {
+        if (item?.formSolutionType === FormSolutionType.Text) {
             return (
                 <Form.Item
                     className={styles.formItem}
@@ -87,7 +84,7 @@ export const IssueFormForm: FC<Props> = typedMemo(function IssueFormForm({
                 </Form.Item>
             );
         }
-        if (item.formSolutionType === FormSolutionType.File) {
+        if (item?.formSolutionType === FormSolutionType.File) {
             return (
                 <Form.Item
                     className={styles.formItem}
@@ -96,7 +93,7 @@ export const IssueFormForm: FC<Props> = typedMemo(function IssueFormForm({
                     rules={[
                         ({ getFieldValue }) => ({
                             validator() {
-                                if (!item.isRequired || getFieldValue(['solutionValueList', order, 'file'])) {
+                                if (!item?.isRequired || getFieldValue(['solutionValueList', order, 'file'])) {
                                     return Promise.resolve();
                                 }
                                 return Promise.reject(new Error('Загрузите файл'));
@@ -108,7 +105,7 @@ export const IssueFormForm: FC<Props> = typedMemo(function IssueFormForm({
                 </Form.Item>
             );
         }
-        if (item.formSolutionType === FormSolutionType.FileOrText) {
+        if (item?.formSolutionType === FormSolutionType.FileOrText) {
             return (
                 <Flex vertical gap={12}>
                     <Form.Item
@@ -157,18 +154,20 @@ export const IssueFormForm: FC<Props> = typedMemo(function IssueFormForm({
                 </Flex>
             );
         }
-    }, [item, form, textInput, fileInput, order]);
+    }, [item, textInput, fileInput, order]);
 
     return (
         <Flex gap={20} vertical>
             <Flex gap={12} vertical>
                 <Typography.Text className={styles.title}>
-                    {item.name}
+                    {item?.name}
 
-                    {!item.isRequired ? <Typography.Text className={styles.optional}> (необязательно)</Typography.Text> : null}
+                    {!item?.isRequired
+                        ? <Typography.Text className={styles.optional}> (необязательно)</Typography.Text>
+                        : null}
                 </Typography.Text>
 
-                {item.description ? <Typography>{item.description}</Typography> : null}
+                {item?.description ? <Typography>{item.description}</Typography> : null}
             </Flex>
 
             {input}

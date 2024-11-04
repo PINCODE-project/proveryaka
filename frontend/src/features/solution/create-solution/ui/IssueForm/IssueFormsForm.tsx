@@ -1,10 +1,6 @@
 import { Button, Flex, Form } from 'antd';
-import { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo } from 'react';
 import { useQueryClient } from 'react-query';
-
-import { useCreateSolution } from '@features/solution/create-solution/lib/useCreateSolution';
-import { useDeleteSolution } from '@features/solution/create-solution/lib/useDeleteSolution';
-import { CreateSolution } from '@features/solution/create-solution/model/CreateSolution';
 
 import { useGetIssueFormList } from '@entities/issue/lib/useGetIssueFormList';
 import { getStudentIssueSolutionQueryKey } from '@entities/solution/lib/getStudentIssueSolutionQueryKey';
@@ -17,6 +13,9 @@ import { ClassNameProps, TestProps } from '@shared/types';
 
 import { IssueFormForm } from './IssueFormForm/IssueFormForm';
 import styles from './IssueFormsForm.module.css';
+import { useCreateSolution } from '../../lib/useCreateSolution';
+import { useDeleteSolution } from '../../lib/useDeleteSolution';
+import { CreateSolution } from '../../model/CreateSolution';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     issueId: string;
@@ -108,7 +107,6 @@ export const IssueFormsForm: FC<Props> = typedMemo(function IssueFormsForm({
                         return solutionValues.map((item, index) => (
                             <IssueFormForm
                                 disabled={!isStudent || Boolean(initialData) || disabled}
-                                item={item}
                                 order={index}
                                 key={item.issueFormId}
                             />
