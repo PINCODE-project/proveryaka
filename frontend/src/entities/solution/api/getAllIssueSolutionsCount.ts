@@ -1,13 +1,11 @@
-import { GetSolutionForExpert } from '@entities/solution/model/GetSolutionForExpert';
-
 import { solutionHttp } from '@shared/config/axios';
 import { extractData } from '@shared/lib';
 import { ListFilters } from '@shared/types';
 
-export function getAllIssueSolutions(spaceId: string, filters?: ListFilters): Promise<GetSolutionForExpert[]> {
+export function getAllIssueSolutionsCount(spaceId: string, filters?: ListFilters): Promise<number> {
     return solutionHttp.get<{
-        entityList: GetSolutionForExpert[];
-    }>('organizer/solution/all', {
+        count: number;
+    }>('organizer/solution/count', {
         params: {
             spaceId,
             ...filters,
@@ -15,5 +13,5 @@ export function getAllIssueSolutions(spaceId: string, filters?: ListFilters): Pr
         },
     })
         .then(extractData)
-        .then(data => data.entityList ?? []);
+        .then(data => data.count ?? 0);
 }

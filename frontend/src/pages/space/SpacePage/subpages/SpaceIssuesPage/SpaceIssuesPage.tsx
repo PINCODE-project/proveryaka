@@ -152,8 +152,7 @@ export const SpaceIssuesPage: FC<Props> = typedMemo(function SpaceTeamsPage({
                         placeholder="Поиск"
                         allowClear
                         onSearch={value => {
-                            changeFilters('search', value);
-                            changeFilters('page', 0);
+                            changeFilters({ search: value, page: 0 });
                         }}
                         style={{ width: 250 }}
                     />
@@ -161,8 +160,7 @@ export const SpaceIssuesPage: FC<Props> = typedMemo(function SpaceTeamsPage({
                         defaultValue={null}
                         style={{ width: 200 }}
                         onChange={value => {
-                            changeFilters('status', value);
-                            changeFilters('page', 0);
+                            changeFilters({ status: value, page: 0 });
                         }}
                         options={getStatusFilter()}
                     />

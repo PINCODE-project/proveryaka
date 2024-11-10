@@ -8,9 +8,11 @@ import { useNavigate } from 'react-router-dom';
 import { SpaceRouter } from '@pages/space';
 
 import { StatusBadge } from '@entities/issue';
+import { useGetIssueSolutionsCount, useGetSolutionsCount } from '@entities/solution';
 import { useGetIssueSolutions } from '@entities/solution/lib/useGetIssueSolutions';
 import { useRolesCheck } from '@entities/space';
 
+import { useListFilters } from '@shared/hooks';
 import { getDateFromISO, getTimeFromISO, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { EmptyTable } from '@shared/ui';
@@ -30,13 +32,18 @@ export const SolutionsTable: FC<Props> = typedMemo(function SolutionsTable({
     const navigate = useNavigate();
     const { isOrganizer } = useRolesCheck();
 
-    const { data: organizationSolutions } = useGetIssueSolutions(spaceId, undefined, { enabled: isOrganizer });
-    const { data: reviewerSolutions } = useGetSolutions(spaceId, undefined, { enabled: !isOrganizer });
+    const [filters, setFilters] = useListFilters({ page: 0, count: 10 });
+
+    const { data: organizationSolutions } = useGetIssueSolutions(spaceId, filters, { enabled: isOrganizer });
+    const { data: reviewerSolutions } = useGetSolutions(spaceId, filters, { enabled: !isOrganizer });
+    const { data: organizationSolutionsCount } = useGetIssueSolutionsCount(spaceId, filters, { enabled: isOrganizer });
+    const { data: reviewerSolutionsCount } = useGetSolutionsCount(spaceId, filters, { enabled: !isOrganizer });
+
     const solutions = useMemo(
         () => isOrganizer
-            ? organizationSolutions
-            : reviewerSolutions,
-        [organizationSolutions, reviewerSolutions, isOrganizer],
+            ? { data: organizationSolutions, count: organizationSolutionsCount }
+            : { data: reviewerSolutions, count: reviewerSolutionsCount },
+        [organizationSolutions, reviewerSolutions, isOrganizer, organizationSolutionsCount, reviewerSolutionsCount],
     );
 
     const columns = useMemo<TableColumnsType<GetSolutionForExpert>>(() => [
@@ -90,15 +97,23 @@ export const SolutionsTable: FC<Props> = typedMemo(function SolutionsTable({
         onClick: () => navigate(SpaceRouter.SpaceSolutionCommon(spaceId, record.id)),
     }), [navigate, spaceId]);
 
-    if (solutions?.length === 0) {
+    if (solutions.data?.length === 0) {
         return <EmptyTable text="Нет работ" />;
     }
     return (
         <Table
             onRow={onRow}
             rowKey="id"
+            pagination={{
+                onChange: (page, count) => {
+                    setFilters({ page, count });
+                },
+                current: filters.page,
+                total: solutions.count,
+                pageSize: filters.count,
+            }}
             columns={columns}
-            dataSource={solutions}
+            dataSource={solutions.data}
         />
     );
 });

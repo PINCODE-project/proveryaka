@@ -8,7 +8,7 @@ type Filters = ListFilters & {
 
 type ReturnType<TFilters extends Filters> = [
     TFilters,
-    (key: keyof TFilters, value: TFilters[keyof TFilters]) => void
+    (value: Partial<TFilters>) => void
 ];
 
 export function useListFilters<TFilters extends Filters>(
@@ -16,8 +16,8 @@ export function useListFilters<TFilters extends Filters>(
 ): ReturnType<TFilters> {
     const [filters, setFilters] = useState<TFilters>(initialValue);
 
-    const changeFilter = useCallback((key: keyof TFilters, value: TFilters[keyof TFilters]) => {
-        setFilters(filters => ({ ...filters, [key]: value }));
+    const changeFilter = useCallback((value: Partial<TFilters>) => {
+        setFilters(filters => ({ ...filters, ...value }));
     }, []);
 
     return [

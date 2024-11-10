@@ -24,7 +24,7 @@ export type Props = ClassNameProps & TestProps & Readonly<{
     spaceId: string;
     actionRender?: ColumnType<GetIssueResponse>['render'];
     filters: GetIssueFilters;
-    changeFilters: (key: keyof GetIssueFilters, value: number | undefined) => void;
+    changeFilters: (value: Partial<GetIssueFilters>) => void;
 }>;
 
 const keyToOrderBy: Record<string, number> = {
@@ -55,8 +55,7 @@ export const IssuesTable: FC<Props> = typedMemo(function TeamsTable({
 
     const handleChange: OnChange = (pagination: TablePaginationConfig, filters, sorter) => {
         setSortedInfo(sorter as Sorts);
-        changeFilters('page', pagination.current! - 1 || 0);
-        changeFilters('count', pagination.pageSize || 10);
+        changeFilters({ page: pagination.current! - 1 || 0, count: pagination.pageSize || 10 });
     };
 
     const columns = useMemo<TableColumnsType<GetIssueResponse>>(() => {
