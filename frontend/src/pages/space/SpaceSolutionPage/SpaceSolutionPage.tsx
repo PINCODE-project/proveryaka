@@ -16,6 +16,8 @@ import { SpaceRouter } from '@pages/space';
 
 import { UserPanel } from '@widgets/UserPanel';
 
+import { DistributeModal, useDistributeExpertToSolution } from '@features/solution/distribute-experts';
+
 import { Status, StatusBadge, useGetSolution } from '@entities/solution';
 import { useGetOrganizerSolution } from '@entities/solution/lib/useGetOrganizerSolution';
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
@@ -49,11 +51,21 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
         [isOrganizer, organizerSolution, reviewerSolution],
     );
 
+    const { mutate: distribute } = useDistributeExpertToSolution();
+
     const items: MenuProps['items'] = useMemo(() => [
         {
             key: '0',
-            label: 'Назначить проверяющих',
-            disabled: true,
+            label: <DistributeModal
+                onSubmit={(onClose, expertIdList) => distribute({ expertIdList, solutionId: solutionId ?? '' }, { onSuccess: onClose })}
+                triggerComponent={
+                    open => (
+                        <Typography onClick={open} className={styles.menuItem}>
+                    Назначить проверяющих
+                        </Typography>
+                    )
+                }
+            />,
         },
     ], []);
 

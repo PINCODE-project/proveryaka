@@ -56,7 +56,7 @@ export const EditUserForm: FC<Props> = typedMemo(function EditUserForm({
         }
         const isLt2M = file.size / 1024 / 1024 < 2;
         if (!isLt2M) {
-            message.error('Изображение должно быть меньше 0.8Мб');
+            message.error('Изображение должно быть меньше 2Мб');
         }
         return isJpgOrPng && isLt2M;
     }, []);
