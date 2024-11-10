@@ -1,6 +1,6 @@
 import { EllipsisOutlined } from '@ant-design/icons';
 import { Dropdown, Flex, MenuProps, Typography } from 'antd';
-import { FC, useCallback } from 'react';
+import { FC, Suspense, useCallback } from 'react';
 import { Navigate } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/space';
@@ -14,6 +14,7 @@ import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { ClassNameProps, TestProps } from '@shared/types';
+import { Fallback } from '@shared/ui';
 
 import styles from './SpaceSolutionsPage.module.css';
 
@@ -69,10 +70,12 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
                 </Typography.Text>
             </Flex>
 
-            <SolutionsTable
-                spaceId={spaceId}
-                actionRender={renderActions}
-            />
+            <Suspense fallback={<Fallback />}>
+                <SolutionsTable
+                    spaceId={spaceId}
+                    actionRender={renderActions}
+                />
+            </Suspense>
         </Flex>
     );
 });

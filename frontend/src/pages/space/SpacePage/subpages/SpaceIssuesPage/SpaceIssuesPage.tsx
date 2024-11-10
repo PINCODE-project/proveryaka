@@ -1,6 +1,6 @@
 import { EllipsisOutlined } from '@ant-design/icons';
 import { Dropdown, Flex, Input, MenuProps, notification, Select, Typography } from 'antd';
-import { FC, useCallback } from 'react';
+import { FC, Suspense, useCallback } from 'react';
 import { useQueryClient } from 'react-query';
 import { Navigate } from 'react-router-dom';
 
@@ -21,6 +21,7 @@ import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { ClassNameProps, TestProps } from '@shared/types';
+import { Fallback } from '@shared/ui';
 
 import styles from './SpaceIssuesPage.module.css';
 
@@ -169,12 +170,14 @@ export const SpaceIssuesPage: FC<Props> = typedMemo(function SpaceTeamsPage({
                 <SpaceIssuesButton spaceId={spaceId} />
             </Flex>
 
-            <IssuesTable
-                spaceId={spaceId}
-                filters={filters}
-                changeFilters={changeFilters}
-                actionRender={renderActions}
-            />
+            <Suspense fallback={<Fallback />}>
+                <IssuesTable
+                    spaceId={spaceId}
+                    filters={filters}
+                    changeFilters={changeFilters}
+                    actionRender={renderActions}
+                />
+            </Suspense>
         </Flex>
     );
 });
