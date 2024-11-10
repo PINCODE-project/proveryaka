@@ -1,5 +1,5 @@
 import { EllipsisOutlined, DeleteOutlined } from '@ant-design/icons';
-import { Dropdown, Flex, MenuProps, Typography } from 'antd';
+import { App, Dropdown, Flex, MenuProps, Typography } from 'antd';
 import { FC, useCallback } from 'react';
 import { useQueryClient } from 'react-query';
 import { Navigate } from 'react-router-dom';
@@ -9,6 +9,7 @@ import { SpaceRouter } from '@pages/space';
 import { AddUserTeamModal } from '@features/team/add-user-team';
 import { CreateTeamModal } from '@features/team/create-team';
 import { EditTeamModal } from '@features/team/edit-team';
+import { useLeaveTeam } from '@features/team/leave-team';
 import { useRemoveTeamUser } from '@features/team/remove-team-user';
 
 import { GetStudentResponse } from '@entities/space';
@@ -34,6 +35,7 @@ export type Props = ClassNameProps & TestProps;
 export const SpaceTeamsPage: FC<Props> = typedMemo(function SpaceTeamsPage({
     className,
 }) {
+    const { notification } = App.useApp();
     const queryClient = useQueryClient();
     const { isStudent, isOrganizer } = useRolesCheck();
     const spaceId = useSpaceId();
@@ -48,6 +50,30 @@ export const SpaceTeamsPage: FC<Props> = typedMemo(function SpaceTeamsPage({
             queryClient.resetQueries(getSpaceTeamsQueryKey(spaceId ?? ''));
         },
     });
+
+    const { mutate: leaveTeam } = useLeaveTeam({
+        onSuccess: (_, context) => {
+            notification.success({
+                message: 'Выход из команды',
+                description: <>Вы покинули команду <b>{context.name}</b></>,
+            });
+            queryClient.resetQueries(getSpaceUserTeamsQueryKey(spaceId ?? ''));
+            queryClient.resetQueries(getSpaceTeamsQueryKey(spaceId ?? ''));
+        },
+    });
+
+    const handleLeave = useCallback(async (team: GetTeam) => {
+        const canDelete = await customConfirm({
+            title: 'Покинуть команду',
+            text: <>Вы уверены, что хотите покинуть команду <b>{team.name}</b>?</>,
+        });
+
+        if (!canDelete) {
+            return;
+        }
+
+        leaveTeam(team);
+    }, [leaveTeam]);
 
     const handleRemove = useCallback(async (team: GetTeam, user: GetStudentResponse) => {
         const canDelete = await customConfirm({
@@ -104,7 +130,7 @@ export const SpaceTeamsPage: FC<Props> = typedMemo(function SpaceTeamsPage({
             items.push({
                 key: '3',
                 label: 'Покинуть команду',
-                disabled: true,
+                onClick: () => handleLeave(record),
             });
         }
 
