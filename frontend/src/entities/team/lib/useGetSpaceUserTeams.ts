@@ -13,7 +13,7 @@ export function useGetSpaceUserTeams(
     filters?: GetTeamFilters,
     options?: AxiosUseQueryOptions<GetTeamList>,
 ) {
-    const queryKey = useMemo(() => getSpaceUserTeamsQueryKey(spaceId), [spaceId]);
+    const queryKey = useMemo(() => getSpaceUserTeamsQueryKey(spaceId, filters), [spaceId, filters]);
 
     return useQuery(queryKey, () => getSpaceUserTeams(spaceId, filters), options);
 }

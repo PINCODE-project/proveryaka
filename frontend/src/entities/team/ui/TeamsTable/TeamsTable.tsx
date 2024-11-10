@@ -24,6 +24,8 @@ export type Props = ClassNameProps & TestProps & Readonly<{
     placeholder?: string;
     actionRender?: ColumnType<GetTeam>['render'];
     renderStudentActions?: (team: GetTeam) => ColumnType<GetStudentResponse>['render'];
+    filters: GetTeamFilters;
+    setFilters: (filters: GetTeamFilters) => void;
 }>;
 
 export const TeamsTable: FC<Props> = typedMemo(function TeamsTable({
@@ -31,10 +33,10 @@ export const TeamsTable: FC<Props> = typedMemo(function TeamsTable({
     renderStudentActions,
     actionRender,
     placeholder = 'В пространстве нет команд',
+    filters,
+    setFilters,
 }) {
     const { isStudent } = useRolesCheck();
-
-    const [filters] = useListFilters<GetTeamFilters>({ teamType: TeamType.Space });
 
     const { data: studentTeams } = useGetSpaceUserTeams(spaceId, filters, {
         enabled: isStudent,
@@ -86,6 +88,14 @@ export const TeamsTable: FC<Props> = typedMemo(function TeamsTable({
     return (
         <Table
             rowKey="id"
+            /* pagination={{
+                total: 1000,
+                onChange: (page, count) => {
+                    setFilters({ page: count !== filters.count ? 0 : page, count });
+                },
+                pageSize: filters.count,
+                current: filters.page,
+            }} */
             columns={columns}
             expandable={{ expandedRowRender }}
             dataSource={teams}
