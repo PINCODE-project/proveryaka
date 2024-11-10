@@ -1,1 +1,3 @@
-export const getSpaceOrganizerQueryKey = (spaceId?: string): (string)[] => ['space-organizer/get', spaceId].filter(Boolean) as string[];
+import { SpaceUsersParams } from '../model/SpaceUsersParams';
+
+export const getSpaceOrganizerQueryKey = (spaceId?: string, filters?: SpaceUsersParams) => ['space-organizer/get', filters, spaceId].filter(Boolean) as string[];

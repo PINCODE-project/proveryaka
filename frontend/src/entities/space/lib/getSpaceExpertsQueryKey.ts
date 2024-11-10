@@ -1,1 +1,3 @@
-export const getSpaceExpertsQueryKey = (spaceId: string): (string)[] => ['space-experts/get', spaceId];
+import { SpaceUsersParams } from '../model/SpaceUsersParams';
+
+export const getSpaceExpertsQueryKey = (spaceId: string, filters?: SpaceUsersParams) => ['space-experts/get', filters, spaceId].filter(Boolean);
