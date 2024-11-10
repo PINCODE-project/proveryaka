@@ -1,7 +1,7 @@
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, GetProp, Upload, UploadProps } from 'antd';
 import { UploadChangeParam } from 'antd/es/upload/interface';
-import { FC, ReactNode, useCallback, useState } from 'react';
+import { FC, ReactNode, useCallback, useMemo, useState } from 'react';
 
 import { typedMemo } from '@shared/lib';
 import { ClassNameProps } from '@shared/types';
@@ -24,6 +24,7 @@ export const FileInput: FC<Props> = typedMemo(function FileInput({
     isEmpty,
     emptyText,
     onChangeFile,
+    disabled,
     filledComponent,
     onChange,
     ...uploadProps
@@ -52,7 +53,6 @@ export const FileInput: FC<Props> = typedMemo(function FileInput({
 
     const handleChange: UploadProps['onChange'] = useCallback((info: UploadChangeParam) => {
         onChange?.(info);
-
         if (info.file.status === 'uploading') {
             setLoading(true);
         } else if (info.file.status === 'done') {
@@ -73,6 +73,19 @@ export const FileInput: FC<Props> = typedMemo(function FileInput({
         }, 0);
     }, []);
 
+    const filled = useMemo(() => (
+        isEmpty
+            ? (isButton
+                ? <Button icon={loading ? <LoadingOutlined /> : <PlusOutlined />}>
+                    {emptyText}
+                </Button>
+                : <button style={{ border: 0, background: 'none' }} type="button">
+                    {loading ? <LoadingOutlined /> : <PlusOutlined />}
+                    <div style={{ marginTop: 8 }}>{emptyText}</div>
+                </button>)
+            : filledComponent
+    ), [isEmpty, isButton, emptyText, loading, filledComponent]);
+
     return (
         <FileInputContextProvider onChange={handleChange}>
             <Upload
@@ -81,19 +94,9 @@ export const FileInput: FC<Props> = typedMemo(function FileInput({
                 customRequest={dummyRequest}
                 className={styles.upload}
             >
-                {
-                    isEmpty
-                        ? (isButton
-                            ? <Button icon={loading ? <LoadingOutlined /> : <PlusOutlined />}>
-                                {emptyText}
-                            </Button>
-                            : <button style={{ border: 0, background: 'none' }} type="button">
-                                {loading ? <LoadingOutlined /> : <PlusOutlined />}
-                                <div style={{ marginTop: 8 }}>{emptyText}</div>
-                            </button>)
-                        : filledComponent
-                }
+                { !disabled && filled}
             </Upload>
+            {disabled ? filled : null}
         </FileInputContextProvider>
     );
 });

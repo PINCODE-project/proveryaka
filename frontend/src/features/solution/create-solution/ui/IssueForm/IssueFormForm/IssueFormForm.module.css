@@ -1,0 +1,20 @@
+.title {
+    font-size: 15px;
+    line-height: 22px;
+    font-weight: var(--font-weight-semibold);
+}
+
+.optional {
+    font-size: 15px;
+    line-height: 22px;
+    font-weight: var(--font-weight-semibold);
+    color: rgba(0, 0, 0, 0.35);
+}
+
+.formItem {
+    margin-bottom: 0;
+}
+
+.textarea {
+    min-height: 54px !important;
+}
