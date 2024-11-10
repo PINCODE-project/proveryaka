@@ -87,7 +87,7 @@ export const SolutionsTable: FC<Props> = typedMemo(function SolutionsTable({
     ], [actionRender, isOrganizer]);
 
     const onRow = useCallback((record: GetSolutionForExpert) => ({
-        onClick: () => navigate(SpaceRouter.SpaceSolution(spaceId, record.id)),
+        onClick: () => navigate(SpaceRouter.SpaceSolutionCommon(spaceId, record.id)),
     }), [navigate, spaceId]);
 
     if (solutions?.length === 0) {
