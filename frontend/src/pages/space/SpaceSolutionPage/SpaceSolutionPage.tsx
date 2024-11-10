@@ -61,7 +61,7 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
         return <Navigate to={SpaceRouter.Spaces} />;
     }
     if (!solutionId || !solution) {
-        return <Navigate to={SpaceRouter.Space(spaceId)} />;
+        return <Navigate to={SpaceRouter.SpaceIssues(spaceId)} />;
     }
     if (location.pathname === SpaceRouter.SpaceSolution(spaceId, solutionId)) {
         return <Navigate to={SpaceRouter.SpaceSolutionCommon(spaceId, solutionId)} replace />;
