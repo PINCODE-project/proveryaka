@@ -10,6 +10,7 @@ textarea.ant-input {
     line-height: 18px;
 }
 
-.ant-notification-notice-icon {
-
+.ant-select-selector {
+    max-height: 116px;
+    overflow: auto;
 }

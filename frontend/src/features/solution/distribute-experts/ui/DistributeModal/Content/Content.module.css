@@ -1,0 +1,13 @@
+.submitButton {
+    margin-left: auto;
+    margin-bottom: 0;
+}
+
+.tabs {
+    margin: 0 12px;
+}
+
+.selectAllButton {
+    margin: 0 12px 12px;
+    width: calc(100% - 24px);
+}
