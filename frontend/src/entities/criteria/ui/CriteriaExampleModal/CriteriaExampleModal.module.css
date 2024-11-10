@@ -10,10 +10,10 @@
 
 .modal {
     max-width: 520px;
-    width: 520px !important;
+    width: 100% !important;
 }
 
 .modal.full {
     max-width: 1040px;
-    width: 1040px !important;
+    width: 100% !important;
 }
