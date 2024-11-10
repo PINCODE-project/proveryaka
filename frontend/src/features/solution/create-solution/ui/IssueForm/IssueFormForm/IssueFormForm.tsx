@@ -31,11 +31,11 @@ export const IssueFormForm: FC<Props> = typedMemo(function IssueFormForm({
     }, [form, order]);
 
     const beforeUpload = useCallback((file: FileType) => {
-        const isLt2M = file.size / 1024 / 1024 < 5;
-        if (!isLt2M) {
+        const isLt5M = file.size / 1024 / 1024 < 5;
+        if (!isLt5M) {
             message.error('Файл должен быть меньше 5Мб');
         }
-        return isLt2M;
+        return isLt5M;
     }, []);
 
     const textInput = useMemo(() => (
