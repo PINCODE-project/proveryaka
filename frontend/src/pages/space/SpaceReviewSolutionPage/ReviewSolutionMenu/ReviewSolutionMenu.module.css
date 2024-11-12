@@ -1,0 +1,14 @@
+.container {
+    height: calc(100% - 50px);
+    max-width: 400px;
+    width: 100%;
+    overflow-y: scroll;
+}
+
+.formItem {
+    margin-bottom: 0;
+}
+
+.formItem label {
+    font-weight: var(--font-weight-semibold);
+}

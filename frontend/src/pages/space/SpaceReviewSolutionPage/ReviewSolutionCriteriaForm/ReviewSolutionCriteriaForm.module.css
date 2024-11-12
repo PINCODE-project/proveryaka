@@ -1,0 +1,25 @@
+.form {
+    padding-bottom: 20px !important;
+}
+
+.formItem {
+    margin-bottom: 0;
+}
+
+.formItem label {
+    font-weight: var(--font-weight-semibold);
+}
+
+.description {
+    white-space: pre-wrap;
+}
+
+.button {
+    width: 170px;
+    color: var(--primary-color);
+    cursor: pointer;
+}
+
+.button {
+
+}
