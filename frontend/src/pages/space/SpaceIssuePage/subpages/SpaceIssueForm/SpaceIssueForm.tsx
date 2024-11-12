@@ -58,9 +58,6 @@ export const SpaceIssueForm: FC<Props> = typedMemo(function SpaceIssueForm() {
     if (!issueId) {
         return null;
     }
-    if (!isStudent) {
-        return <Navigate to={SpaceRouter.Spaces} />;
-    }
     return (
         <IssueFormsForm
             issueId={issueId ?? ''}
