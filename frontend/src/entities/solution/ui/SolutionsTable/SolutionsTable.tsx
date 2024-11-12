@@ -32,7 +32,7 @@ export const SolutionsTable: FC<Props> = typedMemo(function SolutionsTable({
     const navigate = useNavigate();
     const { isOrganizer } = useRolesCheck();
 
-    const [filters, setFilters] = useListFilters({ page: 0, count: 10 });
+    const [filters, setFilters] = useListFilters({ page: 1, count: 10 });
 
     const { data: organizationSolutions } = useGetIssueSolutions(spaceId, filters, { enabled: isOrganizer });
     const { data: reviewerSolutions } = useGetSolutions(spaceId, filters, { enabled: !isOrganizer });

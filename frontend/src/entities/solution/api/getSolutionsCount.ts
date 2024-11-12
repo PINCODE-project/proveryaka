@@ -3,7 +3,7 @@ import { extractData } from '@shared/lib';
 import { ListFilters } from '@shared/types';
 
 export function getSolutionsCount(spaceId: string, filters?: ListFilters): Promise<number> {
-    return solutionHttp.get<{ count: number }>('solution/all', {
+    return solutionHttp.get<{ count: number }>('solution/count', {
         params: {
             spaceId,
             ...filters,
