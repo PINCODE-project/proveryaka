@@ -1,9 +1,9 @@
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { Button, Col, Flex, Modal, Row, Spin, Typography } from 'antd';
+import { Button, Flex, Modal, Spin, Typography } from 'antd';
 import { Dispatch, FC, ReactNode, SetStateAction, Suspense, useCallback, useMemo, useState } from 'react';
 
 import { ExampleType } from '@entities/example/common';
-import { useGetCriteriaExamples } from '@entities/example/criteria-example';
+import { GetCriteriaExample } from '@entities/example/criteria-example';
 
 import { getModuleClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
@@ -13,21 +13,20 @@ import { Example } from './Example';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     triggerComponent: (open: () => void) => ReactNode;
-    criteriaId: string;
+    examplesRaw: GetCriteriaExample[];
 }>;
 
 export const CriteriaExampleModal: FC<Props> = typedMemo(function CriteriaExampleModal({
     triggerComponent,
-    criteriaId,
+    examplesRaw,
 }) {
     const [isOpen, setIsOpen] = useState(false);
 
-    const { data: examplesRaw } = useGetCriteriaExamples(criteriaId);
-    const examples = useMemo(() => examplesRaw?.entityList
-        ?.filter(example => example.exampleType === ExampleType.Standard) ?? [],
+    const examples = useMemo(() => examplesRaw
+        .filter(example => example.exampleType === ExampleType.Standard) ?? [],
     [examplesRaw]);
-    const antiExamples = useMemo(() => examplesRaw?.entityList
-        ?.filter(example => example.exampleType === ExampleType.AntiExample) ?? [],
+    const antiExamples = useMemo(() => examplesRaw
+        .filter(example => example.exampleType === ExampleType.AntiExample) ?? [],
     [examplesRaw]);
 
     const [exampleIndex, setExampleIndex] = useState(0);

@@ -1,12 +1,12 @@
 import { Button, Table, TableColumnsType } from 'antd';
 import { FC, useMemo } from 'react';
 
+import { GetCriteriaWithExampleResponse, useGetIssueCriteriaWithExample } from '@entities/criteria';
+
 import { typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 
 import styles from './CriteriaTable.module.css';
-import { useGetIssueCriteria } from '../../lib/useGetIssueCriteria';
-import { GetCriteriaResponse } from '../../model/GetCriteriaResponse';
 import { CriteriaExampleModal } from '../CriteriaExampleModal';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
@@ -16,9 +16,9 @@ export type Props = ClassNameProps & TestProps & Readonly<{
 export const CriteriaTable: FC<Props> = typedMemo(function CriteriaTable({
     issueId,
 }) {
-    const { data: criteria } = useGetIssueCriteria(issueId);
+    const { data: criteria } = useGetIssueCriteriaWithExample(issueId);
 
-    const columns = useMemo<TableColumnsType<GetCriteriaResponse>>(() => [
+    const columns = useMemo<TableColumnsType<GetCriteriaWithExampleResponse>>(() => [
         {
             title: 'Название',
             dataIndex: 'name',
@@ -49,7 +49,7 @@ export const CriteriaTable: FC<Props> = typedMemo(function CriteriaTable({
             width: 180,
             render: (_, record) => (<CriteriaExampleModal
                 triggerComponent={open => <Button onClick={open} type="default">Примеры выполнения</Button>}
-                criteriaId={record.id}
+                examplesRaw={record.criteriaExampleList ?? []}
             />),
         },
     ], []);
