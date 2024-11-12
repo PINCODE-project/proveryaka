@@ -41,6 +41,7 @@ export const SpaceIssueMarks: FC<Props> = typedMemo(function SpaceIssueMarks() {
     }
     return (
         <SolutionMarksTable
+            isAuthor
             solutionId={solution?.id ?? ''}
             actionRender={actionRender}
             placeholder="Оценки еще не выставлены"

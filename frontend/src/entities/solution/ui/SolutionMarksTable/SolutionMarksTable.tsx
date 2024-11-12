@@ -27,6 +27,7 @@ export type Props = ClassNameProps & TestProps & Readonly<{
     placeholder: string;
     defaultMarkType?: MarkType;
     canChangeMarkType?: boolean;
+    isAuthor?: boolean;
 }>;
 
 export const SolutionMarksTable: FC<Props> = typedMemo(function SolutionMarksTable({
@@ -35,6 +36,7 @@ export const SolutionMarksTable: FC<Props> = typedMemo(function SolutionMarksTab
     placeholder,
     defaultMarkType = MarkType.Common,
     canChangeMarkType = true,
+    isAuthor,
 }) {
     const { data: info } = useGetCurrentUserInfo();
     const { isOrganizer } = useRolesCheck();
@@ -43,8 +45,8 @@ export const SolutionMarksTable: FC<Props> = typedMemo(function SolutionMarksTab
     const { data: organizerSolution } = useGetSolutionReviews(solutionId, { enabled: isOrganizer });
     const solution = useMemo(() => isOrganizer
         ? organizerSolution
-        : { ...studentSolution, reviews: studentSolution?.reviews?.filter(({ userId }) => userId === info?.id) ?? [] }
-    , [studentSolution, organizerSolution, isOrganizer, info]);
+        : { ...studentSolution, reviews: studentSolution?.reviews?.filter(({ userId }) => userId === info?.id || isAuthor) ?? [] }
+    , [studentSolution, organizerSolution, isOrganizer, info, isAuthor]);
 
     const [markType, setMarkType] = useState(defaultMarkType);
 
