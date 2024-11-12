@@ -9,12 +9,11 @@ import { GetIssueResponse, StatusBadge, useGetSpaceIssue } from '@entities/issue
 import { useRolesCheck } from '@entities/space';
 
 import { getDateFromISO, getTimeFromISO, typedMemo } from '@shared/lib';
-import { ClassNameProps, TestProps } from '@shared/types';
+import { AntSorts, ClassNameProps, TestProps } from '@shared/types';
 import { EmptyTable } from '@shared/ui';
 
 import { useGetSpaceIssueCount } from '../../lib/useGetSpaceIssueCount';
 import { GetIssueFilters } from '../../model/GetIssueFilters';
-import { Status, IssueStringStatus } from '../../model/Status';
 
 type OnChange = NonNullable<TableProps<GetIssueResponse>['onChange']>;
 type GetSingle<T> = T extends (infer U)[] ? U : never;
@@ -41,7 +40,7 @@ export const IssuesTable: FC<Props> = typedMemo(function TeamsTable({
     const navigate = useNavigate();
     const { isOrganizer, isStudent } = useRolesCheck();
 
-    const [sortedInfo, setSortedInfo] = useState<Sorts>({});
+    const [sortedInfo, setSortedInfo] = useState<AntSorts<GetIssueResponse>>({});
 
     const { data: issues } = useGetSpaceIssue(
         spaceId,

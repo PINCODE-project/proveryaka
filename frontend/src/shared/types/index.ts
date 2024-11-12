@@ -7,5 +7,6 @@ export * from './TestProps';
 export * from './ConfigRouteProps';
 export * from './ListFilters';
 export * from './ErrorResponse';
+export * from './AntSorts';
 
 export * from './api/GetListResponse';

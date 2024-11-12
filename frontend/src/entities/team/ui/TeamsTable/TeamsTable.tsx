@@ -1,6 +1,6 @@
-import { Table, TableColumnsType } from 'antd';
+import { Table, TableColumnsType, TablePaginationConfig } from 'antd';
 import { ColumnType } from 'antd/lib/table';
-import { FC, Suspense, useCallback, useMemo } from 'react';
+import { FC, Suspense, useCallback, useMemo, useState } from 'react';
 
 // Сущность пространства много где зайдествуется
 // eslint-disable-next-line
@@ -10,7 +10,7 @@ import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
 import { useListFilters } from '@shared/hooks';
 import { typedMemo } from '@shared/lib';
-import { ClassNameProps, TestProps } from '@shared/types';
+import { AntOnChange, AntSorts, ClassNameProps, TestProps } from '@shared/types';
 import { EmptyTable, Fallback } from '@shared/ui';
 
 import { useGetSpaceTeams } from '../../lib/useGetSpaceTeams';
@@ -28,6 +28,11 @@ export type Props = ClassNameProps & TestProps & Readonly<{
     setFilters: (filters: GetTeamFilters) => void;
 }>;
 
+const keyToOrderBy: Record<string, number> = {
+    submitDeadlineDateUtc: 0,
+    assessmentDeadlineDateUtc: 1,
+};
+
 export const TeamsTable: FC<Props> = typedMemo(function TeamsTable({
     spaceId,
     renderStudentActions,
@@ -38,9 +43,18 @@ export const TeamsTable: FC<Props> = typedMemo(function TeamsTable({
 }) {
     const { isStudent } = useRolesCheck();
 
-    const { data: studentTeams } = useGetSpaceUserTeams(spaceId, filters, {
-        enabled: isStudent,
-    });
+    const [sortedInfo, setSortedInfo] = useState<AntSorts<GetTeam>>({});
+
+    const { data: studentTeams } = useGetSpaceUserTeams(
+        spaceId,
+        filters,
+        {
+            orderBy: keyToOrderBy[sortedInfo.field as string] ?? 2,
+            isDesc: sortedInfo.order === 'descend',
+        },
+        {
+            enabled: isStudent,
+        });
     const { data: organizerTeams } = useGetSpaceTeams(spaceId, filters, {
         enabled: !isStudent,
     });
@@ -82,12 +96,18 @@ export const TeamsTable: FC<Props> = typedMemo(function TeamsTable({
         );
     }, [renderStudentActions]);
 
+    const handleChange = (pagination: TablePaginationConfig, filters: any, sorter: AntSorts<GetTeam>) => {
+        setSortedInfo(sorter);
+        setFilters({ page: pagination.current! - 1 || 0, count: pagination.pageSize || 10 });
+    };
+
     if (teams.length === 0) {
         return <EmptyTable text={placeholder} />;
     }
     return (
         <Table
             rowKey="id"
+            onChange={handleChange}
             /* pagination={{
                 total: 1000,
                 onChange: (page, count) => {
