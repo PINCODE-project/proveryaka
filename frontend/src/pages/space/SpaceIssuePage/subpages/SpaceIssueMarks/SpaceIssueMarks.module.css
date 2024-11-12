@@ -1,3 +1,9 @@
-.SpaceIssueMarks {
+.emptySolution {
+    color: rgba(0,0,0,0.4);
+    font-size: var(--title-3-font-size);
+    line-height: var(--title-3-line-height);
+}
 
+.emptySolutionContainer {
+    flex: 1;
 }
