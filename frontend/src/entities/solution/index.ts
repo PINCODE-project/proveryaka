@@ -11,3 +11,4 @@ export * from './lib/useGetSolution';
 export * from './lib/useGetSolutionReviews';
 export * from './lib/useGetSolutionsCount';
 export * from './lib/useGetIssueSolutionsCount';
+export * from './lib/useGetMarksExcel';

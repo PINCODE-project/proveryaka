@@ -14,11 +14,12 @@ import { GetIssueResponse, getSpaceIssueQueryKey } from '@entities/issue';
 import { DistributedType } from '@entities/issue/model/DistributedType';
 import { GetIssueFilters } from '@entities/issue/model/GetIssueFilters';
 import { IssuesTable } from '@entities/issue/ui/IssuesTable';
+import { useGetMarksExcel } from '@entities/solution';
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
 import { useListFilters } from '@shared/hooks';
 import { useSpaceId } from '@shared/hooks/useSpaceId';
-import { typedMemo } from '@shared/lib';
+import { downloadFileByUrl, typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { Fallback } from '@shared/ui';
@@ -59,6 +60,15 @@ export const SpaceIssuesPage: FC<Props> = typedMemo(function SpaceTeamsPage({
         retry: false,
     });
 
+    const { mutate: downloadMarksExcel } = useGetMarksExcel({
+        onSuccess: file => {
+            if (file) {
+                downloadFileByUrl(URL.createObjectURL(file), file.name);
+            }
+        },
+        retry: false,
+    });
+
     const renderActions = useCallback((_: string, record: GetIssueResponse) => {
         const items: MenuProps['items'] = [
             {
@@ -85,7 +95,7 @@ export const SpaceIssuesPage: FC<Props> = typedMemo(function SpaceTeamsPage({
             {
                 key: '4',
                 label: 'Выгрузить оценки в Excel',
-                disabled: true,
+                onClick: () => downloadMarksExcel(record.id),
             },
             {
                 key: '5',

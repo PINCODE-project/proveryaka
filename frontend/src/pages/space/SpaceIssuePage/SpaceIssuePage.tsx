@@ -21,11 +21,12 @@ import { DeleteIssueButton } from '@features/issue/delete-issue';
 import { PublishIssueArguments, usePublishIssue } from '@features/issue/publish-issue/lib/usePublishIssue';
 
 import { getIssueQueryKey, getSpaceIssueQueryKey, Status, StatusBadge, useGetIssue } from '@entities/issue';
+import { useGetMarksExcel } from '@entities/solution';
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
 import { useIssueId } from '@shared/hooks';
 import { useSpaceId } from '@shared/hooks/useSpaceId';
-import { typedMemo } from '@shared/lib';
+import { downloadFileByUrl, typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { Fallback, Sidebar, SidebarItem } from '@shared/ui';
@@ -66,6 +67,15 @@ export const SpaceIssuePage: FC<Props> = typedMemo(function SpaceSolutionPage({
         retry: false,
     });
 
+    const { mutate: downloadMarksExcel } = useGetMarksExcel({
+        onSuccess: file => {
+            if (file) {
+                downloadFileByUrl(URL.createObjectURL(file), file.name);
+            }
+        },
+        retry: false,
+    });
+
     const items: MenuProps['items'] = useMemo(() => {
         if (!issue) return [];
 
@@ -84,6 +94,11 @@ export const SpaceIssuePage: FC<Props> = typedMemo(function SpaceSolutionPage({
                 key: 1,
                 label: 'Назначить проверяющих',
                 disabled: true,
+            },
+            {
+                key: '4',
+                label: 'Выгрузить оценки в Excel',
+                onClick: () => downloadMarksExcel(issue.id!),
             },
             {
                 key: 2,
