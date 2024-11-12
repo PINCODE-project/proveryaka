@@ -62,13 +62,13 @@ export const Content: FC<Props> = typedMemo(function Content({
             className={styles.form}
             name="DistributeForm"
             layout="vertical"
-            initialValues={{ expertIdList: [] }}
-            onFinish={(form: SetExpertToSolutionRequest) => onSubmit(form.expertIdList)}
+            initialValues={{ expertProfileIdList: [] }}
+            onFinish={(form: SetExpertToSolutionRequest) => onSubmit(form.expertProfileIdList)}
             requiredMark={false}
         >
             <Flex vertical gap={12}>
                 <Form.Item<SetExpertToSolutionRequest>
-                    name="expertIdList"
+                    name="expertProfileIdList"
                     label="Пользователи"
                 >
                     <Select

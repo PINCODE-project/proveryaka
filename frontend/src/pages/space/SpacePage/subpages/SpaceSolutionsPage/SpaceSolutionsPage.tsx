@@ -38,7 +38,7 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
             {
                 key: '1',
                 label: <DistributeModal
-                    onSubmit={(onClose, expertIdList) => distribute({ expertIdList, solutionId: record.id }, { onSuccess: onClose })}
+                    onSubmit={(onClose, expertProfileIdList) => distribute({ expertProfileIdList, solutionId: record.id }, { onSuccess: onClose })}
                     triggerComponent={
                         open => (
                             <Typography onClick={open} className={styles.menuItem}>

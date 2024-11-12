@@ -2,7 +2,7 @@ export type SetExpertToSolutionRequest = {
     /**
      * Список айди экспертов (профиль)
      */
-    expertIdList: string[];
+    expertProfileIdList: string[];
 
     /**
      * Идентификатор решения
