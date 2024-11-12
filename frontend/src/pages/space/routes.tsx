@@ -13,6 +13,7 @@ import { SpaceIssuesPage } from './SpacePage/subpages/SpaceIssuesPage';
 import { SpaceSolutionsPage } from './SpacePage/subpages/SpaceSolutionsPage';
 import { SpaceTeamsPage } from './SpacePage/subpages/SpaceTeamsPage';
 import { SpaceUsersPage } from './SpacePage/subpages/SpaceUsersPage';
+import { SpaceReviewSolutionPage } from './SpaceReviewSolutionPage';
 import { SpaceSolutionPage } from './SpaceSolutionPage';
 import { SpaceSolutionCommonPage } from './SpaceSolutionPage/subpages/SpaceSolutionCommonPage';
 import { SpaceSolutionMarksPage } from './SpaceSolutionPage/subpages/SpaceSolutionMarksPage';
@@ -31,6 +32,7 @@ export const SpaceRouter = {
     SpaceSolutionCommon: (spaceId: string, solutionId: string) => `/spaces/${spaceId}/solutions/${solutionId}/common`,
     SpaceSolutionMarks: (spaceId: string, solutionId: string) => `/spaces/${spaceId}/solutions/${solutionId}/mark`,
     SpaceSolutionFeedback: (spaceId: string, solutionId: string) => `/spaces/${spaceId}/solutions/${solutionId}/feedback`,
+    SpaceSolutionReview: (spaceId: string, solutionId: string) => `/spaces/${spaceId}/solutions/${solutionId}/review`,
     SpaceIssue: (spaceId: string, issueId: string) => `/spaces/${spaceId}/tasks/${issueId}`,
     SpaceIssueDescription: (spaceId: string, issueId: string) => `/spaces/${spaceId}/tasks/${issueId}/description`,
     SpaceIssueMaterials: (spaceId: string, issueId: string) => `/spaces/${spaceId}/tasks/${issueId}/materials`,
@@ -49,6 +51,11 @@ export const spaceRouteConfig: ConfigRouteProps[] = [
         path: SpaceRouter.SpaceCreateIssue(':spaceId'),
         withAuthGuard: true,
         element: <SpaceCreateIssuePage />,
+    },
+    {
+        path: SpaceRouter.SpaceSolutionReview(':spaceId', ':solutionId'),
+        withAuthGuard: true,
+        element: <SpaceReviewSolutionPage />,
     },
     {
         path: SpaceRouter.Space(':spaceId'),
