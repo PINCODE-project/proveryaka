@@ -1,13 +1,15 @@
 import { EyeOutlined } from '@ant-design/icons';
-import { Button, Collapse, Flex, Form, Input, InputNumber, Typography } from 'antd';
+import { Collapse, Flex, Form, Input, InputNumber, Typography } from 'antd';
 import { FC } from 'react';
+
+import { GetCriteriaWithExamplesResponse } from '@entities/criteria/model/GetCriteriaWithExamplesResponse';
 
 import { getModuleClasses, typedMemo } from '@shared/lib';
 
 import styles from './ReviewSolutionCriteriaForm.module.css';
 
 type Props = {
-    criteria: any;
+    criteria: GetCriteriaWithExamplesResponse;
     index: number;
     restField: any;
     setCriteriaId: any;
@@ -40,10 +42,13 @@ export const ReviewSolutionCriteriaForm: FC<Props> = typedMemo(function ReviewSo
                             </Flex>
                         </Flex>
 
-                        <Flex gap={6} className={styles.button} onClick={() => setCriteriaId(criteria.id)}>
-                            <EyeOutlined />
-                            Пример выполнения
-                        </Flex>
+                        {
+                            criteria.criteriaExampleList.length > 0 &&
+                            <Flex gap={6} className={styles.button} onClick={() => setCriteriaId(criteria.id)}>
+                                <EyeOutlined />
+                                Пример выполнения
+                            </Flex>
+                        }
 
                         <Form.Item
                             {...restField}
