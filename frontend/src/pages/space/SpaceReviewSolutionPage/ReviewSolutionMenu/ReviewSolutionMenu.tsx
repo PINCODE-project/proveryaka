@@ -5,16 +5,18 @@ import {
     ReviewSolutionCriteriaForm,
 } from '@pages/space/SpaceReviewSolutionPage/ReviewSolutionCriteriaForm/ReviewSolutionCriteriaForm';
 
+import { GetCriteriaWithExamplesResponse } from '@entities/criteria/model/GetCriteriaWithExamplesResponse';
+
 import { getModuleClasses, typedMemo } from '@shared/lib';
 
 import styles from './ReviewSolutionMenu.module.css';
 
 type Props = {
     solution: any;
-    criteria: any;
+    criteria: GetCriteriaWithExamplesResponse[];
     form: FormInstance;
     setCriteriaId: any;
-    examples: any;
+    // examples: any;
 };
 
 export const ReviewSolutionMenu: FC<Props> = typedMemo(function ReviewSolutionMenu({
@@ -22,7 +24,6 @@ export const ReviewSolutionMenu: FC<Props> = typedMemo(function ReviewSolutionMe
     criteria,
     form,
     setCriteriaId,
-    examples,
 }) {
     console.log(criteria);
     return (

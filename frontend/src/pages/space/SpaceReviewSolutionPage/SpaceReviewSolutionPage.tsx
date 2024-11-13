@@ -1,6 +1,6 @@
-import { BookOutlined, UnorderedListOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+import { BookOutlined, EyeInvisibleOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import { Button, Flex, Form, Pagination, Typography } from 'antd';
-import { FC, Suspense, useEffect, useMemo, useState } from 'react';
+import { FC, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/space';
@@ -8,8 +8,7 @@ import { ReviewSolutionMenu } from '@pages/space/SpaceReviewSolutionPage/ReviewS
 
 import { UserPanel } from '@widgets/UserPanel';
 
-import { useGetIssueCriteria } from '@entities/criteria/lib/useGetIssueCriteria';
-import { useGetCriteriaExamples } from '@entities/example/criteria-example';
+import { useGetIssueCriteriaWithExamples } from '@entities/criteria/lib/useGetIssueCriteriaWithExamples';
 import { useGetIssue } from '@entities/issue';
 import { useGetSolution } from '@entities/solution';
 import { useGetOrganizerSolution } from '@entities/solution/lib/useGetOrganizerSolution';
@@ -48,15 +47,11 @@ export const SpaceReviewSolutionPage: FC<Props> = typedMemo(
             enabled: !!solution,
         });
 
-        const { data: criteria } = useGetIssueCriteria(solution?.issueId || '', {}, {
+        const { data: criteria } = useGetIssueCriteriaWithExamples(solution?.issueId || '', {}, {
             enabled: !!solution,
         });
 
         const [criteriaId, setCriteriaId] = useState<string | null>(null);
-
-        const { data: examples } = useGetCriteriaExamples(criteriaId || '', {}, {
-            enabled: !!criteriaId,
-        });
 
         const [isList, setIsList] = useState(true);
         const [currentStep, setCurrentStep] = useState(1);
@@ -93,10 +88,9 @@ export const SpaceReviewSolutionPage: FC<Props> = typedMemo(
                 <Flex gap={60} className={getModuleClasses(styles, 'container')}>
                     <ReviewSolutionMenu
                         solution={solution}
-                        criteria={criteria?.entityList}
+                        criteria={criteria?.entityList || []}
                         form={reviewForm}
                         setCriteriaId={setCriteriaId}
-                        examples={examples}
                     />
 
                     <Flex vertical gap={30} className={getModuleClasses(styles, 'content')}>
