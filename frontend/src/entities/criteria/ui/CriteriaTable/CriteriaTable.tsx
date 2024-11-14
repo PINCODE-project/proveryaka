@@ -1,7 +1,8 @@
 import { Button, Table, TableColumnsType } from 'antd';
 import { FC, useMemo } from 'react';
 
-import { GetCriteriaWithExampleResponse, useGetIssueCriteriaWithExample } from '@entities/criteria';
+import { GetCriteriaWithExampleResponse } from '@entities/criteria';
+import { useGetIssueCriteriaWithExamples } from '@entities/criteria/lib/useGetIssueCriteriaWithExamples';
 
 import { typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
@@ -16,7 +17,7 @@ export type Props = ClassNameProps & TestProps & Readonly<{
 export const CriteriaTable: FC<Props> = typedMemo(function CriteriaTable({
     issueId,
 }) {
-    const { data: criteria } = useGetIssueCriteriaWithExample(issueId);
+    const { data: criteria } = useGetIssueCriteriaWithExamples(issueId);
 
     const columns = useMemo<TableColumnsType<GetCriteriaWithExampleResponse>>(() => [
         {

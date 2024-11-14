@@ -4,5 +4,3 @@ export * from './model/GetCriteriaWithExampleResponse';
 
 export * from './ui/CriteriaTable';
 export * from './ui/CriteriaExampleModal';
-
-export * from './lib/useGetIssueCriteriaWithExample';
