@@ -23,9 +23,18 @@ export const ReviewSolutionMenu: FC<Props> = typedMemo(function ReviewSolutionMe
     hasError,
 }) {
     const reviews = Form.useWatch('reviewsByCriteria', form);
-    const score = reviews?.reduce((prev: number, value: GetCriteriaWithExamplesResponse & {
-        scoreCount: number;
-    }) => prev + (value.scoreCount | 0) * value.weight, 0);
+
+    const calculateTotalScore = (values: any) => {
+        const weightedScores: number[] = values.map((value: any) => {
+            const normalizedScore = (((value.scoreCount || 0) - value.minScore) / (value.maxScore - value.minScore)) * 100;
+            return normalizedScore * value.weight;
+        });
+
+        const totalWeight = values.reduce((sum: number, value: any) => sum + value.weight, 0);
+        return weightedScores.reduce((sum: number, score: number) => sum + score, 0) / totalWeight;
+    };
+
+    const score = reviews ? calculateTotalScore(reviews) : 0;
 
     return (
         <Card className={styles.container}>
@@ -44,7 +53,7 @@ export const ReviewSolutionMenu: FC<Props> = typedMemo(function ReviewSolutionMe
                         <Flex vertical gap={24}>
                             <Flex gap={10}>
                                 <Typography>Итоговая оценка: </Typography>
-                                <Typography>{Math.floor(((score || 0) * 10) * 100) / 100}/100</Typography>
+                                <Typography>{Math.floor((score || 0) * 100) / 100}/100</Typography>
                             </Flex>
 
                             <Form.List name="reviewsByCriteria">
