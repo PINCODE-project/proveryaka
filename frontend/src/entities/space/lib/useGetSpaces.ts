@@ -7,5 +7,5 @@ import { getSpaces } from '../api/getSpaces';
 import { GetSpaceResponse } from '../model/GetSpaceResponse';
 
 export function useGetSpaces(filters?: ListFilters, options?: AxiosUseQueryOptions<GetListResponse<GetSpaceResponse>>) {
-    return useQuery(getSpacesQueryKey, () => getSpaces(filters), options);
+    return useQuery(getSpacesQueryKey(filters), () => getSpaces(filters), options);
 }

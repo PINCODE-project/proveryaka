@@ -1,16 +1,11 @@
 import { FC, useEffect, useMemo, useState } from 'react';
-import { Navigate } from 'react-router-dom';
-
-import { SpaceRouter } from '@pages/space';
 
 import { IssueFormsForm } from '@features/solution/create-solution';
 
 import { useGetIssue } from '@entities/issue';
-import { useGetSolution } from '@entities/solution';
 import { useGetStudentIssueSolution } from '@entities/solution/lib/useGetStudentIssueSolution';
 import { useGetStudentSolution } from '@entities/solution/lib/useGetStudentSolution';
 import { GetSolutionValue } from '@entities/solution/model/GetSolutionValue';
-import { useRolesCheck } from '@entities/space';
 
 import { getFile } from '@shared/api/file/solution/getFile';
 import { useIssueId } from '@shared/hooks';
@@ -21,7 +16,6 @@ export type Props = ClassNameProps & TestProps;
 
 export const SpaceIssueForm: FC<Props> = typedMemo(function SpaceIssueForm() {
     const issueId = useIssueId();
-    const { isStudent } = useRolesCheck();
 
     const { data: issue } = useGetIssue(issueId ?? '');
     const disabled = useMemo(() => issue

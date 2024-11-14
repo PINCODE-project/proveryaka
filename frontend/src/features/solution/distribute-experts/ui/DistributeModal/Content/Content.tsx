@@ -51,9 +51,9 @@ export const Content: FC<Props> = typedMemo(function Content({
     , [activeTab, students, experts, organizers]);
 
     const selectAllFromGroup = useCallback(() => {
-        const selectedIds: string[] = form.getFieldValue('expertIdList');
+        const selectedIds: string[] = form.getFieldValue('expertProfileIdList');
         const resultIds = selectedIds.concat(users.map(({ id }) => id));
-        form.setFieldValue('expertIdList', Array.from(new Set(resultIds)));
+        form.setFieldValue('expertProfileIdList', Array.from(new Set(resultIds)));
     }, [form, users]);
 
     return (

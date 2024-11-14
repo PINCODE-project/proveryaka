@@ -96,6 +96,7 @@ export const CreateIssueMaterialsForm: FC<Props> = typedMemo(function CreateIssu
                                     },
                                 },
                             ]}
+                            hasFeedback
                         >
                             <Input
                                 placeholder="Вставьте ссылку"
@@ -120,6 +121,7 @@ export const CreateIssueMaterialsForm: FC<Props> = typedMemo(function CreateIssu
                                     },
                                 },
                             ]}
+                            hasFeedback
                         >
                             <FileInput
                                 isEmpty={material.file === null && material.fileId === null}
@@ -172,6 +174,7 @@ export const CreateIssueMaterialsForm: FC<Props> = typedMemo(function CreateIssu
                         rules={[
                             { required: true, message: 'Введите текст' },
                         ]}
+                        hasFeedback
                     >
                         <Input.TextArea
                             placeholder="Введите текст..."
@@ -189,6 +192,7 @@ export const CreateIssueMaterialsForm: FC<Props> = typedMemo(function CreateIssu
                         { required: true, message: 'Введите название' },
                         { max: 256, message: 'Не больше 256 символов' },
                     ]}
+                    hasFeedback
                 >
                     <Input
                         placeholder="Введите название..."
@@ -203,6 +207,7 @@ export const CreateIssueMaterialsForm: FC<Props> = typedMemo(function CreateIssu
                     className={getModuleClasses(styles, 'formItem')}
                     label="Описание"
                     name={[index, 'description']}
+                    hasFeedback
                 >
                     <Input.TextArea
                         placeholder="Введите текст..."

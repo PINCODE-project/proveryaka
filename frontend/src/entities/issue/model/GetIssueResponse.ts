@@ -67,4 +67,9 @@ export type GetIssueResponse = {
      * ПОЛЕ ФРОНТА: Статус задания
      */
     status?: Status;
+
+    /**
+     * Командная сдача в задании
+     */
+    isUseTeam: boolean;
 };

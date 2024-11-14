@@ -19,6 +19,8 @@ import { UserPanel } from '@widgets/UserPanel';
 
 import { DeleteIssueButton } from '@features/issue/delete-issue';
 import { PublishIssueArguments, usePublishIssue } from '@features/issue/publish-issue/lib/usePublishIssue';
+import { useStartDistribution } from '@features/issue/start-distribution/lib/useStartDistribution';
+import { DistributeModal } from '@features/issue/start-distribution/ui/DistributeModal';
 
 import { getIssueQueryKey, getSpaceIssueQueryKey, Status, StatusBadge, useGetIssue } from '@entities/issue';
 import { useGetMarksExcel } from '@entities/solution';
@@ -62,6 +64,8 @@ export const SpaceIssuePage: FC<Props> = typedMemo(function SpaceSolutionPage({
         queryClient.invalidateQueries(getIssueQueryKey(issueId!));
     }, [queryClient, spaceId, issueId]);
 
+    const { mutate: distribute } = useStartDistribution();
+
     const { mutate: publishIssue } = usePublishIssue({
         onSuccess: onSuccessPublishIssue,
         retry: false,
@@ -92,8 +96,19 @@ export const SpaceIssuePage: FC<Props> = typedMemo(function SpaceSolutionPage({
         result.push(
             {
                 key: 1,
-                label: 'Назначить проверяющих',
-                disabled: true,
+                label: <DistributeModal
+                    onSubmit={(onClose, expertProfileIdList) => distribute({
+                        expertProfileIdList,
+                        issueId: issue.id!,
+                    }, { onSuccess: onClose })}
+                    triggerComponent={
+                        open => (
+                            <Typography onClick={open} className={styles.menuItem}>
+                                Назначить проверяющих
+                            </Typography>
+                        )
+                    }
+                />,
             },
             {
                 key: '4',
@@ -118,7 +133,7 @@ export const SpaceIssuePage: FC<Props> = typedMemo(function SpaceSolutionPage({
             });
 
         return result;
-    }, [issue, spaceId, publishIssue, navigate]);
+    }, [issue, spaceId, publishIssue, distribute, downloadMarksExcel, navigate]);
 
     if (!spaceId) {
         return <Navigate to={SpaceRouter.Spaces} />;

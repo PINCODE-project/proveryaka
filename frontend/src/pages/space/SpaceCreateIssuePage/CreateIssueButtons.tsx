@@ -25,8 +25,8 @@ export const CreateIssueButtons: FC<CreateIssueButtonsProps> = typedMemo(functio
     return (
         <Flex gap="middle">
             <Button onClick={toIssuesPage}>Выйти</Button>
-            <Button onClick={toNextStep} type="primary">
-                {currentStep === 3 ? 'Создать' : 'Далее'}
+            <Button onClick={toNextStep} type="primary" loading={currentStep === 4}>
+                {currentStep >= 3 ? 'Создать' : 'Далее'}
             </Button>
         </Flex>
     );

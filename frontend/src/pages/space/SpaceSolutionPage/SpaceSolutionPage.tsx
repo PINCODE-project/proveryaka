@@ -57,7 +57,10 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
         {
             key: '0',
             label: <DistributeModal
-                onSubmit={(onClose, expertProfileIdList) => distribute({ expertProfileIdList, solutionId: solutionId ?? '' }, { onSuccess: onClose })}
+                onSubmit={(onClose, expertProfileIdList) => distribute(
+                    { expertProfileIdList, solutionId: solutionId ?? '' },
+                    { onSuccess: onClose },
+                )}
                 triggerComponent={
                     open => (
                         <Typography onClick={open} className={styles.menuItem}>
@@ -67,7 +70,12 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
                 }
             />,
         },
-    ], []);
+    ], [distribute, solutionId]);
+
+    const toReview = useCallback(
+        () => navigate(SpaceRouter.SpaceSolutionReview(spaceId!, solutionId!)),
+        [navigate, solutionId, spaceId],
+    );
 
     if (!spaceId) {
         return <Navigate to={SpaceRouter.Spaces} />;
@@ -132,11 +140,29 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
                             </Typography.Text>
                         </Flex>
 
-                        {isOrganizer
-                            ? <Dropdown menu={{ items }}>
-                                <EllipsisOutlined className={getModuleClasses(styles, 'settingsIcon')} />
-                            </Dropdown>
-                            : null}
+                        <Flex gap="middle">
+                            {
+                                isOrganizer
+                                    ? <Dropdown menu={{ items }}>
+                                        <EllipsisOutlined className={getModuleClasses(styles, 'settingsIcon')} />
+                                    </Dropdown>
+                                    : null
+                            }
+                            {
+                                isOrganizer && solution.status === Status.OnCheck
+                                    ? <Button icon={<EyeOutlined />} color='default' onClick={toReview}>
+                                        Режим проверки
+                                    </Button>
+                                    : null
+                            }
+                            {
+                                !isOrganizer && solution.status === Status.NeedCheck
+                                    ? <Button variant="solid" color="primary" onClick={toReview}>
+                                        Оценить
+                                    </Button>
+                                    : null
+                            }
+                        </Flex>
                     </Flex>
 
                     <Flex gap={6}>

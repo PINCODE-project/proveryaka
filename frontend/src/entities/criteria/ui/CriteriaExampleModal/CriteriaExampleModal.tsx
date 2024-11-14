@@ -80,7 +80,9 @@ export const CriteriaExampleModal: FC<Props> = typedMemo(function CriteriaExampl
                         <Flex vertical gap={24} className={styles.column}>
                             <Flex gap={4}>
                                 {antiExamples.length > 1 && <Button
-                                    onClick={() => changeIndex(antiExampleIndex - 1, antiExamples.length, setAntiExampleIndex)}
+                                    onClick={() => {
+                                        changeIndex(antiExampleIndex - 1, antiExamples.length, setAntiExampleIndex);
+                                    }}
                                     type="text"
                                     icon={<LeftOutlined />}
                                 />}
@@ -88,7 +90,9 @@ export const CriteriaExampleModal: FC<Props> = typedMemo(function CriteriaExampl
                                     Антрипример
                                 </Typography>
                                 {antiExamples.length > 1 && <Button
-                                    onClick={() => changeIndex(antiExampleIndex - 1, antiExamples.length, setAntiExampleIndex)}
+                                    onClick={() => {
+                                        changeIndex(antiExampleIndex - 1, antiExamples.length, setAntiExampleIndex);
+                                    }}
                                     type="text"
                                     icon={<RightOutlined />}
                                 />}

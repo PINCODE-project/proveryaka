@@ -3,7 +3,7 @@ import { FC, useMemo } from 'react';
 
 import { GetCriteriaExample } from '@entities/example/criteria-example';
 
-import { getBemClasses, typedMemo, useGetEstimateFile } from '@shared/lib';
+import { typedMemo, useGetEstimateFile } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 
 import styles from './Example.module.css';

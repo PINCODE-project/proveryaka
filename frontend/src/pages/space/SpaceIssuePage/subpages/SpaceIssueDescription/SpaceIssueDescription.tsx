@@ -27,6 +27,7 @@ export const SpaceIssueDescription: FC<Props> = typedMemo(function SpaceIssueDes
     if (!spaceId || !issueId) {
         return <Navigate to={SpaceRouter.Spaces} />;
     }
+
     return (
         <Flex vertical gap={40}>
             <Typography.Text className={styles.text}>
@@ -40,14 +41,18 @@ export const SpaceIssueDescription: FC<Props> = typedMemo(function SpaceIssueDes
                     </Typography.Text>
 
                     <Flex gap={4} align="center">
-                        {spaceSettings?.isUseTeam
-                            ? <>
-                                <TeamOutlined className={styles.taskIcon} />
-                                <Typography.Text>
+                        {
+                            (spaceSettings?.isUseTeam || issue?.isUseTeam)
+                                ? <>
+                                    <TeamOutlined className={styles.taskIcon} />
+                                    <Typography.Text>
                                     Командный
-                                </Typography.Text>
-                            </>
-                            : <>
+                                    </Typography.Text>
+                                </>
+                                : null
+                        }
+                        {!spaceSettings?.isUseTeam && !issue?.isUseTeam &&
+                            <>
                                 <UserOutlined className={styles.taskIcon} />
                                 <Typography.Text>
                                     Индивидуальный

@@ -32,7 +32,13 @@ const Deadline: FC<DeadlineProps> = ({ title, deadlineDate }) => {
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
             const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
 
-            setTimeLeft(`${title} через ${days ? `${days} дн.` : ''} ${hours ? `${hours} ч.` : ''} ${!days && !hours ? '<1 час' : ''}`);
+            setTimeLeft(
+                `
+                    ${title} через ${days ? `${days} дн.` : ''} 
+                    ${hours ? `${hours} ч.` : ''} 
+                    ${!days && !hours ? '<1 час' : ''}
+                `,
+            );
         };
 
         updateCountdown(deadlineDate);
@@ -76,6 +82,13 @@ export const CreateIssueGeneralForm: FC<Props> = typedMemo(function CreateIssueG
             name="CreateIssueGeneral"
             layout="vertical"
             requiredMark={false}
+            initialValues={{
+                name: '',
+                description: '',
+                checksCountMin: 0,
+                checksCountMax: 1,
+                isUseTeam: false,
+            }}
         >
             <Flex vertical gap={32}>
                 <Form.Item<CreateIssueDraftRequest>
@@ -87,6 +100,7 @@ export const CreateIssueGeneralForm: FC<Props> = typedMemo(function CreateIssueG
                         { max: 64, message: 'Не больше 64 символов' },
                         { min: 1, message: 'Не меньше 1 символа' },
                     ]}
+                    hasFeedback
                 >
                     <Input
                         placeholder="Введите название..."
@@ -102,6 +116,7 @@ export const CreateIssueGeneralForm: FC<Props> = typedMemo(function CreateIssueG
                     rules={[
                         { max: 2047, message: 'Не больше 2047 символов' },
                     ]}
+                    hasFeedback
                 >
                     <Input.TextArea
                         placeholder="Введите текст..."
@@ -141,8 +156,9 @@ export const CreateIssueGeneralForm: FC<Props> = typedMemo(function CreateIssueG
                             label="Минимальное количество проверяющих"
                             name="checksCountMin"
                             rules={[{ required: true, message: 'Введите количество' }]}
+                            hasFeedback
                         >
-                            <InputNumber min={0} placeholder="0" />
+                            <InputNumber min={0} />
                         </Form.Item>
                         <HelpInfo
                             width={340}
@@ -172,8 +188,9 @@ export const CreateIssueGeneralForm: FC<Props> = typedMemo(function CreateIssueG
                                     },
                                 }),
                             ]}
+                            hasFeedback
                         >
-                            <InputNumber min={1} placeholder="0" />
+                            <InputNumber min={1} />
                         </Form.Item>
                         <HelpInfo
                             width={430}

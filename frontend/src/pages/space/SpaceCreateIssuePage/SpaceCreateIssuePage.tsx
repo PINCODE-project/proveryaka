@@ -220,6 +220,7 @@ export const SpaceCreateIssuePage: FC<Props> = typedMemo(function SpacesPage({
 
     const handleChangeStep = useCallback(async (step: number) => {
         if (await validateForms()) return;
+        if (step > currentStep + 1) return;
 
         switch (currentStep) {
             case 0:

@@ -9,6 +9,8 @@ import { SpaceIssuesButton } from '@pages/space/SpacePage/subpages/SpaceIssuesPa
 
 import { DeleteIssueButton } from '@features/issue/delete-issue/ui/DeleteIssueButton';
 import { PublishIssueArguments, usePublishIssue } from '@features/issue/publish-issue/lib/usePublishIssue';
+import { useStartDistribution } from '@features/issue/start-distribution/lib/useStartDistribution';
+import { DistributeModal } from '@features/issue/start-distribution/ui/DistributeModal';
 
 import { GetIssueResponse, getSpaceIssueQueryKey } from '@entities/issue';
 import { DistributedType } from '@entities/issue/model/DistributedType';
@@ -41,7 +43,10 @@ export const SpaceIssuesPage: FC<Props> = typedMemo(function SpaceTeamsPage({
         search: '',
         status: null,
         isDistributed: DistributedType.None,
+        isPublished: null,
     });
+
+    const { mutate: distribute } = useStartDistribution();
 
     const onSuccessPublishIssue = useCallback((_: boolean, variables: PublishIssueArguments) => {
         notification.success({
@@ -89,8 +94,21 @@ export const SpaceIssuesPage: FC<Props> = typedMemo(function SpaceTeamsPage({
         items.push(
             {
                 key: '3',
-                label: 'Назначить проверяющих',
-                disabled: true,
+                label: (
+                    <DistributeModal
+                        onSubmit={(onClose, expertProfileIdList) => distribute({
+                            expertProfileIdList,
+                            issueId: record.id,
+                        }, { onSuccess: onClose })}
+                        triggerComponent={
+                            open => (
+                                <Typography onClick={open} className={styles.menuItem}>
+                                    Назначить проверяющих
+                                </Typography>
+                            )
+                        }
+                    />
+                ),
             },
             {
                 key: '4',
@@ -122,10 +140,10 @@ export const SpaceIssuesPage: FC<Props> = typedMemo(function SpaceTeamsPage({
                 </Dropdown>
             </div>
         );
-    }, [filters, publishIssue, spaceId]);
+    }, [distribute, downloadMarksExcel, filters, publishIssue, spaceId]);
 
     const getStatusFilter = useCallback(() => {
-        const result: {value: number | null; label: string}[] = [
+        const result: { value: number | null; label: string }[] = [
             { value: null, label: 'Все статусы' },
         ];
 

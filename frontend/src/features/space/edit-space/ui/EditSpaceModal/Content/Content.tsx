@@ -55,7 +55,7 @@ export const Content: FC<Props> = typedMemo(function Content({
 
     const { mutate: edit } = useEditSpace({
         onSuccess: () => {
-            queryClient.resetQueries(getSpacesQueryKey);
+            queryClient.resetQueries(getSpacesQueryKey());
             queryClient.resetQueries(getSpaceQueryKey(spaceId));
             notification.success({
                 message: 'Пространство изменено',

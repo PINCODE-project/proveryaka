@@ -8,6 +8,8 @@ export function getIssueCriteriaWithExample(
     issueId: string,
     filters?: ListFilters,
 ): Promise<GetListResponse<GetCriteriaWithExampleResponse>> {
-    return estimateHttp.get<GetListResponse<GetCriteriaWithExampleResponse>>('criteria/all/with-example', { params: { ...filters, issueId } })
-        .then(extractData);
+    return estimateHttp.get<GetListResponse<GetCriteriaWithExampleResponse>>(
+        'criteria/all/with-example',
+        { params: { ...filters, issueId } },
+    ).then(extractData);
 }

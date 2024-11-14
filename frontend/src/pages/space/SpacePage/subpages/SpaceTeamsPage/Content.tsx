@@ -35,7 +35,6 @@ export type Props = ClassNameProps & TestProps & {
 };
 
 export const Content: FC<Props> = typedMemo(function Content({
-    className,
     filters,
     setFilters,
 }) {

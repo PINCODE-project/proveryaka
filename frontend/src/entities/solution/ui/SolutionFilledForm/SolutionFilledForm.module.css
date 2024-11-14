@@ -2,3 +2,14 @@
     margin: 0;
     padding: 0;
 }
+
+.textValue {
+    border: 1px solid #d9d9d9;
+    border-radius: 6px;
+    padding: 4px 11px;
+    width: 660px;
+}
+
+.textValue.ghost {
+    opacity: .6;
+}

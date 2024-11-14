@@ -97,6 +97,7 @@ export const CreateIssueFormForm: FC<Props> = typedMemo(function CreateIssueForm
                     rules={[
                         { required: true, message: 'Введите название' },
                     ]}
+                    hasFeedback
                 >
                     <Input
                         placeholder="Введите название..."
@@ -112,6 +113,7 @@ export const CreateIssueFormForm: FC<Props> = typedMemo(function CreateIssueForm
                     style={{ maxWidth: 580, width: '100%' }}
                     label="Описание"
                     name={[index, 'description']}
+                    hasFeedback
                 >
                     <Input.TextArea
                         style={{ resize: 'vertical' }}
