@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/space';
 
-import { useGetSpaces } from '@entities/space';
+import { useGetSpaces, useRolesCheck } from '@entities/space';
 import { useGetSpacesCount } from '@entities/space/lib/useGetSpacesCount';
 import { GetSpacesFilters } from '@entities/space/model/GetSpacesFilters';
 
@@ -30,6 +30,7 @@ export const SpacesTable: FC<Props> = typedMemo(function SpacesTable({
     const navigate = useNavigate();
     const { data: spaces } = useGetSpaces(filters);
     const { data: spacesCount } = useGetSpacesCount(filters);
+    const { isExpert } = useRolesCheck();
 
     const handleChange: OnChange = (pagination: TablePaginationConfig) => {
         changeFilters({ page: pagination.current! - 1 || 0, count: pagination.pageSize || 10 });
@@ -89,8 +90,8 @@ export const SpacesTable: FC<Props> = typedMemo(function SpacesTable({
     ], [renderActions]);
 
     const onRow = useCallback((record: GetSpaceResponse) => ({
-        onClick: () => navigate(SpaceRouter.SpaceIssues(record.id)),
-    }), [navigate]);
+        onClick: () => navigate(isExpert ? SpaceRouter.SpaceSolutions(record.id) : SpaceRouter.SpaceIssues(record.id)),
+    }), [isExpert, navigate]);
 
     return (
         <Table

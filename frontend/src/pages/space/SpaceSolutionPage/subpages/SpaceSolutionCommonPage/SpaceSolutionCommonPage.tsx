@@ -54,13 +54,6 @@ export const SpaceSolutionCommonPage: FC<Props> = typedMemo(function SpaceSoluti
                                 Страничный вид
                             </Button>
                             : <>
-                                <Pagination
-                                    simple
-                                    current={currentStep}
-                                    onChange={value => setCurrentStep(value)}
-                                    total={solution?.solutionValueList.length}
-                                    pageSize={1}
-                                />
                                 <Button
                                     color="primary"
                                     variant="outlined"
@@ -71,6 +64,13 @@ export const SpaceSolutionCommonPage: FC<Props> = typedMemo(function SpaceSoluti
                                 >
                                     Отобразить списком
                                 </Button>
+                                <Pagination
+                                    simple
+                                    current={currentStep}
+                                    onChange={value => setCurrentStep(value)}
+                                    total={solution?.solutionValueList.length}
+                                    pageSize={1}
+                                />
                             </>
                     }
                 </Flex>
