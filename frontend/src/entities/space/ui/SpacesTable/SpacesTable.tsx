@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/space';
 
-import { useGetSpaces } from '@entities/space';
+import { useGetSpaces, useRolesCheck } from '@entities/space';
 import { useGetSpacesCount } from '@entities/space/lib/useGetSpacesCount';
 import { GetSpacesFilters } from '@entities/space/model/GetSpacesFilters';
 
@@ -89,7 +89,7 @@ export const SpacesTable: FC<Props> = typedMemo(function SpacesTable({
     ], [renderActions]);
 
     const onRow = useCallback((record: GetSpaceResponse) => ({
-        onClick: () => navigate(SpaceRouter.SpaceIssues(record.id)),
+        onClick: () => navigate(SpaceRouter.SpaceDescription(record.id)),
     }), [navigate]);
 
     return (

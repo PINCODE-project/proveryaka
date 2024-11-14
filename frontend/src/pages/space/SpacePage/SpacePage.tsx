@@ -44,7 +44,7 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
     const location = useLocation();
 
     const spaceId = useSpaceId();
-    const { isOrganizer } = useRolesCheck();
+    const { isOrganizer, isExpert } = useRolesCheck();
     const { data: space } = useGetSpace(spaceId ?? '');
     const { data: spaceSettings } = useGetSpaceSettings(spaceId ?? '');
 
@@ -142,10 +142,14 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
         return <Navigate to={SpaceRouter.Spaces} />;
     }
     if (location.pathname === SpaceRouter.Space(spaceId)) {
-        return <Navigate to={SpaceRouter.SpaceIssues(spaceId)} replace />;
+        return isExpert
+            ? <Navigate to={SpaceRouter.SpaceSolutions(spaceId)} replace />
+            : <Navigate to={SpaceRouter.SpaceIssues(spaceId)} replace />;
     }
     if (location.pathname === SpaceRouter.SpaceTeams(spaceId) && !spaceSettings?.isUseTeam) {
-        return <Navigate to={SpaceRouter.SpaceIssues(spaceId)} replace />;
+        return isExpert
+            ? <Navigate to={SpaceRouter.SpaceSolutions(spaceId)} replace />
+            : <Navigate to={SpaceRouter.SpaceIssues(spaceId)} replace />;
     }
     return (
         <Flex
@@ -159,11 +163,15 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
                     text="Описание"
                     icon={className => <InfoCircleOutlined className={className} />}
                 />
-                <SidebarItem
-                    to={SpaceRouter.SpaceIssues(spaceId)}
-                    text="Задания"
-                    icon={className => <FolderOpenOutlined className={className} />}
-                />
+                {
+                    !isExpert &&
+                    <SidebarItem
+                        to={SpaceRouter.SpaceIssues(spaceId)}
+                        text="Задания"
+                        icon={className => <FolderOpenOutlined className={className} />}
+                    />
+                }
+
                 <SidebarItem
                     to={SpaceRouter.SpaceSolutions(spaceId)}
                     text={isOrganizer ? 'Сданные работы' : 'Работы на проверку'}
