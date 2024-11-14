@@ -30,7 +30,6 @@ export const SpacesTable: FC<Props> = typedMemo(function SpacesTable({
     const navigate = useNavigate();
     const { data: spaces } = useGetSpaces(filters);
     const { data: spacesCount } = useGetSpacesCount(filters);
-    const { isExpert } = useRolesCheck();
 
     const handleChange: OnChange = (pagination: TablePaginationConfig) => {
         changeFilters({ page: pagination.current! - 1 || 0, count: pagination.pageSize || 10 });
@@ -90,8 +89,8 @@ export const SpacesTable: FC<Props> = typedMemo(function SpacesTable({
     ], [renderActions]);
 
     const onRow = useCallback((record: GetSpaceResponse) => ({
-        onClick: () => navigate(isExpert ? SpaceRouter.SpaceSolutions(record.id) : SpaceRouter.SpaceIssues(record.id)),
-    }), [isExpert, navigate]);
+        onClick: () => navigate(SpaceRouter.SpaceDescription(record.id)),
+    }), [navigate]);
 
     return (
         <Table
