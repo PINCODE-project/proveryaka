@@ -4,11 +4,10 @@ import { FC, Suspense, useCallback, useMemo } from 'react';
 
 // Сущность пространства много где зайдествуется
 // eslint-disable-next-line
-import {GetStudentResponse, StudentTable} from '@entities/space';
+import { GetStudentResponse, StudentTable } from '@entities/space';
 
 import { useRolesCheck } from '@entities/space/lib/useRolesCheck';
 
-import { useListFilters } from '@shared/hooks';
 import { typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { EmptyTable, Fallback } from '@shared/ui';
@@ -17,7 +16,6 @@ import { useGetSpaceTeams } from '../../lib/useGetSpaceTeams';
 import { useGetSpaceUserTeams } from '../../lib/useGetSpaceUserTeams';
 import { GetTeam } from '../../model/GetTeam';
 import { GetTeamFilters } from '../../model/GetTeamFilters';
-import { TeamType } from '../../model/TeamType';
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     spaceId: string;
@@ -34,7 +32,6 @@ export const TeamsTable: FC<Props> = typedMemo(function TeamsTable({
     actionRender,
     placeholder = 'В пространстве нет команд',
     filters,
-    setFilters,
 }) {
     const { isStudent } = useRolesCheck();
 

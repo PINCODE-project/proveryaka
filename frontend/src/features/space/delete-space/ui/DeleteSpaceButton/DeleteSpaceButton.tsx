@@ -31,7 +31,7 @@ export const DeleteSpaceButton: FC<Props> = typedMemo(function DeleteSpaceButton
         onSuccess: async () => {
             await onSuccess?.();
 
-            queryClient.resetQueries(getSpacesQueryKey);
+            queryClient.resetQueries(getSpacesQueryKey());
             queryClient.resetQueries(getSpaceQueryKey(spaceId ?? ''));
             notification.success({
                 message: 'Пространство удалено',

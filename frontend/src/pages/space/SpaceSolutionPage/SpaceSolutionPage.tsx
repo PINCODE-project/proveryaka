@@ -57,7 +57,10 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
         {
             key: '0',
             label: <DistributeModal
-                onSubmit={(onClose, expertProfileIdList) => distribute({ expertProfileIdList, solutionId: solutionId ?? '' }, { onSuccess: onClose })}
+                onSubmit={(onClose, expertProfileIdList) => distribute(
+                    { expertProfileIdList, solutionId: solutionId ?? '' },
+                    { onSuccess: onClose },
+                )}
                 triggerComponent={
                     open => (
                         <Typography onClick={open} className={styles.menuItem}>
@@ -67,7 +70,7 @@ export const SpaceSolutionPage: FC<Props> = typedMemo(function SpaceSolutionPage
                 }
             />,
         },
-    ], []);
+    ], [distribute, solutionId]);
 
     const toReview = useCallback(
         () => navigate(SpaceRouter.SpaceSolutionReview(spaceId!, solutionId!)),

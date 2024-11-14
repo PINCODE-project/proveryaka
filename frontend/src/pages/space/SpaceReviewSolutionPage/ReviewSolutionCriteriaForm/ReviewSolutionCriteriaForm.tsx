@@ -1,7 +1,8 @@
-import { EyeOutlined } from '@ant-design/icons';
-import { Collapse, Flex, Form, Input, InputNumber, Typography } from 'antd';
+import { EyeOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { Collapse, Flex, Form, FormInstance, Input, InputNumber, Typography } from 'antd';
 import { FC } from 'react';
 
+import { CriteriaExampleModal } from '@entities/criteria';
 import { GetCriteriaWithExamplesResponse } from '@entities/criteria/model/GetCriteriaWithExamplesResponse';
 
 import { getModuleClasses, typedMemo } from '@shared/lib';
@@ -11,17 +12,23 @@ import styles from './ReviewSolutionCriteriaForm.module.css';
 type Props = {
     criteria: GetCriteriaWithExamplesResponse;
     index: number;
-    restField: any;
-    setCriteriaId: any;
+    restField: { name: number; fieldKey?: number | undefined };
+    form: FormInstance;
+    hasError: boolean;
 };
 
 export const ReviewSolutionCriteriaForm: FC<Props> = typedMemo(function ReviewSolutionCriteriaForm({
     criteria,
     index,
     restField,
-    setCriteriaId,
+    form,
+    hasError,
 }) {
-    if (!criteria) { return; }
+    const scoreCount = Form.useWatch(['reviewsByCriteria', index - 1, 'scoreCount'], form);
+
+    if (!criteria) {
+        return;
+    }
 
     return (
         <Collapse items={[
@@ -29,6 +36,11 @@ export const ReviewSolutionCriteriaForm: FC<Props> = typedMemo(function ReviewSo
                 key: '1',
                 label: `${index}. ${criteria.name}`,
                 forceRender: true,
+                extra: (
+                    scoreCount === undefined || scoreCount === null
+                        ? <InfoCircleOutlined style={hasError ? { color: 'red' } : undefined} />
+                        : <Typography>{scoreCount}/{criteria.maxScore}</Typography>
+                ),
                 children: (
                     <Flex vertical gap={24} className={getModuleClasses(styles, 'form')}>
                         <Flex vertical gap={15}>
@@ -44,16 +56,21 @@ export const ReviewSolutionCriteriaForm: FC<Props> = typedMemo(function ReviewSo
 
                         {
                             criteria.criteriaExampleList.length > 0 &&
-                            <Flex gap={6} className={styles.button} onClick={() => setCriteriaId(criteria.id)}>
-                                <EyeOutlined />
-                                Пример выполнения
-                            </Flex>
+                            <CriteriaExampleModal
+                                triggerComponent={open => (
+                                    <Flex gap={6} className={styles.button} onClick={open}>
+                                        <EyeOutlined />
+                                        Пример выполнения
+                                    </Flex>
+                                )}
+                                examplesRaw={criteria.criteriaExampleList ?? []}
+                            />
                         }
 
                         <Form.Item
                             {...restField}
                             className={getModuleClasses(styles, 'formItem')}
-                            name={[index, 'scoreCount']}
+                            name={[index - 1, 'scoreCount']}
                             label={`Оценка от ${criteria.minScore} до ${criteria.maxScore}`}
                             rules={[
                                 { required: true, message: 'Введите оценку!' },
@@ -82,7 +99,7 @@ export const ReviewSolutionCriteriaForm: FC<Props> = typedMemo(function ReviewSo
                             {...restField}
                             className={getModuleClasses(styles, 'formItem')}
                             label="Комментарий"
-                            name={[index, 'comment']}
+                            name={[index - 1, 'comment']}
                             rules={[
                                 { max: 2047, message: 'Не больше 2047 символов' },
                             ]}

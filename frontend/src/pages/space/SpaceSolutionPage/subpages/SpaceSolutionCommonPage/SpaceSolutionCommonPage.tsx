@@ -8,7 +8,6 @@ import { SolutionFilledForms } from '@entities/solution/ui/SolutionFilledForms';
 import { useRolesCheck } from '@entities/space';
 
 import { useSolutionId } from '@shared/hooks/useSolutionId';
-import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 
@@ -17,7 +16,6 @@ import styles from './SpaceSolutionCommonPage.module.css';
 export type Props = ClassNameProps & TestProps;
 
 export const SpaceSolutionCommonPage: FC<Props> = typedMemo(function SpaceSolutionCommonPage() {
-    const spaceId = useSpaceId();
     const solutionId = useSolutionId();
 
     const { isOrganizer } = useRolesCheck();

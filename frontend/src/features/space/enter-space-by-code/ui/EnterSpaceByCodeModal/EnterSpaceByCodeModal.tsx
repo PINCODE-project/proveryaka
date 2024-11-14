@@ -23,7 +23,7 @@ export const EnterSpaceByCodeModal: FC<Props> = typedMemo(function EnterSpaceByC
     const [isOpen, setIsOpen] = useState(false);
     const { mutate: enter } = useEnterByCode({
         onSuccess: () => {
-            queryClient.resetQueries(getSpacesQueryKey);
+            queryClient.resetQueries(getSpacesQueryKey());
             notification.success({
                 message: 'Вы добавлены в пространство',
             });

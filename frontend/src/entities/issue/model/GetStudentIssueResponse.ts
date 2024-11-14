@@ -1,6 +1,6 @@
 import { Status } from './Status';
 
-export type GetIssueResponse = {
+export type GetStudentIssueResponse = {
     /**
      * Идентификатор сущности
      */
@@ -67,6 +67,11 @@ export type GetIssueResponse = {
      * ПОЛЕ ФРОНТА: Статус задания
      */
     status?: Status;
+
+    /**
+     * Оценка
+     */
+    mark: number;
 
     /**
      * Командная сдача в задании

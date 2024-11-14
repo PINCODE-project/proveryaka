@@ -38,7 +38,10 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
             {
                 key: '1',
                 label: <DistributeModal
-                    onSubmit={(onClose, expertProfileIdList) => distribute({ expertProfileIdList, solutionId: record.id }, { onSuccess: onClose })}
+                    onSubmit={(onClose, expertProfileIdList) => distribute(
+                        { expertProfileIdList, solutionId: record.id },
+                        { onSuccess: onClose },
+                    )}
                     triggerComponent={
                         open => (
                             <Typography onClick={open} className={styles.menuItem}>
@@ -57,7 +60,7 @@ export const SpaceSolutionsPage: FC<Props> = typedMemo(function SpaceSolutionsPa
                 </Dropdown>
             </div>
         );
-    }, [isOrganizer]);
+    }, [distribute, isOrganizer]);
 
     if (!spaceId) {
         return <Navigate to={SpaceRouter.Spaces} />;

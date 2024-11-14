@@ -31,7 +31,8 @@ export const SpaceRouter = {
     SpaceSolution: (spaceId: string, solutionId: string) => `/spaces/${spaceId}/solutions/${solutionId}`,
     SpaceSolutionCommon: (spaceId: string, solutionId: string) => `/spaces/${spaceId}/solutions/${solutionId}/common`,
     SpaceSolutionMarks: (spaceId: string, solutionId: string) => `/spaces/${spaceId}/solutions/${solutionId}/mark`,
-    SpaceSolutionFeedback: (spaceId: string, solutionId: string) => `/spaces/${spaceId}/solutions/${solutionId}/feedback`,
+    SpaceSolutionFeedback:
+        (spaceId: string, solutionId: string) => `/spaces/${spaceId}/solutions/${solutionId}/feedback`,
     SpaceSolutionReview: (spaceId: string, solutionId: string) => `/spaces/${spaceId}/solutions/${solutionId}/review`,
     SpaceIssue: (spaceId: string, issueId: string) => `/spaces/${spaceId}/tasks/${issueId}`,
     SpaceIssueDescription: (spaceId: string, issueId: string) => `/spaces/${spaceId}/tasks/${issueId}/description`,

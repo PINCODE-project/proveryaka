@@ -1,7 +1,6 @@
 import { Table, TableColumnsType } from 'antd';
 import { ColumnType } from 'antd/lib/table';
 import { FC, useCallback, useMemo } from 'react';
-
 // Сущность пространства много где зайдествуется
 // eslint-disable-next-line
 import { useNavigate } from 'react-router-dom';

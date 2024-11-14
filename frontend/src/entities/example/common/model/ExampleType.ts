@@ -1,4 +1,4 @@
 export enum ExampleType {
-    Standard,
-    AntiExample
+    Standard = 1,
+    AntiExample= 2
 }

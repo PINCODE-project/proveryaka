@@ -1,9 +1,9 @@
-import { Flex, Input, Typography } from 'antd';
+import { Flex, Typography } from 'antd';
 import { FC } from 'react';
 
 import { GetSolutionValue } from '@entities/solution/model/GetSolutionValue';
 
-import { typedMemo } from '@shared/lib';
+import { getModuleClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { DownloadFileButton } from '@shared/ui/DownloadFileButton';
 
@@ -38,11 +38,9 @@ export const SolutionFilledForm: FC<Props> = typedMemo(function SolutionFilledFo
             </Flex>
             {
                 form.formSolutionType === 1 &&
-                <Input.TextArea
-                    value={form.textValue!}
-                    autoSize={true}
-                    placeholder="Здесь должен был быть текст, но его не написали 🥲"
-                />
+                <Typography className={getModuleClasses(styles, 'textValue', { ghost: !form.textValue })}>
+                    {form.textValue || 'Здесь должен был быть текст, но его не написали 🥲'}
+                </Typography>
             }
             {
                 form.formSolutionType === 2 &&
@@ -57,16 +55,16 @@ export const SolutionFilledForm: FC<Props> = typedMemo(function SolutionFilledFo
             {
                 form.formSolutionType === 2 &&
                 !form.fileIdList?.length &&
-                <Typography className={styles.typography}>Нет прикреплённых файлов 🥲</Typography>
+                <Typography className={getModuleClasses(styles, 'textValue', { ghost: true })}>
+                    Нет прикреплённых файлов 🥲
+                </Typography>
             }
             {
                 form.formSolutionType === 3 &&
                 <>
-                    <Input.TextArea
-                        value={form.textValue!}
-                        autoSize={true}
-                        placeholder="Здесь должен был быть текст, но его не вставили 🥲"
-                    />
+                    <Typography className={getModuleClasses(styles, 'textValue', { ghost: !form.textValue })}>
+                        {form.textValue || 'Здесь должен был быть текст, но его не написали 🥲'}
+                    </Typography>
                     {
                         form.fileIdList?.map(fileId => (
                             <DownloadFileButton

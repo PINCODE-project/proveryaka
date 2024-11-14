@@ -1,31 +1,32 @@
 import { Card, Flex, Form, FormInstance, Input, Typography } from 'antd';
 import { FC } from 'react';
 
-import {
-    ReviewSolutionCriteriaForm,
-} from '@pages/space/SpaceReviewSolutionPage/ReviewSolutionCriteriaForm/ReviewSolutionCriteriaForm';
-
 import { GetCriteriaWithExamplesResponse } from '@entities/criteria/model/GetCriteriaWithExamplesResponse';
+import { GetSolutionForExpert } from '@entities/solution';
 
 import { getModuleClasses, typedMemo } from '@shared/lib';
 
 import styles from './ReviewSolutionMenu.module.css';
+import { ReviewSolutionCriteriaForm } from '../ReviewSolutionCriteriaForm/ReviewSolutionCriteriaForm';
 
 type Props = {
-    solution: any;
+    solution: GetSolutionForExpert;
     criteria: GetCriteriaWithExamplesResponse[];
     form: FormInstance;
-    setCriteriaId: any;
-    // examples: any;
+    hasError: boolean;
 };
 
 export const ReviewSolutionMenu: FC<Props> = typedMemo(function ReviewSolutionMenu({
     solution,
     criteria,
     form,
-    setCriteriaId,
+    hasError,
 }) {
-    console.log(criteria);
+    const reviews = Form.useWatch('reviewsByCriteria', form);
+    const score = reviews?.reduce((prev: number, value: GetCriteriaWithExamplesResponse & {
+        scoreCount: number;
+    }) => prev + (value.scoreCount | 0) * value.weight, 0);
+
     return (
         <Card className={styles.container}>
             {
@@ -35,12 +36,15 @@ export const ReviewSolutionMenu: FC<Props> = typedMemo(function ReviewSolutionMe
                         name="review_form"
                         layout="vertical"
                         requiredMark={false}
-                        initialValues={{ reviewsByCriteria: criteria }}
+                        initialValues={{
+                            reviewsByCriteria: criteria.map(crit => ({ ...crit, comment: '', scoreCount: undefined })),
+                            comment: undefined,
+                        }}
                     >
                         <Flex vertical gap={24}>
                             <Flex gap={10}>
                                 <Typography>Итоговая оценка: </Typography>
-                                <Typography>0/100</Typography>
+                                <Typography>{Math.floor(((score || 0) * 10) * 100) / 100}/100</Typography>
                             </Flex>
 
                             <Form.List name="reviewsByCriteria">
@@ -49,14 +53,17 @@ export const ReviewSolutionMenu: FC<Props> = typedMemo(function ReviewSolutionMe
                                         <Flex vertical gap={8}>
                                             {
                                                 fields.length
-                                                    ? fields.map(({ key, name, ...restField }, index) => {
-                                                        return (<ReviewSolutionCriteriaForm
-                                                            criteria={criteria[key]}
-                                                            key={`criteriaForm${key}`}
-                                                            index={index + 1}
-                                                            restField={restField}
-                                                            setCriteriaId={setCriteriaId}
-                                                        />);
+                                                    ? fields.map(({ key, ...restField }, index) => {
+                                                        return (
+                                                            <ReviewSolutionCriteriaForm
+                                                                criteria={criteria[key]}
+                                                                key={`criteriaForm${key}`}
+                                                                index={index + 1}
+                                                                restField={restField}
+                                                                form={form}
+                                                                hasError={hasError}
+                                                            />
+                                                        );
                                                     })
                                                     : null
                                             }
@@ -68,7 +75,7 @@ export const ReviewSolutionMenu: FC<Props> = typedMemo(function ReviewSolutionMe
                             <Form.Item
                                 className={getModuleClasses(styles, 'formItem')}
                                 label="Общий комментарий"
-                                name={'comment'}
+                                name='comment'
                                 rules={[
                                     { required: true, message: 'Общий комментарий - обязательный!' },
                                     { max: 2047, message: 'Не больше 2047 символов' },

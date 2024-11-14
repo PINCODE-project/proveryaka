@@ -1,6 +1,8 @@
 import { Button, Flex, Form, Select, Tabs, TabsProps } from 'antd';
 import { FC, useCallback, useMemo, useState } from 'react';
 
+import { CreateDistribution } from '@features/issue/start-distribution/model/CreateDistribution';
+
 import { useGetSpaceExperts, useGetSpaceOrganizers, useGetSpaceStudents } from '@entities/space';
 import { SpaceRoleType } from '@entities/space/model/SpaceRoleType';
 
@@ -8,7 +10,6 @@ import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { sortSelectOptionsByLabel, typedMemo } from '@shared/lib';
 
 import styles from './Content.module.css';
-import { SetExpertToSolutionRequest } from '../../../model/SetExpertToSolutionRequest';
 
 export type Props = Readonly<{
     onSubmit: (userIdList: string[]) => void;
@@ -63,11 +64,11 @@ export const Content: FC<Props> = typedMemo(function Content({
             name="DistributeForm"
             layout="vertical"
             initialValues={{ expertProfileIdList: [] }}
-            onFinish={(form: SetExpertToSolutionRequest) => onSubmit(form.expertProfileIdList)}
+            onFinish={(form: CreateDistribution) => onSubmit(form.expertProfileIdList!)}
             requiredMark={false}
         >
             <Flex vertical gap={12}>
-                <Form.Item<SetExpertToSolutionRequest>
+                <Form.Item<CreateDistribution>
                     name="expertProfileIdList"
                     label="Пользователи"
                 >

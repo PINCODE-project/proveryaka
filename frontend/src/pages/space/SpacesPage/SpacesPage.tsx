@@ -1,5 +1,5 @@
 import { EllipsisOutlined, UsergroupAddOutlined } from '@ant-design/icons';
-import { App, Button, Dropdown, Flex, MenuProps, Typography } from 'antd';
+import { App, Button, Dropdown, Flex, Input, MenuProps, Typography } from 'antd';
 import { FC, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -17,9 +17,11 @@ import { useCopySpaceCode, useRegenerateSpaceCode } from '@features/space/get-sp
 
 import { SpacesTable } from '@entities/space';
 import { GetSpaceResponse } from '@entities/space/model/GetSpaceResponse';
+import { GetSpacesFilters } from '@entities/space/model/GetSpacesFilters';
 import { useGetUserIsOrganizer } from '@entities/user';
 
 import Logo from '@shared/assets/images/logo.svg';
+import { useListFilters } from '@shared/hooks';
 import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
 import { ClassNameProps, TestProps } from '@shared/types';
@@ -50,6 +52,13 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
                 description: <>Код пространства <b>{context.name}</b> изменен</>,
             });
         },
+    });
+
+    const [filters, changeFilters] = useListFilters<GetSpacesFilters>({
+        page: 0,
+        count: 10,
+        search: '',
+        authorIdList: [],
     });
 
     const renderActions = useCallback((_: string, record: GetSpaceResponse) => {
@@ -188,11 +197,20 @@ export const SpacesPage: FC<Props> = typedMemo(function SpacesPage({
             </Flex>
 
             <Flex justify="space-between" gap="middle" align="center">
-                <Typography.Text>Filters</Typography.Text>
+                <Flex gap="middle">
+                    <Input.Search
+                        placeholder="Поиск"
+                        allowClear
+                        onSearch={value => {
+                            changeFilters({ search: value, page: 0 });
+                        }}
+                        style={{ width: 250 }}
+                    />
+                </Flex>
                 {SpacesButton}
             </Flex>
 
-            <SpacesTable renderActions={renderActions} />
+            <SpacesTable renderActions={renderActions} filters={filters} changeFilters={changeFilters} />
         </Flex>
     );
 });

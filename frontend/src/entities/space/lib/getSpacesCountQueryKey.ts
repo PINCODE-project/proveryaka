@@ -1,10 +1,10 @@
 import { ListFilters } from '@shared/types';
 
-export function getSpacesQueryKey(
+export function getSpacesCountQueryKey(
     filters?: ListFilters,
 ): (string | ListFilters)[] {
     return [
-        'spaces/get',
+        'spaces/get-count',
         filters,
     ].filter(Boolean) as (string | ListFilters)[];
 }

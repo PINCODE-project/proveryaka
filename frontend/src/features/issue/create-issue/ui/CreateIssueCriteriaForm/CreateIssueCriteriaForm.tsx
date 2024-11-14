@@ -1,4 +1,4 @@
-import { PlusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { ExclamationCircleFilled, PlusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Collapse, Flex, Form, FormInstance, FormListOperation, Input, InputNumber, Typography } from 'antd';
 import { Dispatch, FC, SetStateAction, useCallback } from 'react';
 import { v4 as uuid } from 'uuid';
@@ -72,7 +72,10 @@ export const CreateIssueCriteriaForm: FC<Props> = typedMemo(function CreateIssue
         [setCriteria],
     );
 
-    const getCriteriaForm = (index: number, restField: {fieldKey?: number | undefined}) => {
+    const values = Form.useWatch('criteria', form);
+    const weight = values?.reduce((prev: number, value: any) => prev + value.weight, 0) || 0;
+
+    const getCriteriaForm = (index: number, restField: { fieldKey?: number | undefined }) => {
         const crit = { ...criteria[index] };
 
         return (
@@ -89,6 +92,7 @@ export const CreateIssueCriteriaForm: FC<Props> = typedMemo(function CreateIssue
                                 { required: true, message: 'Введите название' },
                                 { max: 128, message: 'Не больше 64 символов' },
                             ]}
+                            hasFeedback
                         >
                             <Input
                                 placeholder="Введите название..."
@@ -151,6 +155,7 @@ export const CreateIssueCriteriaForm: FC<Props> = typedMemo(function CreateIssue
                                 rules={[
                                     { max: 2047, message: 'Не больше 256 символов' },
                                 ]}
+                                hasFeedback
                             >
                                 <Input.TextArea
                                     placeholder="Введите текст..."
@@ -184,6 +189,7 @@ export const CreateIssueCriteriaForm: FC<Props> = typedMemo(function CreateIssue
                                     className={getModuleClasses(styles, 'formItem')}
                                     name={[index, 'minScore']}
                                     rules={[{ required: true, message: 'Введите минимальную оценку' }]}
+                                    hasFeedback
                                 >
                                     <InputNumber
                                         placeholder="0"
@@ -213,6 +219,7 @@ export const CreateIssueCriteriaForm: FC<Props> = typedMemo(function CreateIssue
                                             },
                                         }),
                                     ]}
+                                    hasFeedback
                                 >
                                     <InputNumber
                                         placeholder="0"
@@ -268,48 +275,74 @@ export const CreateIssueCriteriaForm: FC<Props> = typedMemo(function CreateIssue
             requiredMark={false}
             initialValues={{ criteria }}
         >
-            <Form.List name="criteria">
-                {(fields, { add, remove, move }) => (
-                    <Flex vertical gap={32}>
-                        {
-                            fields.length
-                                ? <Collapse
-                                    items={fields.map(({ key, name, ...restField }, index) => {
-                                        return ({
-                                            key: `criteria${key}`,
-                                            label: <Typography.Title level={5} style={{ margin: 0 }}>
-                                                Критерий {index + 1}
-                                            </Typography.Title>,
-                                            classNames: { header: styles.collapseHeader },
-                                            extra: (
-                                                <CriteriaButtons
-                                                    remove={remove}
-                                                    move={move}
-                                                    index={index}
-                                                    length={fields.length}
-                                                    criteria={criteria}
-                                                    setCriteria={setCriteria}
-                                                />
-                                            ),
-                                            children: getCriteriaForm(name, restField),
-                                            forceRender: true,
-                                        });
-                                    })}
-                                />
-                                : null
-                        }
-
-                        <Button
-                            type="primary"
-                            icon={<PlusCircleOutlined />}
-                            style={{ width: '200px' }}
-                            onClick={() => handleAddNewCriteria(add)}
-                        >
-                            Добавить критерий
-                        </Button>
+            <Flex vertical gap={20}>
+                <Form.Item
+                    className={getModuleClasses(styles, 'formItem')}
+                    name={'weight'}
+                    rules={[
+                        () => ({
+                            validator(_, value) {
+                                if (value === null || weight >= 100) {
+                                    return Promise.resolve();
+                                }
+                                return Promise.reject(new Error(
+                                    'Общий вес должен быть не менее 100%',
+                                ));
+                            },
+                        }),
+                    ]}
+                >
+                    <Flex align='center' gap={10}>
+                        <Typography>
+                        Общий вес: {weight}/100
+                        </Typography>
+                        <ExclamationCircleFilled style={{ color: weight >= 100 ? '#52c41a' : '#faad14' }} />
                     </Flex>
-                )}
-            </Form.List>
+                </Form.Item>
+
+                <Form.List name="criteria">
+                    {(fields, { add, remove, move }) => (
+                        <Flex vertical gap={32}>
+                            {
+                                fields.length
+                                    ? <Collapse
+                                        items={fields.map(({ key, name, ...restField }, index) => {
+                                            return ({
+                                                key: `criteria${key}`,
+                                                label: <Typography.Title level={5} style={{ margin: 0 }}>
+                                                    Критерий {index + 1}
+                                                </Typography.Title>,
+                                                classNames: { header: styles.collapseHeader },
+                                                extra: (
+                                                    <CriteriaButtons
+                                                        remove={remove}
+                                                        move={move}
+                                                        index={index}
+                                                        length={fields.length}
+                                                        criteria={criteria}
+                                                        setCriteria={setCriteria}
+                                                    />
+                                                ),
+                                                children: getCriteriaForm(name, restField),
+                                                forceRender: true,
+                                            });
+                                        })}
+                                    />
+                                    : null
+                            }
+
+                            <Button
+                                type="primary"
+                                icon={<PlusCircleOutlined />}
+                                style={{ width: '200px' }}
+                                onClick={() => handleAddNewCriteria(add)}
+                            >
+                                Добавить критерий
+                            </Button>
+                        </Flex>
+                    )}
+                </Form.List>
+            </Flex>
         </Form>
     );
 });

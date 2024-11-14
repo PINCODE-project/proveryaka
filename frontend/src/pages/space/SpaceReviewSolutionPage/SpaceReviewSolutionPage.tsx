@@ -1,16 +1,18 @@
-import { BookOutlined, EyeInvisibleOutlined, UnorderedListOutlined } from '@ant-design/icons';
-import { Button, Flex, Form, Pagination, Typography } from 'antd';
+import { BookOutlined, UnorderedListOutlined } from '@ant-design/icons';
+import { Button, Flex, Form, Pagination, Spin, Typography } from 'antd';
 import { FC, useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useQueryClient } from 'react-query';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/space';
-import { ReviewSolutionMenu } from '@pages/space/SpaceReviewSolutionPage/ReviewSolutionMenu/ReviewSolutionMenu';
 
 import { UserPanel } from '@widgets/UserPanel';
 
+import { useCreateReview } from '@features/solution/create-review/lib/useCreateReview';
+
 import { useGetIssueCriteriaWithExamples } from '@entities/criteria/lib/useGetIssueCriteriaWithExamples';
-import { useGetIssue } from '@entities/issue';
 import { useGetSolution } from '@entities/solution';
+import { getSolutionQueryKey } from '@entities/solution/lib/getSolutionQueryKey';
 import { useGetOrganizerSolution } from '@entities/solution/lib/useGetOrganizerSolution';
 import { SolutionFilledForms } from '@entities/solution/ui/SolutionFilledForms';
 import { useRolesCheck } from '@entities/space';
@@ -21,12 +23,15 @@ import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { getModuleClasses, typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 
+import { ReviewSolutionMenu } from './ReviewSolutionMenu/ReviewSolutionMenu';
 import styles from './SpaceReviewSolutionPage.module.css';
 
 export type Props = ClassNameProps & TestProps;
 
 export const SpaceReviewSolutionPage: FC<Props> = typedMemo(
     function SpaceReviewSolutionPage() {
+        const navigate = useNavigate();
+        const queryClient = useQueryClient();
         const spaceId = useSpaceId();
         const solutionId = useSolutionId();
 
@@ -43,15 +48,17 @@ export const SpaceReviewSolutionPage: FC<Props> = typedMemo(
             [isOrganizer, organizerSolution, reviewerSolution],
         );
 
-        const { data: issue } = useGetIssue(solution?.issueId || '', {
-            enabled: !!solution,
-        });
-
         const { data: criteria } = useGetIssueCriteriaWithExamples(solution?.issueId || '', {}, {
             enabled: !!solution,
         });
 
-        const [criteriaId, setCriteriaId] = useState<string | null>(null);
+        const { mutate: createReview } = useCreateReview({
+            retry: false,
+            onSuccess: () => {
+                queryClient.invalidateQueries(getSolutionQueryKey(solutionId!));
+                navigate(SpaceRouter.SpaceSolution(spaceId!, solutionId!));
+            },
+        });
 
         const [isList, setIsList] = useState(true);
         const [currentStep, setCurrentStep] = useState(1);
@@ -62,7 +69,18 @@ export const SpaceReviewSolutionPage: FC<Props> = typedMemo(
         const onSubmit = async () => {
             if (!hasError) {
                 if (await reviewForm.validateFields().then(() => true).catch(() => false)) {
-                    console.log('GO');
+                    const values = reviewForm.getFieldsValue();
+                    const data = {
+                        solutionId: solutionId!,
+                        likeType: 0,
+                        reviewsByCriteria: values.reviewsByCriteria.map((rev: any) => ({
+                            criteriaId: rev.id,
+                            scoreCount: rev.scoreCount,
+                            comment: rev.comment,
+                        })),
+                        comment: values.comment,
+                    };
+                    createReview(data);
                 } else {
                     setHasError(true);
                 }
@@ -70,10 +88,14 @@ export const SpaceReviewSolutionPage: FC<Props> = typedMemo(
         };
 
         useEffect(() => {
-            if (hasError) setTimeout(() => setHasError(false), 2000);
+            if (hasError) {
+                setTimeout(() => setHasError(false), 2000);
+            }
         }, [hasError]);
 
-        console.log('criteriaId', criteriaId);
+        if (!solution || !criteria) {
+            return <Spin />;
+        }
 
         return (
             <Flex vertical gap="large" className={getModuleClasses(styles, 'root')}>
@@ -87,62 +109,56 @@ export const SpaceReviewSolutionPage: FC<Props> = typedMemo(
                 </Flex>
                 <Flex gap={60} className={getModuleClasses(styles, 'container')}>
                     <ReviewSolutionMenu
-                        solution={solution}
+                        solution={solution!}
                         criteria={criteria?.entityList || []}
                         form={reviewForm}
-                        setCriteriaId={setCriteriaId}
+                        hasError={hasError}
                     />
 
                     <Flex vertical gap={30} className={getModuleClasses(styles, 'content')}>
                         <Flex justify="space-between" align="center">
-                            {
-                                !criteriaId &&
-                                <Flex gap={20}>
-                                    {
-                                        isList
-                                            ? <Button
+                            <Flex gap={20}>
+                                {
+                                    isList
+                                        ? <Button
+                                            color="primary"
+                                            variant="outlined"
+                                            type="primary"
+                                            size="small"
+                                            onClick={() => setIsList(false)}
+                                            icon={<BookOutlined />}
+                                        >
+                                            Страничный вид
+                                        </Button>
+                                        : <>
+                                            <Pagination
+                                                simple
+                                                current={currentStep}
+                                                onChange={value => setCurrentStep(value)}
+                                                total={solution?.solutionValueList.length}
+                                                pageSize={1}
+                                            />
+                                            <Button
                                                 color="primary"
                                                 variant="outlined"
                                                 type="primary"
                                                 size="small"
-                                                onClick={() => setIsList(false)}
-                                                icon={<BookOutlined />}
+                                                onClick={() => setIsList(true)}
+                                                icon={<UnorderedListOutlined />}
                                             >
-                                                Страничный вид
+                                                Отобразить списком
                                             </Button>
-                                            : <>
-                                                <Pagination
-                                                    simple
-                                                    current={currentStep}
-                                                    onChange={value => setCurrentStep(value)}
-                                                    total={solution?.solutionValueList.length}
-                                                    pageSize={1}
-                                                />
-                                                <Button
-                                                    color="primary"
-                                                    variant="outlined"
-                                                    type="primary"
-                                                    size="small"
-                                                    onClick={() => setIsList(true)}
-                                                    icon={<UnorderedListOutlined />}
-                                                >
-                                                    Отобразить списком
-                                                </Button>
-                                            </>
-                                    }
-                                </Flex>
-                            }
-                            {
-                                criteriaId
-                                    ? <Flex className={styles.button} gap={6} onClick={() => setCriteriaId(null)}>
-                                        <EyeInvisibleOutlined />
-                                        Закрыть пример
-                                    </Flex>
-                                    : null
-                            }
+                                        </>
+                                }
+                            </Flex>
 
                             <Flex gap={12}>
-                                <Button color="default">Выйти</Button>
+                                <Button
+                                    color="default"
+                                    onClick={() => navigate(SpaceRouter.SpaceSolution(spaceId!, solutionId!))}
+                                >
+                                    Выйти
+                                </Button>
                                 <Button
                                     variant="solid"
                                     color={hasError ? 'danger' : 'primary'}
@@ -155,17 +171,11 @@ export const SpaceReviewSolutionPage: FC<Props> = typedMemo(
                         </Flex>
 
                         <div className={styles.filledForms}>
-                            {
-                                !criteriaId &&
-                                <SolutionFilledForms
-                                    items={solution?.solutionValueList || []}
-                                    isList={isList}
-                                    currentStep={currentStep - 1}
-                                />
-                            }
-                            {
-                                criteriaId ? <Typography>awd</Typography> : null
-                            }
+                            <SolutionFilledForms
+                                items={solution?.solutionValueList || []}
+                                isList={isList}
+                                currentStep={currentStep - 1}
+                            />
                         </div>
                     </Flex>
                 </Flex>

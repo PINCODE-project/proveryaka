@@ -1,11 +1,12 @@
-import { Table, TableColumnsType, TablePaginationConfig, TableProps, Tag } from 'antd';
+import { Table, TableColumnsType, TablePaginationConfig, TableProps } from 'antd';
 import { ColumnType } from 'antd/lib/table';
 import { FC, useCallback, useMemo, useState } from 'react';
-// eslint-disable-next-line
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
+
 import { SpaceRouter } from '@pages/space';
 
 import { GetIssueResponse, StatusBadge, useGetSpaceIssue } from '@entities/issue';
+import { useGetSpaceStudentIssue } from '@entities/issue/lib/useGetSpaceStudentIssue';
 import { useRolesCheck } from '@entities/space';
 
 import { getDateFromISO, getTimeFromISO, typedMemo } from '@shared/lib';
@@ -14,7 +15,6 @@ import { EmptyTable } from '@shared/ui';
 
 import { useGetSpaceIssueCount } from '../../lib/useGetSpaceIssueCount';
 import { GetIssueFilters } from '../../model/GetIssueFilters';
-import { Status, IssueStringStatus } from '../../model/Status';
 
 type OnChange = NonNullable<TableProps<GetIssueResponse>['onChange']>;
 type GetSingle<T> = T extends (infer U)[] ? U : never;
@@ -30,6 +30,9 @@ export type Props = ClassNameProps & TestProps & Readonly<{
 const keyToOrderBy: Record<string, number> = {
     submitDeadlineDateUtc: 0,
     assessmentDeadlineDateUtc: 1,
+    allSolutionCount: 3,
+    reviewedSolutionCount: 4,
+    mark: 5,
 };
 
 export const IssuesTable: FC<Props> = typedMemo(function TeamsTable({
@@ -43,14 +46,31 @@ export const IssuesTable: FC<Props> = typedMemo(function TeamsTable({
 
     const [sortedInfo, setSortedInfo] = useState<Sorts>({});
 
-    const { data: issues } = useGetSpaceIssue(
+    const { data: notStudentissues } = useGetSpaceIssue(
         spaceId,
         filters,
         {
             orderBy: keyToOrderBy[sortedInfo.field as string] ?? 2,
             isDesc: sortedInfo.order === 'descend',
         },
+        {
+            enabled: !isStudent,
+        },
     );
+
+    const { data: studentIssues } = useGetSpaceStudentIssue(
+        spaceId,
+        filters,
+        {
+            orderBy: keyToOrderBy[sortedInfo.field as string] ?? 2,
+            isDesc: sortedInfo.order === 'descend',
+        },
+        {
+            enabled: isStudent,
+        },
+    );
+
+    const issues = isStudent ? studentIssues : notStudentissues;
     const { data: issueCount } = useGetSpaceIssueCount(spaceId, filters);
 
     const handleChange: OnChange = (pagination: TablePaginationConfig, filters, sorter) => {
@@ -83,13 +103,12 @@ export const IssuesTable: FC<Props> = typedMemo(function TeamsTable({
             },
             {
                 title: 'Оценка',
-                dataIndex: 'status',
-                key: 'status',
+                dataIndex: 'mark',
+                key: 'mark',
                 hidden: !isStudent,
-                // TODO PROV-311 blocked
-                render: () => `${0}/100`,
-                // sorter: () => 0,
-                // sortOrder: sortedInfo.columnKey === 'reviewedSolutionCount' ? sortedInfo.order : null,
+                render: (value: number) => `${value}/100`,
+                sorter: () => 0,
+                sortOrder: sortedInfo.columnKey === 'mark' ? sortedInfo.order : null,
             },
             {
                 title: 'Сдано',
@@ -97,8 +116,8 @@ export const IssuesTable: FC<Props> = typedMemo(function TeamsTable({
                 key: 'allSolutionCount',
                 hidden: isStudent,
                 render: (value: number, record) => `${value}/${record.allTeamCountInSpace}`,
-                // sorter: () => 0,
-                // sortOrder: sortedInfo.columnKey === 'allSolutionCount' ? sortedInfo.order : null,
+                sorter: () => 0,
+                sortOrder: sortedInfo.columnKey === 'allSolutionCount' ? sortedInfo.order : null,
             },
             {
                 title: 'Проверено',
@@ -106,8 +125,8 @@ export const IssuesTable: FC<Props> = typedMemo(function TeamsTable({
                 key: 'reviewedSolutionCount',
                 hidden: isStudent,
                 render: (value: number, record) => `${value}/${record.allSolutionCount}`,
-                // sorter: () => 0,
-                // sortOrder: sortedInfo.columnKey === 'reviewedSolutionCount' ? sortedInfo.order : null,
+                sorter: () => 0,
+                sortOrder: sortedInfo.columnKey === 'reviewedSolutionCount' ? sortedInfo.order : null,
             },
             {
                 title: 'Статус',

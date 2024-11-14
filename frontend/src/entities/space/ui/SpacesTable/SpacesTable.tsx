@@ -1,25 +1,39 @@
-import { Flex, Table, TableColumnProps, Typography } from 'antd';
+import { Flex, Table, TableColumnProps, TablePaginationConfig, TableProps, Typography } from 'antd';
 import { FC, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/space';
 
+import { useGetSpaces } from '@entities/space';
+import { useGetSpacesCount } from '@entities/space/lib/useGetSpacesCount';
+import { GetSpacesFilters } from '@entities/space/model/GetSpacesFilters';
+
 import { typedMemo } from '@shared/lib';
 import { ClassNameProps, TestProps } from '@shared/types';
 import { Avatar } from '@shared/ui';
 
-import { useGetSpaces } from '../../lib/useGetSpaces';
 import { GetSpaceResponse } from '../../model/GetSpaceResponse';
+
+type OnChange = NonNullable<TableProps<GetSpaceResponse>['onChange']>;
 
 export type Props = ClassNameProps & TestProps & Readonly<{
     renderActions?: TableColumnProps<GetSpaceResponse>['render'];
+    filters: GetSpacesFilters;
+    changeFilters: (value: Partial<GetSpacesFilters>) => void;
 }>;
 
 export const SpacesTable: FC<Props> = typedMemo(function SpacesTable({
     renderActions,
+    filters,
+    changeFilters,
 }) {
     const navigate = useNavigate();
-    const { data: spaces } = useGetSpaces();
+    const { data: spaces } = useGetSpaces(filters);
+    const { data: spacesCount } = useGetSpacesCount(filters);
+
+    const handleChange: OnChange = (pagination: TablePaginationConfig) => {
+        changeFilters({ page: pagination.current! - 1 || 0, count: pagination.pageSize || 10 });
+    };
 
     const columns = useMemo<TableColumnProps<GetSpaceResponse>[]>(() => [
         {
@@ -81,10 +95,16 @@ export const SpacesTable: FC<Props> = typedMemo(function SpacesTable({
     return (
         <Table
             onRow={onRow}
-            pagination={false}
             columns={columns}
-            dataSource={spaces!.entityList ?? []}
+            dataSource={spaces!.entityList! ?? []}
             showSorterTooltip={{ target: 'sorter-icon' }}
+            onChange={handleChange}
+            pagination={{
+                hideOnSinglePage: false,
+                current: filters.page! + 1,
+                pageSize: filters.count,
+                total: spacesCount?.count || 0,
+            }}
         />
     );
 });

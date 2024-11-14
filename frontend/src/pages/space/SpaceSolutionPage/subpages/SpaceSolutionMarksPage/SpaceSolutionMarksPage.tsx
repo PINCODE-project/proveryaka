@@ -12,11 +12,9 @@ import { ClassNameProps, TestProps } from '@shared/types';
 
 import styles from './SpaceSolutionMarksPage.module.css';
 
-export type Props = ClassNameProps & TestProps & Readonly<{}>;
+export type Props = ClassNameProps & TestProps;
 
-export const SpaceSolutionMarksPage: FC<Props> = typedMemo(function SpaceSolutionMarksPage({
-
-}) {
+export const SpaceSolutionMarksPage: FC<Props> = typedMemo(function SpaceSolutionMarksPage() {
     const { isOrganizer } = useRolesCheck();
     const solutionId = useSolutionId();
     const { data: info } = useGetCurrentUserInfo();

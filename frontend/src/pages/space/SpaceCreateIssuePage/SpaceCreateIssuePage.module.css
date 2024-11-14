@@ -1,4 +1,6 @@
 .root {
     padding: 20px;
     height: 100dvh;
+    margin: auto;
+    max-width: 1180px;
 }

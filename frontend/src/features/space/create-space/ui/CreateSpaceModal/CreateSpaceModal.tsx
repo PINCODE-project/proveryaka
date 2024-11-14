@@ -29,7 +29,7 @@ export const CreateSpaceModal: FC<Props> = typedMemo(function CreateSpaceModal({
     const [isOpen, setIsOpen] = useState(false);
     const { mutate: create } = useCreateSpace({
         onSuccess: () => {
-            queryClient.resetQueries(getSpacesQueryKey);
+            queryClient.resetQueries(getSpacesQueryKey());
             notification.success({
                 message: 'Пространство создано',
             });
