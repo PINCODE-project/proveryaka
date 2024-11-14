@@ -43,6 +43,7 @@ export const SpaceIssuesPage: FC<Props> = typedMemo(function SpaceTeamsPage({
         search: '',
         status: null,
         isDistributed: DistributedType.None,
+        isPublished: null,
     });
 
     const { mutate: distribute } = useStartDistribution();

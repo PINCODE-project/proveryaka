@@ -71,7 +71,10 @@ export const IssuesTable: FC<Props> = typedMemo(function TeamsTable({
     );
 
     const issues = isStudent ? studentIssues : notStudentissues;
-    const { data: issueCount } = useGetSpaceIssueCount(spaceId, filters);
+    const { data: issueCount } = useGetSpaceIssueCount(spaceId, {
+        ...filters,
+        isPublished: isStudent ? true : filters.isPublished,
+    });
 
     const handleChange: OnChange = (pagination: TablePaginationConfig, filters, sorter) => {
         setSortedInfo(sorter as Sorts);
