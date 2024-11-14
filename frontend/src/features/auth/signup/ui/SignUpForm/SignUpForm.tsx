@@ -31,6 +31,8 @@ export const SignUpForm: FC<Props> = typedMemo(function SignInForm({
         signUp(trimAllObjectValues(values) as SignUp);
     };
 
+    const agreementLink = 'https://storage.yandexcloud.net/proverayka/%D0%9F%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D1%81%D0%BA%D0%BE%D0%B5%20%D1%81%D0%BE%D0%B3%D0%BB%D0%B0%D1%88%D0%B5%D0%BD%D0%B8%D0%B5.pdf';
+
     return (
         <Form
             className={getModuleClasses(styles, 'form', null, className)}
@@ -129,9 +131,11 @@ export const SignUpForm: FC<Props> = typedMemo(function SignInForm({
 
             <Typography.Text className={getModuleClasses(styles, 'policyPrivacy')}>
                 Нажимая на кнопку регистрации вы соглашаетесь с принятой на сайте{' '}
-                <span className={getModuleClasses(styles, 'policyPrivacyLink')}>
+                <a href={agreementLink} target="_blank" rel="noreferrer">
+                    <span className={getModuleClasses(styles, 'policyPrivacyLink')}>
                     политикой обработки персональных данных
-                </span>
+                    </span>
+                </a>
             </Typography.Text>
         </Form>
     );

@@ -166,7 +166,7 @@ export const SpacePage: FC<Props> = typedMemo(function SpacePage({
                 />
                 <SidebarItem
                     to={SpaceRouter.SpaceSolutions(spaceId)}
-                    text="Работы на проверку"
+                    text={isOrganizer ? 'Сданные работы' : 'Работы на проверку'}
                     icon={className => <FileDoneOutlined className={className} />}
                 />
                 <SidebarItem

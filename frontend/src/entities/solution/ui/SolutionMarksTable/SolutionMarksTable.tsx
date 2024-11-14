@@ -129,7 +129,7 @@ export const SolutionMarksTable: FC<Props> = typedMemo(function SolutionMarksTab
             title: 'Оценка',
             dataIndex: 'scoreCount',
             key: 'scoreCount',
-            render: scoreCount => `${scoreCount}/100`,
+            render: (scoreCount, record) => `${scoreCount}/${record.maxScore}`,
         },
         {
             title: 'Комментарий',
