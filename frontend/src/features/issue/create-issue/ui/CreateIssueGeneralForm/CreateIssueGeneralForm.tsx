@@ -55,6 +55,7 @@ export type Props = ClassNameProps & TestProps & Readonly<{
     isUseTeam: boolean;
     disabled: boolean;
     initialValue: Store;
+    isEdit?: boolean;
 }>;
 
 export const CreateIssueGeneralForm: FC<Props> = typedMemo(function CreateIssueGeneralForm({
@@ -62,6 +63,7 @@ export const CreateIssueGeneralForm: FC<Props> = typedMemo(function CreateIssueG
     disabled,
     isUseTeam,
     initialValue,
+    isEdit,
 }) {
     useLayoutEffect(() => {
         form.setFieldsValue({
@@ -211,7 +213,7 @@ export const CreateIssueGeneralForm: FC<Props> = typedMemo(function CreateIssueG
                                 { required: true, message: 'Выберите дату и время' },
                                 () => ({
                                     validator(_, value) {
-                                        if (value === null ||
+                                        if (value === null || isEdit ||
                                             value.isAfter(new Date())
                                         ) {
                                             return Promise.resolve();

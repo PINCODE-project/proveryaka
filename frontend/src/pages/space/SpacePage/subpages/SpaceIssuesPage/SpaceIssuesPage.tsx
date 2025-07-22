@@ -2,7 +2,7 @@ import { EllipsisOutlined } from '@ant-design/icons';
 import { Dropdown, Flex, Input, MenuProps, notification, Select, Typography } from 'antd';
 import { FC, Suspense, useCallback } from 'react';
 import { useQueryClient } from 'react-query';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 import { SpaceRouter } from '@pages/space';
 import { SpaceIssuesButton } from '@pages/space/SpacePage/subpages/SpaceIssuesPage/SpaceIssuesButton';
@@ -33,6 +33,7 @@ export type Props = ClassNameProps & TestProps;
 export const SpaceIssuesPage: FC<Props> = typedMemo(function SpaceTeamsPage({
     className,
 }) {
+    const navigate = useNavigate();
     const queryClient = useQueryClient();
     const { isOrganizer, isStudent } = useRolesCheck();
     const spaceId = useSpaceId();
@@ -79,7 +80,7 @@ export const SpaceIssuesPage: FC<Props> = typedMemo(function SpaceTeamsPage({
             {
                 key: '1',
                 label: 'Редактировать',
-                disabled: true,
+                onClick: () => navigate(SpaceRouter.SpaceEditIssue(spaceId!, record.id)),
             },
         ];
 

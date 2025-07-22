@@ -1,4 +1,4 @@
-import { Flex, Form, FormInstance, Steps, Typography } from 'antd';
+import { Flex, Form, FormInstance, Spin, Steps, Typography } from 'antd';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { FC, useCallback, useEffect, useState } from 'react';
@@ -12,26 +12,24 @@ import { CreateIssueForm } from '@pages/space/SpaceCreateIssuePage/CreateIssueFo
 import { UserPanel } from '@widgets/UserPanel';
 
 import { useCreateIssueCriteriaDraft } from '@features/issue/create-issue/lib/useCreateIssueCriteriaDraft';
-import { useCreateIssueDraft } from '@features/issue/create-issue/lib/useCreateIssueDraft';
 import { useCreateIssueFormDraft } from '@features/issue/create-issue/lib/useCreateIssueFormDraft';
 import { useCreateIssueMaterialDraft } from '@features/issue/create-issue/lib/useCreateIssueMaterialDraft';
-import { useDeleteMyDraft } from '@features/issue/create-issue/lib/useDeleteMyDraft';
-import { useSaveMyDraft } from '@features/issue/create-issue/lib/useSaveMyDraft';
-import { useUpdateMyDraft } from '@features/issue/create-issue/lib/useUpdateMyDraft';
 import { CreateIssueCriteriaDraftRequest } from '@features/issue/create-issue/model/CreateIssueCriteriaDraftRequest';
 import {
     CreateIssueCriteriaExampleDraftRequest,
 } from '@features/issue/create-issue/model/CreateIssueCriteriaExampleDraftRequest';
 import { CreateIssueFormRequest } from '@features/issue/create-issue/model/CreateIssueFormRequest';
 import { CreateIssueMaterialDraftRequest } from '@features/issue/create-issue/model/CreateIssueMaterialDraftRequest';
-import { RestoreDraftModal } from '@features/issue/create-issue/ui/RestoreDraftModal';
+import { useEditIssue } from '@features/issue/edit-issue/lib/useEditIssue';
 
-import { GetIssueResponse } from '@entities/issue';
-import { getMyIssueDraftQueryKey, useGetMyIssueDraft } from '@entities/issue-draft';
+import { useGetIssueCriteriaWithExamples } from '@entities/criteria/lib/useGetIssueCriteriaWithExamples';
+import { GetIssueResponse, useGetIssue, useGetIssueMaterials } from '@entities/issue';
+import { getMyIssueDraftQueryKey } from '@entities/issue-draft';
 import { useGetSpaceSettings, useRolesCheck } from '@entities/space';
 
 import { createFile } from '@shared/api/file/createFile';
 import Logo from '@shared/assets/images/logo.svg';
+import { useIssueId } from '@shared/hooks';
 import { useSpaceId } from '@shared/hooks/useSpaceId';
 import { typedMemo } from '@shared/lib';
 import { getModuleClasses } from '@shared/lib/getModuleClasses';
@@ -44,13 +42,14 @@ export type Props = ClassNameProps & TestProps;
 
 dayjs.extend(utc);
 
-export const SpaceCreateIssuePage: FC<Props> = typedMemo(function SpaceCreateIssuePage({
+export const SpaceEditIssuePage: FC<Props> = typedMemo(function SpaceEditIssuePage({
     className,
 }) {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
 
     const spaceId = useSpaceId();
+    const issueId = useIssueId();
 
     const { isOrganizer } = useRolesCheck();
 
@@ -61,26 +60,13 @@ export const SpaceCreateIssuePage: FC<Props> = typedMemo(function SpaceCreateIss
     }, [isOrganizer, navigate, spaceId]);
 
     const [currentStep, setCurrentStep] = useState(0);
-    const [isOpenRestoreModal, setIsOpenRestoreModal] = useState(false);
-    const [isBlockForm, setIsBlockForm] = useState(true);
-    const [isNewDraft, setIsNewDraft] = useState(true);
 
     const { data: spaceSettings } = useGetSpaceSettings(spaceId ?? '');
-    const { mutate: updateMyDraft } = useUpdateMyDraft({
-        retry: false,
-        onSuccess: () => queryClient.invalidateQueries(getMyIssueDraftQueryKey(spaceId!)),
-    });
-    const { mutate: createIssueDraft } = useCreateIssueDraft({
-        retry: false,
-        onSuccess: () => {
-            queryClient.invalidateQueries(getMyIssueDraftQueryKey(spaceId!));
-            setIsNewDraft(false);
-        },
-    });
+
     const { mutate: createIssueMaterialDraft } = useCreateIssueMaterialDraft({ retry: false });
     const { mutate: createIssueCriteriaDraft } = useCreateIssueCriteriaDraft({ retry: false });
     const { mutate: createIssueFormDraft } = useCreateIssueFormDraft({ retry: false });
-    const { mutate: saveMyDraft } = useSaveMyDraft({
+    const { mutate: editIssue } = useEditIssue({
         retry: false,
         onSuccess: () => {
             queryClient.invalidateQueries(getMyIssueDraftQueryKey(spaceId!));
@@ -92,50 +78,63 @@ export const SpaceCreateIssuePage: FC<Props> = typedMemo(function SpaceCreateIss
     const [materialsForm] = Form.useForm();
     const [criteriaForm] = Form.useForm();
     const [formsForm] = Form.useForm();
+    const [myIssueDraft, setMyIssueDraft] = useState<GetIssueResponse | null>(null);
     const [materials, setMaterials] = useState<CreateIssueMaterialDraftRequest[]>([]);
     const [criteria, setCriteria] = useState<CreateIssueCriteriaDraftRequest[]>([]);
     const [forms, setForms] = useState<CreateIssueFormRequest[]>([]);
 
-    const { data: myIssueDraft } = useGetMyIssueDraft(spaceId!, {
+    const { data: getCriteria } = useGetIssueCriteriaWithExamples(issueId!, {});
+    const { data: getMaterials } = useGetIssueMaterials(issueId!);
+
+    const { data: getIssue } = useGetIssue(issueId!, {
         onSuccess: draft => {
-            if (isBlockForm) {
-                if (draft) {
-                    setIsOpenRestoreModal(true);
 
-                    setMaterials(draft.materials!.map(material => ({
-                        ...material, id: uuid(), file: null,
-                    })) as CreateIssueMaterialDraftRequest[]);
+            // if (isBlockForm) {
+            //     if (draft) {
+            //         setIsOpenRestoreModal(true);
+            //
 
-                    setCriteria(draft.criteria!.map(crit => ({
-                        ...crit,
-                        id: uuid(),
-                        weight: crit.weight * 100,
-                        examples: crit.examples.map(example => ({
-                            ...example,
-                            id: uuid(),
-                            file: null,
-                        })) as CreateIssueCriteriaExampleDraftRequest[],
-                    })) as CreateIssueCriteriaDraftRequest[]);
-                    setForms(draft.forms!.map(form => ({ ...form, id: uuid() })) as CreateIssueFormRequest[]);
-                } else {
-                    setIsBlockForm(false);
-                    setIsOpenRestoreModal(false);
-                    setIsNewDraft(true);
-                    setMaterials([]);
-                }
-            }
+            //
+            //
+            //         setForms(draft.forms!.map(form => ({ ...form, id: uuid() })) as CreateIssueFormRequest[]);
+            //     }
+            // }
         },
         useErrorBoundary: false,
-        refetchOnWindowFocus: true,
-        refetchOnMount: 'always',
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
     });
 
-    const { mutate: deleteMyDraft } = useDeleteMyDraft({
-        onSuccess: () => {
-            queryClient.invalidateQueries(getMyIssueDraftQueryKey(spaceId!));
-        },
-        retry: false,
-    });
+    useEffect(() => {
+        if (getIssue) {
+            setMyIssueDraft(getIssue!);
+        }
+    }, [getIssue]);
+
+    useEffect(() => {
+        if (getMaterials) {
+            setMaterials(getMaterials.entityList!.map(material => ({
+                ...material, id: uuid(), file: null,
+            })) as CreateIssueMaterialDraftRequest[]);
+        }
+    }, [getMaterials]);
+
+    useEffect(() => {
+        if (getCriteria) {
+            setCriteria(getCriteria.entityList!.map(crit => ({
+                ...crit,
+                id: uuid(),
+                weight: crit.weight * 100,
+                examples: crit.criteriaExampleList.map(example => ({
+                    ...example,
+                    id: uuid(),
+                    file: null,
+                })) as CreateIssueCriteriaExampleDraftRequest[],
+            })) as CreateIssueCriteriaDraftRequest[]);
+        }
+    }, [getCriteria]);
+
+    console.log(getIssue, myIssueDraft, 'ISSUE');
 
     const formIsInvalidate = useCallback(async (index: number, form: FormInstance) => {
         return currentStep === index && !(await form.validateFields().then(() => true).catch(() => false));
@@ -154,16 +153,13 @@ export const SpaceCreateIssuePage: FC<Props> = typedMemo(function SpaceCreateIss
         const generalFormValues = generalForm.getFieldsValue();
         const data = {
             ...generalFormValues,
+            id: issueId!,
             assessmentDeadlineDateUtc: generalFormValues.assessmentDeadlineDateUtc.utc().format(),
             submitDeadlineDateUtc: generalFormValues.submitDeadlineDateUtc.utc().format(),
         };
 
-        if (isNewDraft) {
-            createIssueDraft({ data, spaceId: spaceId! });
-        } else {
-            updateMyDraft({ data, spaceId: spaceId! });
-        }
-    }, [generalForm, isNewDraft, createIssueDraft, updateMyDraft, spaceId]);
+        editIssue(data);
+    }, [generalForm, editIssue]);
 
     const handleMaterialDraft = useCallback(async () => {
         const data = await Promise.all(
@@ -223,100 +219,72 @@ export const SpaceCreateIssuePage: FC<Props> = typedMemo(function SpaceCreateIss
         if (await validateForms()) return;
         if (step > currentStep + 1) return;
 
-        switch (currentStep) {
-            case 0:
-                handleGeneralFormDraft();
-                break;
-            case 1:
-                await handleMaterialDraft();
-                break;
-            case 2:
-                await handleCriteriaDraft();
-                break;
-            case 3:
-                handleFormsDraft();
-                if (step === 4) {
-                    setTimeout(() => saveMyDraft({ spaceId: spaceId! }), 2000);
-                }
-                break;
-            default:
-                break;
+        if (currentStep === 3 && step === 4) {
+            handleGeneralFormDraft();
+            await handleMaterialDraft();
+            await handleCriteriaDraft();
+            handleFormsDraft();
         }
 
         setCurrentStep(step);
-    }, [
-        validateForms, handleGeneralFormDraft, handleMaterialDraft, handleCriteriaDraft, handleFormsDraft,
-        setCurrentStep, spaceId, saveMyDraft, currentStep,
-    ]);
+    }, [validateForms, handleGeneralFormDraft, handleMaterialDraft, handleCriteriaDraft, handleFormsDraft,
+        setCurrentStep, currentStep]);
 
-    const handleRestoreDraft = useCallback(() => {
-        setIsBlockForm(false);
-        setIsOpenRestoreModal(false);
-        setIsNewDraft(false);
-    }, []);
-
-    const handleDeleteDraft = useCallback(() => {
-        deleteMyDraft({ spaceId: spaceId! });
-    }, [deleteMyDraft, spaceId]);
+    if (!myIssueDraft || !materials || !criteria) {
+        return <Spin />;
+    }
 
     return (
-        <>
-            <Flex
-                vertical
-                gap="large"
-                className={getModuleClasses(styles, 'root', null, className)}
-            >
-                <Flex justify="space-between" gap="middle">
-                    <Link to={SpaceRouter.Spaces}>
-                        <Logo />
-                    </Link>
-                    <Typography.Text>
-                        <UserPanel />
-                    </Typography.Text>
-                </Flex>
+        <Flex
+            vertical
+            gap="large"
+            className={getModuleClasses(styles, 'root', null, className)}
+        >
+            <Flex justify="space-between" gap="middle">
+                <Link to={SpaceRouter.Spaces}>
+                    <Logo />
+                </Link>
+                <Typography.Text>
+                    <UserPanel />
+                </Typography.Text>
+            </Flex>
 
-                <Flex justify="space-between" gap="large">
-                    <Steps
-                        current={currentStep}
-                        onChange={handleChangeStep}
-                        labelPlacement="vertical"
-                        items={[
-                            { title: 'Общее' },
-                            { title: 'Материалы' },
-                            { title: 'Критерии' },
-                            { title: 'Форма сдачи' },
-                        ]}
-                    />
-                    <CreateIssueButtons
-                        currentStep={currentStep}
-                        spaceId={spaceId}
-                        handleChangeStep={handleChangeStep}
-                    />
-                </Flex>
-
-                <CreateIssueForm
+            <Flex justify="space-between" gap="large">
+                <Steps
+                    current={currentStep}
+                    onChange={handleChangeStep}
+                    labelPlacement="vertical"
+                    items={[
+                        { title: 'Общее', status: currentStep === 0 ? 'process' : 'finish' },
+                        { title: 'Материалы', status: currentStep === 1 ? 'process' : 'finish' },
+                        { title: 'Критерии', status: currentStep === 2 ? 'process' : 'finish' },
+                        { title: 'Форма сдачи', status: currentStep === 3 ? 'process' : 'finish' },
+                    ]}
+                />
+                <CreateIssueButtons
                     currentStep={currentStep}
-                    isBlockForm={isBlockForm}
-                    generalForm={generalForm}
-                    spaceSettings={spaceSettings}
-                    myIssueDraft={myIssueDraft}
-                    materialsForm={materialsForm}
-                    materials={materials}
-                    setMaterials={setMaterials}
-                    criteriaForm={criteriaForm}
-                    criteria={criteria}
-                    setCriteria={setCriteria}
-                    formsForm={formsForm}
-                    forms={forms}
-                    setForms={setForms}
+                    spaceId={spaceId}
+                    handleChangeStep={handleChangeStep}
                 />
             </Flex>
 
-            <RestoreDraftModal
-                isOpen={isOpenRestoreModal}
-                onRestoreDraft={handleRestoreDraft}
-                onDeleteDraft={handleDeleteDraft}
+            <CreateIssueForm
+                currentStep={currentStep}
+                isBlockForm={false}
+                generalForm={generalForm}
+                spaceSettings={spaceSettings}
+                myIssueDraft={{ ...myIssueDraft, materials: [], criteria: [], forms: [] }}
+                materialsForm={materialsForm}
+                materials={materials}
+                setMaterials={setMaterials}
+                criteriaForm={criteriaForm}
+                criteria={criteria}
+                setCriteria={setCriteria}
+                formsForm={formsForm}
+                forms={forms}
+                setForms={setForms}
+                isEdit={true}
             />
-        </>
+        </Flex>
     );
 });

@@ -1,3 +1,5 @@
+import { SpaceEditIssuePage } from '@pages/space/SpaceEditIssuePage';
+
 import { ConfigRouteProps } from '@shared/types';
 
 import { SpaceCreateIssuePage } from './SpaceCreateIssuePage';
@@ -34,12 +36,13 @@ export const SpaceRouter = {
     SpaceSolutionFeedback:
         (spaceId: string, solutionId: string) => `/spaces/${spaceId}/solutions/${solutionId}/feedback`,
     SpaceSolutionReview: (spaceId: string, solutionId: string) => `/spaces/${spaceId}/solutions/${solutionId}/review`,
-    SpaceIssue: (spaceId: string, issueId: string) => `/spaces/${spaceId}/tasks/${issueId}`,
-    SpaceIssueDescription: (spaceId: string, issueId: string) => `/spaces/${spaceId}/tasks/${issueId}/description`,
-    SpaceIssueMaterials: (spaceId: string, issueId: string) => `/spaces/${spaceId}/tasks/${issueId}/materials`,
-    SpaceIssueCriteria: (spaceId: string, issueId: string) => `/spaces/${spaceId}/tasks/${issueId}/criteria`,
-    SpaceIssueForm: (spaceId: string, issueId: string) => `/spaces/${spaceId}/tasks/${issueId}/form`,
-    SpaceIssueMarks: (spaceId: string, issueId: string) => `/spaces/${spaceId}/tasks/${issueId}/marks`,
+    SpaceIssue: (spaceId: string, issueId: string) => `/spaces/${spaceId}/issue/${issueId}`,
+    SpaceEditIssue: (spaceId: string, issueId: string) => `/spaces/${spaceId}/issue/${issueId}/edit`,
+    SpaceIssueDescription: (spaceId: string, issueId: string) => `/spaces/${spaceId}/issue/${issueId}/description`,
+    SpaceIssueMaterials: (spaceId: string, issueId: string) => `/spaces/${spaceId}/issue/${issueId}/materials`,
+    SpaceIssueCriteria: (spaceId: string, issueId: string) => `/spaces/${spaceId}/issue/${issueId}/criteria`,
+    SpaceIssueForm: (spaceId: string, issueId: string) => `/spaces/${spaceId}/issue/${issueId}/form`,
+    SpaceIssueMarks: (spaceId: string, issueId: string) => `/spaces/${spaceId}/issue/${issueId}/marks`,
 };
 
 export const spaceRouteConfig: ConfigRouteProps[] = [
@@ -52,6 +55,11 @@ export const spaceRouteConfig: ConfigRouteProps[] = [
         path: SpaceRouter.SpaceCreateIssue(':spaceId'),
         withAuthGuard: true,
         element: <SpaceCreateIssuePage />,
+    },
+    {
+        path: SpaceRouter.SpaceEditIssue(':spaceId', ':issueId'),
+        withAuthGuard: true,
+        element: <SpaceEditIssuePage />,
     },
     {
         path: SpaceRouter.SpaceSolutionReview(':spaceId', ':solutionId'),

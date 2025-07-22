@@ -28,10 +28,9 @@ type CreateIssueFormProps = {
     formsForm: FormInstance;
     forms: CreateIssueFormRequest[];
     setForms: (forms: CreateIssueFormRequest[]) => void;
-    isEdit?: boolean;
 };
 
-export const CreateIssueForm: FC<CreateIssueFormProps> = typedMemo(function CreateIssueForm({
+export const EditIssueForm: FC<CreateIssueFormProps> = typedMemo(function EditIssueForm({
     currentStep,
     isBlockForm,
     generalForm,
@@ -46,7 +45,6 @@ export const CreateIssueForm: FC<CreateIssueFormProps> = typedMemo(function Crea
     formsForm,
     forms,
     setForms,
-    isEdit = false,
 }) {
     return useMemo(() => {
         switch (currentStep) {
@@ -56,7 +54,6 @@ export const CreateIssueForm: FC<CreateIssueFormProps> = typedMemo(function Crea
                         disabled={isBlockForm}
                         form={generalForm}
                         isUseTeam={spaceSettings?.isUseTeam || false}
-                        isEdit={isEdit}
                         initialValue={!isBlockForm && myIssueDraft
                             ? {
                                 name: myIssueDraft.name,
